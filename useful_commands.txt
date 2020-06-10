@@ -1,0 +1,11 @@
+### Generate ARB files from Dart code getters:
+flutter pub run intl_translation:extract_to_arb --output-dir=lib/l10n lib/l10n/L.dart
+
+### Generate l10n Dart files from ARB files:
+flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n --no-use-deferred-loading lib/l10n/L.dart lib/l10n/intl_*.arb
+
+### Run Flutter testing with code coverage
+flutter test --coverage
+
+### Generate coverage output (requires genhtml)
+genhtml coverage/lcov.info --output coverage

@@ -1,0 +1,7 @@
+include: package:pedantic/analysis_options.yaml
+
+analyzer:
+  exclude: [build/**, lib/**/*.g.dart, lib/l10n/**]
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false

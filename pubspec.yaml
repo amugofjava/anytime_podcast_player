@@ -1,0 +1,90 @@
+name: anytime
+description: Anytime Podcast Player
+
+version: 0.1.0+4
+
+environment:
+  sdk: ">=2.5.0 <3.0.0"
+
+dependencies:
+#  podcast_search: ^0.3.4
+  podcast_search:
+    git:
+      url: https://github.com/amugofjava/podcast_search.git
+      ref: 9cdcd9d3ee9fc25406823109810e8a5ad707ebaa
+  audioplayers: ^0.15.1
+  audio_service: ^0.9.0
+  cached_network_image: ^2.0.0
+  connectivity: ^0.4.8+6
+  executor: ^2.2.1
+  flutter_dialogs: ^1.0.3
+  flutter_downloader: ^1.4.4
+  flutter_launcher_icons: ^0.7.4
+  flutter_spinkit: ^4.1.2+1
+  html: ^0.14.0+3
+  just_audio: ^0.1.10
+  liquid_pull_to_refresh: ^2.0.0
+  logging: ^0.11.4
+  mockito: ^4.1.1
+  mp3_info: ^0.1.3
+  package_info: ^0.4.0+18
+  path_provider: ^1.6.8
+  percent_indicator: ^2.1.3
+  permission_handler: ^5.0.0+hotfix.6
+  provider: ^4.1.2
+  rxdart: ^0.24.1
+  sembast: ^2.4.4+1
+  url_launcher: ^5.4.7
+
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.16.0
+  intl_translation:
+
+  cupertino_icons: ^0.1.2
+
+dev_dependencies:
+  pedantic: ^1.8.0+1
+  flutter_test:
+    sdk: flutter
+
+flutter_icons:
+  image_path: "assets/images/anytime-logo.png"
+  android: true
+  ios: true
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/images/anytime-logo.png
+    - assets/images/anytime-logo-s.png
+
+  fonts:
+    - family: SpaceMonoRegular
+      fonts:
+        - asset: assets/fonts/SpaceMono-Regular.ttf
+    - family: SpaceMonoBold
+      fonts:
+        - asset: assets/fonts/SpaceMono-Bold.ttf
+    - family: RobotoCondensedBold
+      fonts:
+        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+    - family: RobotoRegular
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: MontserratMedium
+      fonts:
+        - asset: assets/fonts/Montserrat-Medium.otf
+    - family: MontserratRegular
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.otf
+    - family: MontserratBold
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.otf
+    - family: JostRegular
+      fonts:
+        - asset: assets/fonts/jost/Jost-Regular.ttf

@@ -1,0 +1,219 @@
+{
+  "@@last_modified": "2020-05-17T09:02:38.520557",
+  "app_title": "Anytime Podcast Player",
+  "@app_title": {
+    "description": "Full title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "app_title_short": "Anytime Player",
+  "@app_title_short": {
+    "description": "Title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library": "Library",
+  "@library": {
+    "description": "Library tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "discover": "Discover",
+  "@discover": {
+    "description": "Discover tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads": "Downloads",
+  "@downloads": {
+    "description": "Downloads tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_button_label": "SUBSCRIBE",
+  "@subscribe_button_label": {
+    "description": "Subscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_button_label": "UNSUBSCRIBE",
+  "@unsubscribe_button_label": {
+    "description": "Unsubscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_button_label": "CANCEL",
+  "@cancel_button_label": {
+    "description": "Cancel button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_label": "Subscribe",
+  "@subscribe_label": {
+    "description": "Subscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_label": "Unsubscribe",
+  "@unsubscribe_label": {
+    "description": "Unsubscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_message": "Unsubscribing will delete all downloaded episodes of this podcast.",
+  "@unsubscribe_message": {
+    "description": "Displayed when the user unsubscribes from a podcast.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_for_podcasts_hint": "Search for podcasts",
+  "@search_for_podcasts_hint": {
+    "description": "Hint displayed on search bar when the user clicks the search icon.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_subscriptions_message": "Tap the Discovery button below or use the search bar above to find your first podcast",
+  "@no_subscriptions_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_label": "Delete",
+  "@delete_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_button_label": "DELETE",
+  "@delete_button_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_played_label": "Mark As Played",
+  "@mark_played_label": {
+    "description": "Mark as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_unplayed_label": "Mark As Unplayed",
+  "@mark_unplayed_label": {
+    "description": "Mark as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_confirmation": "Are you sure you wish to delete this episode?",
+  "@delete_episode_confirmation": {
+    "description": "User is asked to confirm when they attempt to delete an episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_title": "Delete Episode",
+  "@delete_episode_title": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_downloads_message": "You do not have any downloaded episodes",
+  "@no_downloads_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_search_results_message": "No podcasts found",
+  "@no_search_results_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_podcast_details_message": "Could not load podcast episodes. Please check your connection.",
+  "@no_podcast_details_message": {
+    "description": "Displayed on the podcast details page when the details could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_button_label": "Play epsiode",
+  "@play_button_label": {
+    "description": "Semantic label for the play button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pause_button_label": "Pause episode",
+  "@pause_button_label": {
+    "description": "Semantic label for the pause button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_episode_button_label": "Download episode",
+  "@download_episode_button_label": {
+    "description": "Semantic label for the download episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_button_label": "Delete episode",
+  "@delete_episode_button_label": {
+    "description": "Semantic label for the delete episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close_button_label": "Close",
+  "@close_button_label": {
+    "description": "Close button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_button_label": "Search",
+  "@search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clear_search_button_label": "Clear search text",
+  "@clear_search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_back_button_label": "Back",
+  "@search_back_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimise_player_window_button_label": "Minimise player window",
+  "@minimise_player_window_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewind_button_label": "Rewind episode 30 seconds",
+  "@rewind_button_label": {
+    "description": "Rewind button tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fast_forward_button_label": "Fast-forward episode 30 seconds",
+  "@fast_forward_button_label": {
+    "description": "Fast forward tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "about_label": "About",
+  "@about_label": {
+    "description": "About menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_played_label": "Mark all episodes as played",
+  "@mark_episodes_played_label": {
+    "description": "Mark all episodes played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_not_played_label": "Mark all episodes as not played",
+  "@mark_episodes_not_played_label": {
+    "description": "Mark all episodes not-played menu item",
+    "type": "text",
+    "placeholders": {}
+  }
+}
