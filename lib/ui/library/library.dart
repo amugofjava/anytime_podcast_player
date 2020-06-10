@@ -17,7 +17,7 @@ class Library extends StatefulWidget {
 class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
-    final PodcastBloc _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<List<Podcast>>(
         stream: _podcastBloc.subscriptions,

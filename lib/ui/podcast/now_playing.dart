@@ -32,7 +32,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    final AudioBloc audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     // If the episode finishes we can close.
     playingStateSubscription = audioBloc.playingState.listen((playingState) async {
@@ -63,7 +63,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final AudioBloc audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -74,7 +74,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
               return Container();
             }
 
-            int duration = snapshot.data == null ? 0 : snapshot.data.duration;
+            var duration = snapshot.data == null ? 0 : snapshot.data.duration;
 
             return SafeArea(
               child: Stack(
@@ -131,7 +131,7 @@ class NowPlayingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioBloc audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context);
 
     return StreamBuilder<AudioState>(
         stream: audioBloc.playingState,
@@ -159,7 +159,7 @@ class NowPlayingHeader extends StatelessWidget {
                       ),
                     );
                   },
-                  errorWidget: (_, __, ___) {
+                  errorWidget: (_, __, dynamic ___) {
                     return Container(
                       constraints: BoxConstraints.expand(),
                       child: Placeholder(

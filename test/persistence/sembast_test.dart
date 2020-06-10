@@ -11,6 +11,7 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 class MockPathProvder extends PathProviderPlatform {
@@ -18,6 +19,7 @@ class MockPathProvder extends PathProviderPlatform {
     return Future.value(Directory.systemTemp);
   }
 
+  @override
   Future<String> getApplicationDocumentsPath() {
     return Future.value(Directory.systemTemp.path);
   }
@@ -31,9 +33,10 @@ void main() {
   Podcast podcast2;
   Podcast podcast3;
 
-  setUp(() {
+  setUp(() async {
     mockPath = MockPathProvder();
     PathProviderPlatform.instance = mockPath;
+    disablePathProviderPlatformOverride = true;
     persistenceService = SembastRepository();
 
     podcast1 =
@@ -53,7 +56,7 @@ void main() {
 
     persistenceService = null;
 
-    File f = File("${Directory.systemTemp.path}/anytime.db");
+    var f = File('${Directory.systemTemp.path}/anytime.db');
 
     if (f.existsSync()) {
       f.deleteSync();
@@ -110,7 +113,7 @@ void main() {
     });
 
     test('Retrieve an existing Podcast without episodes', () async {
-      Podcast podcast1 = Podcast(
+      var podcast1 = Podcast(
           title: 'Podcast 1B', description: '1st podcast', guid: 'http://p1.com', link: 'http://p1.com', url: 'http://p1.com');
 
       await persistenceService.savePodcast(podcast1);
@@ -123,7 +126,7 @@ void main() {
     });
 
     test('Retrieve an existing Podcast with episodes', () async {
-      Podcast podcast3 = Podcast(
+      var podcast3 = Podcast(
           title: 'Podcast 3', description: '3rd podcast', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
 
       podcast3.episodes = <Episode>[
@@ -157,7 +160,7 @@ void main() {
 
       await persistenceService.savePodcast(podcast1);
 
-      List<Podcast> results = await persistenceService.subscriptions();
+      var results = await persistenceService.subscriptions();
 
       await expect(true, listEquals(results, [podcast1]));
 
@@ -563,8 +566,8 @@ void main() {
 
       expect(noDownload, null);
 
-      Episode e1 = podcast1.episodes.firstWhere((e) => e.guid == 'EP002');
-      Episode e2 = podcast1.episodes.firstWhere((e) => e.guid == 'EP005');
+      var e1 = podcast1.episodes.firstWhere((e) => e.guid == 'EP002');
+      var e2 = podcast1.episodes.firstWhere((e) => e.guid == 'EP005');
 
       e1.downloadTaskId = tid1;
       e2.downloadTaskId = tid2;

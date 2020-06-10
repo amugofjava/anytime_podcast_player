@@ -19,14 +19,14 @@ class _DownloadsState extends State<Downloads> {
   void initState() {
     super.initState();
 
-    final EpisodeBloc bloc = Provider.of<EpisodeBloc>(context, listen: false);
+    final bloc = Provider.of<EpisodeBloc>(context, listen: false);
 
     bloc.fetchDownloads(false);
   }
 
   @override
   Widget build(BuildContext context) {
-    final EpisodeBloc bloc = Provider.of<EpisodeBloc>(context);
+    final bloc = Provider.of<EpisodeBloc>(context);
 
     return StreamBuilder<BlocState>(
       stream: bloc.downloads,
@@ -50,7 +50,7 @@ class _DownloadsState extends State<Downloads> {
           } else if (state is BlocErrorState) {
             return SliverFillRemaining(
               hasScrollBody: false,
-              child: Text("ERROR"),
+              child: Text('ERROR'),
             );
           }
 

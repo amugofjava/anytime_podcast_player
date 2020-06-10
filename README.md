@@ -11,6 +11,15 @@ Anytime is currently in *Alpha* - so please expect bugs! It also only supports A
 A version for iOS is in the works, but is slower going as I do not have any Apple
 hardware to build or test on.
 
+#### Testers
+
+I am looking for a few people to help me test the binaries on the Google Play Store
+in a closed Alpha test. If you would be willing to help me, please drop me an email
+at [anytime@amugofjava.me.uk](mailto:anytime@amugofjava.me.uk) or raise a GitHub issue.
+Once Anytime is out of Alpha I will move to an open Beta test on the Play Store.
+
+#### Building from source
+
 If you do not have the Flutter SDK installed, follow the instructions from the
 Flutter site [here](https://flutter.dev/docs/get-started/install).
 

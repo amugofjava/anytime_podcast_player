@@ -19,15 +19,14 @@ class _DiscoveryState extends State<Discovery> {
   void initState() {
     super.initState();
 
-    final DiscoveryBloc bloc =
-        Provider.of<DiscoveryBloc>(context, listen: false);
+    final bloc = Provider.of<DiscoveryBloc>(context, listen: false);
 
     bloc.discover(DiscoveryChartEvent(count: 10));
   }
 
   @override
   Widget build(BuildContext context) {
-    final DiscoveryBloc bloc = Provider.of<DiscoveryBloc>(context);
+    final bloc = Provider.of<DiscoveryBloc>(context);
 
     return DiscoveryResults(data: bloc.results);
   }

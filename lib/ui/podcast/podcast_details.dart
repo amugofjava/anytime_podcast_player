@@ -83,7 +83,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final PodcastBloc _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -141,7 +141,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         ),
                       );
                     },
-                    errorWidget: (_, __, ___) {
+                    errorWidget: (_, __, dynamic ___) {
                       return Container(
                         constraints: BoxConstraints.expand(height: 60, width: 60),
                         child: Placeholder(
@@ -246,7 +246,7 @@ class PodcastTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -286,7 +286,7 @@ class SubscriptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PodcastBloc bloc = Provider.of<PodcastBloc>(context);
+    final bloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<BlocState<Podcast>>(
         stream: bloc.details,
@@ -295,7 +295,7 @@ class SubscriptionButton extends StatelessWidget {
             final state = snapshot.data;
 
             if (state is BlocPopulatedState<Podcast>) {
-              Podcast p = state.results;
+              var p = state.results;
 
               return p.subscribed
                   ? OutlineButton.icon(

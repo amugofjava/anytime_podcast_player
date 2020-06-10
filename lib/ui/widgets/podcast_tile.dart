@@ -19,7 +19,7 @@ class PodcastTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PodcastBloc _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context);
 
     return Center(
       child: Column(
@@ -51,7 +51,7 @@ class PodcastTile extends StatelessWidget {
                     ),
                   );
                 },
-                errorWidget: (_, __, ___) {
+                errorWidget: (_, __, dynamic ___) {
                   return Container(
                     constraints: BoxConstraints.expand(height: 60, width: 60),
                     child: Placeholder(

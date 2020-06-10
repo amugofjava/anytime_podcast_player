@@ -26,7 +26,6 @@ class DatabaseService {
   Future _openDatabase() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
     final dbPath = join(appDocumentDir.path, 'anytime.db');
-
     final database = await databaseFactoryIo.openDatabase(dbPath);
 
     _databaseCompleter.complete(database);

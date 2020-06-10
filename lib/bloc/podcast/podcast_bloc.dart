@@ -152,7 +152,7 @@ class PodcastBloc {
   void _listenDownloads() {
     // Listen to download progress
     MobileDownloadService.downloadProgress.listen((s) async {
-      log.fine("Download progress for task id ${s.id} - ${s.percentage}%");
+      log.fine('Download progress for task id ${s.id} - ${s.percentage}%');
 
       final downloadable = await downloadService.findEpisodeByTaskId(s.id);
 
@@ -174,7 +174,7 @@ class PodcastBloc {
           await podcastService.saveEpisode(episode);
         }
       } else {
-        log.severe("Downloadable not found with id ${s.id}");
+        log.severe('Downloadable not found with id ${s.id}');
       }
     });
   }

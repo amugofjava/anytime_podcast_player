@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 final ThemeData kLightTheme = _buildLightTheme();
 
 ThemeData _buildLightTheme() {
-  final ThemeData base = ThemeData.light();
+  final base = ThemeData.light();
 
   return base.copyWith(
     primaryColor: Colors.orange,

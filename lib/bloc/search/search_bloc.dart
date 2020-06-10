@@ -50,9 +50,7 @@ class SearchBloc extends Bloc {
     } else if (event is SearchChartsEvent) {
       yield BlocLoadingState();
 
-      if (_resultsCache == null) {
-        _resultsCache = await podcastService.charts(size: 10);
-      }
+      _resultsCache ??= await podcastService.charts(size: 10);
 
       yield BlocPopulatedState<pcast.SearchResult>(_resultsCache);
     } else if (event is SearchTermEvent) {
@@ -69,7 +67,7 @@ class SearchBloc extends Bloc {
         if (connectivityResult == ConnectivityResult.none) {
           yield BlocErrorState(error: BlocErrorType.connectivity);
         } else {
-          final pcast.SearchResult results = await podcastService.search(term: term);
+          final results = await podcastService.search(term: term);
 
           // Was the search successful?
           if (results.successful) {

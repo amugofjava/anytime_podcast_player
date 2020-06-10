@@ -31,9 +31,9 @@ class EpisodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
     final tileTheme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
-    final EpisodeBloc bloc = Provider.of<EpisodeBloc>(context);
+    final bloc = Provider.of<EpisodeBloc>(context);
 
     return Opacity(
       opacity: episode.played ? 0.5 : 1.0,
@@ -167,7 +167,7 @@ class EpisodeTile extends StatelessWidget {
                     ),
                   );
                 },
-                errorWidget: (_, __, ___) {
+                errorWidget: (_, __, dynamic ___) {
                   return Container(
                     constraints: BoxConstraints.expand(height: 56, width: 56),
                     child: Placeholder(
@@ -213,7 +213,7 @@ class EpisodeTransportControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> buttons = [];
+    final buttons = <Widget>[];
 
     if (download) {
       buttons.add(Padding(
@@ -253,7 +253,7 @@ class EpisodeSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
     var timeRemaining = episode.timeRemaining;
 
     String title;

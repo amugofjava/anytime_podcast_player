@@ -256,7 +256,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _menuSelect(String choice) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final packageInfo = await PackageInfo.fromPlatform();
 
     switch (choice) {
       case 'about':
@@ -273,7 +273,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               Text('\u00a9 2020 Ben Hills'),
               GestureDetector(
                   child:
-                      Text("anytime@amugofjava.me.uk", style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+                      Text('anytime@amugofjava.me.uk', style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
                   onTap: () {
                     _launchEmail();
                   }),

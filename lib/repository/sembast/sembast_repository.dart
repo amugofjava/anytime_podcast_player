@@ -66,7 +66,7 @@ class SembastRepository extends Repository {
 
   @override
   Future<void> deletePodcast(Podcast podcast) async {
-    Database db = await _db;
+    final db = await _db;
 
     await db.transaction((txn) async {
       final podcastFinder = Finder(filter: Filter.byKey(podcast.id));
@@ -210,7 +210,8 @@ class SembastRepository extends Repository {
     var d = await _db;
 
     await d.transaction((txn) async {
-      List<Future<int>> futures = [];
+      var futures = <Future<int>>[];
+
       for (var e in episodes) {
         if (e.id == null) {
           e.id = await _episodeStore.add(txn, e.toMap());
@@ -251,11 +252,14 @@ class SembastRepository extends Repository {
 
   @override
   Future<void> close() async {
-    Database d = await _db;
+    final d = await _db;
 
     return d.close();
   }
 
+  @override
   Stream<EpisodeState> get episodeListener => _episodeSubject.stream;
+
+  @override
   Stream<Podcast> get podcastListener => _podcastSubject.stream;
 }

@@ -32,6 +32,8 @@ class MobileDownloadService extends DownloadService {
   static BehaviorSubject<DownloadProgress> downloadProgress = BehaviorSubject<DownloadProgress>();
 
   final log = Logger('MobileDownloadService');
+
+  @override
   final Repository repository;
   final ReceivePort _port = ReceivePort();
 
@@ -55,7 +57,7 @@ class MobileDownloadService extends DownloadService {
       }
 
       final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
-      Uri uri = Uri.parse(episode.contentUrl);
+      var uri = Uri.parse(episode.contentUrl);
 
       // Ensure the download directory exists
       Directory(downloadPath).createSync(recursive: true);
@@ -63,9 +65,7 @@ class MobileDownloadService extends DownloadService {
       // Filename should be last segment of URI.
       var filename = safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
 
-      if (filename == null) {
-        filename = safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
-      }
+      filename ??= safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
 
       if (filename == null) {
         //TODO: Handle unsupported format.
@@ -116,9 +116,9 @@ class MobileDownloadService extends DownloadService {
     IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
 
     _port.listen((dynamic data) {
-      final String id = data[0] as String;
-      final DownloadTaskStatus status = data[1] as DownloadTaskStatus;
-      final int progress = data[2] as int;
+      final id = data[0] as String;
+      final status = data[1] as DownloadTaskStatus;
+      final progress = data[2] as int;
 
       var state = DownloadState.none;
 
@@ -171,7 +171,7 @@ class MobileDownloadService extends DownloadService {
   }
 
   static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    final send = IsolateNameServer.lookupPortByName('downloader_send_port');
 
     send.send([id, status, progress]);
   }

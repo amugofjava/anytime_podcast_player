@@ -34,7 +34,7 @@ class MiniPlayer extends StatelessWidget {
 class _MiniPlayerBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).textTheme;
     final audioBloc = Provider.of<AudioBloc>(context);
 
     return Dismissible(
@@ -88,7 +88,7 @@ class _MiniPlayerBuilder extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                errorWidget: (_, __, ___) {
+                                errorWidget: (_, __, dynamic ___) {
                                   return Container(
                                     constraints: BoxConstraints.expand(height: 48, width: 48),
                                     child: Placeholder(

@@ -60,9 +60,9 @@ class MobilePodcastService extends PodcastService {
   Future<Podcast> loadPodcast({@required Podcast podcast, bool refresh}) async {
     if (podcast.id == null || refresh) {
       psapi.Podcast loadedPodcast;
-      var title = "";
-      var description = "";
-      var copyright = "";
+      var title = '';
+      var description = '';
+      var copyright = '';
 
       if (!refresh) {
         loadedPodcast = _cache.item(podcast.url);
@@ -94,7 +94,7 @@ class MobilePodcastService extends PodcastService {
 
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
 
-      final Podcast pc = Podcast(
+      final pc = Podcast(
         guid: loadedPodcast.url,
         url: loadedPodcast.url,
         link: loadedPodcast.link,
@@ -126,7 +126,7 @@ class MobilePodcastService extends PodcastService {
           }
         }
 
-        for (final psapi.Episode episode in loadedPodcast.episodes) {
+        for (final episode in loadedPodcast.episodes) {
           var existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
 
           if (existingEpisode == null) {
@@ -167,7 +167,7 @@ class MobilePodcastService extends PodcastService {
 
       // Add any downloaded episodes that are no longer in the feed - they
       // may have expired but we still want them.
-      for (final Episode episode in existingEpisodes) {
+      for (final episode in existingEpisodes) {
         var feedEpisode = loadedPodcast.episodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
 
         if (feedEpisode == null) {
@@ -208,7 +208,7 @@ class MobilePodcastService extends PodcastService {
 
     final filename = join(await getStorageDirectory(), safePath(episode.podcast), episode.filename);
 
-    File f = File.fromUri(Uri.file(filename));
+    var f = File.fromUri(Uri.file(filename));
 
     return f.delete();
   }
@@ -230,7 +230,7 @@ class MobilePodcastService extends PodcastService {
   Future<void> unsubscribe(Podcast podcast) async {
     final filename = join(await getStorageDirectory(), safePath(podcast.title));
 
-    Directory d = Directory.fromUri(Uri.file(filename));
+    final d = Directory.fromUri(Uri.file(filename));
 
     if (await d.exists()) {
       await d.delete(recursive: true);
@@ -279,8 +279,10 @@ class MobilePodcastService extends PodcastService {
     return psapi.Podcast.loadFeed(url: url);
   }
 
+  @override
   Stream<Podcast> get podcastListener => repository.podcastListener;
 
+  @override
   Stream<EpisodeState> get episodeListener => repository.episodeListener;
 }
 
@@ -298,11 +300,11 @@ class _PodcastCache {
   _PodcastCache({@required this.maxItems, @required this.expiration}) : _queue = Queue<_CacheItem>();
 
   psapi.Podcast item(String key) {
-    _CacheItem hit = _queue.firstWhere((_CacheItem i) => i.podcast.url == key, orElse: () => null);
+    var hit = _queue.firstWhere((_CacheItem i) => i.podcast.url == key, orElse: () => null);
     psapi.Podcast p;
 
     if (hit != null) {
-      DateTime now = DateTime.now();
+      var now = DateTime.now();
 
       if (now.difference(hit.dateAdded) <= expiration) {
         p = hit.podcast;

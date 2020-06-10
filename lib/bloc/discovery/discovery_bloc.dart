@@ -33,9 +33,7 @@ class DiscoveryBloc extends Bloc {
     yield DiscoveryLoadingState();
 
     if (event is DiscoveryChartEvent) {
-      if (_resultsCache == null) {
-        _resultsCache = await podcastService.charts(size: event.count);
-      }
+      _resultsCache ??= await podcastService.charts(size: event.count);
 
       yield DiscoveryPopulatedState<pcast.SearchResult>(_resultsCache);
     }

@@ -21,7 +21,7 @@ class DownloadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double progress = percent.toDouble() / 100;
+    var progress = percent.toDouble() / 100;
 
     return Semantics(
       label: '$label $title',

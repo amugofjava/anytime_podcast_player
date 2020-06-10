@@ -2,21 +2,19 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<bool> hasStoragePermission() async {
-  final PermissionStatus permissionStatus = await Permission.storage.request();
+  final permissionStatus = await Permission.storage.request();
 
   return Future.value(permissionStatus.isGranted);
 }
 
 Future<String> getStorageDirectory() async {
   if (await hasStoragePermission()) {
-    final List<Directory> appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
+    final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
     String path;
 
@@ -41,7 +39,7 @@ Future<String> getStorageDirectory() async {
     return join(path, 'AnyTime');
   }
 
-  return "";
+  return '';
 }
 
 String safePath(String s) {

@@ -33,9 +33,7 @@ class Podcast {
     this.subscribedDate,
     this.episodes,
   }) {
-    if (this.episodes == null) {
-      episodes = [];
-    }
+    episodes ??= [];
   }
 
   Podcast.fromSearchResultItem(search.Item item)
@@ -62,7 +60,7 @@ class Podcast {
   }
 
   static Podcast fromMap(int key, Map<String, dynamic> podcast) {
-    final String sds = podcast['subscribedDate'] as String;
+    final sds = podcast['subscribedDate'] as String;
     DateTime sd;
 
     if (sds.isNotEmpty && sds != 'null') {

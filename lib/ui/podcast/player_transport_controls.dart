@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 class PlayerTransportControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AudioBloc audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 42.0),

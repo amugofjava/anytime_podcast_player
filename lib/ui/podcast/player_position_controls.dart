@@ -16,15 +16,13 @@ class PlayerPositionControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioBloc audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context);
 
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          Duration position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 1);
-
-          Duration length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
-
+          var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 1);
+          var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
           var p = position.inSeconds;
 
           if (p < 0) {
@@ -79,13 +77,13 @@ class PlayerPositionControls extends StatelessWidget {
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) {
-      if (n >= 10) return "$n";
-      return "0$n";
+      if (n >= 10) return '$n';
+      return '0$n';
     }
 
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
+    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
+    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
 
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+    return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
   }
 }

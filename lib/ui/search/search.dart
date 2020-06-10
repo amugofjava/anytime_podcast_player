@@ -22,7 +22,7 @@ class _SearchState extends State<Search> {
   void initState() {
     super.initState();
 
-    final SearchBloc bloc = Provider.of<SearchBloc>(context, listen: false);
+    final bloc = Provider.of<SearchBloc>(context, listen: false);
 
     bloc.search(SearchClearEvent());
 
@@ -40,7 +40,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    final SearchBloc bloc = Provider.of<SearchBloc>(context);
+    final bloc = Provider.of<SearchBloc>(context);
 
     return Scaffold(
       backgroundColor: Colors.white,

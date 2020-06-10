@@ -27,8 +27,8 @@ class PodcastList extends StatelessWidget {
           padding: EdgeInsets.all(0.0),
           itemCount: results.items.length,
           itemBuilder: (BuildContext context, int index) {
-            final search.Item i = results.items[index];
-            final Podcast p = Podcast.fromSearchResultItem(i);
+            final i = results.items[index];
+            final p = Podcast.fromSearchResultItem(i);
 
             return PodcastTile(podcast: p);
           },

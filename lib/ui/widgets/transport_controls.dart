@@ -27,7 +27,7 @@ class PlayControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioBloc _audioBloc = Provider.of<AudioBloc>(context);
+    final _audioBloc = Provider.of<AudioBloc>(context);
 
     return StreamBuilder<PlayerControlState>(
         stream: Rx.combineLatest2(_audioBloc.playingState, _audioBloc.nowPlaying,
@@ -134,8 +134,8 @@ class DownloadControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AudioBloc _audioBloc = Provider.of<AudioBloc>(context);
-    final PodcastBloc _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _audioBloc = Provider.of<AudioBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<PlayerControlState>(
         stream: Rx.combineLatest2(_audioBloc.playingState, _audioBloc.nowPlaying,

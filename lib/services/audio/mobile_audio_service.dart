@@ -45,7 +45,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
-      List<String> trackDetails = [];
+      var trackDetails = <String>[];
+
       var download = false;
       var startPosition = 0;
       var uri = episode.contentUrl;
@@ -59,8 +60,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       // If we have a downloaded copy of the episode, set the URI to the file path.
       if (savedEpisode != null && episode.downloadState == DownloadState.downloaded) {
         if (await hasStoragePermission()) {
-          final String downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
-
+          final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
           final downloadFile = join(downloadPath, episode.filename);
 
           uri = downloadFile;
@@ -271,9 +271,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
   void _handleAudioServiceTransitions() async {
     AudioService.playbackStateStream.listen((state) async {
       if (state != null && state is PlaybackState) {
-        final AudioProcessingState ps = state.processingState;
+        final ps = state.processingState;
 
-        log.fine("Received state change from audio_service: ${ps.toString()}");
+        log.fine('Received state change from audio_service: ${ps.toString()}');
 
         switch (ps) {
           case AudioProcessingState.none:
@@ -355,13 +355,16 @@ class MobileAudioPlayerService extends AudioPlayerService {
     }
   }
 
+  @override
   Episode get nowPlaying => _episode;
 
   /// Get the current playing state
+  @override
   Stream<AudioState> get playingState => _playingState.stream;
 
   Stream<EpisodeState> get episodeListener => repository.episodeListener;
 
+  @override
   Stream<PositionState> get playPosition => _playPosition.stream;
 }
 
