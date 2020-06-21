@@ -202,6 +202,7 @@ class MobilePodcastService extends PodcastService {
   Future<void> deleteDownload(Episode episode) async {
     episode.downloadTaskId = null;
     episode.downloadPercentage = 0;
+    episode.position = 0;
     episode.downloadState = DownloadState.none;
 
     await repository.saveEpisode(episode);
