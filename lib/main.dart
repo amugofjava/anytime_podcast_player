@@ -4,8 +4,9 @@
 
 import 'package:anytime/ui/anytime_podcast_app.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
+
+import 'core/chrome.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,13 +17,7 @@ void main() {
     print('${record.level.name}: - ${record.time}: ${record.loggerName}: ${record.message}');
   });
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.white,
-    statusBarBrightness: Brightness.light,
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
+  Chrome.transparentLight();
 
   runApp(AnytimePodcastApp());
 }

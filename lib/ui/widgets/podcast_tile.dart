@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -28,6 +29,8 @@ class PodcastTile extends StatelessWidget {
         children: <Widget>[
           ListTile(
             onTap: () {
+              Chrome.translucentLight();
+
               Navigator.push(
                 context,
                 MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc)),

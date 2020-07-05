@@ -3,11 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
+import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,6 +55,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     _sliverScrollController.addListener(() {
       if (!toolbarCollpased && _sliverScrollController.hasClients && _sliverScrollController.offset > (300 - kToolbarHeight)) {
         setState(() {
+          Chrome.transparentLight();
           brightness = Brightness.light;
           toolbarCollpased = true;
         });
@@ -60,6 +63,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
           _sliverScrollController.hasClients &&
           _sliverScrollController.offset < (300 - kToolbarHeight)) {
         setState(() {
+          Chrome.translucentLight();
           brightness = Brightness.dark;
           toolbarCollpased = false;
         });
@@ -85,144 +89,150 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   Widget build(BuildContext context) {
     final _podcastBloc = Provider.of<PodcastBloc>(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: LiquidPullToRefresh(
-        onRefresh: _handleRefresh,
-        showChildOpacityTransition: false,
-        child: CustomScrollView(
-          controller: _sliverScrollController,
-          slivers: <Widget>[
-            SliverAppBar(
-              brightness: brightness,
-              title: toolbarCollpased
-                  ? Text(widget.podcast.title, style: (TextStyle(color: Colors.black)))
-                  : Text(
-                      '',
+    return WillPopScope(
+      onWillPop: () {
+        Chrome.transparentLight();
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: LiquidPullToRefresh(
+          onRefresh: _handleRefresh,
+          showChildOpacityTransition: false,
+          child: CustomScrollView(
+            controller: _sliverScrollController,
+            slivers: <Widget>[
+              SliverAppBar(
+                brightness: brightness,
+                title: toolbarCollpased
+                    ? Text(widget.podcast.title, style: (TextStyle(color: Colors.black)))
+                    : Text(
+                        '',
+                      ),
+                leading: DecoratedIconButton(
+                  icon: Icons.close,
+                  iconColour: toolbarCollpased ? Colors.black : Colors.white,
+                  decorationColour: toolbarCollpased ? Colors.white : Color(0x22000000),
+                  onPressed: () {
+                    setState(() {
+                      // We need to switch brightness to light here. If we do not,
+                      // it will stay dark until the previous screen is rebuilt and
+                      // that results in the status bar being blank for a a few
+                      // milliseconds which looks very odd.
+                      brightness = Brightness.light;
+                    });
+
+                    Chrome.transparentLight();
+
+                    Navigator.pop(context);
+                  },
+                ),
+                backgroundColor: Colors.white,
+                expandedHeight: 300.0,
+                floating: false,
+                pinned: true,
+                snap: false,
+                flexibleSpace: FlexibleSpaceBar(
+                    background: Hero(
+                  tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
+                  child: ExcludeSemantics(
+                    child: CachedNetworkImage(
+                      imageUrl: widget.podcast.imageUrl,
+                      fit: BoxFit.fitWidth,
+                      placeholder: (context, url) {
+                        return Container(
+                          constraints: BoxConstraints.expand(height: 60, width: 60),
+                          child: Placeholder(
+                            color: Colors.grey,
+                            strokeWidth: 1,
+                            fallbackWidth: 60,
+                            fallbackHeight: 60,
+                          ),
+                        );
+                      },
+                      errorWidget: (_, __, dynamic ___) {
+                        return Container(
+                          constraints: BoxConstraints.expand(height: 60, width: 60),
+                          child: Placeholder(
+                            color: Colors.grey,
+                            strokeWidth: 1,
+                            fallbackWidth: 60,
+                            fallbackHeight: 60,
+                          ),
+                        );
+                      },
                     ),
-              leading: IconButton(
-                color: toolbarCollpased ? Colors.black : Colors.white,
-                tooltip: L.of(context).close_button_label,
-                icon: Icon(
-                  Icons.close,
-                ),
-                onPressed: () {
-                  setState(() {
-                    // We need to switch brightness to light here. If we do not,
-                    // it will stay dark until the previous screen is rebuilt and
-                    // that results in the status bar being blank for a a few
-                    // milliseconds which looks very odd.
-                    brightness = Brightness.light;
-                  });
-
-                  Navigator.pop(context);
-                },
-              ),
-              backgroundColor: Colors.white,
-              expandedHeight: 300.0,
-              floating: false,
-              pinned: true,
-              snap: false,
-              flexibleSpace: FlexibleSpaceBar(
-                  background: Hero(
-                tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
-                child: ExcludeSemantics(
-                  child: CachedNetworkImage(
-                    imageUrl: widget.podcast.imageUrl,
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) {
-                      return Container(
-                        constraints: BoxConstraints.expand(height: 60, width: 60),
-                        child: Placeholder(
-                          color: Colors.grey,
-                          strokeWidth: 1,
-                          fallbackWidth: 60,
-                          fallbackHeight: 60,
-                        ),
-                      );
-                    },
-                    errorWidget: (_, __, dynamic ___) {
-                      return Container(
-                        constraints: BoxConstraints.expand(height: 60, width: 60),
-                        child: Placeholder(
-                          color: Colors.grey,
-                          strokeWidth: 1,
-                          fallbackWidth: 60,
-                          fallbackHeight: 60,
-                        ),
-                      );
-                    },
                   ),
-                ),
-              )),
-            ),
-            StreamBuilder<BlocState<Podcast>>(
-                initialData: BlocEmptyState<Podcast>(),
-                stream: _podcastBloc.details,
-                builder: (context, snapshot) {
-                  final state = snapshot.data;
+                )),
+              ),
+              StreamBuilder<BlocState<Podcast>>(
+                  initialData: BlocEmptyState<Podcast>(),
+                  stream: _podcastBloc.details,
+                  builder: (context, snapshot) {
+                    final state = snapshot.data;
 
-                  if (state is BlocLoadingState) {
+                    if (state is BlocLoadingState) {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Column(
+                            children: <Widget>[
+                              CircularProgressIndicator(),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is BlocErrorState) {
+                      return SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Icons.error_outline,
+                                size: 50,
+                                color: Colors.blue[900],
+                              ),
+                              Text(
+                                L.of(context).no_podcast_details_message,
+                                style: Theme.of(context).textTheme.bodyText2,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is BlocPopulatedState<Podcast>) {
+                      return SliverToBoxAdapter(child: buildPage(context, state.results));
+                    }
+
                     return SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                          children: <Widget>[
-                            CircularProgressIndicator(),
-                          ],
-                        ),
-                      ),
+                      child: Container(),
                     );
-                  }
-
-                  if (state is BlocErrorState) {
-                    return SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.error_outline,
-                              size: 50,
-                              color: Colors.blue[900],
-                            ),
-                            Text(
-                              L.of(context).no_podcast_details_message,
-                              style: Theme.of(context).textTheme.bodyText2,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  if (state is BlocPopulatedState<Podcast>) {
-                    return SliverToBoxAdapter(child: buildPage(context, state.results));
-                  }
-
-                  return SliverToBoxAdapter(
-                    child: Container(),
-                  );
-                }),
-            StreamBuilder<List<Episode>>(
-                stream: _podcastBloc.episodes,
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? SliverList(
-                          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                          return EpisodeTile(
-                            episode: snapshot.data[index],
-                            download: true,
-                            play: true,
-                          );
-                        }, childCount: snapshot.data.length))
-                      : SliverToBoxAdapter(child: Container());
-                }),
-          ],
+                  }),
+              StreamBuilder<List<Episode>>(
+                  stream: _podcastBloc.episodes,
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? SliverList(
+                            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+                            return EpisodeTile(
+                              episode: snapshot.data[index],
+                              download: true,
+                              play: true,
+                            );
+                          }, childCount: snapshot.data.length))
+                        : SliverToBoxAdapter(child: Container());
+                  }),
+            ],
+          ),
         ),
       ),
     );

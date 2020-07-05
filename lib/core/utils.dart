@@ -42,6 +42,7 @@ Future<String> getStorageDirectory() async {
   return '';
 }
 
+/// Strips characters that are invalid for file and directory names.
 String safePath(String s) {
-  return s.replaceAll(RegExp(r'[^\w\s\.]+'), '');
+  return s == null ? null : s.replaceAll(RegExp(r'[^\w\s\.]+'), '');
 }

@@ -8,6 +8,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
+import 'package:anytime/core/chrome.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
@@ -146,14 +147,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         // We need to update the chrome on resume as otherwise if
         // another application (or the launcher) changes them, when
         // we switch back it will stay as the other app put them.
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Colors.white,
-          statusBarBrightness: Brightness.light,
-          systemNavigationBarIconBrightness: Brightness.dark,
-        ));
-
+        Chrome.restoreLast();
         break;
       case AppLifecycleState.paused:
         audioBloc.transitionLifecycleState(LifecyleState.pause);
