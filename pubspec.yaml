@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.1.0+5
+version: 0.1.0+6
 
 environment:
   sdk: ">=2.5.0 <3.0.0"

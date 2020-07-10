@@ -14,6 +14,7 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as psapi;
 
@@ -200,6 +201,11 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<void> deleteDownload(Episode episode) async {
+    // If this episode is currently downloading, cancel the download first.
+    if (episode.downloadPercentage < 100) {
+      await FlutterDownloader.cancel(taskId: episode.downloadTaskId);
+    }
+
     episode.downloadTaskId = null;
     episode.downloadPercentage = 0;
     episode.position = 0;
@@ -211,7 +217,11 @@ class MobilePodcastService extends PodcastService {
 
     var f = File.fromUri(Uri.file(filename));
 
-    return f.delete();
+    if (await f.exists()) {
+      return f.delete();
+    }
+
+    return null;
   }
 
   @override

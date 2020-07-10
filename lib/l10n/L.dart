@@ -12,8 +12,8 @@ class L {
   L(this.localeName);
 
   static Future<L> load(Locale locale) {
-    final String name = locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
-    final String localeName = Intl.canonicalizedLocale(name);
+    final name = locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
 
     return initializeMessages(localeName).then((_) {
       return L(localeName);
@@ -350,6 +350,33 @@ class L {
       'Mark all episodes as not-played',
       name: 'mark_episodes_not_played_label',
       desc: 'Mark all episodes not played menu item',
+      locale: localeName,
+    );
+  }
+
+  String get stop_download_confirmation {
+    return Intl.message(
+      'Are you sure you wish to stop this download and delete the episode?',
+      name: 'stop_download_confirmation',
+      desc: 'User is asked to confirm when they wish to stop the active download.',
+      locale: localeName,
+    );
+  }
+
+  String get stop_download_button_label {
+    return Intl.message(
+      'STOP',
+      name: 'stop_download_button_label',
+      desc: 'Stop label',
+      locale: localeName,
+    );
+  }
+
+  String get stop_download_title {
+    return Intl.message(
+      'Stop Download',
+      name: 'stop_download_title',
+      desc: 'Stop download label',
       locale: localeName,
     );
   }

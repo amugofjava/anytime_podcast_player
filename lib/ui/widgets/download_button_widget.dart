@@ -10,6 +10,7 @@ class DownloadButton extends StatelessWidget {
   final String title;
   final IconData icon;
   final int percent;
+  final VoidCallback onPressed;
 
   const DownloadButton({
     Key key,
@@ -17,6 +18,7 @@ class DownloadButton extends StatelessWidget {
     @required this.title,
     @required this.icon,
     @required this.percent,
+    @required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -25,26 +27,29 @@ class DownloadButton extends StatelessWidget {
 
     return Semantics(
       label: '$label $title',
-      child: CircularPercentIndicator(
-        radius: 38.0,
-        lineWidth: 2.0,
-        backgroundColor: Colors.orange,
-        progressColor: Colors.blue,
-        animation: true,
-        animateFromLastPercent: true,
-        percent: progress,
-        center: percent > 0
-            ? Text(
-                '$percent%',
-                style: TextStyle(
-                  fontSize: 12.0,
+      child: InkWell(
+        onTap: onPressed,
+        child: CircularPercentIndicator(
+          radius: 38.0,
+          lineWidth: 2.0,
+          backgroundColor: Colors.orange,
+          progressColor: Colors.blue,
+          animation: true,
+          animateFromLastPercent: true,
+          percent: progress,
+          center: percent > 0
+              ? Text(
+                  '$percent%',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                  ),
+                )
+              : Icon(
+                  icon,
+                  size: 28.0,
+                  color: Colors.orange,
                 ),
-              )
-            : Icon(
-                icon,
-                size: 28.0,
-                color: Colors.orange,
-              ),
+        ),
       ),
     );
   }

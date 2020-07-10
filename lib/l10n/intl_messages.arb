@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-17T09:02:38.520557",
+  "@@last_modified": "2020-07-10T10:59:59.050814",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -210,9 +210,27 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_episodes_not_played_label": "Mark all episodes as not played",
+  "mark_episodes_not_played_label": "Mark all episodes as not-played",
   "@mark_episodes_not_played_label": {
-    "description": "Mark all episodes not-played menu item",
+    "description": "Mark all episodes not played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_confirmation": "Are you sure you wish to stop this download and delete the episode?",
+  "@stop_download_confirmation": {
+    "description": "User is asked to confirm when they wish to stop the active download.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_button_label": "STOP",
+  "@stop_download_button_label": {
+    "description": "Stop label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_title": "Stop Download",
+  "@stop_download_title": {
+    "description": "Stop download label",
     "type": "text",
     "placeholders": {}
   }

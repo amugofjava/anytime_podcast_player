@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
@@ -12,6 +13,7 @@ import 'package:anytime/ui/widgets/download_button_widget.dart';
 import 'package:anytime/ui/widgets/play_pause_button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -150,6 +152,7 @@ class DownloadControl extends StatelessWidget {
                 return Opacity(
                   opacity: 0.2,
                   child: DownloadButton(
+                    onPressed: () {},
                     title: episode.title,
                     icon: Icons.save_alt,
                     percent: 0,
@@ -160,6 +163,7 @@ class DownloadControl extends StatelessWidget {
                 return Opacity(
                   opacity: 0.2,
                   child: DownloadButton(
+                    onPressed: () {},
                     title: episode.title,
                     icon: Icons.check,
                     percent: 0,
@@ -172,6 +176,7 @@ class DownloadControl extends StatelessWidget {
 
           if (episode.downloadState == DownloadState.downloaded) {
             return DownloadButton(
+              onPressed: () {},
               title: episode.title,
               icon: Icons.check,
               percent: 0,
@@ -179,6 +184,7 @@ class DownloadControl extends StatelessWidget {
             );
           } else if (episode.downloadState == DownloadState.queued) {
             return DownloadButton(
+              onPressed: () => _showCancelDialog(context),
               title: episode.title,
               icon: Icons.timer,
               percent: 0,
@@ -186,6 +192,7 @@ class DownloadControl extends StatelessWidget {
             );
           } else if (episode.downloadState == DownloadState.downloading) {
             return DownloadButton(
+              onPressed: () => _showCancelDialog(context),
               title: episode.title,
               icon: Icons.timer,
               percent: episode.downloadPercentage,
@@ -193,18 +200,49 @@ class DownloadControl extends StatelessWidget {
             );
           }
 
-          return InkWell(
-            onTap: () {
-              return _podcastBloc.downloadEpisode(episode);
-            },
-            child: DownloadButton(
-              title: episode.title,
-              icon: Icons.save_alt,
-              percent: 0,
-              label: L.of(context).download_episode_button_label,
-            ),
+          return DownloadButton(
+            onPressed: () => _podcastBloc.downloadEpisode(episode),
+            title: episode.title,
+            icon: Icons.save_alt,
+            percent: 0,
+            label: L.of(context).download_episode_button_label,
           );
         });
+  }
+
+  Future<void> _showCancelDialog(BuildContext context) {
+    final _episodeBloc = Provider.of<EpisodeBloc>(context, listen: false);
+
+    return showPlatformDialog<void>(
+      context: context,
+      builder: (_) => BasicDialogAlert(
+        title: Text(
+          L.of(context).stop_download_title,
+        ),
+        content: Text(L.of(context).stop_download_confirmation),
+        actions: <Widget>[
+          BasicDialogAction(
+            title: Text(
+              L.of(context).cancel_button_label,
+              style: TextStyle(color: Colors.orange),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          BasicDialogAction(
+            title: Text(
+              L.of(context).stop_download_button_label,
+              style: TextStyle(color: Colors.orange),
+            ),
+            onPressed: () {
+              _episodeBloc.deleteDownload(episode);
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
 

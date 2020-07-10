@@ -209,5 +209,23 @@
     "description": "Mark all episodes not-played menu item",
     "type": "text",
     "placeholders": {}
+  },
+  "stop_download_confirmation": "Möchten Sie diesen Download wirklich beenden und die Episode löschen?",
+  "@stop_download_confirmation": {
+    "description": "User is asked to confirm when they wish to stop the active download.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_button_label": "HALT",
+  "@stop_download_button_label": {
+    "description": "Stop label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_title": "Stop Download",
+  "@stop_download_title": {
+    "description": "Stop download label",
+    "type": "text",
+    "placeholders": {}
   }
 }
