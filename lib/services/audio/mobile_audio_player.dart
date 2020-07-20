@@ -213,6 +213,16 @@ class MobileAudioPlayer {
     }
   }
 
+  Future<void> onClick() async {
+    if (_uri.isNotEmpty) {
+      if (_isPlaying) {
+        await pause();
+      } else {
+        await play();
+      }
+    }
+  }
+
   Future<void> _setBufferingState() async {
     log.fine('_setBufferingState()');
 

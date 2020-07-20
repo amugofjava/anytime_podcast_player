@@ -1,22 +1,23 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.1.0+6
+version: 0.1.0+7
 
 environment:
   sdk: ">=2.5.0 <3.0.0"
 
 dependencies:
 #  podcast_search: ^0.3.4
+  # Awaiting update to dart_rss dependency, so we're having to use
+  # a Git commit for now.
   podcast_search:
     git:
       url: https://github.com/amugofjava/podcast_search.git
       ref: 9cdcd9d3ee9fc25406823109810e8a5ad707ebaa
   audioplayers: ^0.15.1
   audio_service: ^0.9.0
-  cached_network_image: ^2.0.0
+  cached_network_image: ^2.2.0+1
   connectivity: ^0.4.8+6
-  executor: ^2.2.1
   flutter_dialogs: ^1.0.3
   flutter_downloader: ^1.4.4
   flutter_launcher_icons: ^0.7.4
@@ -29,11 +30,11 @@ dependencies:
   mp3_info: ^0.1.3
   package_info: ^0.4.0+18
   path_provider: ^1.6.10
-  percent_indicator: ^2.1.3
+  percent_indicator: ^2.1.5
   permission_handler: ^5.0.0+hotfix.6
   provider: ^4.1.2
   rxdart: ^0.24.1
-  sembast: ^2.4.4+1
+  sembast: ^2.4.7+4
   url_launcher: ^5.4.7
 
   flutter:

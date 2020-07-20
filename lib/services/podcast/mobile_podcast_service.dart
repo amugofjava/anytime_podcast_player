@@ -157,6 +157,7 @@ class MobilePodcastService extends PodcastService {
               contentUrl: episode.contentUrl,
               link: episode.link,
               imageUrl: pc.imageUrl,
+              thumbImageUrl: pc.thumbImageUrl,
               duration: episode.duration?.inSeconds ?? 0,
               publicationDate: episode.publicationDate,
             ));

@@ -24,6 +24,7 @@ class Episode {
   String description;
   String link;
   String imageUrl;
+  String thumbImageUrl;
   DateTime publicationDate;
   String contentUrl;
   String author;
@@ -45,6 +46,7 @@ class Episode {
     this.description,
     this.link,
     this.imageUrl,
+    this.thumbImageUrl,
     this.publicationDate,
     this.contentUrl,
     this.author,
@@ -66,6 +68,7 @@ class Episode {
       'description': description,
       'link': link,
       'imageUrl': imageUrl,
+      'thumbImageUrl': thumbImageUrl,
       'publicationDate': publicationDate?.millisecondsSinceEpoch.toString(),
       'contentUrl': contentUrl,
       'author': author,
@@ -89,6 +92,7 @@ class Episode {
       description: episode['description'] as String,
       link: episode['link'] as String,
       imageUrl: episode['imageUrl'] as String,
+      thumbImageUrl: episode['thumbImageUrl'] as String,
       publicationDate: episode['publicationDate'] == 'null'
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),

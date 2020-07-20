@@ -210,7 +210,14 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     }
 
                     if (state is BlocPopulatedState<Podcast>) {
-                      return SliverToBoxAdapter(child: buildPage(context, state.results));
+                      return SliverToBoxAdapter(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          PodcastTitle(state.results),
+                          Divider(),
+                        ],
+                      ));
                     }
 
                     return SliverToBoxAdapter(
@@ -235,16 +242,6 @@ class _PodcastDetailsState extends State<PodcastDetails> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildPage(BuildContext context, Podcast podcast) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        PodcastTitle(podcast),
-        Divider(),
-      ],
     );
   }
 }

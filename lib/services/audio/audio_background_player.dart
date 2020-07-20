@@ -61,6 +61,11 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
+  void onClick(MediaButton button) {
+    _anytimeAudioPlayer.onClick();
+  }
+
+  @override
   Future<dynamic> onCustomAction(String name, dynamic arguments) async {
     log.fine('onCustomAction()');
     switch (name) {
