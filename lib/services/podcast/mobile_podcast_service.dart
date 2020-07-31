@@ -12,6 +12,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -154,6 +155,8 @@ class MobilePodcastService extends PodcastService {
               title: title,
               description: description,
               author: author,
+              season: episode.season ?? 0,
+              episode: episode.episode ?? 0,
               contentUrl: episode.contentUrl,
               link: episode.link,
               imageUrl: pc.imageUrl,
@@ -202,6 +205,8 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<void> deleteDownload(Episode episode) async {
+    var settings = await MobileSettingsService.instance();
+
     // If this episode is currently downloading, cancel the download first.
     if (episode.downloadPercentage < 100) {
       await FlutterDownloader.cancel(taskId: episode.downloadTaskId);
@@ -212,9 +217,14 @@ class MobilePodcastService extends PodcastService {
     episode.position = 0;
     episode.downloadState = DownloadState.none;
 
+    if (settings.markDeletedEpisodesAsPlayed) {
+      episode.played = true;
+    }
+
     await repository.saveEpisode(episode);
 
-    final filename = join(await getStorageDirectory(), safePath(episode.podcast), episode.filename);
+    final filepath = episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
+    final filename = join(filepath, safePath(episode.podcast), episode.filename);
 
     var f = File.fromUri(Uri.file(filename));
 

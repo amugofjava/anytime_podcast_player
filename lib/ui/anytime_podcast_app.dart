@@ -18,11 +18,13 @@ import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/state/pager_bloc.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
 import 'package:anytime/ui/search/search.dart';
+import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/mini_player_widget.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
@@ -85,7 +87,7 @@ class AnytimePodcastApp extends StatelessWidget {
         Provider<AudioBloc>(
           create: (_) => AudioBloc(audioPlayerService: audioPlayerService),
           dispose: (_, value) => value.dispose(),
-        )
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -192,6 +194,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       itemBuilder: (BuildContext context) {
                         return <PopupMenuEntry<String>>[
                           PopupMenuItem<String>(
+                            value: 'settings',
+                            child: Text('Settings'), //TODO: FIX
+                          ),
+                          PopupMenuItem<String>(
                             value: 'about',
                             child: Text(L.of(context).about_label),
                           ),
@@ -272,6 +278,17 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     _launchEmail();
                   }),
             ]);
+        break;
+      case 'settings':
+        var s = await MobileSettingsService.instance();
+
+        await Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+              builder: (context) => Settings(
+                    settingsService: s,
+                  )),
+        );
         break;
     }
   }

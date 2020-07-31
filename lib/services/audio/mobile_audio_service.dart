@@ -60,8 +60,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
       // If we have a downloaded copy of the episode, set the URI to the file path.
       if (savedEpisode != null && episode.downloadState == DownloadState.downloaded) {
         if (await hasStoragePermission()) {
-          final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
-          final downloadFile = join(downloadPath, episode.filename);
+          final filepath = episode.filepath == null || episode.filepath.isEmpty
+              ? join(await getStorageDirectory(), safePath(episode.podcast))
+              : episode.filepath;
+          final downloadFile = join(filepath, episode.filename);
 
           uri = downloadFile;
 

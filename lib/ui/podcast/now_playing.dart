@@ -19,6 +19,9 @@ import 'package:html/parser.dart' show parseFragment;
 import 'package:html/parser.dart';
 import 'package:provider/provider.dart';
 
+/// This is the full-screen player Widget which is invoked
+/// by touching the mini player. This displays the podcast
+/// image, episode notes and standard playback controls.
 class NowPlaying extends StatefulWidget {
   @override
   _NowPlayingState createState() => _NowPlayingState();

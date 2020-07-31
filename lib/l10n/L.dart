@@ -102,6 +102,15 @@ class L {
     );
   }
 
+  String get ok_button_label {
+    return Intl.message(
+      'OK',
+      name: 'ok_button_label',
+      desc: 'OK button label',
+      locale: localeName,
+    );
+  }
+
   String get subscribe_label {
     return Intl.message(
       'Subscribe',
@@ -377,6 +386,51 @@ class L {
       'Stop Download',
       name: 'stop_download_title',
       desc: 'Stop download label',
+      locale: localeName,
+    );
+  }
+
+  String get settings_mark_deleted_played_label {
+    return Intl.message(
+      'Mark deleted episodes as played',
+      name: 'settings_mark_deleted_played_label',
+      desc: 'Mark deleted episodes as played setting',
+      locale: localeName,
+    );
+  }
+
+  String get settings_download_sd_card_label {
+    return Intl.message(
+      'Download episodes to SD card',
+      name: 'settings_download_sd_card_label',
+      desc: 'Download episodes to SD card setting',
+      locale: localeName,
+    );
+  }
+
+  String get settings_download_switch_card {
+    return Intl.message(
+      'New downloads will be saved to the SD card. Existing downloads will remain on internal storage.',
+      name: 'settings_download_switch_card',
+      desc: 'Displayed when user switches from internal storage to SD card',
+      locale: localeName,
+    );
+  }
+
+  String get settings_download_switch_internal {
+    return Intl.message(
+      'New downloads will be saved to internal storage. Existing downloads will remain on the SD card.',
+      name: 'settings_download_switch_internal',
+      desc: 'Displayed when user switches from internal SD card to internal storage',
+      locale: localeName,
+    );
+  }
+
+  String get settings_download_switch_label {
+    return Intl.message(
+      'Change storage location',
+      name: 'settings_download_switch_label',
+      desc: 'Dialog label for storage switch',
       locale: localeName,
     );
   }

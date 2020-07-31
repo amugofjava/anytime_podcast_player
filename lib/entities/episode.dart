@@ -17,6 +17,7 @@ class Episode {
   String pguid;
   int id;
   String downloadTaskId;
+  String filepath;
   String filename;
   DownloadState downloadState = DownloadState.none;
   String podcast;
@@ -28,6 +29,8 @@ class Episode {
   DateTime publicationDate;
   String contentUrl;
   String author;
+  int season;
+  int episode;
   int duration;
   int position;
   int downloadPercentage;
@@ -40,6 +43,7 @@ class Episode {
     @required this.podcast,
     this.id,
     this.downloadTaskId,
+    this.filepath,
     this.filename,
     this.downloadState = DownloadState.none,
     this.title,
@@ -50,6 +54,8 @@ class Episode {
     this.publicationDate,
     this.contentUrl,
     this.author,
+    this.season = 0,
+    this.episode = 0,
     this.duration = 0,
     this.position = 0,
     this.downloadPercentage = 0,
@@ -61,6 +67,7 @@ class Episode {
       'guid': guid,
       'pguid': pguid,
       'downloadTaskId': downloadTaskId,
+      'filepath': filepath,
       'filename': filename,
       'downloadState': downloadState.index,
       'podcast': podcast,
@@ -72,6 +79,8 @@ class Episode {
       'publicationDate': publicationDate?.millisecondsSinceEpoch.toString(),
       'contentUrl': contentUrl,
       'author': author,
+      'season': season.toString(),
+      'episode': episode.toString(),
       'duration': duration.toString(),
       'position': position.toString(),
       'downloadPercentage': downloadPercentage.toString(),
@@ -85,6 +94,7 @@ class Episode {
       guid: episode['guid'] as String,
       pguid: episode['pguid'] as String,
       downloadTaskId: episode['downloadTaskId'] as String,
+      filepath: episode['filepath'] as String,
       filename: episode['filename'] as String,
       downloadState: _determineState(episode['downloadState'] as int),
       podcast: episode['podcast'] as String,
@@ -98,6 +108,8 @@ class Episode {
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
       contentUrl: episode['contentUrl'] as String,
       author: episode['author'] as String,
+      season: int.parse(episode['season'] as String ?? '0'),
+      episode: int.parse(episode['episode'] as String ?? '0'),
       duration: int.parse(episode['duration'] as String ?? '0'),
       position: int.parse(episode['position'] as String ?? '0'),
       downloadPercentage: int.parse(episode['downloadPercentage'] as String ?? '0'),

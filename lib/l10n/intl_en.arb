@@ -48,6 +48,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "ok_button_label": "OK",
+  "@ok_button_label": {
+    "description": "OK button label",
+    "type": "text",
+    "placeholders": {}
+  },
   "subscribe_label": "Subscribe",
   "@subscribe_label": {
     "description": "Subscribe label",
@@ -225,6 +231,36 @@
   "stop_download_title": "Stop Download",
   "@stop_download_title": {
     "description": "Stop download label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_mark_deleted_played_label": "Mark deleted episodes as played",
+  "@settings_mark_deleted_played_label": {
+    "description": "Mark deleted episodes as played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_sd_card_label": "Download episodes to SD card",
+  "@settings_download_sd_card_label": {
+    "description": "Download episodes to SD card setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_card": "New downloads will be saved to the SD card. Existing downloads will remain on internal storage.",
+  "@settings_download_switch_card": {
+    "description": "Displayed when user switches from internal storage to SD card",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_internal": "New downloads will be saved to internal storage. Existing downloads will remain on the SD card.",
+  "@settings_download_switch_internal": {
+    "description": "Displayed when user switches from internal SD card to internal storage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_label": "Change storage location",
+  "@settings_download_switch_label": {
+    "description": "Dialog label for storage switch",
     "type": "text",
     "placeholders": {}
   }

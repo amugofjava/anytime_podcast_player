@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-07-10T10:59:59.050814",
+  "@@last_modified": "2020-07-31T12:53:14.532500",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -45,6 +45,12 @@
   "cancel_button_label": "CANCEL",
   "@cancel_button_label": {
     "description": "Cancel button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok_button_label": "OK",
+  "@ok_button_label": {
+    "description": "OK button label",
     "type": "text",
     "placeholders": {}
   },
@@ -231,6 +237,36 @@
   "stop_download_title": "Stop Download",
   "@stop_download_title": {
     "description": "Stop download label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_mark_deleted_played_label": "Mark deleted episodes as played",
+  "@settings_mark_deleted_played_label": {
+    "description": "Mark deleted episodes as played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_sd_card_label": "Download episodes to SD card",
+  "@settings_download_sd_card_label": {
+    "description": "Download episodes to SD card setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_card": "New downloads will be saved to the SD card. Existing downloads will remain on internal storage.",
+  "@settings_download_switch_card": {
+    "description": "Displayed when user switches from internal storage to SD card",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_internal": "New downloads will be saved to internal storage. Existing downloads will remain on the SD card.",
+  "@settings_download_switch_internal": {
+    "description": "Displayed when user switches from internal SD card to internal storage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_label": "Change storage location",
+  "@settings_download_switch_label": {
+    "description": "Dialog label for storage switch",
     "type": "text",
     "placeholders": {}
   }

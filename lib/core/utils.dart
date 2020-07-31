@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
+import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,30 +17,52 @@ Future<bool> hasStoragePermission() async {
 }
 
 Future<String> getStorageDirectory() async {
+  SettingsService settings = await MobileSettingsService.instance();
+
+  if (Platform.isIOS || !settings.storeDownloadsSDCard) {
+    var d = await getApplicationSupportDirectory();
+
+    return join(d.path, 'AnyTime');
+  } else {
+    return join(await _getSDCard(), 'AnyTime');
+  }
+}
+
+Future<bool> hasExternalStorage() async {
+  try {
+    var result = await _getSDCard();
+
+    return result.isNotEmpty;
+  } catch (e) {
+    return Future.value(false);
+  }
+}
+
+Future<String> _getSDCard() async {
   if (await hasStoragePermission()) {
     final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
     String path;
 
-    // If the directory contains emulated this may well be mapped to
-    // internal storage. We really want external storage. This is VERY
-    // simplistic but will be OK for the first alpha. Later on we will
-    // prompt the user to select the storage directory.
-    if (appDocumentDir.length == 1) {
-      path = appDocumentDir[0].path;
-    } else {
+    // If the directory contains the word 'emulated' we are
+    // probably looking at a mapped user partition rather than
+    // an actual SD card - so skip those and find the first
+    // non-emulated directory.
+    if (appDocumentDir.isNotEmpty) {
       // See if we can find the last card without emulated
       for (var d in appDocumentDir) {
+        print('Found path ${d.absolute.path}');
         if (!d.path.contains('emulated')) {
           path = d.absolute.path;
         }
-
-        // If we didn't find one, just set it to the last card we found;
-        path = path ?? appDocumentDir[appDocumentDir.length - 1].path;
       }
     }
 
-    return join(path, 'AnyTime');
+    if (path == null) {
+      throw ('No SD card found');
+    }
+
+    return path;
   }
 
   return '';

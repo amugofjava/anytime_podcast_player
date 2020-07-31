@@ -49,6 +49,9 @@ class MobileDownloadService extends DownloadService {
 
   @override
   Future<bool> downloadEpisode(Episode episode) async {
+    final season = episode.season > 0 ? episode.season.toString() : '';
+    final epno = episode.episode > 0 ? episode.episode.toString() : '';
+
     if (await hasStoragePermission()) {
       final e = await repository.findEpisodeByGuid(episode.guid);
 
@@ -80,6 +83,11 @@ class MobileDownloadService extends DownloadService {
           }
         }
 
+        // Some podcasts use the same file name for each episode, but also set the
+        // iTunes season and episode number values. If these are set, use them as
+        // part of the file name.
+        filename = '$season$epno$filename';
+
         log.fine('Download episode (${episode?.title}) $filename to $downloadPath');
 
         final taskId = await FlutterDownloader.enqueue(
@@ -91,6 +99,7 @@ class MobileDownloadService extends DownloadService {
         );
 
         // Update the episode with download data
+        episode.filepath = downloadPath;
         episode.filename = filename;
         episode.downloadTaskId = taskId;
         episode.downloadState = DownloadState.downloading;

@@ -148,6 +148,41 @@ void main() {
       expect(true, podcastByGuid == podcast3);
       expect(true, listEquals(podcast.episodes, podcast3.episodes));
     });
+
+    test('Retrieve an existing Podcast with episodes and update episodes', () async {
+      var podcast4 = Podcast(
+          title: 'Podcast 3', description: '3rd podcast', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
+
+      podcast4.episodes = <Episode>[
+        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast4.guid, podcast: podcast4.title),
+        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast4.guid, podcast: podcast4.title),
+        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast4.guid, podcast: podcast4.title),
+      ];
+
+      await persistenceService.savePodcast(podcast4);
+
+      var podcast = await persistenceService.findPodcastById(podcast4.id);
+
+      expect(true, podcast == podcast4);
+      expect(true, listEquals(podcast.episodes, podcast4.episodes));
+
+      // Update episodes and save batch
+      expect(true, podcast.episodes.length == 3);
+
+      // Mark all as played
+      podcast.episodes[0].played = true;
+      podcast.episodes[1].played = true;
+      podcast.episodes[2].played = true;
+
+      await persistenceService.savePodcast(podcast);
+
+      // Re-fetch and ensure all episodes played.
+      podcast = await persistenceService.findPodcastById(podcast4.id);
+
+      expect(true, podcast.episodes[0].played);
+      expect(true, podcast.episodes[1].played);
+      expect(true, podcast.episodes[2].played);
+    });
   });
 
   group('Multiple Podcast subscription handling', () {

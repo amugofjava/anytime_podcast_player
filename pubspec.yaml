@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.1.0+7
+version: 0.1.1+8
 
 environment:
   sdk: ">=2.5.0 <3.0.0"
@@ -13,7 +13,7 @@ dependencies:
   podcast_search:
     git:
       url: https://github.com/amugofjava/podcast_search.git
-      ref: 9cdcd9d3ee9fc25406823109810e8a5ad707ebaa
+      ref: 4390c0a70499477dc0b03d3a6d6529b515bfb816
   audioplayers: ^0.15.1
   audio_service: ^0.9.0
   cached_network_image: ^2.2.0+1
@@ -35,6 +35,7 @@ dependencies:
   provider: ^4.1.2
   rxdart: ^0.24.1
   sembast: ^2.4.7+4
+  shared_preferences: ^0.5.8
   url_launcher: ^5.4.7
 
   flutter:
