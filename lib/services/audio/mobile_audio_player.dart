@@ -165,8 +165,6 @@ class MobileAudioPlayer {
   Future<void> complete() async {
     log.fine('complete()');
 
-    await _audioPlayer.stop();
-
     _position = -1;
 
     await _setStoppedState();

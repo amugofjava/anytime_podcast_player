@@ -59,55 +59,57 @@ class MobileDownloadService extends DownloadService {
         episode = e;
       }
 
-      final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
-      var uri = Uri.parse(episode.contentUrl);
+      if (await hasStoragePermission()) {
+        final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
+        var uri = Uri.parse(episode.contentUrl);
 
-      // Ensure the download directory exists
-      Directory(downloadPath).createSync(recursive: true);
+        // Ensure the download directory exists
+        Directory(downloadPath).createSync(recursive: true);
 
-      // Filename should be last segment of URI.
-      var filename = safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
+        // Filename should be last segment of URI.
+        var filename = safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
 
-      filename ??= safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
+        filename ??= safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
 
-      if (filename == null) {
-        //TODO: Handle unsupported format.
-      } else {
-        // The last segment could also be a full URL. Take a second pass.
-        if (filename.contains('/')) {
-          try {
-            uri = Uri.parse(filename);
-            filename = uri.pathSegments.last;
-          } on FormatException {
-            // It wasn't a URL...
+        if (filename == null) {
+          //TODO: Handle unsupported format.
+        } else {
+          // The last segment could also be a full URL. Take a second pass.
+          if (filename.contains('/')) {
+            try {
+              uri = Uri.parse(filename);
+              filename = uri.pathSegments.last;
+            } on FormatException {
+              // It wasn't a URL...
+            }
           }
+
+          // Some podcasts use the same file name for each episode, but also set the
+          // iTunes season and episode number values. If these are set, use them as
+          // part of the file name.
+          filename = '$season$epno$filename';
+
+          log.fine('Download episode (${episode?.title}) $filename to $downloadPath');
+
+          final taskId = await FlutterDownloader.enqueue(
+            url: episode.contentUrl,
+            savedDir: downloadPath,
+            fileName: filename,
+            showNotification: true,
+            openFileFromNotification: false,
+          );
+
+          // Update the episode with download data
+          episode.filepath = downloadPath;
+          episode.filename = filename;
+          episode.downloadTaskId = taskId;
+          episode.downloadState = DownloadState.downloading;
+          episode.downloadPercentage = 0;
+
+          await repository.saveEpisode(episode);
+
+          return Future.value(true);
         }
-
-        // Some podcasts use the same file name for each episode, but also set the
-        // iTunes season and episode number values. If these are set, use them as
-        // part of the file name.
-        filename = '$season$epno$filename';
-
-        log.fine('Download episode (${episode?.title}) $filename to $downloadPath');
-
-        final taskId = await FlutterDownloader.enqueue(
-          url: episode.contentUrl,
-          savedDir: downloadPath,
-          fileName: filename,
-          showNotification: true,
-          openFileFromNotification: false,
-        );
-
-        // Update the episode with download data
-        episode.filepath = downloadPath;
-        episode.filename = filename;
-        episode.downloadTaskId = taskId;
-        episode.downloadState = DownloadState.downloading;
-        episode.downloadPercentage = 0;
-
-        await repository.saveEpisode(episode);
-
-        return Future.value(true);
       }
     }
 
@@ -161,16 +163,18 @@ class MobileDownloadService extends DownloadService {
       episode.downloadState = progress.status;
 
       if (progress.percentage == 100) {
-        final filename = join(await getStorageDirectory(), safePath(episode.podcast), episode.filename);
+        if (await hasStoragePermission()) {
+          final filename = join(await getStorageDirectory(), safePath(episode.podcast), episode.filename);
 
-        // If we do not have a duration for this file - let's calculate it
-        if (episode.duration == 0) {
-          var mp3Info = MP3Processor.fromFile(File(filename));
+          // If we do not have a duration for this file - let's calculate it
+          if (episode.duration == 0) {
+            var mp3Info = MP3Processor.fromFile(File(filename));
 
-          episode.duration = mp3Info.duration.inSeconds;
+            episode.duration = mp3Info.duration.inSeconds;
+          }
+
+          await repository.saveEpisode(episode);
         }
-
-        await repository.saveEpisode(episode);
       }
     }
   }

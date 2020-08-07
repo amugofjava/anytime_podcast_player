@@ -99,7 +99,7 @@ class _SettingsState extends State<Settings> {
     showPlatformDialog<void>(
       context: context,
       builder: (_) => BasicDialogAlert(
-        title: Text("Change storage location"),
+        title: Text(L.of(context).settings_download_switch_label),
         content: Text(
           enableExternalStorage ? L.of(context).settings_download_switch_card : L.of(context).settings_download_switch_internal,
         ),

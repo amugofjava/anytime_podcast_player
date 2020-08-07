@@ -201,6 +201,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
     log.fine('_onStop() ${playbackState.position}');
 
     if (playbackState.position.inMilliseconds == -1) {
+      log.fine('_onStop(): position is -1 indicating we have reached end of episode');
+
       _episode.position = 0;
       _episode.played = true;
 

@@ -11,9 +11,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<bool> hasStoragePermission() async {
-  final permissionStatus = await Permission.storage.request();
+  SettingsService settings = await MobileSettingsService.instance();
 
-  return Future.value(permissionStatus.isGranted);
+  if (Platform.isIOS || !settings.storeDownloadsSDCard) {
+    return Future.value(true);
+  } else {
+    final permissionStatus = await Permission.storage.request();
+
+    return Future.value(permissionStatus.isGranted);
+  }
 }
 
 Future<String> getStorageDirectory() async {
@@ -39,33 +45,33 @@ Future<bool> hasExternalStorage() async {
 }
 
 Future<String> _getSDCard() async {
-  if (await hasStoragePermission()) {
-    final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
+//  if (await hasStoragePermission()) {
+  final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
-    String path;
+  String path;
 
-    // If the directory contains the word 'emulated' we are
-    // probably looking at a mapped user partition rather than
-    // an actual SD card - so skip those and find the first
-    // non-emulated directory.
-    if (appDocumentDir.isNotEmpty) {
-      // See if we can find the last card without emulated
-      for (var d in appDocumentDir) {
-        print('Found path ${d.absolute.path}');
-        if (!d.path.contains('emulated')) {
-          path = d.absolute.path;
-        }
+  // If the directory contains the word 'emulated' we are
+  // probably looking at a mapped user partition rather than
+  // an actual SD card - so skip those and find the first
+  // non-emulated directory.
+  if (appDocumentDir.isNotEmpty) {
+    // See if we can find the last card without emulated
+    for (var d in appDocumentDir) {
+      print('Found path ${d.absolute.path}');
+      if (!d.path.contains('emulated')) {
+        path = d.absolute.path;
       }
     }
-
-    if (path == null) {
-      throw ('No SD card found');
-    }
-
-    return path;
   }
 
-  return '';
+  if (path == null) {
+    throw ('No SD card found');
+  }
+
+  return path;
+//  }
+//
+//  return '';
 }
 
 /// Strips characters that are invalid for file and directory names.

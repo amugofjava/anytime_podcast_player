@@ -32,7 +32,7 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
-  void onStop() async {
+  Future<void> onStop() async {
     log.fine('onStop()');
     await _anytimeAudioPlayer.stop();
   }

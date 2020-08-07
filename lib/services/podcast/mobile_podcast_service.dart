@@ -223,13 +223,15 @@ class MobilePodcastService extends PodcastService {
 
     await repository.saveEpisode(episode);
 
-    final filepath = episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
-    final filename = join(filepath, safePath(episode.podcast), episode.filename);
+    if (await hasStoragePermission()) {
+      final filepath = episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
+      final filename = join(filepath, safePath(episode.podcast), episode.filename);
 
-    var f = File.fromUri(Uri.file(filename));
+      var f = File.fromUri(Uri.file(filename));
 
-    if (await f.exists()) {
-      return f.delete();
+      if (await f.exists()) {
+        return f.delete();
+      }
     }
 
     return null;
@@ -250,12 +252,14 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<void> unsubscribe(Podcast podcast) async {
-    final filename = join(await getStorageDirectory(), safePath(podcast.title));
+    if (await hasStoragePermission()) {
+      final filename = join(await getStorageDirectory(), safePath(podcast.title));
 
-    final d = Directory.fromUri(Uri.file(filename));
+      final d = Directory.fromUri(Uri.file(filename));
 
-    if (await d.exists()) {
-      await d.delete(recursive: true);
+      if (await d.exists()) {
+        await d.delete(recursive: true);
+      }
     }
 
     return repository.deletePodcast(podcast);
