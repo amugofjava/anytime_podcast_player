@@ -9,6 +9,7 @@ import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
+import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -277,7 +278,7 @@ class PodcastTitle extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               SubscriptionButton(podcast),
-              EpisodeFilterButton(podcast),
+              PodcastContextMenu(podcast),
             ],
           )
         ],
@@ -357,51 +358,5 @@ class SubscriptionButton extends StatelessWidget {
           }
           return Container();
         });
-  }
-}
-
-class EpisodeFilterButton extends StatelessWidget {
-  final Podcast podcast;
-
-  EpisodeFilterButton(this.podcast);
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = Provider.of<PodcastBloc>(context);
-
-    return StreamBuilder<BlocState<Podcast>>(
-        stream: bloc.details,
-        builder: (context, snapshot) {
-          return PopupMenuButton<String>(
-            onSelected: (event) {
-              togglePlayed(value: event, bloc: bloc);
-            },
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: 'ma',
-                  enabled: podcast.subscribed,
-                  child: Text(L.of(context).mark_episodes_played_label),
-                ),
-                PopupMenuItem<String>(
-                  value: 'ua',
-                  enabled: podcast.subscribed,
-                  child: Text(L.of(context).mark_episodes_not_played_label),
-                ),
-              ];
-            },
-          );
-        });
-  }
-
-  void togglePlayed({
-    @required String value,
-    @required PodcastBloc bloc,
-  }) {
-    if (value == 'ma') {
-      bloc.podcastEvent(PodcastEvent.markAllPlayed);
-    } else if (value == 'ua') {
-      bloc.podcastEvent(PodcastEvent.clearAllPlayed);
-    }
   }
 }

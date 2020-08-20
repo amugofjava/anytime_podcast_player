@@ -1,13 +1,13 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.1.1+10
+version: 0.1.2+10
 
 environment:
   sdk: ">=2.5.0 <3.0.0"
 
 dependencies:
-  podcast_search: ^0.3.5
+  podcast_search: ^0.3.6
   audioplayers: ^0.15.1
   audio_service: ^0.10.0
   cached_network_image: ^2.2.0+1

@@ -263,5 +263,11 @@
     "description": "Dialog label for storage switch",
     "type": "text",
     "placeholders": {}
+  },
+  "cancel_option_label": "Cancel",
+  "@cancel_option_label": {
+    "description": "Cancel option label",
+    "type": "text",
+    "placeholders": {}
   }
 }

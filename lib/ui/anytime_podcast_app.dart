@@ -28,10 +28,12 @@ import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/mini_player_widget.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logging/logging.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -118,6 +120,7 @@ class AnytimeHomePage extends StatefulWidget {
 }
 
 class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingObserver {
+  final log = Logger('_AnytimeHomePageState');
   Widget library;
 
   @override
@@ -125,6 +128,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     super.initState();
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    Chrome.transparentLight();
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -145,11 +150,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecyleState.resume);
-
-        // We need to update the chrome on resume as otherwise if
-        // another application (or the launcher) changes them, when
-        // we switch back it will stay as the other app put them.
-        Chrome.restoreLast();
         break;
       case AppLifecycleState.paused:
         audioBloc.transitionLifecycleState(LifecyleState.pause);

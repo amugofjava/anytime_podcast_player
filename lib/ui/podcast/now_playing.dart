@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -37,6 +38,8 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
+    Chrome.transparentLight();
+
     // If the episode finishes we can close.
     playingStateSubscription = audioBloc.playingState.listen((playingState) async {
       if (playingState == AudioState.stopped) {
@@ -50,18 +53,6 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     playingStateSubscription.cancel();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.resumed:
-        break;
-      case AppLifecycleState.paused:
-        break;
-      default:
-        break;
-    }
   }
 
   @override
@@ -87,7 +78,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     left: 0.0,
                     right: 0.0,
                     child: AppBar(
-                      brightness: Brightness.light,
+                      brightness: Brightness.dark,
                       backgroundColor: Colors.transparent,
                       elevation: 0.0,
                       leading: IconButton(

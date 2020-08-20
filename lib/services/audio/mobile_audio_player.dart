@@ -151,12 +151,16 @@ class MobileAudioPlayer {
   Future<void> pause() async {
     log.fine('pause()');
 
+    _position = _latestPosition();
+
     await _audioPlayer.pause();
     await _setPausedState();
   }
 
   Future<void> stop() async {
     log.fine('stop()');
+
+    _position = _latestPosition();
 
     await _audioPlayer.stop();
     await _setStoppedState();
@@ -173,6 +177,8 @@ class MobileAudioPlayer {
   Future<void> fastforward() async {
     log.fine('fastforward()');
 
+    _position = _latestPosition();
+
     await _audioPlayer.seek(Duration(milliseconds: _position + 30000));
 
     if (_isPlaying) {
@@ -186,6 +192,12 @@ class MobileAudioPlayer {
 
   Future<void> rewind() async {
     log.fine('rewind()');
+
+    _position = _latestPosition();
+
+    log.fine('Positions:');
+    log.fine(' - Stored position is $_position');
+    log.fine(' - Player position is ${_audioPlayer.position.inMilliseconds}');
 
     if (_position > 0) {
       _position -= 30000;
@@ -285,5 +297,13 @@ class MobileAudioPlayer {
 
     await AudioServiceBackground.setState(
         controls: _controls, processingState: _playbackState, position: Duration(milliseconds: _position), playing: _isPlaying);
+  }
+
+  int _latestPosition() {
+    log.fine('Fetching latest position:');
+    log.fine(' - Stored position is $_position');
+    log.fine(' - Player position is ${_audioPlayer.position?.inMilliseconds}');
+
+    return _audioPlayer.position == null ? _position : _audioPlayer.position.inMilliseconds;
   }
 }

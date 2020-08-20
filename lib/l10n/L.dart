@@ -434,6 +434,15 @@ class L {
       locale: localeName,
     );
   }
+
+  String get cancel_option_label {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel_option_label',
+      desc: 'Cancel option label',
+      locale: localeName,
+    );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

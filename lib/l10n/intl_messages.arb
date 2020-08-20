@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-07-31T12:53:14.532500",
+  "@@last_modified": "2020-08-16T17:01:41.258349",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -267,6 +267,12 @@
   "settings_download_switch_label": "Change storage location",
   "@settings_download_switch_label": {
     "description": "Dialog label for storage switch",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_option_label": "Cancel",
+  "@cancel_option_label": {
+    "description": "Cancel option label",
     "type": "text",
     "placeholders": {}
   }

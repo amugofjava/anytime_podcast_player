@@ -32,8 +32,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Ticks whilst playing. Updates our current position within an episode.
   final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
 
-  /// Stream for the current position of the playing track
-  final PublishSubject<PositionState> _playPosition = PublishSubject<PositionState>();
+  /// Stream for the current position of the playing track.
+  final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
   MobileAudioPlayerService({@required this.repository}) {
     _handleAudioServiceTransitions();

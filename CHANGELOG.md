@@ -1,3 +1,7 @@
+## 0.1.2+10
+
+- Improve accuracy of rewind and fast-forward.
+
 ## 0.1.1+8
 
 - Breaking change: New settings page. User can switch between using internal storage or SD card. If you have episodes already downloaded to an SD Card, you must go in to setting and switch on SD Card storage.
