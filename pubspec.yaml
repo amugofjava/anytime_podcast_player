@@ -1,19 +1,18 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.1.2+10
+version: 0.1.2+11
 
 environment:
   sdk: ">=2.5.0 <3.0.0"
 
 dependencies:
   podcast_search: ^0.3.6
-  audioplayers: ^0.15.1
-  audio_service: ^0.10.0
-  cached_network_image: ^2.2.0+1
+  audio_service: ^0.13.0
+  cached_network_image: ^2.3.0
   connectivity: ^0.4.8+6
   flutter_dialogs: ^1.0.3
-  flutter_downloader: ^1.4.4
+  flutter_downloader: ^1.5.0
   flutter_launcher_icons: ^0.7.4
   flutter_spinkit: ^4.1.2+1
   html: ^0.14.0+3
@@ -28,7 +27,7 @@ dependencies:
   permission_handler: ^5.0.0+hotfix.6
   provider: ^4.1.2
   rxdart: ^0.24.1
-  sembast: ^2.4.7+4
+  sembast: ^2.4.7+6
   shared_preferences: ^0.5.8
   url_launcher: ^5.4.7
 

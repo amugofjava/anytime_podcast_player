@@ -22,6 +22,9 @@ class MobileAudioPlayer {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Completer _completer = Completer<dynamic>();
 
+  StreamSubscription<AudioPlaybackState> playerStateSubscription;
+  StreamSubscription<AudioPlaybackEvent> eventSubscription;
+
   AudioProcessingState _playbackState;
   List<MediaControl> _controls = [];
   String _uri;
@@ -97,23 +100,16 @@ class MobileAudioPlayer {
   Future<void> start() async {
     log.fine('start()');
 
-    var playerStateSubscription =
+    playerStateSubscription =
         _audioPlayer.playbackStateStream.where((state) => state == AudioPlaybackState.completed).listen((state) async {
       await complete();
     });
 
-    var eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
+    eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
       if (event.state == AudioPlaybackState.playing) {
         _position = event.position.inMilliseconds;
       }
     });
-
-    await _completer.future;
-
-    await playerStateSubscription.cancel();
-    await eventSubscription.cancel();
-
-    await _audioPlayer.dispose();
   }
 
   Future<void> play() async {
@@ -162,7 +158,6 @@ class MobileAudioPlayer {
 
     _position = _latestPosition();
 
-    await _audioPlayer.stop();
     await _setStoppedState();
   }
 
@@ -264,6 +259,9 @@ class MobileAudioPlayer {
 
   Future<void> _setStoppedState() async {
     log.fine('setStoppedState()');
+
+    await playerStateSubscription.cancel();
+    await eventSubscription.cancel();
 
     await _audioPlayer.stop();
     await _audioPlayer.dispose();

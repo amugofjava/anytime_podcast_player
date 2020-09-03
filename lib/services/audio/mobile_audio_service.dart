@@ -263,6 +263,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       androidNotificationIcon: 'drawable/ic_stat_name',
       androidStopForegroundOnPause: true,
       fastForwardInterval: Duration(seconds: 30),
+      rewindInterval: Duration(seconds: 30),
     );
   }
 

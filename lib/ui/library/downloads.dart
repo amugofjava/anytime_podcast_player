@@ -6,6 +6,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
+import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class _DownloadsState extends State<Downloads> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  PlatformProgressIndicator(),
                 ],
               ),
             );

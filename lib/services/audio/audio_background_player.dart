@@ -35,33 +35,35 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   Future<void> onStop() async {
     log.fine('onStop()');
     await _anytimeAudioPlayer.stop();
+
+    await super.onStop();
   }
 
   @override
-  void onPlay() {
+  Future<void> onPlay() {
     log.fine('onPlay()');
     _anytimeAudioPlayer.play();
   }
 
   @override
-  void onPause() {
+  Future<void> onPause() {
     log.fine('onPause()');
     _anytimeAudioPlayer.pause();
   }
 
   @override
-  void onSeekTo(Duration position) {
+  Future<void> onSeekTo(Duration position) {
     log.fine('onSeekTo()');
     _anytimeAudioPlayer.seekTo(position);
   }
 
   @override
-  void onAudioBecomingNoisy() {
+  Future<void> onAudioBecomingNoisy() {
     _anytimeAudioPlayer.onNoise();
   }
 
   @override
-  void onClick(MediaButton button) {
+  Future<void> onClick(MediaButton button) {
     _anytimeAudioPlayer.onClick();
   }
 
@@ -82,13 +84,13 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
-  void onFastForward() async {
+  Future<void> onFastForward() async {
     log.fine('onFastForward()');
     await _anytimeAudioPlayer.fastforward();
   }
 
   @override
-  void onRewind() async {
+  Future<void> onRewind() async {
     log.fine('onRewind()');
     await _anytimeAudioPlayer.rewind();
   }

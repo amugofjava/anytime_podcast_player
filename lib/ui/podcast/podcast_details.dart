@@ -12,6 +12,7 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
+import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -178,7 +179,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                           padding: const EdgeInsets.all(24.0),
                           child: Column(
                             children: <Widget>[
-                              CircularProgressIndicator(),
+                              PlatformProgressIndicator(),
                             ],
                           ),
                         ),
