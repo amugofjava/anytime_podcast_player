@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 class MiniPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return StreamBuilder<AudioState>(
         stream: audioBloc.playingState,
@@ -35,10 +35,10 @@ class _MiniPlayerBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return Dismissible(
-      key: UniqueKey(),
+      key: Key('miniplayerdismissable'),
       confirmDismiss: (direction) async {
         await audioBloc.transitionState(TransitionState.stop);
         return true;
@@ -49,7 +49,7 @@ class _MiniPlayerBuilder extends StatelessWidget {
         height: 64.0,
       ),
       child: GestureDetector(
-        key: UniqueKey(),
+        key: Key('miniplayergesture'),
         onTap: () {
           Navigator.push(
             context,

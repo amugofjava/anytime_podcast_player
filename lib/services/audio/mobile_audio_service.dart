@@ -45,6 +45,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
+      await _playingState.add(AudioState.playing);
+
       var trackDetails = <String>[];
 
       var download = false;
