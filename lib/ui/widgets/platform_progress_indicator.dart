@@ -22,5 +22,7 @@ class PlatformProgressIndicator extends StatelessWidget {
       case TargetPlatform.macOS:
         return CupertinoActivityIndicator();
     }
+
+    return CircularProgressIndicator();
   }
 }

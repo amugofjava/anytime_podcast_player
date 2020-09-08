@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:pedantic/pedantic.dart';
@@ -21,9 +22,12 @@ class MobileAudioPlayer {
   final log = Logger('MobileAudioPlayer');
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Completer _completer = Completer<dynamic>();
+  VoidCallback completionHandler;
 
-  StreamSubscription<AudioPlaybackState> playerStateSubscription;
-  StreamSubscription<AudioPlaybackEvent> eventSubscription;
+  MobileAudioPlayer({this.completionHandler});
+
+  StreamSubscription<AudioPlaybackState> _playerStateSubscription;
+  StreamSubscription<AudioPlaybackEvent> _eventSubscription;
 
   AudioProcessingState _playbackState;
   List<MediaControl> _controls = [];
@@ -100,12 +104,12 @@ class MobileAudioPlayer {
   Future<void> start() async {
     log.fine('start()');
 
-    playerStateSubscription =
+    _playerStateSubscription =
         _audioPlayer.playbackStateStream.where((state) => state == AudioPlaybackState.completed).listen((state) async {
       await complete();
     });
 
-    eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
+    _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
       if (event.state == AudioPlaybackState.playing) {
         _position = event.position.inMilliseconds;
       }
@@ -167,6 +171,10 @@ class MobileAudioPlayer {
     _position = -1;
 
     await _setStoppedState();
+
+    if (completionHandler != null) {
+      completionHandler();
+    }
   }
 
   Future<void> fastforward() async {
@@ -260,8 +268,8 @@ class MobileAudioPlayer {
   Future<void> _setStoppedState() async {
     log.fine('setStoppedState()');
 
-    await playerStateSubscription.cancel();
-    await eventSubscription.cancel();
+    await _playerStateSubscription.cancel();
+    await _eventSubscription.cancel();
 
     await _audioPlayer.stop();
     await _audioPlayer.dispose();

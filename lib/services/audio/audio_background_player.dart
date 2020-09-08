@@ -13,7 +13,7 @@ import 'package:logging/logging.dart';
 /// playback and Android services for continuing playback in the background.
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
-  final _anytimeAudioPlayer = MobileAudioPlayer();
+  MobileAudioPlayer _anytimeAudioPlayer;
 
   /// As we are running in a separate Isolate, we need a separate Logger -
   /// or we'll not see anything in the console/logs!.
@@ -26,9 +26,19 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
-  Future<void> onStart(Map<String, dynamic> params) {
+  Future<void> onStart(Map<String, dynamic> params) async {
     log.fine('onStart()');
-    return _anytimeAudioPlayer.start();
+
+    // As audio_service now requires a call to super.onStop() we need to
+    // be notified if playback comes to an end. Without this callback,
+    // episodes that finished would result in audio_service not tidying up.
+    // This may be a temporary solution if I can think of a cleaner way
+    // of doing this.
+    _anytimeAudioPlayer = MobileAudioPlayer(completionHandler: () async {
+      await super.onStop();
+    });
+
+    await _anytimeAudioPlayer.start();
   }
 
   @override
@@ -42,29 +52,29 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   @override
   Future<void> onPlay() {
     log.fine('onPlay()');
-    _anytimeAudioPlayer.play();
+    return _anytimeAudioPlayer.play();
   }
 
   @override
   Future<void> onPause() {
     log.fine('onPause()');
-    _anytimeAudioPlayer.pause();
+    return _anytimeAudioPlayer.pause();
   }
 
   @override
   Future<void> onSeekTo(Duration position) {
     log.fine('onSeekTo()');
-    _anytimeAudioPlayer.seekTo(position);
+    return _anytimeAudioPlayer.seekTo(position);
   }
 
   @override
   Future<void> onAudioBecomingNoisy() {
-    _anytimeAudioPlayer.onNoise();
+    return _anytimeAudioPlayer.onNoise();
   }
 
   @override
   Future<void> onClick(MediaButton button) {
-    _anytimeAudioPlayer.onClick();
+    return _anytimeAudioPlayer.onClick();
   }
 
   @override
