@@ -89,6 +89,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final backgroundColour = Theme.of(context).backgroundColor;
+    final defaultBrightness = Theme.of(context).brightness;
+    final altBrightness = defaultBrightness == Brightness.light ? Brightness.dark : Brightness.light;
+    final titleStyle = Theme.of(context).textTheme.bodyText1;
     final _podcastBloc = Provider.of<PodcastBloc>(context);
 
     return WillPopScope(
@@ -97,7 +101,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColour,
         body: LiquidPullToRefresh(
           onRefresh: _handleRefresh,
           showChildOpacityTransition: false,
@@ -105,9 +109,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
             controller: _sliverScrollController,
             slivers: <Widget>[
               SliverAppBar(
-                brightness: brightness,
+                brightness: toolbarCollpased ? altBrightness : defaultBrightness,
                 title: toolbarCollpased
-                    ? Text(widget.podcast.title, style: (TextStyle(color: Colors.black)))
+                    // ? Text(widget.podcast.title, style: (TextStyle(color: Colors.black)))
+                    ? Text(widget.podcast.title, style: titleStyle)
                     : Text(
                         '',
                       ),
@@ -129,7 +134,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     Navigator.pop(context);
                   },
                 ),
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).appBarTheme.color,
                 expandedHeight: 300.0,
                 floating: false,
                 pinned: true,

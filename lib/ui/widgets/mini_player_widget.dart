@@ -2,12 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
-import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +33,33 @@ class MiniPlayer extends StatelessWidget {
   }
 }
 
-class _MiniPlayerBuilder extends StatelessWidget {
+class _MiniPlayerBuilder extends StatefulWidget {
+  @override
+  _MiniPlayerBuilderState createState() => _MiniPlayerBuilderState();
+}
+
+class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTickerProviderStateMixin {
+  AnimationController _playPauseController;
+  StreamSubscription<AudioState> _audioStateSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _playPauseController.value = 1;
+
+    audioStateListener();
+  }
+
+  @override
+  void dispose() {
+    _playPauseController.dispose();
+    _audioStateSubscription.cancel();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -50,11 +78,15 @@ class _MiniPlayerBuilder extends StatelessWidget {
       ),
       child: GestureDetector(
         key: Key('miniplayergesture'),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await _audioStateSubscription.cancel();
+
+          return Navigator.push(
             context,
             MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: false),
-          );
+          ).then((value) {
+            audioStateListener();
+          });
         },
         child: Container(
           height: 64,
@@ -68,24 +100,20 @@ class _MiniPlayerBuilder extends StatelessWidget {
               stream: audioBloc.nowPlaying,
               builder: (context, snapshot) {
                 return Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(
-                      flex: 1,
+                    SizedBox(
+                      height: 58.0,
+                      width: 58.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: snapshot.hasData
                             ? CachedNetworkImage(
                                 imageUrl: snapshot.data.imageUrl,
-                                width: 32,
                                 placeholder: (context, url) {
-                                  return Container(
-                                    constraints: BoxConstraints.expand(height: 48, width: 48),
-                                    child: Placeholder(
-                                      color: Colors.grey,
-                                      strokeWidth: 1,
-                                      fallbackWidth: 40,
-                                      fallbackHeight: 40,
-                                    ),
+                                  return Placeholder(
+                                    color: Colors.grey,
+                                    strokeWidth: 1,
                                   );
                                 },
                                 errorWidget: (_, __, dynamic ___) {
@@ -104,60 +132,49 @@ class _MiniPlayerBuilder extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                        flex: 3,
-                        child: Container(
-                          height: 48.0,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                snapshot.data?.title ?? '',
-                                overflow: TextOverflow.ellipsis,
-                                style: textTheme.subtitle1,
-                              ),
-                              Text(
-                                snapshot.data?.author ?? '',
-                                overflow: TextOverflow.ellipsis,
-                                style: textTheme.bodyText1,
-                              ),
-                            ],
-                          ),
+                        flex: 1,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              snapshot.data?.title ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.subtitle1,
+                            ),
+                            Text(
+                              snapshot.data?.author ?? '',
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.bodyText1,
+                            ),
+                          ],
                         )),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: StreamBuilder<AudioState>(
-                            stream: audioBloc.playingState,
-                            builder: (context, snapshot) {
-                              return (snapshot.data == AudioState.playing)
-                                  ? IconButton(
-                                      onPressed: () {
-                                        _pause(audioBloc);
-                                      },
-                                      tooltip: L.of(context).pause_button_label,
-                                      padding: const EdgeInsets.all(0.0),
-                                      icon: Icon(
-                                        Icons.pause,
-                                        size: 48.0,
-                                        color: Colors.orange,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      onPressed: () {
-                                        _play(audioBloc);
-                                      },
-                                      tooltip: L.of(context).play_button_label,
-                                      padding: const EdgeInsets.all(0.0),
-                                      icon: Icon(
-                                        Icons.play_arrow,
-                                        size: 48.0,
-                                        color: Colors.orange,
-                                      ),
-                                    );
-                            }),
-                      ),
+                    SizedBox(
+                      height: 64.0,
+                      width: 64.0,
+                      child: StreamBuilder<AudioState>(
+                          stream: audioBloc.playingState,
+                          builder: (context, snapshot) {
+                            var playing = snapshot.data == AudioState.playing;
+
+                            return FlatButton(
+                              padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                              onPressed: () {
+                                if (playing) {
+                                  _pause(audioBloc);
+                                } else {
+                                  _play(audioBloc);
+                                }
+                              },
+                              shape: CircleBorder(side: BorderSide(color: Colors.grey[100], width: 0.0)),
+                              child: AnimatedIcon(
+                                size: 48.0,
+                                icon: AnimatedIcons.play_pause,
+                                color: Colors.orange,
+                                progress: _playPauseController,
+                              ),
+                            );
+                          }),
                     ),
                   ],
                 );
@@ -165,6 +182,37 @@ class _MiniPlayerBuilder extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// We call this method to setup a listener for changing [AudioState]. This
+  /// in turns calls upon the [_pauseController] to animate the play/pause icon.
+  /// The [AudioBloc] playingState method is backed by a [BehaviorSubject] so
+  /// we'll always get the current state when we subscribe. This, however, has
+  /// a side effect causing the play/pause icon to animate when returning from
+  /// the full-size player, which looks a little odd. Therefore, on the first
+  /// event we move the controller to the correct state without animating. This
+  /// feels a little hacky, but stops the UI from looking a little odd.
+  void audioStateListener() {
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    var firstEvent = true;
+
+    _audioStateSubscription = audioBloc.playingState.listen((event) {
+      if (event == AudioState.playing) {
+        if (firstEvent) {
+          _playPauseController.value = 1;
+          firstEvent = false;
+        } else {
+          _playPauseController.forward();
+        }
+      } else {
+        if (firstEvent) {
+          _playPauseController.value = 0;
+          firstEvent = false;
+        } else {
+          _playPauseController.reverse();
+        }
+      }
+    });
   }
 
   void _play(AudioBloc audioBloc) {

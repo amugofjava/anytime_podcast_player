@@ -38,7 +38,8 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final theme = Themes.lightTheme().themeData;
+// final theme = Themes.lightTheme().themeData;
+final theme = Themes.darkTheme().themeData;
 
 /// Anytime is a Podcast player. You can search and subscribe to podcasts,
 /// download and stream episodes and view the latest podcast charts.
@@ -163,9 +164,16 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   Widget build(BuildContext context) {
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
+    final backgroundColour = Theme.of(context).backgroundColor;
+    final brightness = Theme.of(context).brightness;
+
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.pink,
+    //   systemNavigationBarColor: Colors.blue,
+    // ));
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColour,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -173,8 +181,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               slivers: <Widget>[
                 SliverAppBar(
                   title: TitleWidget(),
-                  brightness: Brightness.light,
-                  backgroundColor: Colors.white,
+                  brightness: brightness,
+                  backgroundColor: backgroundColour,
                   floating: false,
                   pinned: true,
                   snap: false,
@@ -182,6 +190,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     IconButton(
                       tooltip: L.of(context).search_button_label,
                       icon: Icon(Icons.search),
+                      color: Theme.of(context).indicatorColor,
                       onPressed: () async {
                         await Navigator.push(
                           context,
@@ -190,14 +199,17 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       },
                     ),
                     PopupMenuButton<String>(
+                      color: Theme.of(context).dialogBackgroundColor,
                       onSelected: _menuSelect,
                       itemBuilder: (BuildContext context) {
                         return <PopupMenuEntry<String>>[
                           PopupMenuItem<String>(
+                            textStyle: Theme.of(context).textTheme.subtitle1,
                             value: 'settings',
                             child: Text('Settings'), //TODO: FIX
                           ),
                           PopupMenuItem<String>(
+                            textStyle: Theme.of(context).textTheme.subtitle1,
                             value: 'about',
                             child: Text(L.of(context).about_label),
                           ),
@@ -223,21 +235,21 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
             return BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).backgroundColor,
               currentIndex: snapshot.data,
               onTap: pager.changePage,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.library_music),
-                  title: Text(L.of(context).library),
+                  label: L.of(context).library,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.explore),
-                  title: Text(L.of(context).discover),
+                  label: L.of(context).discover,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.file_download),
-                  title: Text(L.of(context).downloads),
+                  label: L.of(context).downloads,
                 ),
               ],
             );
@@ -307,8 +319,11 @@ class TitleWidget extends StatelessWidget {
   final TextStyle _titleTheme1 = theme.textTheme.bodyText2
       .copyWith(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
 
-  final TextStyle _titleTheme2 = theme.textTheme.bodyText2
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2
       .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2
+      .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +337,7 @@ class TitleWidget extends StatelessWidget {
           ),
           Text(
             'Player',
-            style: _titleTheme2,
+            style: Theme.of(context).brightness == Brightness.light ? _titleTheme2Light : _titleTheme2Dark,
           ),
         ],
       ),
