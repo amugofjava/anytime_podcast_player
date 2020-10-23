@@ -225,7 +225,7 @@ class MobilePodcastService extends PodcastService {
 
     if (await hasStoragePermission()) {
       final filepath = episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
-      final filename = join(filepath, safePath(episode.podcast), episode.filename);
+      final filename = join(filepath, episode.filename);
 
       var f = File.fromUri(Uri.file(filename));
 
