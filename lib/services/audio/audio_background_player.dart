@@ -88,7 +88,7 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
         await _anytimeAudioPlayer.updatePosition();
         break;
       case 'kill':
-        await _anytimeAudioPlayer.stop();
+        await onStop();
         break;
     }
   }

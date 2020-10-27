@@ -229,15 +229,15 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: Icon(Icons.library_music),
-                  title: Text(L.of(context).library),
+                  label: L.of(context).library,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.explore),
-                  title: Text(L.of(context).discover),
+                  label: L.of(context).discover,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.file_download),
-                  title: Text(L.of(context).downloads),
+                  label: L.of(context).downloads,
                 ),
               ],
             );
