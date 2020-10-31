@@ -67,9 +67,9 @@ class MobileDownloadService extends DownloadService {
         Directory(downloadPath).createSync(recursive: true);
 
         // Filename should be last segment of URI.
-        var filename = safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
+        var filename = safePath(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
 
-        filename ??= safePath(uri.pathSegments.firstWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
+        filename ??= safePath(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
 
         if (filename == null) {
           //TODO: Handle unsupported format.
