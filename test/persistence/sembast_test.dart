@@ -246,6 +246,12 @@ void main() {
       var episode = await persistenceService.findEpisodeByGuid(podcast.episodes[1].guid);
 
       expect(true, episode == episode2);
+
+      var episodeById = await persistenceService.findEpisodeById(podcast.episodes[1].id);
+
+      expect(true, episode == episodeById);
+
+      expect(true, podcast3.subscribed);
     });
   });
 
@@ -327,6 +333,47 @@ void main() {
       var singleDownload = await persistenceService.findDownloads();
 
       expect(true, listEquals(singleDownload, downloaded));
+    });
+
+    test('Test download state', () async {
+      var download = Downloadable(
+        guid: 'downloadguid1',
+        url: 'http://localhost/episode1.mp3',
+        directory: 'test1',
+        filename: 'episode1.mp3',
+        state: DownloadState.none,
+        percentage: 0,
+      );
+
+      var json = download.toMap();
+
+      // Reconstruct from the JSON.
+      var d = Downloadable.fromMap(json);
+
+      // Check they match
+      expect(true, download == d);
+
+      // Check states
+      json['state'] = 0;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.none);
+
+      json['state'] = 1;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.queued);
+
+      json['state'] = 2;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.downloading);
+
+      json['state'] = 3;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.failed);
+
+      json['state'] = 4;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.cancelled);
+
+      json['state'] = 5;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.paused);
+
+      json['state'] = 6;
+      expect(true, Downloadable.fromMap(json).state == DownloadState.downloaded);
     });
 
     test('Delete downloaded episodes', () async {
@@ -615,6 +662,119 @@ void main() {
       var episode2 = await persistenceService.findEpisodeByTaskId(tid2);
 
       expect(episode2.downloadPercentage, 50);
+    });
+
+    test('Test episode state', () async {
+      var pubDate5 = DateTime.now();
+      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            description: 'Episode 1 description',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1,
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2,
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate5,
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate4,
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            description: '<b>Episode 3</b> description',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3,
+            downloadPercentage: 100),
+      ];
+
+      // Save the podcasts.
+      await persistenceService.savePodcast(podcast1);
+
+      // Fetch the downloaded podcast
+      var episode = await persistenceService.findEpisodeByGuid('EP001');
+
+      expect(false, episode.downloaded);
+      expect(true, episode.descriptionText == 'Episode 1 description');
+
+      episode = await persistenceService.findEpisodeByGuid('EP002');
+
+      expect(true, episode.descriptionText == '');
+
+      episode = await persistenceService.findEpisodeByGuid('EP003');
+
+      expect(true, episode.downloaded);
+      expect(true, episode.descriptionText == 'Episode 3 description');
+    });
+
+    test('Test episode duration', () async {
+      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            description: 'Episode 1 description',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1,
+            position: 60000,
+            // 1 min in ms
+            duration: 120,
+            // 2 min in s
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2,
+            position: 0,
+            duration: 240,
+            downloadPercentage: 100),
+      ];
+
+      // Save the podcasts.
+      await persistenceService.savePodcast(podcast1);
+
+      // Fetch the downloaded podcast
+      var episode = await persistenceService.findEpisodeByGuid('EP001');
+
+      expect(true, episode.timeRemaining.inSeconds == 60);
+      expect(true, episode.percentagePlayed == 50.0);
+
+      episode = await persistenceService.findEpisodeByGuid('EP002');
+
+      expect(true, episode.timeRemaining.inSeconds == 0);
+      expect(true, episode.percentagePlayed == 0.0);
+
+      // Invalid position
+      episode.position = 500000;
+      expect(true, episode.percentagePlayed == 100.0);
     });
   });
 }
