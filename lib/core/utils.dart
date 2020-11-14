@@ -45,7 +45,6 @@ Future<bool> hasExternalStorage() async {
 }
 
 Future<String> _getSDCard() async {
-//  if (await hasStoragePermission()) {
   final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
   String path;
@@ -69,9 +68,6 @@ Future<String> _getSDCard() async {
   }
 
   return path;
-//  }
-//
-//  return '';
 }
 
 /// Strips characters that are invalid for file and directory names.

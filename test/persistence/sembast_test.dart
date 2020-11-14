@@ -11,7 +11,6 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 class MockPathProvder extends PathProviderPlatform {
@@ -36,7 +35,6 @@ void main() {
   setUp(() async {
     mockPath = MockPathProvder();
     PathProviderPlatform.instance = mockPath;
-    disablePathProviderPlatformOverride = true;
     persistenceService = SembastRepository();
 
     podcast1 =

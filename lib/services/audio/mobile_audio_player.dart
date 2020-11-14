@@ -4,6 +4,8 @@
 
 import 'dart:async';
 
+import 'package:anytime/entities/persistable.dart';
+import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
@@ -35,7 +37,9 @@ class MobileAudioPlayer {
   int _position = 0;
   bool _isPlaying = false;
   bool _loadTrack = false;
+  bool _clearedCompletedState = false;
   bool _local;
+  int _episodeId = 0;
 
   MediaControl playControl = MediaControl(
     androidIcon: 'drawable/ic_action_play_circle_outline',
@@ -80,6 +84,8 @@ class MobileAudioPlayer {
     _uri = args[3] as String;
     _local = (args[4] as String) == '1';
     var sp = args[5] as String;
+    var episodeIdStr = args[6] as String;
+    _episodeId = int.parse(episodeIdStr);
 
     _position = 0;
 
@@ -89,7 +95,7 @@ class MobileAudioPlayer {
       log.info('Failed to parse starting position of $sp');
     }
 
-    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position');
+    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId}');
 
     _loadTrack = true;
 
@@ -168,9 +174,7 @@ class MobileAudioPlayer {
   Future<void> complete() async {
     log.fine('complete()');
 
-    _position = -1;
-
-    await _setStoppedState();
+    await _setStoppedState(completed: true);
 
     if (completionHandler != null) {
       completionHandler();
@@ -262,10 +266,10 @@ class MobileAudioPlayer {
     _controls = [rewindControl, playControl, fastforwardControl];
     _isPlaying = false;
 
-    await _setState();
+    await _setState(state: LastState.paused);
   }
 
-  Future<void> _setStoppedState() async {
+  Future<void> _setStoppedState({bool completed = false}) async {
     log.fine('setStoppedState()');
 
     await _playerStateSubscription.cancel();
@@ -274,11 +278,11 @@ class MobileAudioPlayer {
     await _audioPlayer.stop();
     await _audioPlayer.dispose();
 
-    _playbackState = AudioProcessingState.stopped;
+    _playbackState = completed ? AudioProcessingState.completed : AudioProcessingState.stopped;
     _controls = [playControl];
     _isPlaying = false;
 
-    await _setState();
+    await _setState(state: completed ? LastState.completed : LastState.stopped);
 
     _completer.complete();
   }
@@ -298,11 +302,44 @@ class MobileAudioPlayer {
         playing: _isPlaying);
   }
 
-  Future<void> _setState() async {
-    log.fine('_setState() to ${_playbackState.toString()} - $_position');
+  Future<void> _setState({LastState state = LastState.none}) async {
+    log.fine('_setState() to ${_playbackState.toString()} - $_position - state: $state');
+
+    if (state == LastState.none) {
+      await _clearPersistentState();
+    } else {
+      await _persistState(state);
+    }
 
     await AudioServiceBackground.setState(
         controls: _controls, processingState: _playbackState, position: Duration(milliseconds: _position), playing: _isPlaying);
+  }
+
+  Future<void> _persistState(LastState state) async {
+    // Save our completion state to disk so we can query this later
+    log.fine('Saving ${state.toString()} state - episode id $_episodeId - position $_position');
+
+    await PersistentState.persistState(Persistable(
+      episodeId: _episodeId,
+      position: _position,
+      state: state,
+    ));
+
+    _clearedCompletedState = false;
+  }
+
+  Future<void> _clearPersistentState() async {
+    log.fine('Clearing completed status $_clearedCompletedState');
+
+    if (!_clearedCompletedState) {
+      await PersistentState.persistState(Persistable(
+        episodeId: 0,
+        position: 0,
+        state: LastState.none,
+      ));
+
+      _clearedCompletedState = true;
+    }
   }
 
   int _latestPosition() {

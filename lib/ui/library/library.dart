@@ -5,6 +5,7 @@
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,7 +65,13 @@ class _LibraryState extends State<Library> {
           } else {
             return SliverFillRemaining(
               hasScrollBody: false,
-              child: Container(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  PlatformProgressIndicator(),
+                ],
+              ),
             );
           }
         });

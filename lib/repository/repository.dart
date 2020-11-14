@@ -20,6 +20,7 @@ abstract class Repository {
   Future<List<Podcast>> subscriptions();
 
   /// Episodes
+  Future<Episode> findEpisodeById(int id);
   Future<Episode> findEpisodeByGuid(String guid);
   Future<List<Episode>> findEpisodesByPodcastGuid(String pguid);
   Future<Episode> findEpisodeByTaskId(String taskId);

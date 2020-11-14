@@ -121,6 +121,13 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<Episode> findEpisodeById(int id) async {
+    final snapshot = await _episodeStore.record(id).get(await _db);
+
+    return snapshot == null ? null : Episode.fromMap(id, snapshot);
+  }
+
+  @override
   Future<Episode> findEpisodeByGuid(String guid) async {
     final finder = Finder(filter: Filter.equals('guid', guid));
 

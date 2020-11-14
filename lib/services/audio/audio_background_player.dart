@@ -56,7 +56,7 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
-  Future<void> onPause() {
+  Future<void> onPause() async {
     log.fine('onPause()');
     return _anytimeAudioPlayer.pause();
   }

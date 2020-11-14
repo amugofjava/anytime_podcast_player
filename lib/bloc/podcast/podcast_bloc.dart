@@ -92,7 +92,6 @@ class PodcastBloc {
   /// containing the Podcast.
   void _listenPodcastLoad() async {
     _podcastFeed.listen((feed) async {
-      log.fine('Load podcast request');
       _podcastStream.sink.add(BlocLoadingState<Podcast>());
 
       _episodes = [];
@@ -108,8 +107,6 @@ class PodcastBloc {
         _episodesStream.add(_episodes);
 
         _podcastStream.sink.add(BlocPopulatedState<Podcast>(_podcast));
-
-        log.fine('Pushed podcast with ID ${_podcast.id} to the podcast stream with ${_episodes.length} episodes');
       } on Exception {
         // For now we'll assume a network error as this is the most likely.
         _podcastStream.sink.add(BlocErrorState<Podcast>());
@@ -136,7 +133,6 @@ class PodcastBloc {
       // If there was an error downloading the episode, push an error state
       // and then restore to none.
       if (!result) {
-        print('Pushing failed state');
         episode.downloadState = DownloadState.failed;
         _episodesStream.add(_episodes);
         episode.downloadState = DownloadState.none;
@@ -152,8 +148,6 @@ class PodcastBloc {
   void _listenDownloads() {
     // Listen to download progress
     MobileDownloadService.downloadProgress.listen((s) async {
-      log.fine('Download progress for task id ${s.id} - ${s.percentage}%');
-
       final downloadable = await downloadService.findEpisodeByTaskId(s.id);
 
       if (downloadable != null) {
@@ -194,8 +188,6 @@ class PodcastBloc {
 
   void _listenPodcastStateEvents() async {
     _podcastEvent.listen((event) async {
-      log.fine('Received new podcast event for podcast ${_podcast.title}:');
-
       switch (event) {
         case PodcastEvent.subscribe:
           _podcast = await podcastService.subscribe(_podcast);

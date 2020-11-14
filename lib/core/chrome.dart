@@ -31,8 +31,6 @@ class Chrome {
   static var _last = _translucent;
 
   static void translucentLight() {
-    log.fine('translucentLight()');
-
     _last = _translucent;
 
     restoreLast();
@@ -47,12 +45,6 @@ class Chrome {
   }
 
   static void restoreLast() {
-    if (_last == _translucent) {
-      log.fine('restoring translucentLight()');
-    } else {
-      log.fine('restoring transparentLight()');
-    }
-
     SystemChrome.setSystemUIOverlayStyle(_last);
   }
 }

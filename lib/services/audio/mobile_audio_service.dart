@@ -7,10 +7,12 @@ import 'dart:async';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_background_player.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +56,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var uri = episode.contentUrl;
 
       log.info('Playing episode ${episode.title} - ${episode.id}');
-      log.info(episode.contentUrl);
 
       // See if we have the details for this episode already in storage.
       final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
@@ -71,7 +72,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
           download = true;
 
-          log.fine('Loaded position ${savedEpisode.position}');
           episode.position = savedEpisode.position;
 
           startPosition = download && resume ? savedEpisode.position : 0;
@@ -100,6 +100,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         uri,
         episode.downloaded ? '1' : '0',
         startPosition.toString(),
+        episode.id == null ? '0' : episode.id.toString()
       ];
 
       // Store reference
@@ -113,7 +114,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
       }
 
       await AudioService.customAction('track', trackDetails);
-
       await AudioService.play();
     }
   }
@@ -165,27 +165,37 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
       // If we have no state we'll have to assume we stopped whilst suspended.
       if (basicState == AudioProcessingState.none) {
-        // Get the current playing state Anytime thinks we're in
-        var currentState = await _playingState.first;
+        var persistedState = await PersistentState.fetchState();
 
-        // If we are in a playing state, the audio must have been
-        // stopped whilst we were suspended. Currently, the only
-        // way to stop whilst we are suspended is either because
-        // we have reached the end of the episode or have been killed.
-        // For now, we'll have to assume the former and mark the
-        // episode as completed.
-        if (currentState == AudioState.playing) {
-          _episode.position = -1;
-          _episode.played = true;
-        }
-
-        await repository.saveEpisode(_episode);
-
+        await _updateEpisodeState(persistedState);
         await _playingState.add(AudioState.stopped);
-      } else if (basicState == AudioProcessingState.ready) {
+      } else {
         await _startTicker();
       }
+    } else {
+      var persistedState = await PersistentState.fetchState();
+
+      if (persistedState != null && persistedState.episodeId != 0) {
+        _episode = await repository.findEpisodeById(persistedState.episodeId);
+
+        if (_episode != null) {
+          await _updateEpisodeState(persistedState);
+        }
+      }
     }
+
+    await PersistentState.clearState();
+  }
+
+  Future _updateEpisodeState(Persistable persistedState) async {
+    if (persistedState.state == LastState.completed) {
+      _episode.position = 0;
+      _episode.played = true;
+    } else {
+      _episode.position = persistedState.position;
+    }
+
+    await repository.saveEpisode(_episode);
   }
 
   @override
@@ -202,16 +212,24 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
     log.fine('_onStop() ${playbackState.position}');
 
-    if (playbackState.position.inMilliseconds == -1) {
-      log.fine('_onStop(): position is -1 indicating we have reached end of episode');
+    await _savePosition();
 
-      _episode.position = 0;
-      _episode.played = true;
+    _episode = null;
 
-      await repository.saveEpisode(_episode);
-    } else {
-      await _savePosition();
-    }
+    _playingState.add(AudioState.stopped);
+  }
+
+  Future<void> _onComplete() async {
+    var playbackState = await AudioService.playbackState;
+
+    await _stopTicker();
+
+    log.fine('_onStop() ${playbackState.position}');
+
+    _episode.position = 0;
+    _episode.played = true;
+
+    await repository.saveEpisode(_episode);
 
     _episode = null;
 
@@ -285,6 +303,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
         switch (ps) {
           case AudioProcessingState.none:
             break;
+          case AudioProcessingState.completed:
+            await _onComplete();
+            break;
           case AudioProcessingState.stopped:
             await _onStop();
             break;
@@ -313,8 +334,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
           case AudioProcessingState.skippingToNext:
             break;
           case AudioProcessingState.skippingToQueueItem:
-            break;
-          case AudioProcessingState.completed:
             break;
         }
       }
