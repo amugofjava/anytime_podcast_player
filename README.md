@@ -2,7 +2,8 @@
 
 This is the official repository for the Anytime Podcast Player - the simple Podcast playing app built with Dart & Flutter.
 ***
-![screenshot1.png](docs/screenshot1.png)![screenshot2.png](docs/screenshot2.png)
+![screenshot1.png](docs/screenshot1.png)
+![screenshot2.png](docs/screenshot2.png)
 ![screenshot3.png](docs/screenshot3.png)
 
 ## Getting Started
@@ -13,10 +14,11 @@ hardware to build or test on.
 
 #### Testers
 
-I am looking for a few people to help me test the binaries on the Google Play Store
-in a closed Alpha test. If you would be willing to help me, please drop me an email
-at [anytime@amugofjava.me.uk](mailto:anytime@amugofjava.me.uk) or raise a GitHub issue.
-Once Anytime is out of Alpha I will move to an open Beta test on the Play Store.
+Anytime is now in public Beta. Please click the image below to head over to the Play Store.
+
+<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' width="40%" src='https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png'/></a>
+
+I would really appreciate all feedback - good and bad - as it helps improve Anytime and helps prioritise new features.
 
 #### Building from source
 
