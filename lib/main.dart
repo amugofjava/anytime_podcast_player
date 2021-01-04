@@ -1,14 +1,13 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/ui/anytime_podcast_app.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
-import 'core/chrome.dart';
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Logger.root.level = Level.FINE;
@@ -17,7 +16,7 @@ void main() {
     print('${record.level.name}: - ${record.time}: ${record.loggerName}: ${record.message}');
   });
 
-  Chrome.transparentLight();
+  var _mobileSettingsService = await MobileSettingsService.instance();
 
-  runApp(AnytimePodcastApp());
+  runApp(AnytimePodcastApp(_mobileSettingsService));
 }

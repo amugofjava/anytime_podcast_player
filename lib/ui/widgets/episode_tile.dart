@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -60,9 +60,8 @@ class EpisodeTile extends StatelessWidget {
           children: <Widget>[
             FlatButton(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              onPressed: !episode.downloaded
-                  ? null
-                  : () {
+              onPressed: episode.downloaded
+                  ? () {
                       showPlatformDialog<void>(
                         context: context,
                         builder: (_) => BasicDialogAlert(
@@ -74,7 +73,7 @@ class EpisodeTile extends StatelessWidget {
                             BasicDialogAction(
                               title: Text(
                                 L.of(context).cancel_button_label,
-                                style: TextStyle(color: Colors.orange),
+                                style: TextStyle(color: Theme.of(context).primaryColor),
                               ),
                               onPressed: () {
                                 Navigator.pop(context);
@@ -83,7 +82,7 @@ class EpisodeTile extends StatelessWidget {
                             BasicDialogAction(
                               title: Text(
                                 L.of(context).delete_button_label,
-                                style: TextStyle(color: Colors.orange),
+                                style: TextStyle(color: Theme.of(context).primaryColor),
                               ),
                               onPressed: () {
                                 bloc.deleteDownload(episode);
@@ -93,12 +92,13 @@ class EpisodeTile extends StatelessWidget {
                           ],
                         ),
                       );
-                    },
+                    }
+                  : null,
               child: Column(
                 children: <Widget>[
                   Icon(
                     Icons.delete_outline,
-                    color: Colors.orange,
+                    color: Theme.of(context).buttonColor,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -106,7 +106,7 @@ class EpisodeTile extends StatelessWidget {
                   Text(
                     L.of(context).delete_label,
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: Theme.of(context).buttonColor,
                     ),
                   ),
                 ],
@@ -121,14 +121,16 @@ class EpisodeTile extends StatelessWidget {
                 children: <Widget>[
                   Icon(
                     Icons.bookmark_border,
-                    color: Colors.orange,
+                    color: Theme.of(context).buttonColor,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2.0),
                   ),
                   Text(
                     episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
-                    style: TextStyle(color: Colors.orange),
+                    style: TextStyle(
+                      color: Theme.of(context).buttonColor,
+                    ),
                   ),
                 ],
               ),
@@ -180,7 +182,7 @@ class EpisodeTile extends StatelessWidget {
           Container(
             height: 4.0,
             width: 56.0 * (episode.percentagePlayed / 100),
-            color: Colors.orange,
+            color: Theme.of(context).primaryColor,
           ),
         ],
       ),

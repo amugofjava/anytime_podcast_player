@@ -52,9 +52,14 @@ class _MaterialPodcastMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return PopupMenuButton<String>(
+            color: Theme.of(context).backgroundColor,
             onSelected: (event) {
               togglePlayed(value: event, bloc: bloc);
             },
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).buttonColor,
+            ),
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry<String>>[
                 PopupMenuItem<String>(

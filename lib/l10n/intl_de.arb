@@ -269,5 +269,11 @@
     "description": "Cancel option label",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_theme_switch_label": "Dark theme",
+  "@settings_theme_switch_label": {
+    "description": "Dunkles Thema",
+    "type": "text",
+    "placeholders": {}
   }
 }

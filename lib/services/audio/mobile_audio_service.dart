@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -146,12 +146,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> stop({bool update = true}) async {
-    if (update) {
-      await AudioService.stop();
-    } else {
-      await AudioService.customAction('kill', 1);
-    }
+  Future<void> stop() async {
+    await AudioService.stop();
   }
 
   @override

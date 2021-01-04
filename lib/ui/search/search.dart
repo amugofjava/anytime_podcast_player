@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -43,11 +43,10 @@ class _SearchState extends State<Search> {
     final bloc = Provider.of<SearchBloc>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            brightness: Brightness.light,
+            brightness: Theme.of(context).brightness,
             leading: IconButton(
               tooltip: L.of(context).search_back_button_label,
               icon: Icon(Icons.arrow_back),
@@ -61,13 +60,13 @@ class _SearchState extends State<Search> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: L.of(context).search_for_podcasts_hint,
+                  // hintStyle: ,
                   border: InputBorder.none,
                 ),
                 style: const TextStyle(color: Colors.grey, fontSize: 18.0),
                 onSubmitted: ((value) {
                   bloc.search(SearchTermEvent(value));
                 })),
-            backgroundColor: Colors.white,
             floating: false,
             pinned: true,
             snap: false,

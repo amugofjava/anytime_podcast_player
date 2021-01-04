@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-08-16T17:01:41.258349",
+  "@@last_modified": "2020-12-14T11:05:52.194574",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -273,6 +273,12 @@
   "cancel_option_label": "Cancel",
   "@cancel_option_label": {
     "description": "Cancel option label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_switch_label": "Dark theme",
+  "@settings_theme_switch_label": {
+    "description": "Dark theme",
     "type": "text",
     "placeholders": {}
   }

@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -86,7 +86,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                   icon: Icon(
                     Icons.replay_30,
                     size: 48.0,
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 Tooltip(
@@ -99,8 +99,8 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                         _play(audioBloc);
                       }
                     },
-                    shape: CircleBorder(side: BorderSide(color: Colors.orange, width: 2.0)),
-                    color: Colors.orange,
+                    shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
+                    color: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
                     padding: const EdgeInsets.all(8.0),
                     child: AnimatedIcon(
                       size: 60.0,
@@ -118,7 +118,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                   icon: Icon(
                     Icons.forward_30,
                     size: 48.0,
-                    color: Colors.orange,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
               ],

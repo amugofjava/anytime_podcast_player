@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
-import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -38,7 +37,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    Chrome.transparentLight();
+    // Chrome.transparentLight();
 
     // If the episode finishes we can close.
     playingStateSubscription = audioBloc.playingState.listen((playingState) async {
@@ -60,7 +59,6 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     final audioBloc = Provider.of<AudioBloc>(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: StreamBuilder<Episode>(
           stream: audioBloc.nowPlaying,
           builder: (context, snapshot) {
@@ -78,7 +76,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     left: 0.0,
                     right: 0.0,
                     child: AppBar(
-                      brightness: Brightness.dark,
+                      brightness: Theme.of(context).brightness,
                       backgroundColor: Colors.transparent,
                       elevation: 0.0,
                       leading: IconButton(

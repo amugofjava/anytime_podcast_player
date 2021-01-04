@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -73,7 +73,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
       },
       direction: DismissDirection.startToEnd,
       background: Container(
-        color: Colors.orange,
+        color: Theme.of(context).scaffoldBackgroundColor,
         height: 64.0,
       ),
       child: GestureDetector(
@@ -91,10 +91,10 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
         child: Container(
           height: 64,
           decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Theme.of(context).bottomAppBarColor,
               border: Border(
-                top: BorderSide(width: 1.0, color: Colors.black12),
-                bottom: BorderSide(width: 1.0, color: Colors.black12),
+                top: Divider.createBorderSide(context, width: 1.0),
+                bottom: Divider.createBorderSide(context, width: 1.0),
               )),
           child: StreamBuilder<Episode>(
               stream: audioBloc.nowPlaying,
@@ -166,11 +166,11 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   _play(audioBloc);
                                 }
                               },
-                              shape: CircleBorder(side: BorderSide(color: Colors.grey[100], width: 0.0)),
+                              shape: CircleBorder(side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
                               child: AnimatedIcon(
                                 size: 48.0,
                                 icon: AnimatedIcons.play_pause,
-                                color: Colors.orange,
+                                color: Theme.of(context).accentColor,
                                 progress: _playPauseController,
                               ),
                             );

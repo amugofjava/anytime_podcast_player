@@ -1,3 +1,4 @@
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,4 +33,19 @@ class MobileSettingsService extends SettingsService {
   set storeDownloadsSDCard(bool value) {
     _sharedPreferences.setBool('savesdcard', value);
   }
+
+  @override
+  bool get themeDarkMode {
+    var theme = _sharedPreferences.getString('theme') ?? 'light';
+
+    return theme == 'dark';
+  }
+
+  @override
+  set themeDarkMode(bool value) {
+    _sharedPreferences.setString('theme', value ? 'dark' : 'light');
+  }
+
+  @override
+  AppSettings settings;
 }

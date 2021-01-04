@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -35,7 +35,7 @@ class _LibraryState extends State<Library> {
                       Icon(
                         Icons.headset,
                         size: 75,
-                        color: Colors.blue[900],
+                        color: Theme.of(context).primaryColor,
                       ),
                       Text(
                         L.of(context).no_subscriptions_message,

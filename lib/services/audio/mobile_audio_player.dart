@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -126,7 +126,7 @@ class MobileAudioPlayer {
 
       log.fine('loading new track $_uri - from position $_position');
 
-      await _audioPlayer.setUrl(_uri);
+      _local ? await _audioPlayer.setFilePath(_uri) : await _audioPlayer.setUrl(_uri);
 
       if (_position > 0) {
         log.fine('moving position to ${_position}');

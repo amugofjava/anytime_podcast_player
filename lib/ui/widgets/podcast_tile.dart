@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -21,6 +21,8 @@ class PodcastTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _theme = Theme.of(context);
+    final darkMode = _theme.brightness == Brightness.dark;
 
     return Center(
       child: Column(
@@ -29,11 +31,15 @@ class PodcastTile extends StatelessWidget {
         children: <Widget>[
           ListTile(
             onTap: () {
-              Chrome.translucentLight();
+              if (darkMode) {
+                Chrome.translucentDark();
+              } else {
+                Chrome.translucentLight();
+              }
 
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+                MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc, darkMode)),
               );
             },
             leading: Hero(

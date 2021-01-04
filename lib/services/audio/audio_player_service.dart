@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -31,7 +31,7 @@ abstract class AudioPlayerService {
 
   /// Stop playing of current episode. Set update to false to stop
   /// playback without saving any episode or positional updates.
-  Future<void> stop({bool update});
+  Future<void> stop();
 
   /// Pause the current episode.
   Future<void> pause();

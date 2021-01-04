@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -29,8 +29,9 @@ import 'package:provider/provider.dart';
 class PodcastDetails extends StatefulWidget {
   final Podcast podcast;
   final PodcastBloc _podcastBloc;
+  final bool _darkMode;
 
-  PodcastDetails(this.podcast, this._podcastBloc);
+  PodcastDetails(this.podcast, this._podcastBloc, this._darkMode);
 
   @override
   _PodcastDetailsState createState() => _PodcastDetailsState();
@@ -50,6 +51,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     // Load the details of the Podcast specified in the URL
     log.fine('initState() - load feed');
     widget._podcastBloc.load(Feed(podcast: widget.podcast));
+    brightness = widget._darkMode ? Brightness.dark : Brightness.light;
 
     // We only want to display the podcast title when the toolbar is in a
     // collapsed state. Add a listener and set toollbarCollapsed variable
@@ -57,16 +59,28 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     _sliverScrollController.addListener(() {
       if (!toolbarCollpased && _sliverScrollController.hasClients && _sliverScrollController.offset > (300 - kToolbarHeight)) {
         setState(() {
-          Chrome.transparentLight();
-          brightness = Brightness.light;
+          if (widget._darkMode) {
+            Chrome.transparentDark();
+            brightness = Brightness.light;
+          } else {
+            Chrome.transparentLight();
+            brightness = Brightness.light;
+          }
+
           toolbarCollpased = true;
         });
       } else if (toolbarCollpased &&
           _sliverScrollController.hasClients &&
           _sliverScrollController.offset < (300 - kToolbarHeight)) {
         setState(() {
-          Chrome.translucentLight();
-          brightness = Brightness.dark;
+          if (widget._darkMode) {
+            Chrome.translucentDark();
+            brightness = Brightness.light;
+          } else {
+            Chrome.translucentLight();
+            brightness = Brightness.dark;
+          }
+
           toolbarCollpased = false;
         });
       }
@@ -87,17 +101,26 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     ));
   }
 
+  void _setChrome({bool darkMode}) {
+    if (darkMode) {
+      Chrome.transparentDark();
+    } else {
+      Chrome.transparentLight();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final backgroundColour = Theme.of(context).backgroundColor;
     final defaultBrightness = Theme.of(context).brightness;
-    final altBrightness = defaultBrightness == Brightness.light ? Brightness.dark : Brightness.light;
-    final titleStyle = Theme.of(context).textTheme.bodyText1;
     final _podcastBloc = Provider.of<PodcastBloc>(context);
+
+    brightness = toolbarCollpased ? defaultBrightness : Brightness.dark;
 
     return WillPopScope(
       onWillPop: () {
-        Chrome.transparentLight();
+        _setChrome(darkMode: widget._darkMode);
+
         return Future.value(true);
       },
       child: Scaffold(
@@ -109,27 +132,26 @@ class _PodcastDetailsState extends State<PodcastDetails> {
             controller: _sliverScrollController,
             slivers: <Widget>[
               SliverAppBar(
-                brightness: toolbarCollpased ? altBrightness : defaultBrightness,
-                title: toolbarCollpased
-                    // ? Text(widget.podcast.title, style: (TextStyle(color: Colors.black)))
-                    ? Text(widget.podcast.title, style: titleStyle)
-                    : Text(
-                        '',
-                      ),
+                brightness: brightness,
+                title: AnimatedOpacity(
+                  opacity: toolbarCollpased ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: Text(widget.podcast.title),
+                ),
                 leading: DecoratedIconButton(
                   icon: Icons.close,
-                  iconColour: toolbarCollpased ? Colors.black : Colors.white,
-                  decorationColour: toolbarCollpased ? Colors.white : Color(0x22000000),
+                  iconColour: toolbarCollpased && defaultBrightness == Brightness.light ? Colors.black : Colors.white,
+                  decorationColour: toolbarCollpased ? Color(0x00000000) : Color(0x22000000),
                   onPressed: () {
                     setState(() {
                       // We need to switch brightness to light here. If we do not,
                       // it will stay dark until the previous screen is rebuilt and
-                      // that results in the status bar being blank for a a few
+                      // that results in the status bar being blank for a few
                       // milliseconds which looks very odd.
-                      brightness = Brightness.light;
+                      brightness = widget._darkMode ? Brightness.dark : Brightness.light;
                     });
 
-                    Chrome.transparentLight();
+                    _setChrome(darkMode: widget._darkMode);
 
                     Navigator.pop(context);
                   },
@@ -203,7 +225,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                               Icon(
                                 Icons.error_outline,
                                 size: 50,
-                                color: Colors.blue[900],
+                                color: Theme.of(context).buttonColor,
                               ),
                               Text(
                                 L.of(context).no_podcast_details_message,
@@ -315,7 +337,7 @@ class SubscriptionButton extends StatelessWidget {
                   ? OutlineButton.icon(
                       icon: Icon(
                         Icons.delete_outline,
-                        color: Colors.orange,
+                        color: Theme.of(context).buttonColor,
                       ),
                       label: Text(L.of(context).unsubscribe_label),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -329,14 +351,13 @@ class SubscriptionButton extends StatelessWidget {
                               BasicDialogAction(
                                 title: Text(
                                   L.of(context).cancel_button_label,
-                                  style: TextStyle(color: Colors.orange),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               BasicDialogAction(
-                                title: Text(L.of(context).unsubscribe_button_label, style: TextStyle(color: Colors.orange)),
+                                title: Text(L.of(context).unsubscribe_button_label),
                                 onPressed: () {
                                   bloc.podcastEvent(PodcastEvent.unsubscribe);
 
@@ -352,7 +373,7 @@ class SubscriptionButton extends StatelessWidget {
                   : OutlineButton.icon(
                       icon: Icon(
                         Icons.add,
-                        color: Colors.orange,
+                        color: Theme.of(context).buttonColor,
                       ),
                       label: Text(L.of(context).subscribe_label),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

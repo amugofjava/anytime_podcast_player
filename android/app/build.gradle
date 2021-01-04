@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Ben Hills. All rights reserved.
+ * Copyright 2020-2021 Ben Hills. All rights reserved.
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
@@ -76,6 +76,7 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -52,20 +52,20 @@ class PlayerPositionControls extends StatelessWidget {
                 Expanded(
                   child: snapshot.hasData
                       ? Slider(
-                          onChanged: (value) {
+                    onChanged: (value) {
                             audioBloc.transitionPosition(value);
                           },
                           value: p.toDouble(),
                           min: 0.0,
                           max: length.inSeconds.toDouble(),
-                          activeColor: Colors.orange,
+                          activeColor: Theme.of(context).primaryColor,
                         )
                       : Slider(
-                          onChanged: null,
+                    onChanged: null,
                           value: 0,
                           min: 0.0,
                           max: 1.0,
-                          activeColor: Colors.orange,
+                          activeColor: Theme.of(context).primaryColor,
                         ),
                 ),
                 Text(_formatDuration(Duration(seconds: timeRemaining))),

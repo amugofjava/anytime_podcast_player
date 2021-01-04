@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -45,7 +45,6 @@ Future<bool> hasExternalStorage() async {
 }
 
 Future<String> _getSDCard() async {
-//  if (await hasStoragePermission()) {
   final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
   String path;
@@ -69,9 +68,6 @@ Future<String> _getSDCard() async {
   }
 
   return path;
-//  }
-//
-//  return '';
 }
 
 /// Strips characters that are invalid for file and directory names.
