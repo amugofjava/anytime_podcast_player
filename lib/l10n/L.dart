@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:ui';
@@ -440,6 +440,15 @@ class L {
       'Cancel',
       name: 'cancel_option_label',
       desc: 'Cancel option label',
+      locale: localeName,
+    );
+  }
+
+  String get settings_theme_switch_label {
+    return Intl.message(
+      'Dark theme',
+      name: 'settings_theme_switch_label',
+      desc: 'Dark theme',
       locale: localeName,
     );
   }

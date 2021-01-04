@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -32,7 +32,7 @@ class DownloadButton extends StatelessWidget {
         child: CircularPercentIndicator(
           radius: 38.0,
           lineWidth: 2.0,
-          backgroundColor: Colors.orange,
+          backgroundColor: Theme.of(context).buttonColor,
           progressColor: Colors.blue,
           animation: true,
           animateFromLastPercent: true,
@@ -45,9 +45,9 @@ class DownloadButton extends StatelessWidget {
                   ),
                 )
               : Icon(
-                  icon,
+            icon,
                   size: 28.0,
-                  color: Colors.orange,
+                  color: Theme.of(context).buttonColor,
                 ),
         ),
       ),

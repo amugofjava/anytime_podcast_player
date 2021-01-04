@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/l10n/L.dart';
@@ -47,7 +47,7 @@ class SearchResults extends StatelessWidget {
                     Icon(
                       Icons.search,
                       size: 75,
-                      color: Colors.blue[900],
+                      color: Theme.of(context).primaryColor,
                     ),
                     Text(
                       L.of(context).no_search_results_message,

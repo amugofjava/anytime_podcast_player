@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
@@ -94,7 +94,7 @@ class _DownloadsState extends State<Downloads> {
               Icon(
                 Icons.cloud_download,
                 size: 75,
-                color: Colors.blue[900],
+                color: Theme.of(context).primaryColor,
               ),
               Text(
                 L.of(context).no_downloads_message,

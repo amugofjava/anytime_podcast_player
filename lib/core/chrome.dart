@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -12,7 +12,7 @@ import 'package:logging/logging.dart';
 class Chrome {
   static final log = Logger('Chrome');
 
-  static const _translucent = SystemUiOverlayStyle(
+  static const _translucentLight = SystemUiOverlayStyle(
     statusBarColor: Color(0x22000000),
     statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: Colors.white,
@@ -20,7 +20,7 @@ class Chrome {
     systemNavigationBarIconBrightness: Brightness.dark,
   );
 
-  static const _transparent = SystemUiOverlayStyle(
+  static const _transparentLight = SystemUiOverlayStyle(
     statusBarColor: Color(0xFFFFFFFF),
     statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: Colors.white,
@@ -28,10 +28,29 @@ class Chrome {
     systemNavigationBarIconBrightness: Brightness.dark,
   );
 
-  static var _last = _translucent;
+  static const _translucentDark = SystemUiOverlayStyle(
+    statusBarColor: Color(0x22000000),
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Color(0xff222222),
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarIconBrightness: Brightness.light,
+  );
+
+  static const _transparentDark = SystemUiOverlayStyle(
+    statusBarColor: Color(0xff222222),
+    // Color(0x00FFFFFF),
+    statusBarIconBrightness: Brightness.light,
+    systemNavigationBarColor: Color(0xff222222),
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarIconBrightness: Brightness.light,
+  );
+
+  static var _last = _translucentDark;
 
   static void translucentLight() {
-    _last = _translucent;
+    log.fine('translucentLight()');
+
+    _last = _translucentLight;
 
     restoreLast();
   }
@@ -39,7 +58,23 @@ class Chrome {
   static void transparentLight() {
     log.fine('transparentLight()');
 
-    _last = _transparent;
+    _last = _transparentLight;
+
+    restoreLast();
+  }
+
+  static void translucentDark() {
+    log.fine('translucentDark()');
+
+    _last = _translucentDark;
+
+    restoreLast();
+  }
+
+  static void transparentDark() {
+    log.fine('transparentDark()');
+
+    _last = _transparentDark;
 
     restoreLast();
   }

@@ -1,4 +1,4 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -8,6 +8,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
 import 'package:anytime/core/chrome.dart';
 import 'package:anytime/l10n/L.dart';
@@ -38,25 +39,67 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final theme = Themes.lightTheme().themeData;
+// var theme = Themes.lightTheme().themeData;
+var theme = Themes.darkTheme().themeData;
 
 /// Anytime is a Podcast player. You can search and subscribe to podcasts,
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
-class AnytimePodcastApp extends StatelessWidget {
+class AnytimePodcastApp extends StatefulWidget {
   final Repository repository;
   final MobilePodcastApi podcastApi;
   DownloadService downloadService;
   PodcastService podcastService;
   AudioPlayerService audioPlayerService;
+  SettingsBloc settingsBloc;
+  MobileSettingsService mobileSettingsService;
 
-  // Initialise all the services our application will need.
-  AnytimePodcastApp()
+  AnytimePodcastApp(this.mobileSettingsService)
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
     downloadService = MobileDownloadService(repository: repository);
-    podcastService = MobilePodcastService(api: podcastApi, repository: repository);
+    podcastService = MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
     audioPlayerService = MobileAudioPlayerService(repository: repository);
+    settingsBloc = SettingsBloc(mobileSettingsService);
+  }
+
+  @override
+  _AnytimePodcastAppState createState() => _AnytimePodcastAppState();
+}
+
+class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
+  ThemeData theme;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.settingsBloc.settings.listen((event) {
+      setState(() {
+        var newTheme = event.theme == 'dark' ? Themes.darkTheme().themeData : Themes.lightTheme().themeData;
+
+        /// Only update the theme if it has changed.
+        if (newTheme != theme) {
+          theme = newTheme;
+
+          if (event.theme == 'dark') {
+            Chrome.transparentDark();
+          } else {
+            Chrome.transparentLight();
+          }
+        }
+      });
+    });
+
+    if (widget.mobileSettingsService.themeDarkMode) {
+      theme = Themes.darkTheme().themeData;
+
+      Chrome.transparentDark();
+    } else {
+      Chrome.transparentLight();
+
+      theme = Themes.lightTheme().themeData;
+    }
   }
 
   @override
@@ -64,22 +107,38 @@ class AnytimePodcastApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<SearchBloc>(
-          create: (_) => SearchBloc(podcastService: MobilePodcastService(api: podcastApi, repository: repository)),
+          create: (_) => SearchBloc(
+              podcastService: MobilePodcastService(
+            api: widget.podcastApi,
+            repository: widget.repository,
+            settingsService: widget.mobileSettingsService,
+          )),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<DiscoveryBloc>(
-          create: (_) => DiscoveryBloc(podcastService: MobilePodcastService(api: podcastApi, repository: repository)),
+          create: (_) => DiscoveryBloc(
+              podcastService: MobilePodcastService(
+            api: widget.podcastApi,
+            repository: widget.repository,
+            settingsService: widget.mobileSettingsService,
+          )),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<EpisodeBloc>(
           create: (_) => EpisodeBloc(
-              podcastService: MobilePodcastService(api: podcastApi, repository: repository),
-              audioPlayerService: audioPlayerService),
+              podcastService: MobilePodcastService(
+                api: widget.podcastApi,
+                repository: widget.repository,
+                settingsService: widget.mobileSettingsService,
+              ),
+              audioPlayerService: widget.audioPlayerService),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PodcastBloc>(
-          create: (_) =>
-              PodcastBloc(podcastService: podcastService, audioPlayerService: audioPlayerService, downloadService: downloadService),
+          create: (_) => PodcastBloc(
+              podcastService: widget.podcastService,
+              audioPlayerService: widget.audioPlayerService,
+              downloadService: widget.downloadService),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PagerBloc>(
@@ -87,7 +146,11 @@ class AnytimePodcastApp extends StatelessWidget {
           dispose: (_, value) => value.dispose(),
         ),
         Provider<AudioBloc>(
-          create: (_) => AudioBloc(audioPlayerService: audioPlayerService),
+          create: (_) => AudioBloc(audioPlayerService: widget.audioPlayerService),
+          dispose: (_, value) => value.dispose(),
+        ),
+        Provider<SettingsBloc>(
+          create: (_) => widget.settingsBloc,
           dispose: (_, value) => value.dispose(),
         ),
       ],
@@ -129,7 +192,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    Chrome.transparentLight();
+    // Chrome.transparentLight();
 
     WidgetsBinding.instance.addObserver(this);
 
@@ -163,9 +226,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   Widget build(BuildContext context) {
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
+    // final backgroundColour = Theme.of(context).backgroundColor;
+    final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
+    final brightness = Theme.of(context).brightness;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColour,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -173,8 +239,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               slivers: <Widget>[
                 SliverAppBar(
                   title: TitleWidget(),
-                  brightness: Brightness.light,
-                  backgroundColor: Colors.white,
+                  brightness: brightness,
+                  backgroundColor: backgroundColour,
                   floating: false,
                   pinned: true,
                   snap: false,
@@ -182,6 +248,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     IconButton(
                       tooltip: L.of(context).search_button_label,
                       icon: Icon(Icons.search),
+                      // color: Theme.of(context).indicatorColor,
                       onPressed: () async {
                         await Navigator.push(
                           context,
@@ -190,14 +257,21 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       },
                     ),
                     PopupMenuButton<String>(
+                      color: Theme.of(context).dialogBackgroundColor,
                       onSelected: _menuSelect,
+                      icon: Icon(
+                        Icons.more_vert,
+                        // color: Theme.of(context).buttonColor,
+                      ),
                       itemBuilder: (BuildContext context) {
                         return <PopupMenuEntry<String>>[
                           PopupMenuItem<String>(
+                            textStyle: Theme.of(context).textTheme.subtitle1,
                             value: 'settings',
                             child: Text('Settings'), //TODO: FIX
                           ),
                           PopupMenuItem<String>(
+                            textStyle: Theme.of(context).textTheme.subtitle1,
                             value: 'about',
                             child: Text(L.of(context).about_label),
                           ),
@@ -223,7 +297,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
             return BottomNavigationBar(
               type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).bottomAppBarColor,
+              selectedIconTheme: Theme.of(context).iconTheme,
               currentIndex: snapshot.data,
               onTap: pager.changePage,
               items: <BottomNavigationBarItem>[
@@ -263,31 +338,28 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion: 'v${packageInfo.version} Beta build ${packageInfo.buildNumber}',
+            applicationVersion: 'v${packageInfo.version} Alpha build ${packageInfo.buildNumber}',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,
               height: 52.0,
             ),
             children: <Widget>[
-              Text('\u00a9 2020 Ben Hills'),
+              Text('\u00a9 2020-2021 Ben Hills'),
               GestureDetector(
-                  child:
-                      Text('anytime@amugofjava.me.uk', style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
+                  child: Text(
+                    'anytime@amugofjava.me.uk',
+                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                  ),
                   onTap: () {
                     _launchEmail();
                   }),
             ]);
         break;
       case 'settings':
-        var s = await MobileSettingsService.instance();
-
         await Navigator.push(
           context,
-          MaterialPageRoute<void>(
-              builder: (context) => Settings(
-                    settingsService: s,
-                  )),
+          MaterialPageRoute<void>(builder: (context) => Settings()),
         );
         break;
     }
@@ -307,8 +379,11 @@ class TitleWidget extends StatelessWidget {
   final TextStyle _titleTheme1 = theme.textTheme.bodyText2
       .copyWith(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
 
-  final TextStyle _titleTheme2 = theme.textTheme.bodyText2
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2
       .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2
+      .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
 
   @override
   Widget build(BuildContext context) {
@@ -322,7 +397,7 @@ class TitleWidget extends StatelessWidget {
           ),
           Text(
             'Player',
-            style: _titleTheme2,
+            style: Theme.of(context).brightness == Brightness.light ? _titleTheme2Light : _titleTheme2Dark,
           ),
         ],
       ),

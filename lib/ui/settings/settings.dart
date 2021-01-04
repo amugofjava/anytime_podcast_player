@@ -1,14 +1,16 @@
-// Copyright 2020 Ben Hills. All rights reserved.
+// Copyright 2020-2021 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
-import 'package:anytime/services/settings/settings_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:provider/provider.dart';
 
 /// This is the settings page and allows the user to select various
 /// options for the app. This is a self contained page and so, unlike
@@ -21,12 +23,6 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 /// rest of the application is not prepared for iOS design; this
 /// is in preparation for the iOS version.
 class Settings extends StatefulWidget {
-  final SettingsService settingsService;
-
-  Settings({
-    @required this.settingsService,
-  });
-
   @override
   _SettingsState createState() => _SettingsState();
 }
@@ -34,64 +30,75 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   bool sdcard = false;
 
-  Widget _buildList() {
-    return ListView(
-        children: ListTile.divideTiles(
-      context: context,
-      tiles: [
-        ListTile(
-          title: Text(L.of(context).settings_mark_deleted_played_label),
-          trailing: Switch.adaptive(
-            activeColor: Colors.orange,
-            value: widget.settingsService.markDeletedEpisodesAsPlayed,
-            onChanged: (value) => setState(() => widget.settingsService.markDeletedEpisodesAsPlayed = value),
-          ),
-        ),
-        ListTile(
-          title: Text(L.of(context).settings_download_sd_card_label),
-          enabled: sdcard,
-          trailing: Switch.adaptive(
-            activeColor: Colors.orange,
-            value: widget.settingsService.storeDownloadsSDCard,
-            onChanged: (value) => sdcard
-                ? setState(() {
-                    if (value) {
-                      _showStorageDialog(enableExternalStorage: true);
-                    } else {
-                      _showStorageDialog(enableExternalStorage: false);
-                    }
+  Widget _buildList(BuildContext context) {
+    var settingsBloc = Provider.of<SettingsBloc>(context);
 
-                    widget.settingsService.storeDownloadsSDCard = value;
-                  })
-                : null,
-          ),
-        ),
-      ],
-    ).toList());
+    return StreamBuilder<AppSettings>(
+        stream: settingsBloc.settings,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+                children: ListTile.divideTiles(
+              context: context,
+              tiles: [
+                ListTile(
+                  title: Text(L.of(context).settings_theme_switch_label),
+                  trailing: Switch.adaptive(
+                      value: snapshot.data.theme == 'dark',
+                      onChanged: (value) {
+                        settingsBloc.darkMode(value);
+                      }),
+                ),
+                ListTile(
+                  title: Text(L.of(context).settings_mark_deleted_played_label),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data.markDeletedEpisodesAsPlayed,
+                    onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
+                  ),
+                ),
+                ListTile(
+                  title: Text(L.of(context).settings_download_sd_card_label),
+                  enabled: sdcard,
+                  trailing: Switch.adaptive(
+                    value: snapshot.data.storeDownloadsSDCard,
+                    onChanged: (value) => sdcard
+                        ? setState(() {
+                            if (value) {
+                              _showStorageDialog(enableExternalStorage: true);
+                            } else {
+                              _showStorageDialog(enableExternalStorage: false);
+                            }
+
+                            settingsBloc.storeDownloadonSDCard(value);
+                          })
+                        : null,
+                  ),
+                ),
+              ],
+            ).toList());
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        brightness: Theme.of(context).brightness,
         elevation: 0.0,
         title: Text(
           'Settings',
-          style: TextStyle(
-            color: Colors.grey[800],
-          ),
         ),
       ),
-      body: _buildList(),
+      body: _buildList(context),
     );
   }
 
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(),
-      child: _buildList(),
+      child: _buildList(context),
     );
   }
 

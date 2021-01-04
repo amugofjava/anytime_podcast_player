@@ -12,7 +12,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
-import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -23,9 +23,10 @@ class MobilePodcastService extends PodcastService {
   final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
 
   MobilePodcastService({
-    PodcastApi api,
-    Repository repository,
-  }) : super(api: api, repository: repository);
+    @required PodcastApi api,
+    @required Repository repository,
+    @required SettingsService settingsService,
+  }) : super(api: api, repository: repository, settingsService: settingsService);
 
   @override
   Future<psapi.SearchResult> search({
@@ -205,8 +206,6 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<void> deleteDownload(Episode episode) async {
-    var settings = await MobileSettingsService.instance();
-
     // If this episode is currently downloading, cancel the download first.
     if (episode.downloadPercentage < 100) {
       await FlutterDownloader.cancel(taskId: episode.downloadTaskId);
@@ -217,7 +216,7 @@ class MobilePodcastService extends PodcastService {
     episode.position = 0;
     episode.downloadState = DownloadState.none;
 
-    if (settings.markDeletedEpisodesAsPlayed) {
+    if (settingsService.markDeletedEpisodesAsPlayed) {
       episode.played = true;
     }
 
