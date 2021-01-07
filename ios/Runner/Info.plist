@@ -50,5 +50,11 @@
     <!-- changes this number to configure the maximum number of concurrent tasks -->
     <key>FDMaximumConcurrentTasks</key>
     <integer>1</integer>
+    <!-- Allow HTTP downloads for flutter_downloader -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

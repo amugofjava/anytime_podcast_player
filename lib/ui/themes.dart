@@ -60,7 +60,7 @@ ThemeData _buildDarktheme() {
     primaryColorDark: Color(0xfff57c00),
     accentColor: Color(0xffffffff),
     accentColorBrightness: Brightness.dark,
-    canvasColor: Color(0xfffafafa),
+    canvasColor: Color(0xff000000),
     scaffoldBackgroundColor: Color(0xff000000),
     bottomAppBarColor: Color(0xff222222),
     cardColor: Colors.black,

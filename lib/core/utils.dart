@@ -24,30 +24,33 @@ Future<bool> hasStoragePermission() async {
 
 Future<String> getStorageDirectory() async {
   SettingsService settings = await MobileSettingsService.instance();
+  Directory directory;
 
-  if (Platform.isIOS || !settings.storeDownloadsSDCard) {
-    var d = await getApplicationSupportDirectory();
-
-    return join(d.path, 'AnyTime');
+  if (Platform.isIOS) {
+    directory = await getApplicationDocumentsDirectory();
+  } else if (settings.storeDownloadsSDCard) {
+    directory = await _getSDCard();
   } else {
-    return join(await _getSDCard(), 'AnyTime');
+    directory = await getApplicationSupportDirectory();
   }
+
+  return join(directory.path, 'AnyTime');
 }
 
 Future<bool> hasExternalStorage() async {
   try {
     var result = await _getSDCard();
 
-    return result.isNotEmpty;
+    return result != null;
   } catch (e) {
     return Future.value(false);
   }
 }
 
-Future<String> _getSDCard() async {
+Future<Directory> _getSDCard() async {
   final appDocumentDir = await getExternalStorageDirectories(type: StorageDirectory.podcasts);
 
-  String path;
+  Directory path;
 
   // If the directory contains the word 'emulated' we are
   // probably looking at a mapped user partition rather than
@@ -58,7 +61,7 @@ Future<String> _getSDCard() async {
     for (var d in appDocumentDir) {
       print('Found path ${d.absolute.path}');
       if (!d.path.contains('emulated')) {
-        path = d.absolute.path;
+        path = d.absolute;
       }
     }
   }
