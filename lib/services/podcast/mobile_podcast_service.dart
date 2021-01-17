@@ -294,14 +294,14 @@ class MobilePodcastService extends PodcastService {
   /// separate isolate so that the UI can continue to present a loading
   /// indicator whilst the data is fetched without locking the UI.
   Future<psapi.Podcast> _loadPodcastFeed({@required String url}) {
-    return compute<String, psapi.Podcast>(_loadPodcastFeedCompute, url);
+    return compute<_FeedComputer, psapi.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
   }
 
-  /// We have to separate the process of calling compute as you cannot used
+  /// We have to separate the process of calling compute as you cannot use
   /// named parameters with compute. The podcast feed load API uses named
   /// parameters so we need to change it to a single, positional parameter.
-  static Future<psapi.Podcast> _loadPodcastFeedCompute(String url) {
-    return psapi.Podcast.loadFeed(url: url);
+  static Future<psapi.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
+    return c.api.loadFeed(c.url);
   }
 
   @override
@@ -358,4 +358,11 @@ class _CacheItem {
   final DateTime dateAdded;
 
   _CacheItem(this.podcast) : dateAdded = DateTime.now();
+}
+
+class _FeedComputer {
+  final PodcastApi api;
+  final String url;
+
+  _FeedComputer({@required this.api, @required this.url});
 }

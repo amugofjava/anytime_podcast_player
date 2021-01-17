@@ -21,4 +21,7 @@ abstract class PodcastApi {
 
   /// Request the top podcast charts from iTunes, and at most [size] records.
   Future<SearchResult> charts(int size);
+
+  /// URL representing the RSS feed for a podcast.
+  Future<Podcast> loadFeed(String url);
 }

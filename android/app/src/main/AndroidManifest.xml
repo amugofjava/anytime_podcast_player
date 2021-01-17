@@ -46,7 +46,7 @@
             android:authorities="${applicationId}.workmanager-init"
             android:enabled="false"
             android:exported="false" />
-
+l
         <provider
             android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
             android:authorities="${applicationId}.flutter-downloader-init"

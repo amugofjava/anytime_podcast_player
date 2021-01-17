@@ -8,7 +8,7 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is currently in *Alpha* - so please expect bugs! It also only supports Android at this time.
+Anytime is currently in *Beta* - so please expect bugs! It also only supports Android at this time.
 A version for iOS is in the works, but is slower going as I do not have any Apple
 hardware to build or test on.
 
@@ -75,7 +75,7 @@ Anytime takes a layered approach:
 
 ## Contributing
 
-If you have an issue or discover a bug, please raise a GitHub issue. Pull requests are also welcome.
+If you have an issue or discover a bug, please raise a GitHub issue. Pull requests are also welcome. Full details can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Have a question?
 

@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:anytime/services/audio/mobile_audio_player.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:logging/logging.dart';
 
 /// This is the implementation of the Anytime Audio Service for Android. This
@@ -13,6 +14,8 @@ import 'package:logging/logging.dart';
 /// playback and Android services for continuing playback in the background.
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
+
+  StreamSubscription<void> noisyStream;
   MobileAudioPlayer _anytimeAudioPlayer;
 
   /// As we are running in a separate Isolate, we need a separate Logger -
@@ -28,6 +31,13 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   @override
   Future<void> onStart(Map<String, dynamic> params) async {
     log.fine('onStart()');
+
+    final session = await AudioSession.instance;
+    await session.configure(AudioSessionConfiguration.speech());
+
+    noisyStream = session.becomingNoisyEventStream.listen((_) {
+      _anytimeAudioPlayer.onNoise();
+    });
 
     // As audio_service now requires a call to super.onStop() we need to
     // be notified if playback comes to an end. Without this callback,
@@ -46,13 +56,26 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
     log.fine('onStop()');
     await _anytimeAudioPlayer.stop();
 
+    if (noisyStream != null) {
+      await noisyStream.cancel();
+    }
+
     await super.onStop();
   }
 
   @override
-  Future<void> onPlay() {
+  Future<void> onPlay() async {
     log.fine('onPlay()');
-    return _anytimeAudioPlayer.play();
+
+    final session = await AudioSession.instance;
+
+    if (await session.setActive(true)) {
+      return _anytimeAudioPlayer.play();
+    } else {
+      log.fine('ERROR: Could not activate play session');
+    }
+
+    return;
   }
 
   @override
@@ -65,11 +88,6 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   Future<void> onSeekTo(Duration position) {
     log.fine('onSeekTo()');
     return _anytimeAudioPlayer.seekTo(position);
-  }
-
-  @override
-  Future<void> onAudioBecomingNoisy() {
-    return _anytimeAudioPlayer.onNoise();
   }
 
   @override

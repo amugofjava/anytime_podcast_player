@@ -39,13 +39,15 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-// var theme = Themes.lightTheme().themeData;
-var theme = Themes.darkTheme().themeData;
+var theme = Themes.lightTheme().themeData;
 
 /// Anytime is a Podcast player. You can search and subscribe to podcasts,
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
+  static String applicationVersion = '0.1.3';
+  static String applicationBuildNumber = '22';
+
   final Repository repository;
   final MobilePodcastApi podcastApi;
   DownloadService downloadService;
@@ -192,8 +194,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    // Chrome.transparentLight();
-
     WidgetsBinding.instance.addObserver(this);
 
     audioBloc.transitionLifecycleState(LifecyleState.resume);
@@ -226,7 +226,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   Widget build(BuildContext context) {
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
-    // final backgroundColour = Theme.of(context).backgroundColor;
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
     final brightness = Theme.of(context).brightness;
 
@@ -248,7 +247,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     IconButton(
                       tooltip: L.of(context).search_button_label,
                       icon: Icon(Icons.search),
-                      // color: Theme.of(context).indicatorColor,
                       onPressed: () async {
                         await Navigator.push(
                           context,
@@ -349,7 +347,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               GestureDetector(
                   child: Text(
                     'anytime@amugofjava.me.uk',
-                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.orange),
                   ),
                   onTap: () {
                     _launchEmail();
