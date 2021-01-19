@@ -28,8 +28,8 @@ class MobileAudioPlayer {
 
   MobileAudioPlayer({this.completionHandler});
 
-  StreamSubscription<AudioPlaybackState> _playerStateSubscription;
-  StreamSubscription<AudioPlaybackEvent> _eventSubscription;
+  StreamSubscription<ProcessingState> _playerStateSubscription;
+  StreamSubscription<PlaybackEvent> _eventSubscription;
 
   AudioProcessingState _playbackState;
   List<MediaControl> _controls = [];
@@ -111,13 +111,13 @@ class MobileAudioPlayer {
     log.fine('start()');
 
     _playerStateSubscription =
-        _audioPlayer.playbackStateStream.where((state) => state == AudioPlaybackState.completed).listen((state) async {
+        _audioPlayer.processingStateStream.where((state) => state == ProcessingState.completed).listen((state) async {
       await complete();
     });
 
     _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
-      if (event.state == AudioPlaybackState.playing) {
-        _position = event.position.inMilliseconds;
+      if (_audioPlayer.playing && event.updatePosition != null) {
+        _position = event.updatePosition.inMilliseconds;
       }
     });
   }
@@ -132,22 +132,18 @@ class MobileAudioPlayer {
 
       log.fine('loading new track $_uri - from position $_position');
 
-      _local ? await _audioPlayer.setFilePath(_uri) : await _audioPlayer.setUrl(_uri);
-
-      if (_position > 0) {
-        log.fine('moving position to ${_position}');
-        await _audioPlayer.seek(Duration(milliseconds: _position));
-      }
+      _local
+          ? await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position))
+          : await _audioPlayer.setUrl(_uri);
 
       _loadTrack = false;
     }
 
-    if (_audioPlayer.playbackEvent.state != AudioPlaybackState.connecting ||
-        _audioPlayer.playbackEvent.state != AudioPlaybackState.none) {
+    if (_audioPlayer.processingState != ProcessingState.idle) {
       try {
         unawaited(_audioPlayer.play());
       } catch (e) {
-        print('State error');
+        print('State error ${e.toString()}');
       }
     }
 
