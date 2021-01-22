@@ -40,6 +40,7 @@ class MobileAudioPlayer {
   bool _clearedCompletedState = false;
   bool _local;
   int _episodeId = 0;
+  double _playbackSpeed = 1.0;
 
   MediaControl playControl = MediaControl(
     androidIcon: 'drawable/ic_action_play_circle_outline',
@@ -85,7 +86,9 @@ class MobileAudioPlayer {
     _local = (args[4] as String) == '1';
     var sp = args[5] as String;
     var episodeIdStr = args[6] as String;
+    var playbackSpeedStr = args[7] as String;
     _episodeId = int.parse(episodeIdStr);
+    _playbackSpeed = double.parse(playbackSpeedStr);
 
     _position = 0;
 
@@ -95,7 +98,7 @@ class MobileAudioPlayer {
       log.info('Failed to parse starting position of $sp');
     }
 
-    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId}');
+    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
 
@@ -141,6 +144,12 @@ class MobileAudioPlayer {
 
     if (_audioPlayer.processingState != ProcessingState.idle) {
       try {
+        print('Checking current playback speed ${_audioPlayer.speed} with $_playbackSpeed');
+
+        if (_audioPlayer.speed != _playbackSpeed) {
+          await _audioPlayer.setSpeed(_playbackSpeed);
+        }
+
         unawaited(_audioPlayer.play());
       } catch (e) {
         print('State error ${e.toString()}');
@@ -217,6 +226,12 @@ class MobileAudioPlayer {
         _playbackState = AudioProcessingState.rewinding;
         await _setState();
       }
+    }
+  }
+
+  Future<void> setSpeed(double speed) async {
+    if (_isPlaying) {
+      await _audioPlayer.setSpeed(speed);
     }
   }
 
