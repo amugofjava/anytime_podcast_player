@@ -11,10 +11,11 @@ class SettingsBloc extends Bloc {
   final log = Logger('SettingsBloc');
   final SettingsService _settingsService;
 
-  final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>();
+  final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
   final BehaviorSubject<bool> _darkMode = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadonSDCard = BehaviorSubject<bool>();
+  final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -25,12 +26,14 @@ class SettingsBloc extends Bloc {
     var themeDarkMode = _settingsService.themeDarkMode;
     var markDeletedEpisodesAsPlayed = _settingsService.markDeletedEpisodesAsPlayed;
     var storeDownloadsSDCard = _settingsService.storeDownloadsSDCard;
+    var playbackSpeed = _settingsService.playbackSpeed;
     var themeName = themeDarkMode ? 'dark' : 'light';
 
     var s = AppSettings(
       theme: themeDarkMode ? 'dark' : 'light',
       markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
       storeDownloadsSDCard: storeDownloadsSDCard,
+      playbackSpeed: playbackSpeed,
     );
 
     _settings.add(s);
@@ -42,6 +45,7 @@ class SettingsBloc extends Bloc {
         theme: themeName,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
         storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
       );
 
       _settings.add(s);
@@ -56,6 +60,7 @@ class SettingsBloc extends Bloc {
         theme: themeName,
         markDeletedEpisodesAsPlayed: mark,
         storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
       );
 
       _settings.add(s);
@@ -70,11 +75,27 @@ class SettingsBloc extends Bloc {
         theme: themeName,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
         storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
       );
 
       _settings.add(s);
 
       _settingsService.storeDownloadsSDCard = sdcard;
+    });
+
+    _playbackSpeed.listen((double speed) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: speed,
+      );
+
+      _settings.add(s);
+
+      print('Setting speed to $speed');
+
+      _settingsService.playbackSpeed = speed;
     });
   }
 
@@ -85,6 +106,8 @@ class SettingsBloc extends Bloc {
   void Function(bool) get storeDownloadonSDCard => _storeDownloadonSDCard.add;
 
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
+
+  void Function(double) get setPlaybackSpeed => _playbackSpeed.add;
 
   @override
   void dispose() {

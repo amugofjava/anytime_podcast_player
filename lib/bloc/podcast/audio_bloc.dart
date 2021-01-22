@@ -44,9 +44,13 @@ class AudioBloc extends Bloc {
   /// Handles persisting data to storage.
   final AudioPlayerService audioPlayerService;
 
+  final PublishSubject<double> _playbackSpeedSubject = PublishSubject<double>();
+
   StreamSubscription<dynamic> _positionSubscription;
 
-  AudioBloc({@required this.audioPlayerService}) {
+  AudioBloc({
+    @required this.audioPlayerService,
+  }) {
     /// Listen for transition events from the client.
     _handlePlayingStateTransitions();
 
@@ -58,6 +62,9 @@ class AudioBloc extends Bloc {
 
     /// Listen for lifecycle pause or resume states
     _handleLifecycleTransitions();
+
+    /// Listen for playback speed changes
+    _handlePlaybackSpeedTransitions();
   }
 
   /// Listens to events from the UI (or any client) to transition from one
@@ -111,6 +118,12 @@ class AudioBloc extends Bloc {
     });
   }
 
+  void _handlePlaybackSpeedTransitions() {
+    _playbackSpeedSubject.listen((double speed) async {
+      await audioPlayerService.setPlaybackSpeed(speed);
+    });
+  }
+
   /// Play the specified track now
   void Function(Episode) get play => _playSubject.add;
 
@@ -131,12 +144,16 @@ class AudioBloc extends Bloc {
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;
 
+  /// Change playback speed
+  void Function(double) get playbackSpeed => _playbackSpeedSubject.sink.add;
+
   @override
   void dispose() {
     _playSubject.close();
     _transitionPlayingState.close();
     _transitionPosition.close();
     _lifecycleSubject.close();
+    _playbackSpeedSubject.close();
     _positionSubscription.cancel();
   }
 }

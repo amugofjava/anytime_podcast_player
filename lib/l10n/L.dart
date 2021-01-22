@@ -452,6 +452,15 @@ class L {
       locale: localeName,
     );
   }
+
+  String get playback_speed_label {
+    return Intl.message(
+      'Set playback speed',
+      name: 'playback_speed_label',
+      desc: 'Set playback speed icon label',
+      locale: localeName,
+    );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

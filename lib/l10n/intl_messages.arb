@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-12-14T11:05:52.194574",
+  "@@last_modified": "2021-01-23T13:44:32.781978",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -279,6 +279,12 @@
   "settings_theme_switch_label": "Dark theme",
   "@settings_theme_switch_label": {
     "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Set playback speed",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
     "type": "text",
     "placeholders": {}
   }

@@ -275,5 +275,11 @@
     "description": "Dark theme",
     "type": "text",
     "placeholders": {}
+  },
+  "playback_speed_label": "Set playback speed",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
   }
 }
