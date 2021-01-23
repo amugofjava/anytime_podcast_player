@@ -15,7 +15,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/services/audio/mobile_audio_service.dart';
+import 'package:anytime/services/audio/mobile_audio_player_service.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
@@ -36,7 +36,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -62,7 +61,7 @@ class AnytimePodcastApp extends StatefulWidget {
         podcastApi = MobilePodcastApi() {
     downloadService = MobileDownloadService(repository: repository, downloadManager: FlutterDownloaderManager());
     podcastService = MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
-    audioPlayerService = MobileAudioPlayerService(repository: repository);
+    audioPlayerService = MobileAudioPlayerService(repository: repository, settingsService: mobileSettingsService);
     settingsBloc = SettingsBloc(mobileSettingsService);
   }
 
@@ -236,6 +235,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         children: <Widget>[
           Expanded(
             child: CustomScrollView(
+              // physics: NeverScrollableScrollPhysics(),
               slivers: <Widget>[
                 SliverAppBar(
                   title: TitleWidget(),
@@ -330,14 +330,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _menuSelect(String choice) async {
-    final packageInfo = await PackageInfo.fromPlatform();
-
     switch (choice) {
       case 'about':
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion: 'v${packageInfo.version} Alpha build ${packageInfo.buildNumber}',
+            applicationVersion: 'v${AnytimePodcastApp.applicationVersion} Beta build ${AnytimePodcastApp.applicationBuildNumber}',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,

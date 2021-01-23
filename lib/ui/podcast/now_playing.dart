@@ -37,8 +37,6 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    // Chrome.transparentLight();
-
     // If the episode finishes we can close.
     playingStateSubscription = audioBloc.playingState.listen((playingState) async {
       if (playingState == AudioState.stopped) {

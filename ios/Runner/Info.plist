@@ -56,5 +56,15 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<!-- Setup just_audio -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Anytime does not require mic access</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+        <key>NSAllowsArbitraryLoadsForMedia</key>
+        <true/>
+    </dict>
 </dict>
 </plist>

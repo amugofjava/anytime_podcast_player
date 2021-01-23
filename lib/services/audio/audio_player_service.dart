@@ -22,6 +22,10 @@ class PositionState {
   PositionState(this.position, this.length, this.percentage);
 }
 
+/// This class defines the audio playback options supported by Anytime.
+/// The implementing classes will then handle the specifics for the
+/// platform we are running on. Currently this is just mobile, but may
+/// expand to web and desktop in the future.
 abstract class AudioPlayerService {
   /// Play a new episode, optionally resume at last save point.
   Future<void> playEpisode({@required Episode episode, bool resume});
@@ -50,6 +54,9 @@ abstract class AudioPlayerService {
 
   /// Call when the app is about to be suspended.
   Future<void> suspend();
+
+  /// Call to set the playback speed.
+  Future<void> setPlaybackSpeed(double speed);
 
   Episode nowPlaying;
 
