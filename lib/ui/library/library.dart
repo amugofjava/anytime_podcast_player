@@ -11,6 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Library extends StatefulWidget {
+  final String noSubscriptionsMessage;
+
+  const Library({this.noSubscriptionsMessage});
+
   @override
   _LibraryState createState() => _LibraryState();
 }
@@ -39,7 +43,7 @@ class _LibraryState extends State<Library> {
                         color: Theme.of(context).primaryColor,
                       ),
                       Text(
-                        L.of(context).no_subscriptions_message,
+                        widget.noSubscriptionsMessage ?? L.of(context).no_subscriptions_message,
                         style: Theme.of(context).textTheme.headline6,
                         textAlign: TextAlign.center,
                       ),
