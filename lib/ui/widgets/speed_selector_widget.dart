@@ -53,8 +53,8 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 constraints: const BoxConstraints(
                   maxHeight: 24.0,
                   minHeight: 24.0,
-                  maxWidth: 48.0,
-                  minWidth: 48.0,
+                  maxWidth: 24.0,
+                  minWidth: 24.0,
                 ),
                 tooltip: L.of(context).playback_speed_label,
                 padding: const EdgeInsets.all(0.0),

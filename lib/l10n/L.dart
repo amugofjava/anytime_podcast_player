@@ -461,6 +461,15 @@ class L {
       locale: localeName,
     );
   }
+
+  String get show_notes_label {
+    return Intl.message(
+      'Show notes',
+      name: 'show_notes_label',
+      desc: 'Set show notes icon label',
+      locale: localeName,
+    );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

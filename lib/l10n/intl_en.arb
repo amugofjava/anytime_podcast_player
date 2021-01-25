@@ -90,13 +90,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_played_label": "Mark As Played",
+  "mark_played_label": "Mark Played",
   "@mark_played_label": {
     "description": "Mark as played",
     "type": "text",
     "placeholders": {}
   },
-  "mark_unplayed_label": "Mark As Unplayed",
+  "mark_unplayed_label": "Mark Unplayed",
   "@mark_unplayed_label": {
     "description": "Mark as unplayed",
     "type": "text",
@@ -279,6 +279,12 @@
   "playback_speed_label": "Set playback speed",
   "@playback_speed_label": {
     "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Show notes",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
     "type": "text",
     "placeholders": {}
   }
