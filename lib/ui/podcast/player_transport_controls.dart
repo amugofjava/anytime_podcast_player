@@ -69,8 +69,8 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
     final effectiveVisualDensity = theme.visualDensity;
 
     var unadjustedConstraints = const BoxConstraints(
-      minWidth: kMinInteractiveDimension,
-      minHeight: kMinInteractiveDimension,
+      minWidth: 24.0,
+      minHeight: 24.0,
     );
 
     final adjustedConstraints = effectiveVisualDensity.effectiveConstraints(unadjustedConstraints);

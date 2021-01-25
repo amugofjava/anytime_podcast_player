@@ -44,8 +44,8 @@ var theme = Themes.lightTheme().themeData;
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
-  static String applicationVersion = '0.1.3';
-  static String applicationBuildNumber = '22';
+  static String applicationVersion = '0.1.4';
+  static String applicationBuildNumber = '23';
 
   final Repository repository;
   final MobilePodcastApi podcastApi;
@@ -59,7 +59,8 @@ class AnytimePodcastApp extends StatefulWidget {
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
     downloadService = MobileDownloadService(repository: repository, downloadManager: FlutterDownloaderManager());
-    podcastService = MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
+    podcastService =
+        MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
     audioPlayerService = MobileAudioPlayerService(repository: repository, settingsService: mobileSettingsService);
     settingsBloc = SettingsBloc(mobileSettingsService);
   }
@@ -334,7 +335,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion: 'v${AnytimePodcastApp.applicationVersion} Beta build ${AnytimePodcastApp.applicationBuildNumber}',
+            applicationVersion:
+                'v${AnytimePodcastApp.applicationVersion} Beta build ${AnytimePodcastApp.applicationBuildNumber}',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,
@@ -372,14 +374,26 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 }
 
 class TitleWidget extends StatelessWidget {
-  final TextStyle _titleTheme1 = theme.textTheme.bodyText2
-      .copyWith(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme1 = theme.textTheme.bodyText2.copyWith(
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2
-      .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2.copyWith(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2
-      .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2.copyWith(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
   @override
   Widget build(BuildContext context) {
