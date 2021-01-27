@@ -20,4 +20,8 @@ abstract class SettingsService {
   set playbackSpeed(double playbackSpeed);
 
   double get playbackSpeed;
+
+  set autoOpenNowPlaying(bool autoOpenNowPlaying);
+
+  bool get autoOpenNowPlaying;
 }
