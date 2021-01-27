@@ -178,8 +178,9 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
 
 class AnytimeHomePage extends StatefulWidget {
   final String title;
+  final bool topBarVisible;
 
-  AnytimeHomePage({this.title});
+  AnytimeHomePage({this.title, this.topBarVisible = true});
 
   @override
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
@@ -238,47 +239,50 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             child: CustomScrollView(
               // physics: NeverScrollableScrollPhysics(),
               slivers: <Widget>[
-                SliverAppBar(
-                  title: TitleWidget(),
-                  brightness: brightness,
-                  backgroundColor: backgroundColour,
-                  floating: false,
-                  pinned: true,
-                  snap: false,
-                  actions: <Widget>[
-                    IconButton(
-                      tooltip: L.of(context).search_button_label,
-                      icon: Icon(Icons.search),
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          SlideRightRoute(widget: Search()),
-                        );
-                      },
-                    ),
-                    PopupMenuButton<String>(
-                      color: Theme.of(context).dialogBackgroundColor,
-                      onSelected: _menuSelect,
-                      icon: Icon(
-                        Icons.more_vert,
-                        // color: Theme.of(context).buttonColor,
+                SliverVisibility(
+                  visible: widget.topBarVisible,
+                  sliver: SliverAppBar(
+                    title: TitleWidget(),
+                    brightness: brightness,
+                    backgroundColor: backgroundColour,
+                    floating: false,
+                    pinned: true,
+                    snap: false,
+                    actions: <Widget>[
+                      IconButton(
+                        tooltip: L.of(context).search_button_label,
+                        icon: Icon(Icons.search),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            SlideRightRoute(widget: Search()),
+                          );
+                        },
                       ),
-                      itemBuilder: (BuildContext context) {
-                        return <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'settings',
-                            child: Text('Settings'), //TODO: FIX
-                          ),
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'about',
-                            child: Text(L.of(context).about_label),
-                          ),
-                        ];
-                      },
-                    ),
-                  ],
+                      PopupMenuButton<String>(
+                        color: Theme.of(context).dialogBackgroundColor,
+                        onSelected: _menuSelect,
+                        icon: Icon(
+                          Icons.more_vert,
+                          // color: Theme.of(context).buttonColor,
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return <PopupMenuEntry<String>>[
+                            PopupMenuItem<String>(
+                              textStyle: Theme.of(context).textTheme.subtitle1,
+                              value: 'settings',
+                              child: Text('Settings'), //TODO: FIX
+                            ),
+                            PopupMenuItem<String>(
+                              textStyle: Theme.of(context).textTheme.subtitle1,
+                              value: 'about',
+                              child: Text(L.of(context).about_label),
+                            ),
+                          ];
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 StreamBuilder<int>(
                     stream: pager.currentPage,
