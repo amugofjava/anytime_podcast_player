@@ -157,13 +157,8 @@ class EpisodeTile extends StatelessWidget {
               width: 56,
               placeholder: (context, url) {
                 return Container(
+                  color: Theme.of(context).primaryColorLight,
                   constraints: BoxConstraints.expand(height: 56, width: 56),
-                  child: Placeholder(
-                    color: Colors.grey,
-                    strokeWidth: 1,
-                    fallbackWidth: 56,
-                    fallbackHeight: 56,
-                  ),
                 );
               },
               errorWidget: (_, __, dynamic ___) {

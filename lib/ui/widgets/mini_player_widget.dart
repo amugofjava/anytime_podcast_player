@@ -111,9 +111,9 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                             ? CachedNetworkImage(
                                 imageUrl: snapshot.data.imageUrl,
                                 placeholder: (context, url) {
-                                  return Placeholder(
-                                    color: Colors.grey,
-                                    strokeWidth: 1,
+                                  return Container(
+                                    color: Theme.of(context).primaryColorLight,
+                                    constraints: BoxConstraints.expand(height: 48, width: 48),
                                   );
                                 },
                                 errorWidget: (_, __, dynamic ___) {
