@@ -178,7 +178,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         return Container(
                           constraints: BoxConstraints.expand(height: 60, width: 60),
                           child: Placeholder(
-                            color: Colors.grey,
+                            color: Theme.of(context).errorColor,
                             strokeWidth: 1,
                             fallbackWidth: 60,
                             fallbackHeight: 60,

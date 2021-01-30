@@ -59,7 +59,7 @@ class PodcastTile extends StatelessWidget {
                   return Container(
                     constraints: BoxConstraints.expand(height: 60, width: 60),
                     child: Placeholder(
-                      color: Colors.grey,
+                      color: _theme.errorColor,
                       strokeWidth: 1,
                       fallbackWidth: 60,
                       fallbackHeight: 60,
