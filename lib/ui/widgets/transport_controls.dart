@@ -147,7 +147,8 @@ class DownloadControl extends StatelessWidget {
             final audioState = snapshot.data.audioState;
             final nowPlaying = snapshot.data.episode;
 
-            if (nowPlaying.guid == episode.guid && (audioState == AudioState.playing || audioState == AudioState.buffering)) {
+            if (nowPlaying.guid == episode.guid &&
+                (audioState == AudioState.playing || audioState == AudioState.buffering)) {
               if (episode.downloadState != DownloadState.downloaded) {
                 return Opacity(
                   opacity: 0.2,
@@ -224,7 +225,7 @@ class DownloadControl extends StatelessWidget {
           BasicDialogAction(
             title: Text(
               L.of(context).cancel_button_label,
-              style: TextStyle(color: Colors.orange),
+              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -233,7 +234,7 @@ class DownloadControl extends StatelessWidget {
           BasicDialogAction(
             title: Text(
               L.of(context).stop_download_button_label,
-              style: TextStyle(color: Colors.orange),
+              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               _episodeBloc.deleteDownload(episode);

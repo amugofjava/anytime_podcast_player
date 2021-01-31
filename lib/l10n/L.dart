@@ -455,7 +455,7 @@ class L {
 
   String get playback_speed_label {
     return Intl.message(
-      'Set playback speed',
+      'Playback speed',
       name: 'playback_speed_label',
       desc: 'Set playback speed icon label',
       locale: localeName,
@@ -467,6 +467,87 @@ class L {
       'Show notes',
       name: 'show_notes_label',
       desc: 'Set show notes icon label',
+      locale: localeName,
+    );
+  }
+
+  String get search_provider_label {
+    return Intl.message(
+      'Search provider',
+      name: 'search_provider_label',
+      desc: 'Set search provider label',
+      locale: localeName,
+    );
+  }
+
+  String get settings_label {
+    return Intl.message(
+      'Settings',
+      name: 'settings_label',
+      desc: 'Settings label',
+      locale: localeName,
+    );
+  }
+
+  String get go_back_button_label {
+    return Intl.message(
+      'GO BACK',
+      name: 'go_back_button_label',
+      desc: 'Go-back button label',
+      locale: localeName,
+    );
+  }
+
+  String get continue_button_label {
+    return Intl.message(
+      'CONTINUE',
+      name: 'continue_button_label',
+      desc: 'Continue button label',
+      locale: localeName,
+    );
+  }
+
+  String get consent_message {
+    return Intl.message(
+      'The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime',
+      name: 'consent_message',
+      desc: 'Display when first accessing external funding link',
+      locale: localeName,
+    );
+  }
+
+  String get episode_label {
+    return Intl.message(
+      'Episode',
+      name: 'episode_label',
+      desc: 'Tab label on now playing screen.',
+      locale: localeName,
+    );
+  }
+
+  String get chapters_label {
+    return Intl.message(
+      'Chapters',
+      name: 'chapters_label',
+      desc: 'Tab label on now playing screen.',
+      locale: localeName,
+    );
+  }
+
+  String get notes_label {
+    return Intl.message(
+      'Notes',
+      name: 'notes_label',
+      desc: 'Tab label on now playing screen.',
+      locale: localeName,
+    );
+  }
+
+  String get podcast_funding_dialog_header {
+    return Intl.message(
+      'Podcast Funding',
+      name: 'podcast_funding_dialog_header',
+      desc: 'Header on podcast funding consent dialog',
       locale: localeName,
     );
   }

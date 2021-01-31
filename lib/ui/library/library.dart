@@ -49,9 +49,13 @@ class _LibraryState extends State<Library> {
               );
             } else {
               return SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                return PodcastTile(podcast: snapshot.data.elementAt(index));
-              }, childCount: snapshot.data.length));
+                  delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return PodcastTile(podcast: snapshot.data.elementAt(index));
+                },
+                childCount: snapshot.data.length,
+                addAutomaticKeepAlives: false,
+              ));
             }
           } else {
             return SliverFillRemaining(

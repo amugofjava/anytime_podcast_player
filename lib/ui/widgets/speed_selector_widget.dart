@@ -61,37 +61,41 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 icon: Icon(
                   Icons.speed,
                   size: 24.0,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).buttonColor,
                 ),
                 onPressed: () {
                   showDialog<void>(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(content: StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: List<Widget>.generate(speeds.length, (int index) {
-                              return RadioListTile<double>(
-                                title: Text('x${speeds[index]}'),
-                                value: speeds[index],
-                                groupValue: snapshot.data.playbackSpeed,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    settingsBloc.setPlaybackSpeed(value);
+                      return AlertDialog(
+                          title: Text(
+                            L.of(context).playback_speed_label,
+                          ),
+                          content: StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: List<Widget>.generate(speeds.length, (int index) {
+                                  return RadioListTile<double>(
+                                    title: Text('x${speeds[index]}'),
+                                    value: speeds[index],
+                                    groupValue: snapshot.data.playbackSpeed,
+                                    onChanged: (double value) {
+                                      setState(() {
+                                        settingsBloc.setPlaybackSpeed(value);
 
-                                    if (widget.onChanged != null) {
-                                      widget.onChanged(value);
-                                    }
+                                        if (widget.onChanged != null) {
+                                          widget.onChanged(value);
+                                        }
 
-                                    Navigator.pop(context);
-                                  });
-                                },
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  );
+                                }),
                               );
-                            }),
-                          );
-                        },
-                      ));
+                            },
+                          ));
                     },
                   );
                 },
@@ -102,7 +106,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   'x${snapshot.data.playbackSpeed}',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
                 ),
               ),

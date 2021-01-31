@@ -70,7 +70,7 @@ ThemeData _buildDarktheme() {
     selectedRowColor: Color(0xfff5f5f5),
     unselectedWidgetColor: Colors.white,
     disabledColor: Color(0x77ffffff),
-    buttonColor: Color(0xffe0e0e0),
+    buttonColor: Color(0xffffffff),
     toggleableActiveColor: Color(0xfffb8c00),
     secondaryHeaderColor: Color(0xfffff3e0),
     textSelectionColor: Color(0xffffcc80),

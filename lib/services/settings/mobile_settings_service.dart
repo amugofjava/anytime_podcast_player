@@ -1,3 +1,4 @@
+import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,16 +51,37 @@ class MobileSettingsService extends SettingsService {
 
   @override
   set playbackSpeed(double playbackSpeed) {
-    _sharedPreferences.setDouble('speed', playbackSpeed).then((value) => print('Saved playback speed of $playbackSpeed'));
+    _sharedPreferences.setDouble('speed', playbackSpeed);
   }
 
   @override
   double get playbackSpeed {
-    var s = _sharedPreferences.getDouble('speed') ?? 1.0;
+    return _sharedPreferences.getDouble('speed') ?? 1.0;
+  }
 
-    print('Returning playback speed of $s');
-    return s;
-    // return _sharedPreferences.getDouble('speed') ?? 1.0;
+  @override
+  set searchProvider(String provider) {
+    _sharedPreferences.setString('search', provider);
+  }
+
+  @override
+  String get searchProvider {
+    // If we do not have PodcastIndex key, fallback to iTunes
+    if (podcastIndexKey.isEmpty) {
+      return 'itunes';
+    } else {
+      return _sharedPreferences.getString('search') ?? 'itunes';
+    }
+  }
+
+  @override
+  set externalLinkConsent(bool consent) {
+    _sharedPreferences.setBool('elconsent', consent);
+  }
+
+  @override
+  bool get externalLinkConsent {
+    return _sharedPreferences.getBool('elconsent') ?? false;
   }
 
   @override

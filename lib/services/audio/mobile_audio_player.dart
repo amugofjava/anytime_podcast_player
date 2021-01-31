@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
@@ -98,12 +99,13 @@ class MobileAudioPlayer {
       log.info('Failed to parse starting position of $sp');
     }
 
-    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
+    log.fine(
+        'Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
 
     await AudioServiceBackground.setMediaItem(MediaItem(
-      id: '100',
+      id: episodeIdStr,
       title: args[1] as String,
       album: args[0] as String,
       artUri: args[2] as String,
@@ -133,26 +135,30 @@ class MobileAudioPlayer {
         await _setBufferingState();
       }
 
+      var userAgent = await Environment.userAgent();
+
       log.fine('loading new track $_uri - from position $_position');
+
+      var headers = <String, String>{
+        'User-Agent': '$userAgent',
+      };
 
       _local
           ? await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position))
-          : await _audioPlayer.setUrl(_uri);
+          : await _audioPlayer.setUrl(_uri, headers: headers);
 
       _loadTrack = false;
     }
 
     if (_audioPlayer.processingState != ProcessingState.idle) {
       try {
-        print('Checking current playback speed ${_audioPlayer.speed} with $_playbackSpeed');
-
         if (_audioPlayer.speed != _playbackSpeed) {
           await _audioPlayer.setSpeed(_playbackSpeed);
         }
 
         unawaited(_audioPlayer.play());
       } catch (e) {
-        print('State error ${e.toString()}');
+        log.fine('State error ${e.toString()}');
       }
     }
 
@@ -231,7 +237,10 @@ class MobileAudioPlayer {
 
   Future<void> setSpeed(double speed) async {
     if (_isPlaying) {
+      _playbackSpeed = speed;
+
       await _audioPlayer.setSpeed(speed);
+      await _setPlayingState();
     }
   }
 
@@ -323,7 +332,12 @@ class MobileAudioPlayer {
     }
 
     await AudioServiceBackground.setState(
-        controls: _controls, processingState: _playbackState, position: Duration(milliseconds: _position), playing: _isPlaying);
+      controls: _controls,
+      processingState: _playbackState,
+      position: Duration(milliseconds: _position),
+      playing: _isPlaying,
+      speed: _playbackSpeed,
+    );
   }
 
   Future<void> _persistState(LastState state) async {

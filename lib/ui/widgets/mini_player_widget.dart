@@ -8,10 +8,10 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 
 /// Displays a mini podcast player widget if a podcast is playing or paused. If stopped a zero height
@@ -108,23 +108,15 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: snapshot.hasData
-                            ? CachedNetworkImage(
+                            ? OptimizedCacheImage(
                                 imageUrl: snapshot.data.imageUrl,
                                 placeholder: (context, url) {
+                                  return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
+                                },
+                                errorWidget: (_, __, dynamic ___) {
                                   return Placeholder(
                                     color: Colors.grey,
                                     strokeWidth: 1,
-                                  );
-                                },
-                                errorWidget: (_, __, dynamic ___) {
-                                  return Container(
-                                    constraints: BoxConstraints.expand(height: 48, width: 48),
-                                    child: Placeholder(
-                                      color: Colors.grey,
-                                      strokeWidth: 1,
-                                      fallbackWidth: 40,
-                                      fallbackHeight: 40,
-                                    ),
                                   );
                                 },
                               )
@@ -166,11 +158,12 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   _play(audioBloc);
                                 }
                               },
-                              shape: CircleBorder(side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
+                              shape: CircleBorder(
+                                  side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
                               child: AnimatedIcon(
                                 size: 48.0,
                                 icon: AnimatedIcons.play_pause,
-                                color: Theme.of(context).accentColor,
+                                color: Theme.of(context).buttonColor,
                                 progress: _playPauseController,
                               ),
                             );
@@ -197,7 +190,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     var firstEvent = true;
 
     _audioStateSubscription = audioBloc.playingState.listen((event) {
-      if (event == AudioState.playing) {
+      if (event == AudioState.playing || event == AudioState.buffering) {
         if (firstEvent) {
           _playPauseController.value = 1;
           firstEvent = false;

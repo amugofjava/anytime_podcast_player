@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart' show parseFragment;
@@ -35,7 +36,13 @@ class Episode {
   int position;
   int downloadPercentage;
   bool played;
+  String chaptersUrl;
   String _descriptionText;
+  List<Chapter> chapters;
+
+  // Index of the currently playing chapter it available. Transient.
+  int chapterIndex;
+  Chapter currentChapter;
 
   Episode({
     @required this.guid,
@@ -60,6 +67,8 @@ class Episode {
     this.position = 0,
     this.downloadPercentage = 0,
     this.played = false,
+    this.chaptersUrl,
+    this.chapters,
   });
 
   Map<String, dynamic> toMap() {
@@ -85,10 +94,24 @@ class Episode {
       'position': position.toString(),
       'downloadPercentage': downloadPercentage.toString(),
       'played': played ? 'true' : 'false',
+      'chaptersUrl': chaptersUrl,
+      'chapters': (chapters ?? <Chapter>[]).map((chapter) => chapter.toMap())?.toList(growable: false),
     };
   }
 
   static Episode fromMap(int key, Map<String, dynamic> episode) {
+    var chapters = <Chapter>[];
+
+    // We need to perform an 'is' on each loop to prevent Dart
+    // from complaining that we have not set the type for chapter.
+    if (episode['chapters'] != null) {
+      for (var chapter in (episode['chapters'] as List)) {
+        if (chapter is Map<String, dynamic>) {
+          chapters.add(Chapter.fromMap(chapter));
+        }
+      }
+    }
+
     return Episode(
       id: key,
       guid: episode['guid'] as String,
@@ -114,6 +137,8 @@ class Episode {
       position: int.parse(episode['position'] as String ?? '0'),
       downloadPercentage: int.parse(episode['downloadPercentage'] as String ?? '0'),
       played: episode['played'] == 'true' ? true : false,
+      chaptersUrl: episode['chaptersUrl'] as String,
+      chapters: chapters,
     );
   }
 
@@ -147,7 +172,8 @@ class Episode {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Episode && runtimeType == other.runtimeType && guid == other.guid && pguid == other.pguid;
+      identical(this, other) ||
+      other is Episode && runtimeType == other.runtimeType && guid == other.guid && pguid == other.pguid;
 
   @override
   int get hashCode => guid.hashCode ^ pguid.hashCode;
@@ -192,5 +218,17 @@ class Episode {
     }
 
     return _descriptionText;
+  }
+
+  bool get hasChapters => chaptersUrl != null && chaptersUrl.isNotEmpty;
+  bool get chaptersAreLoaded => chapters != null && chapters.isNotEmpty;
+  bool get chaptersAreNotLoaded => chapters == null || chapters.isEmpty;
+
+  String get positionalImageUrl {
+    if (currentChapter != null && currentChapter.imageUrl != null && currentChapter.imageUrl.isNotEmpty) {
+      return currentChapter.imageUrl;
+    }
+
+    return imageUrl;
   }
 }

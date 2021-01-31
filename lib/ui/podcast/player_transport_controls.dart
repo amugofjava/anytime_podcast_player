@@ -37,7 +37,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
     /// frames we want to animate. Doing it this way prevents the play/pause
     /// button from animating when the form is first loaded.
     _audioStateSubscription = audioBloc.playingState.listen((event) {
-      if (event == AudioState.playing) {
+      if (event == AudioState.playing || event == AudioState.buffering) {
         if (init) {
           _playPauseController.value = 1;
           init = false;
@@ -102,7 +102,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                   icon: Icon(
                     Icons.replay_30,
                     size: 48.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
                 ),
                 Tooltip(
@@ -134,12 +134,11 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                   icon: Icon(
                     Icons.forward_30,
                     size: 48.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
                 ),
                 SpeedSelectorWidget(
                   onChanged: (double value) {
-                    print('Speed callback of $value');
                     audioBloc.playbackSpeed(value);
                   },
                 ),

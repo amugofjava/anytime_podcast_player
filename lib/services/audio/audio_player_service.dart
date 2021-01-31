@@ -18,8 +18,13 @@ class PositionState {
   Duration position;
   Duration length;
   int percentage;
+  Episode episode;
 
-  PositionState(this.position, this.length, this.percentage);
+  PositionState(this.position, this.length, this.percentage, this.episode);
+
+  PositionState.emptyState() {
+    PositionState(Duration(seconds: 0), Duration(seconds: 0), 0, null);
+  }
 }
 
 /// This class defines the audio playback options supported by Anytime.
@@ -50,7 +55,7 @@ abstract class AudioPlayerService {
   Future<void> seek({@required int position});
 
   /// Call when the app is resumed to re-establish the audio service.
-  Future<void> resume();
+  Future<Episode> resume();
 
   /// Call when the app is about to be suspended.
   Future<void> suspend();

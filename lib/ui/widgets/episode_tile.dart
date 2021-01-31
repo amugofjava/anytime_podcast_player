@@ -6,8 +6,8 @@ import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/show_notes.dart';
+import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:anytime/ui/widgets/transport_controls.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -200,31 +200,9 @@ class EpisodeTile extends StatelessWidget {
         children: <Widget>[
           Opacity(
             opacity: episode.played ? 0.5 : 1.0,
-            child: CachedNetworkImage(
-              imageUrl: episode.thumbImageUrl ?? episode.imageUrl,
-              width: 56,
-              placeholder: (context, url) {
-                return Container(
-                  constraints: BoxConstraints.expand(height: 56, width: 56),
-                  child: Placeholder(
-                    color: Colors.grey,
-                    strokeWidth: 1,
-                    fallbackWidth: 56,
-                    fallbackHeight: 56,
-                  ),
-                );
-              },
-              errorWidget: (_, __, dynamic ___) {
-                return Container(
-                  constraints: BoxConstraints.expand(height: 56, width: 56),
-                  child: Placeholder(
-                    color: Colors.grey,
-                    strokeWidth: 1,
-                    fallbackWidth: 56,
-                    fallbackHeight: 56,
-                  ),
-                );
-              },
+            child: TileImage(
+              url: episode.thumbImageUrl ?? episode.imageUrl,
+              size: 56.0,
             ),
           ),
           Container(

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/entities/search_providers.dart';
 import 'package:flutter/foundation.dart';
 
 class AppSettings {
@@ -9,17 +10,26 @@ class AppSettings {
   final bool markDeletedEpisodesAsPlayed;
   final bool storeDownloadsSDCard;
   final double playbackSpeed;
+  final String searchProvider;
+  final List<SearchProvider> searchProviders;
+  final bool externalLinkConsent;
 
   AppSettings({
     @required this.theme,
     @required this.markDeletedEpisodesAsPlayed,
     @required this.storeDownloadsSDCard,
     @required this.playbackSpeed,
+    @required this.searchProvider,
+    @required this.searchProviders,
+    @required this.externalLinkConsent,
   });
 
   AppSettings.sensibleDefaults()
       : theme = 'dark',
         markDeletedEpisodesAsPlayed = false,
         storeDownloadsSDCard = false,
-        playbackSpeed = 1.0;
+        playbackSpeed = 1.0,
+        searchProvider = 'itunes',
+        searchProviders = <SearchProvider>[],
+        externalLinkConsent = false;
 }

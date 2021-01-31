@@ -8,6 +8,7 @@ import 'dart:ui';
 
 import 'package:anytime/entities/downloadable.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:logging/logging.dart';
 
 class DownloadProgress {
   final String id;
@@ -24,6 +25,7 @@ abstract class DownloadManager {
 }
 
 class FlutterDownloaderManager implements DownloadManager {
+  final log = Logger('FlutterDownloaderManager');
   final ReceivePort _port = ReceivePort();
   final downloadController = StreamController<DownloadProgress>();
 
@@ -35,7 +37,10 @@ class FlutterDownloaderManager implements DownloadManager {
   }
 
   Future _init() async {
+    log.fine('Initialising download manager');
     await FlutterDownloader.initialize();
+
+    await IsolateNameServer.removePortNameMapping('downloader_send_port');
 
     IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {

@@ -31,14 +31,10 @@ class PersistentState {
     if (file.existsSync()) {
       var result = file.readAsStringSync();
 
-      print('Got back $result');
-
       if (result != null && result.isNotEmpty) {
         var data = jsonDecode(result) as Map<String, dynamic>;
 
         p = Persistable.fromMap(data);
-
-        print('Maps to ${p.state}');
       }
     }
 

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/entities/funding.dart';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 
@@ -17,6 +18,7 @@ class Podcast {
   final String imageUrl;
   final String thumbImageUrl;
   final String copyright;
+  final List<Funding> funding;
   DateTime subscribedDate;
   List<Episode> episodes;
 
@@ -31,6 +33,7 @@ class Podcast {
     this.thumbImageUrl,
     this.copyright,
     this.subscribedDate,
+    this.funding,
     this.episodes,
   }) {
     episodes ??= [];
@@ -42,8 +45,9 @@ class Podcast {
         link = item.feedUrl,
         title = item.trackName,
         description = '',
-        imageUrl = item.artworkUrl600 ?? item.artworkUrl100,
-        thumbImageUrl = item.artworkUrl60,
+        imageUrl = item.bestArtworkUrl ?? item.artworkUrl,
+        thumbImageUrl = item.thumbnailArtworkUrl,
+        funding = const <Funding>[],
         copyright = item.artistName;
 
   Map<String, dynamic> toMap() {
@@ -56,15 +60,25 @@ class Podcast {
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
+      'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap())?.toList(growable: false),
     };
   }
 
   static Podcast fromMap(int key, Map<String, dynamic> podcast) {
     final sds = podcast['subscribedDate'] as String;
+    final funding = <Funding>[];
     DateTime sd;
 
     if (sds.isNotEmpty && sds != 'null') {
       sd = DateTime.fromMicrosecondsSinceEpoch(int.parse(podcast['subscribedDate'] as String));
+    }
+
+    if (podcast['funding'] != null) {
+      for (var chapter in (podcast['funding'] as List)) {
+        if (chapter is Map<String, dynamic>) {
+          funding.add(Funding.fromMap(chapter));
+        }
+      }
     }
 
     return Podcast(
@@ -77,6 +91,7 @@ class Podcast {
       url: podcast['url'] as String,
       imageUrl: podcast['imageUrl'] as String,
       thumbImageUrl: podcast['thumbImageUrl'] as String,
+      funding: funding,
       subscribedDate: sd,
     );
   }
@@ -85,7 +100,8 @@ class Podcast {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is Podcast && runtimeType == other.runtimeType && guid == other.guid && url == other.url;
+      identical(this, other) ||
+      other is Podcast && runtimeType == other.runtimeType && guid == other.guid && url == other.url;
 
   @override
   int get hashCode => guid.hashCode ^ url.hashCode;

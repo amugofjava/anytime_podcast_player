@@ -3,21 +3,23 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/podcast/chapter_selector.dart';
+import 'package:anytime/ui/podcast/dot_decoration.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:html/parser.dart' show parseFragment;
-import 'package:html/parser.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// This is the full-screen player Widget which is invoked
 /// by touching the mini player. This displays the podcast
@@ -56,68 +58,194 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
 
-    return Scaffold(
-      body: StreamBuilder<Episode>(
-          stream: audioBloc.nowPlaying,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
+    return StreamBuilder<Episode>(
+        stream: audioBloc.nowPlaying,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
 
-            var duration = snapshot.data == null ? 0 : snapshot.data.duration;
+          var duration = snapshot.data == null ? 0 : snapshot.data.duration;
 
-            return SafeArea(
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                    top: 0.0,
-                    left: 0.0,
-                    right: 0.0,
-                    child: AppBar(
-                      brightness: Theme.of(context).brightness,
-                      backgroundColor: Colors.transparent,
-                      elevation: 0.0,
-                      leading: IconButton(
-                        tooltip: L.of(context).minimise_player_window_button_label,
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        onPressed: () => {
-                          Navigator.pop(context),
-                        },
-                      ),
-                    ),
+          return DefaultTabController(
+              length: snapshot.data.chaptersAreLoaded ? 3 : 2,
+              initialIndex: snapshot.data.chaptersAreLoaded ? 1 : 0,
+              child: Scaffold(
+                appBar: AppBar(
+                  brightness: Theme.of(context).brightness,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  leading: IconButton(
+                    tooltip: L.of(context).minimise_player_window_button_label,
+                    icon: Icon(Icons.keyboard_arrow_down),
+                    onPressed: () => {
+                      Navigator.pop(context),
+                    },
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      snapshot.data == null
-                          ? Container()
-                          : Expanded(
-                              child: NowPlayingHeader(imageUrl: snapshot.data.imageUrl),
-                              flex: 6,
-                            ),
-                      Expanded(
-                        child: NowPlayingDetails(title: snapshot.data.title, description: snapshot.data.description),
-                        flex: 4,
+                  flexibleSpace: snapshot.data.chaptersAreLoaded
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            EpisodeTabBarWithChapters(),
+                          ],
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            EpisodeTabBar(),
+                          ],
+                        ),
+                ),
+                body: snapshot.data.chaptersAreLoaded
+                    ? EpisodeTabBarViewWithChapters(
+                        episode: snapshot.data,
+                      )
+                    : EpisodeTabBarView(
+                        episode: snapshot.data,
                       ),
-                      SizedBox(
-                        height: 160.0,
-                        child: NowPlayingTransport(duration: duration),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          }),
+                bottomNavigationBar: SizedBox(
+                  height: 140.0,
+                  child: NowPlayingTransport(duration: duration),
+                ),
+              ));
+        });
+  }
+}
+
+class EpisodeTabBar extends StatelessWidget {
+  const EpisodeTabBar({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      isScrollable: true,
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
+      tabs: [
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('Episode'),
+          ),
+        ),
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('Notes'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class EpisodeTabBarWithChapters extends StatelessWidget {
+  const EpisodeTabBarWithChapters({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBar(
+      isScrollable: true,
+      indicatorSize: TabBarIndicatorSize.tab,
+      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
+      tabs: [
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('Chapters'),
+          ),
+        ),
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('Episode'),
+          ),
+        ),
+        Tab(
+          child: Align(
+            alignment: Alignment.center,
+            child: Text('Notes'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class EpisodeTabBarView extends StatelessWidget {
+  final Episode episode;
+
+  EpisodeTabBarView({
+    Key key,
+    this.episode,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TabBarView(
+      children: [
+        NowPlayingHeader(
+          imageUrl: episode.imageUrl,
+          title: episode.title,
+          description: episode.description,
+        ),
+        NowPlayingDetails(title: episode.title, description: episode.description),
+      ],
+    );
+  }
+}
+
+class EpisodeTabBarViewWithChapters extends StatelessWidget {
+  final Episode episode;
+
+  EpisodeTabBarViewWithChapters({
+    Key key,
+    this.episode,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final audioBloc = Provider.of<AudioBloc>(context);
+
+    return TabBarView(
+      children: [
+        ChapterSelectorWidget(
+          episode: episode,
+          chapter: episode.chapters[0],
+        ),
+        StreamBuilder<PositionState>(
+            stream: audioBloc.playPosition,
+            builder: (context, snapshot) {
+              final e = snapshot.hasData ? snapshot.data.episode : episode;
+              return NowPlayingHeader(
+                imageUrl: e.positionalImageUrl,
+                title: e.title,
+                description: e.description,
+                subTitle: e.currentChapter == null ? '' : e.currentChapter.title,
+              );
+            }),
+        NowPlayingDetails(title: episode.title, description: episode.description),
+      ],
     );
   }
 }
 
 class NowPlayingHeader extends StatelessWidget {
   final String imageUrl;
+  final String title;
+  final String description;
+  final String subTitle;
 
-  const NowPlayingHeader({@required this.imageUrl});
+  const NowPlayingHeader({
+    @required this.imageUrl,
+    @required this.title,
+    @required this.description,
+    this.subTitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -127,39 +255,70 @@ class NowPlayingHeader extends StatelessWidget {
         stream: audioBloc.playingState,
         builder: (context, statesnap) {
           return Padding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                if (statesnap.data == AudioState.playing) {
-                  audioBloc.transitionState(TransitionState.pause);
-                } else {
-                  audioBloc.transitionState(TransitionState.play);
-                }
-              },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: CachedNetworkImage(
-                  imageUrl: imageUrl,
-                  placeholder: (context, url) {
-                    return Container(
-                      constraints: BoxConstraints.expand(),
-                      child: Placeholder(
-                        color: Colors.grey,
-                        strokeWidth: 1,
-                      ),
-                    );
-                  },
-                  errorWidget: (_, __, dynamic ___) {
-                    return Container(
-                      constraints: BoxConstraints.expand(),
-                      child: Placeholder(
-                        color: Colors.grey,
-                        strokeWidth: 1,
-                      ),
-                    );
-                  },
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 7,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: OptimizedCacheImage(
+                      imageUrl: imageUrl,
+                      placeholder: (context, url) {
+                        return Container(
+                          constraints: BoxConstraints.expand(),
+                          child: Placeholder(
+                            color: Colors.grey,
+                            strokeWidth: 1,
+                          ),
+                        );
+                      },
+                      errorWidget: (_, __, dynamic ___) {
+                        return Container(
+                          constraints: BoxConstraints.expand(),
+                          child: Placeholder(
+                            color: Colors.grey,
+                            strokeWidth: 1,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      bottom: 0.0,
+                      left: 16.0,
+                      right: 16.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
+                          child: Text(title ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              )),
+                        ),
+                        Text(subTitle ?? '',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 16.0,
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         });
@@ -180,33 +339,24 @@ class NowPlayingDetails extends StatelessWidget {
     return SizedBox.expand(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 8.0,
+            left: 16.0,
+            right: 16.0,
+          ),
+          child: Html(
+            data: description,
+            style: {
+              'html': Style(
+                fontSize: FontSize.large,
               ),
-            ),
+            },
+            onLinkTap: (url) {
+              canLaunch(url).then((value) => launch(url));
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 8.0,
-              left: 16.0,
-              right: 16.0,
-            ),
-            child: Text(
-              parseFragment(description).text,
-            ),
-          ),
-        ]),
+        ),
       ),
     );
   }
@@ -228,11 +378,6 @@ class NowPlayingTransport extends StatelessWidget {
           duration: duration,
         ),
         PlayerTransportControls(),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0.0,
-          ),
-        ),
       ],
     );
   }

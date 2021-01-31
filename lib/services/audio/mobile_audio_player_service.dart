@@ -11,6 +11,7 @@ import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_background_player.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
@@ -31,6 +32,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final log = Logger('MobileAudioPlayerService');
   final Repository repository;
   final SettingsService settingsService;
+  final PodcastService podcastService;
   double _playbackSpeed;
 
   Episode _episode;
@@ -41,7 +43,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final BehaviorSubject<AudioState> _playingState = BehaviorSubject<AudioState>.seeded(AudioState.none);
 
   /// Ticks whilst playing. Updates our current position within an episode.
-  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
+  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 250)).asBroadcastStream();
 
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
@@ -49,6 +51,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   MobileAudioPlayerService({
     @required this.repository,
     @required this.settingsService,
+    @required this.podcastService,
   }) {
     _handleAudioServiceTransitions();
   }
@@ -130,6 +133,12 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
       await AudioService.customAction('track', trackDetails);
       await AudioService.play();
+
+      // If we are streaming and this episode has chapters we
+      // should fetch them now.
+      if (!download && _episode.hasChapters) {
+        _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
+      }
     }
   }
 
@@ -155,7 +164,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
     var seconds = Duration(seconds: position);
 
-    _playPosition.add(PositionState(seconds, Duration(seconds: _episode.duration), complete.toInt()));
+    _updateChapter(seconds.inSeconds, duration);
+
+    _playPosition.add(PositionState(seconds, Duration(seconds: _episode.duration), complete.toInt(), _episode));
 
     return await AudioService.seekTo(seconds);
   }
@@ -166,7 +177,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> resume() async {
+  Future<Episode> resume() async {
     await AudioService.connect();
 
     if (_episode != null) {
@@ -184,18 +195,24 @@ class MobileAudioPlayerService extends AudioPlayerService {
         await _startTicker();
       }
     } else {
-      var persistedState = await PersistentState.fetchState();
+      if (AudioService.currentMediaItem == null) {
+        var persistedState = await PersistentState.fetchState();
 
-      if (persistedState != null && persistedState.episodeId != 0) {
-        _episode = await repository.findEpisodeById(persistedState.episodeId);
+        if (persistedState != null && persistedState.episodeId != 0) {
+          _episode = await repository.findEpisodeById(persistedState.episodeId);
 
-        if (_episode != null) {
-          await _updateEpisodeState(persistedState);
+          if (_episode != null) {
+            await _updateEpisodeState(persistedState);
+          }
         }
+      } else {
+        _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
       }
     }
 
     await PersistentState.clearState();
+
+    return Future.value(_episode);
   }
 
   @override
@@ -278,7 +295,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
         var complete = position.inSeconds > 0 ? (duration / position.inSeconds) * 100 : 0;
 
-        _playPosition.add(PositionState(position, Duration(seconds: _episode.duration), complete.toInt()));
+        _updateChapter(position.inSeconds, duration);
+
+        _playPosition.add(PositionState(position, Duration(seconds: _episode.duration), complete.toInt(), _episode));
       }
     }
   }
@@ -392,6 +411,25 @@ class MobileAudioPlayerService extends AudioPlayerService {
       await _positionSubscription.cancel();
 
       _positionSubscription = null;
+    }
+  }
+
+  void _updateChapter(int seconds, int duration) {
+    if (_episode.hasChapters && _episode.chaptersAreLoaded) {
+      final chapters = _episode.chapters;
+
+      // What is our current chapter?
+      for (var x = 0; x < _episode.chapters.length; x++) {
+        final startTime = chapters[x].startTime;
+        final endTime = x == (_episode.chapters.length - 1) ? duration : chapters[x + 1].startTime;
+
+        if (seconds >= startTime && seconds < endTime) {
+          if (chapters[x] != _episode.currentChapter) {
+            _episode.currentChapter = chapters[x];
+            break;
+          }
+        }
+      }
     }
   }
 

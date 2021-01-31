@@ -2,20 +2,27 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/bloc/bloc.dart';
+import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
+import 'package:anytime/entities/search_providers.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
+// TODO: This needs to be refactored to make it simpler. We will soon reach
+//       enough settings as to make having a stream for each one no longer
+//       maintainable or efficient.
 class SettingsBloc extends Bloc {
   final log = Logger('SettingsBloc');
   final SettingsService _settingsService;
 
-  final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
-  final BehaviorSubject<bool> _darkMode = BehaviorSubject<bool>();
-  final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
-  final BehaviorSubject<bool> _storeDownloadonSDCard = BehaviorSubject<bool>();
-  final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
+  final _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
+  final _darkMode = BehaviorSubject<bool>();
+  final _markDeletedAsPlayed = BehaviorSubject<bool>();
+  final _storeDownloadonSDCard = BehaviorSubject<bool>();
+  final _playbackSpeed = BehaviorSubject<double>();
+  final _searchProvider = BehaviorSubject<String>();
+  final _externalLinkConsent = BehaviorSubject<bool>();
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -28,12 +35,24 @@ class SettingsBloc extends Bloc {
     var storeDownloadsSDCard = _settingsService.storeDownloadsSDCard;
     var playbackSpeed = _settingsService.playbackSpeed;
     var themeName = themeDarkMode ? 'dark' : 'light';
+    var searchProvider = _settingsService.searchProvider;
+    var externalLinkConsent = _settingsService.externalLinkConsent;
+
+    // Add our available search providers.
+    var providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
+
+    if (podcastIndexKey.isNotEmpty) {
+      providers.add(SearchProvider(key: 'podcastindex', name: 'PodcastIndex'));
+    }
 
     var s = AppSettings(
       theme: themeDarkMode ? 'dark' : 'light',
       markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
       storeDownloadsSDCard: storeDownloadsSDCard,
       playbackSpeed: playbackSpeed,
+      searchProvider: searchProvider,
+      searchProviders: providers,
+      externalLinkConsent: externalLinkConsent,
     );
 
     _settings.add(s);
@@ -46,6 +65,9 @@ class SettingsBloc extends Bloc {
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
         storeDownloadsSDCard: storeDownloadsSDCard,
         playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
       );
 
       _settings.add(s);
@@ -61,6 +83,9 @@ class SettingsBloc extends Bloc {
         markDeletedEpisodesAsPlayed: mark,
         storeDownloadsSDCard: storeDownloadsSDCard,
         playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
       );
 
       _settings.add(s);
@@ -76,6 +101,9 @@ class SettingsBloc extends Bloc {
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
         storeDownloadsSDCard: storeDownloadsSDCard,
         playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
       );
 
       _settings.add(s);
@@ -89,13 +117,49 @@ class SettingsBloc extends Bloc {
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
         storeDownloadsSDCard: storeDownloadsSDCard,
         playbackSpeed: speed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
       );
 
       _settings.add(s);
 
-      print('Setting speed to $speed');
-
       _settingsService.playbackSpeed = speed;
+    });
+
+    _searchProvider.listen((search) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: search,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
+      );
+
+      _settings.add(s);
+
+      _settingsService.searchProvider = search;
+    });
+
+    _externalLinkConsent.listen((consent) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: consent,
+      );
+
+      _settings.add(s);
+
+      // If the setting has not changed, don't bother updating it
+      if (consent != externalLinkConsent) {
+        _settingsService.externalLinkConsent = consent;
+      }
     });
   }
 
@@ -108,6 +172,10 @@ class SettingsBloc extends Bloc {
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
 
   void Function(double) get setPlaybackSpeed => _playbackSpeed.add;
+
+  void Function(String) get setSearchProvider => _searchProvider.add;
+
+  void Function(bool) get setExternalLinkConsent => _externalLinkConsent.add;
 
   @override
   void dispose() {

@@ -76,10 +76,12 @@ class EpisodeBloc extends Bloc {
   void _listenEpisodeEvents() {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
-      var episode = _episodes.indexOf(state.episode);
+      if (_episodes != null) {
+        var episode = _episodes.indexOf(state.episode);
 
-      if (episode != -1) {
-        fetchDownloads(true);
+        if (episode != -1) {
+          fetchDownloads(true);
+        }
       }
     });
   }

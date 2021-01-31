@@ -7,8 +7,10 @@ import 'dart:io';
 
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
@@ -45,6 +47,7 @@ class MobilePodcastService extends PodcastService {
       limit: limit,
       language: language,
       explicit: explicit,
+      searchProvider: settingsService.searchProvider,
     );
   }
 
@@ -96,6 +99,9 @@ class MobilePodcastService extends PodcastService {
       }
 
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
+      var funding = <Funding>[];
+
+      loadedPodcast.funding?.forEach((f) => funding.add(Funding(url: f.url, value: f.value)));
 
       final pc = Podcast(
         guid: loadedPodcast.url,
@@ -106,6 +112,7 @@ class MobilePodcastService extends PodcastService {
         imageUrl: podcast.imageUrl ?? loadedPodcast.image,
         thumbImageUrl: podcast.thumbImageUrl ?? loadedPodcast.image,
         copyright: copyright,
+        funding: funding,
         episodes: <Episode>[],
       );
 
@@ -164,6 +171,8 @@ class MobilePodcastService extends PodcastService {
               thumbImageUrl: pc.thumbImageUrl,
               duration: episode.duration?.inSeconds ?? 0,
               publicationDate: episode.publicationDate,
+              chaptersUrl: episode.chapters?.url,
+              chapters: <Chapter>[],
             ));
           } else {
             pc.episodes.add(existingEpisode);
@@ -200,6 +209,27 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<List<Chapter>> loadChaptersByUrl({@required String url}) async {
+    var c = await psapi.Podcast.loadChaptersByUrl(url: url);
+    var chapters = <Chapter>[];
+
+    if (c != null) {
+      for (var chapter in c.chapters) {
+        chapters.add(Chapter(
+          title: chapter.title,
+          url: chapter.url,
+          imageUrl: chapter.imageUrl,
+          startTime: chapter.startTime,
+          endTime: chapter.endTime,
+          toc: chapter.toc,
+        ));
+      }
+    }
+
+    return chapters;
+  }
+
+  @override
   Future<List<Episode>> loadDownloads() async {
     return repository.findDownloads();
   }
@@ -223,7 +253,8 @@ class MobilePodcastService extends PodcastService {
     await repository.saveEpisode(episode);
 
     if (await hasStoragePermission()) {
-      final filepath = episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
+      final filepath =
+          episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
       final filename = join(filepath, episode.filename);
 
       var f = File.fromUri(Uri.file(filename));

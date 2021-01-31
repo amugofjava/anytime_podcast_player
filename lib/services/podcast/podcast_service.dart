@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/api/podcast/podcast_api.dart';
+import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/repository/repository.dart';
@@ -46,6 +47,8 @@ abstract class PodcastService {
   });
 
   Future<List<Episode>> loadDownloads();
+
+  Future<List<Chapter>> loadChaptersByUrl({@required String url});
 
   Future<void> deleteDownload(Episode episode);
   Future<void> toggleEpisodePlayed(Episode episode);

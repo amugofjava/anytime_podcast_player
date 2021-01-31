@@ -6,6 +6,7 @@ import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/search_provider_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,7 @@ class _SettingsState extends State<Settings> {
                         : null,
                   ),
                 ),
+                SearchProviderWidget(),
               ],
             ).toList());
           } else {
@@ -108,7 +110,9 @@ class _SettingsState extends State<Settings> {
       builder: (_) => BasicDialogAlert(
         title: Text(L.of(context).settings_download_switch_label),
         content: Text(
-          enableExternalStorage ? L.of(context).settings_download_switch_card : L.of(context).settings_download_switch_internal,
+          enableExternalStorage
+              ? L.of(context).settings_download_switch_card
+              : L.of(context).settings_download_switch_internal,
         ),
         actions: <Widget>[
           BasicDialogAction(

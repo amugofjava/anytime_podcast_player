@@ -43,7 +43,7 @@ class PlayerPositionControls extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: 4.0,
+              top: 0.0,
               bottom: 4.0,
             ),
             child: Row(
@@ -52,20 +52,20 @@ class PlayerPositionControls extends StatelessWidget {
                 Expanded(
                   child: snapshot.hasData
                       ? Slider(
-                    onChanged: (value) {
+                          onChanged: (value) {
                             audioBloc.transitionPosition(value);
                           },
                           value: p.toDouble(),
                           min: 0.0,
                           max: length.inSeconds.toDouble(),
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: Theme.of(context).buttonColor,
                         )
                       : Slider(
-                    onChanged: null,
+                          onChanged: null,
                           value: 0,
                           min: 0.0,
                           max: 1.0,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: Theme.of(context).buttonColor,
                         ),
                 ),
                 Text(_formatDuration(Duration(seconds: timeRemaining))),

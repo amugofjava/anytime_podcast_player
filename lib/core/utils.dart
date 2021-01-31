@@ -59,7 +59,6 @@ Future<Directory> _getSDCard() async {
   if (appDocumentDir.isNotEmpty) {
     // See if we can find the last card without emulated
     for (var d in appDocumentDir) {
-      print('Found path ${d.absolute.path}');
       if (!d.path.contains('emulated')) {
         path = d.absolute;
       }

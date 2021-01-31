@@ -22,6 +22,7 @@ enum TransitionState {
 enum LifecyleState {
   pause,
   resume,
+  detach,
 }
 
 /// A BLoC to handle interactions between the audio service and the client.
@@ -30,16 +31,16 @@ class AudioBloc extends Bloc {
   final log = Logger('AudioBloc');
 
   /// Stream for our currently playing Episode
-  final BehaviorSubject<Episode> _playSubject = BehaviorSubject<Episode>();
+  final BehaviorSubject<Episode> _nowPlaying = BehaviorSubject<Episode>();
+
+  /// Listen for new episode play requests.
+  final BehaviorSubject<Episode> _play = BehaviorSubject<Episode>();
 
   /// Move from one playing state to another such as from paused to play
   final PublishSubject<TransitionState> _transitionPlayingState = PublishSubject<TransitionState>();
 
   /// Sink to update our position
   final PublishSubject<double> _transitionPosition = PublishSubject<double>();
-
-  /// Handle lifecycle events
-  final PublishSubject<LifecyleState> _lifecycleSubject = PublishSubject<LifecyleState>(sync: true);
 
   /// Handles persisting data to storage.
   final AudioPlayerService audioPlayerService;
@@ -59,9 +60,6 @@ class AudioBloc extends Bloc {
 
     /// Listen for requests to move the play position within the episode.
     _handlePositionTransitions();
-
-    /// Listen for lifecycle pause or resume states
-    _handleLifecycleTransitions();
 
     /// Listen for playback speed changes
     _handlePlaybackSpeedTransitions();
@@ -98,7 +96,10 @@ class AudioBloc extends Bloc {
   /// Setup a listener for episode requests and then connect to the
   /// underlying audio service.
   void _handleEpisodeRequests() async {
-    _playSubject.listen((episode) => audioPlayerService.playEpisode(episode: episode, resume: true));
+    _play.listen((episode) {
+      audioPlayerService.playEpisode(episode: episode, resume: true);
+      _nowPlaying.add(episode);
+    });
   }
 
   /// Listen for requests to change the position of the current episode.
@@ -108,24 +109,33 @@ class AudioBloc extends Bloc {
     });
   }
 
-  void _handleLifecycleTransitions() async {
-    _lifecycleSubject.listen((state) async {
-      if (state == LifecyleState.resume) {
-        await audioPlayerService.resume();
-      } else if (state == LifecyleState.pause) {
-        await audioPlayerService.suspend();
-      }
-    });
-  }
-
   void _handlePlaybackSpeedTransitions() {
     _playbackSpeedSubject.listen((double speed) async {
       await audioPlayerService.setPlaybackSpeed(speed);
     });
   }
 
+  @override
+  void pause() async {
+    log.fine('Audio lifecycle pause');
+    await audioPlayerService.suspend();
+  }
+
+  @override
+  void resume() async {
+    log.fine('Audio lifecycle resume');
+    var ep = await audioPlayerService.resume();
+
+    if (ep != null) {
+      log.fine('Resuming with episode');
+      _nowPlaying.add(ep);
+    } else {
+      log.fine('Resuming without an episode ${_nowPlaying.value}');
+    }
+  }
+
   /// Play the specified track now
-  void Function(Episode) get play => _playSubject.add;
+  void Function(Episode) get play => _play.add;
 
   /// Transition the state from connecting, to play, pause, stop etc.
   void Function(TransitionState) get transitionState => _transitionPlayingState.add;
@@ -133,13 +143,11 @@ class AudioBloc extends Bloc {
   /// Move the play position.
   void Function(double) get transitionPosition => _transitionPosition.sink.add;
 
-  void Function(LifecyleState) get transitionLifecycleState => _lifecycleSubject.sink.add;
-
   /// Get the current playing state
   Stream<AudioState> get playingState => audioPlayerService.playingState;
 
   /// Get the current playing track
-  Stream<Episode> get nowPlaying => _playSubject.stream;
+  Stream<Episode> get nowPlaying => _nowPlaying.stream;
 
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;
@@ -149,11 +157,12 @@ class AudioBloc extends Bloc {
 
   @override
   void dispose() {
-    _playSubject.close();
+    _play.close();
+    _nowPlaying.close();
     _transitionPlayingState.close();
     _transitionPosition.close();
-    _lifecycleSubject.close();
     _playbackSpeedSubject.close();
     _positionSubscription.cancel();
+    super.dispose();
   }
 }

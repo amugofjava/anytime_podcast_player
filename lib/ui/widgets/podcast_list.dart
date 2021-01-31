@@ -20,20 +20,16 @@ class PodcastList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (results.items.isNotEmpty) {
       return SliverList(
-          delegate: SliverChildListDelegate([
-        ListView.builder(
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          padding: EdgeInsets.all(0.0),
-          itemCount: results.items.length,
-          itemBuilder: (BuildContext context, int index) {
-            final i = results.items[index];
-            final p = Podcast.fromSearchResultItem(i);
+          delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final i = results.items[index];
+          final p = Podcast.fromSearchResultItem(i);
 
-            return PodcastTile(podcast: p);
-          },
-        )
-      ]));
+          return PodcastTile(podcast: p);
+        },
+        childCount: results.items.length,
+        addAutomaticKeepAlives: false,
+      ));
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,
