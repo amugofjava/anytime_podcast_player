@@ -41,6 +41,7 @@ ThemeData _buildLightTheme() {
     errorColor: Color(0xffd32f2f),
     primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     textTheme: Typography.material2018(platform: TargetPlatform.android).black,
+    accentTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     iconTheme: IconThemeData(color: Colors.orange),
     appBarTheme: base.appBarTheme.copyWith(
@@ -83,6 +84,7 @@ ThemeData _buildDarktheme() {
     errorColor: Color(0xffd32f2f),
     primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
     textTheme: Typography.material2018(platform: TargetPlatform.android).white,
+    accentTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
     primaryIconTheme: IconThemeData(color: Colors.white),
     iconTheme: IconThemeData(color: Colors.white),
     dividerTheme: base.dividerTheme.copyWith(
