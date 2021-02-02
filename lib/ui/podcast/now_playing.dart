@@ -142,11 +142,8 @@ class NowPlayingHeader extends StatelessWidget {
                   imageUrl: imageUrl,
                   placeholder: (context, url) {
                     return Container(
+                      color: Theme.of(context).primaryColor,
                       constraints: BoxConstraints.expand(),
-                      child: Placeholder(
-                        color: Colors.grey,
-                        strokeWidth: 1,
-                      ),
                     );
                   },
                   errorWidget: (_, __, dynamic ___) {
