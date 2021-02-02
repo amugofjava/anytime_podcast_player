@@ -287,5 +287,11 @@
     "description": "Set show notes icon label",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Full screen player mode",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
   }
 }

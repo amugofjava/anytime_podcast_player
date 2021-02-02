@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-01-25T13:45:36.008606",
+  "@@last_modified": "2021-02-02T20:56:59.328637",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -291,6 +291,12 @@
   "show_notes_label": "Show notes",
   "@show_notes_label": {
     "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Full screen player mode",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
     "type": "text",
     "placeholders": {}
   }

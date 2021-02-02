@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_back_button_label" : MessageLookupByLibrary.simpleMessage("Back"),
     "search_button_label" : MessageLookupByLibrary.simpleMessage("Search"),
     "search_for_podcasts_hint" : MessageLookupByLibrary.simpleMessage("Search for podcasts"),
+    "settings_auto_open_now_playing" : MessageLookupByLibrary.simpleMessage("Full screen player mode"),
     "settings_download_sd_card_label" : MessageLookupByLibrary.simpleMessage("Download episodes to SD card"),
     "settings_download_switch_card" : MessageLookupByLibrary.simpleMessage("New downloads will be saved to the SD card. Existing downloads will remain on internal storage."),
     "settings_download_switch_internal" : MessageLookupByLibrary.simpleMessage("New downloads will be saved to internal storage. Existing downloads will remain on the SD card."),

@@ -74,6 +74,13 @@ class _SettingsState extends State<Settings> {
                         : null,
                   ),
                 ),
+                ListTile(
+                  title: Text(L.of(context).settings_auto_open_now_playing),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data.autoOpenNowPlaying,
+                    onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
+                  ),
+                ),
               ],
             ).toList());
           } else {
