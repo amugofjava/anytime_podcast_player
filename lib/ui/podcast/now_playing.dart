@@ -153,7 +153,7 @@ class NowPlayingHeader extends StatelessWidget {
                     return Container(
                       constraints: BoxConstraints.expand(),
                       child: Placeholder(
-                        color: Colors.grey,
+                        color: Theme.of(context).errorColor,
                         strokeWidth: 1,
                       ),
                     );

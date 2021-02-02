@@ -120,7 +120,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   return Container(
                                     constraints: BoxConstraints.expand(height: 48, width: 48),
                                     child: Placeholder(
-                                      color: Colors.grey,
+                                      color: Theme.of(context).errorColor,
                                       strokeWidth: 1,
                                       fallbackWidth: 40,
                                       fallbackHeight: 40,
