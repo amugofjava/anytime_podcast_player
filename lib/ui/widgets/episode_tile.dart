@@ -5,6 +5,7 @@
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/show_notes.dart';
 import 'package:anytime/ui/widgets/transport_controls.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -48,95 +49,142 @@ class EpisodeTile extends StatelessWidget {
               episode.descriptionText,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
-              maxLines: 10,
+              maxLines: 5,
               style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
             ),
           ),
         ),
-        ButtonBar(
-          alignment: MainAxisAlignment.spaceAround,
-          buttonHeight: 52.0,
-          buttonMinWidth: 90.0,
-          children: <Widget>[
-            FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              onPressed: episode.downloaded
-                  ? () {
-                      showDialog<void>(
-                        context: context,
-                        useRootNavigator: false,
-                        builder: (_) => BasicDialogAlert(
-                          title: Text(
-                            L.of(context).delete_episode_title,
-                          ),
-                          content: Text(L.of(context).delete_episode_confirmation),
-                          actions: <Widget>[
-                            BasicDialogAction(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                  onPressed: episode.downloaded
+                      ? () {
+                          showDialog<void>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
                               title: Text(
-                                L.of(context).cancel_button_label,
-                                style: TextStyle(color: Theme.of(context).primaryColor),
+                                L.of(context).delete_episode_title,
                               ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                              content: Text(L.of(context).delete_episode_confirmation),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: Text(
+                                    L.of(context).cancel_button_label,
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                BasicDialogAction(
+                                  title: Text(
+                                    L.of(context).delete_button_label,
+                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    bloc.deleteDownload(episode);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
                             ),
-                            BasicDialogAction(
-                              title: Text(
-                                L.of(context).delete_button_label,
-                                style: TextStyle(color: Theme.of(context).primaryColor),
-                              ),
-                              onPressed: () {
-                                bloc.deleteDownload(episode);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
+                          );
+                        }
+                      : null,
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).buttonColor,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        L.of(context).delete_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
                         ),
-                      );
-                    }
-                  : null,
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.delete_outline,
-                    color: Theme.of(context).buttonColor,
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  ),
-                  Text(
-                    L.of(context).delete_label,
-                    style: TextStyle(
-                      color: Theme.of(context).buttonColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              onPressed: () {
-                bloc.togglePlayed(episode);
-              },
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.bookmark_border,
-                    color: Theme.of(context).buttonColor,
+              Expanded(
+                child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  onPressed: () {
+                    return Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => ShowNotes(
+                          episode: episode,
+                        ),
+                        fullscreenDialog: true,
+                      ),
+                    ).then((value) {});
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.wysiwyg_outlined,
+                        color: Theme.of(context).buttonColor,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        L.of(context).show_notes_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  ),
-                  Text(
-                    episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
-                    style: TextStyle(
-                      color: Theme.of(context).buttonColor,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  onPressed: () {
+                    bloc.togglePlayed(episode);
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.bookmark_border_outlined,
+                        color: Theme.of(context).buttonColor,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
       trailing: Opacity(

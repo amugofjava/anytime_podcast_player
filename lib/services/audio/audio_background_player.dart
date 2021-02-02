@@ -9,9 +9,9 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:logging/logging.dart';
 
-/// This is the implementation of the Anytime Audio Service for Android. This
-/// version uses AudioService and AudioPlayer packages to provide the audio
-/// playback and Android services for continuing playback in the background.
+/// This class provides an implementation of [BackgroundAudioTask] from the
+/// [audio_service](https://pub.dev/packages/audio_service) package to handle
+/// events from [AudioService] in a background Isolate.
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
 
@@ -93,6 +93,11 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   @override
   Future<void> onClick(MediaButton button) {
     return _anytimeAudioPlayer.onClick();
+  }
+
+  @override
+  Future<void> onSetSpeed(double speed) {
+    return _anytimeAudioPlayer.setSpeed(speed);
   }
 
   @override

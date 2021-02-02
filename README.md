@@ -8,21 +8,20 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is currently in *Beta* - so please expect bugs! It also only supports Android at this time.
-A version for iOS is in the works, but is slower going as I do not have any Apple
-hardware to build or test on.
+Anytime is currently in *Beta* - so please expect bugs! Only Android is supposed at the moment,
+but an iOS version is in the works.
 
 #### Testers
 
-Anytime is now in public Beta. Please click the image below to head over to the Play Store.
+Anytime is in public Beta. Please click the image below to head over to the Play Store.
 
 <a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' width="40%" src='https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
-I would really appreciate all feedback - good and bad - as it helps improve Anytime and helps prioritise new features.
+I would really appreciate all feedback - positive and negative - as it both helps improve Anytime and prioritise new features.
 
 #### Building from source
 
-If you do not have the Flutter SDK installed, follow the instructions from the
+If you do not already have the Flutter SDK installed, follow the instructions from the
 Flutter site [here](https://flutter.dev/docs/get-started/install).
 
 To build from source fetch the latest from master:

@@ -67,21 +67,13 @@ class _DownloadsState extends State<Downloads> {
   Widget buildResults(BuildContext context, List<Episode> episodes) {
     if (episodes.isNotEmpty) {
       return SliverList(
-          delegate: SliverChildListDelegate([
-        ListView.builder(
-          padding: EdgeInsets.all(0.0),
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: episodes.length,
-          itemBuilder: (BuildContext context, int index) {
-            return EpisodeTile(
-              episode: episodes[index],
-              download: false,
-              play: true,
-            );
-          },
-        )
-      ]));
+          delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+        return EpisodeTile(
+          episode: episodes[index],
+          download: false,
+          play: true,
+        );
+      }, childCount: episodes.length));
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,

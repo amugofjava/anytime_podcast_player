@@ -11,6 +11,7 @@ import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_background_player.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
@@ -20,10 +21,18 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// An instance of the [AudioPlayerService] for mobile devices.
+/// An implementation of the [AudioPlayerService] for mobile devices.
+/// The [audio_service](https://pub.dev/packages/audio_service) package
+/// is used to handle audio tasks in a separate Isolate thus allowing
+/// audio to play in the background or when the screen is off. An
+/// instance of [BackgroundPlayerTask] is used to handle events from
+/// the background Isolate and pass them on to the audio player.
 class MobileAudioPlayerService extends AudioPlayerService {
   final log = Logger('MobileAudioPlayerService');
   final Repository repository;
+  final SettingsService settingsService;
+  double _playbackSpeed;
+
   Episode _episode;
 
   StreamSubscription<dynamic> _positionSubscription;
@@ -37,7 +46,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
-  MobileAudioPlayerService({@required this.repository}) {
+  MobileAudioPlayerService({
+    @required this.repository,
+    @required this.settingsService,
+  }) {
     _handleAudioServiceTransitions();
   }
 
@@ -48,6 +60,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
       await _playingState.add(AudioState.playing);
+
+      _playbackSpeed = await settingsService.playbackSpeed;
 
       var trackDetails = <String>[];
 
@@ -100,7 +114,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
         uri,
         episode.downloaded ? '1' : '0',
         startPosition.toString(),
-        episode.id == null ? '0' : episode.id.toString()
+        episode.id == null ? '0' : episode.id.toString(),
+        _playbackSpeed.toString(),
       ];
 
       // Store reference
@@ -182,6 +197,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
     await PersistentState.clearState();
   }
+
+  @override
+  Future<void> setPlaybackSpeed(double speed) => AudioService.setSpeed(speed);
 
   Future _updateEpisodeState(Persistable persistedState) async {
     if (persistedState.state == LastState.completed) {
