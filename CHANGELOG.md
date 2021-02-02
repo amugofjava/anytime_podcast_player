@@ -1,3 +1,8 @@
+## 0.1.4
+
+- Add playback speed control.
+- Add show notes page.
+
 ## 0.1.3
 
 - Add dark mode support.

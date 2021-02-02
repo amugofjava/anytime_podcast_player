@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/widgets/speed_selector_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -64,9 +65,18 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final theme = Theme.of(context);
+    final effectiveVisualDensity = theme.visualDensity;
+
+    var unadjustedConstraints = const BoxConstraints(
+      minWidth: 24.0,
+      minHeight: 24.0,
+    );
+
+    final adjustedConstraints = effectiveVisualDensity.effectiveConstraints(unadjustedConstraints);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 42.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: StreamBuilder<AudioState>(
           stream: audioBloc.playingState,
           builder: (context, snapshot) {
@@ -74,9 +84,15 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                ConstrainedBox(
+                  constraints: adjustedConstraints,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                  ),
+                ),
                 IconButton(
                   onPressed: () {
                     _rewind(audioBloc);
@@ -120,6 +136,12 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                     size: 48.0,
                     color: Theme.of(context).primaryColor,
                   ),
+                ),
+                SpeedSelectorWidget(
+                  onChanged: (double value) {
+                    print('Speed callback of $value');
+                    audioBloc.playbackSpeed(value);
+                  },
                 ),
               ],
             );

@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/downloadable.dart';
@@ -17,14 +16,7 @@ import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
-
-class DownloadProgress {
-  final String id;
-  final int percentage;
-  final DownloadState status;
-
-  DownloadProgress(this.id, this.percentage, this.status);
-}
+import 'package:anytime/services/download/download_manager.dart';
 
 /// An implementation of a [DownloadService] that handles downloading
 /// of episodes on mobile.
@@ -35,16 +27,21 @@ class MobileDownloadService extends DownloadService {
 
   @override
   final Repository repository;
-  final ReceivePort _port = ReceivePort();
+  final DownloadManager downloadManager;
 
-  MobileDownloadService({@required this.repository}) : super(repository: repository) {
-    _init();
+  MobileDownloadService({@required this.repository, @required this.downloadManager}) : super(repository: repository) {
+    downloadManager.downloadProgress.pipe(downloadProgress);
+    downloadProgress.listen((progress) {
+      if (progress.status == DownloadState.downloaded) {
+        _saveDownload(progress);
+        FlutterDownloader.remove(taskId: progress.id, shouldDeleteContent: false);
+      }
+    });
   }
 
   @override
   void dispose() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
-    downloadProgress.close();
+    downloadManager.dispose();
   }
 
   @override
@@ -91,13 +88,7 @@ class MobileDownloadService extends DownloadService {
 
           log.fine('Download episode (${episode?.title}) $filename to $downloadPath');
 
-          final taskId = await FlutterDownloader.enqueue(
-            url: episode.contentUrl,
-            savedDir: downloadPath,
-            fileName: filename,
-            showNotification: true,
-            openFileFromNotification: false,
-          );
+          final taskId = await downloadManager.enqueTask(episode.contentUrl, downloadPath, filename);
 
           // Update the episode with download data
           episode.filepath = downloadPath;
@@ -119,40 +110,6 @@ class MobileDownloadService extends DownloadService {
   @override
   Future<Episode> findEpisodeByTaskId(String taskId) {
     return repository.findEpisodeByTaskId(taskId);
-  }
-
-  Future<void> _init() async {
-    await FlutterDownloader.initialize();
-
-    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
-
-    _port.listen((dynamic data) {
-      final id = data[0] as String;
-      final status = data[1] as DownloadTaskStatus;
-      final progress = data[2] as int;
-
-      var state = DownloadState.none;
-
-      if (status == DownloadTaskStatus.enqueued) {
-        state = DownloadState.queued;
-      } else if (status == DownloadTaskStatus.canceled) {
-        state = DownloadState.cancelled;
-      } else if (status == DownloadTaskStatus.complete) {
-        state = DownloadState.downloaded;
-        _saveDownload(DownloadProgress(id, progress, state));
-        _clearDownload(id);
-      } else if (status == DownloadTaskStatus.running) {
-        state = DownloadState.downloading;
-      } else if (status == DownloadTaskStatus.failed) {
-        state = DownloadState.failed;
-      } else if (status == DownloadTaskStatus.paused) {
-        state = DownloadState.paused;
-      }
-
-      downloadProgress.add(DownloadProgress(id, progress, state));
-    });
-
-    FlutterDownloader.registerCallback(downloadCallback);
   }
 
   Future<void> _saveDownload(DownloadProgress progress) async {
@@ -177,15 +134,5 @@ class MobileDownloadService extends DownloadService {
         }
       }
     }
-  }
-
-  Future<Null> _clearDownload(String id) {
-    return FlutterDownloader.remove(taskId: id, shouldDeleteContent: false);
-  }
-
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final send = IsolateNameServer.lookupPortByName('downloader_send_port');
-
-    send.send([id, status, progress]);
   }
 }

@@ -28,8 +28,8 @@ class MobileAudioPlayer {
 
   MobileAudioPlayer({this.completionHandler});
 
-  StreamSubscription<AudioPlaybackState> _playerStateSubscription;
-  StreamSubscription<AudioPlaybackEvent> _eventSubscription;
+  StreamSubscription<ProcessingState> _playerStateSubscription;
+  StreamSubscription<PlaybackEvent> _eventSubscription;
 
   AudioProcessingState _playbackState;
   List<MediaControl> _controls = [];
@@ -40,6 +40,7 @@ class MobileAudioPlayer {
   bool _clearedCompletedState = false;
   bool _local;
   int _episodeId = 0;
+  double _playbackSpeed = 1.0;
 
   MediaControl playControl = MediaControl(
     androidIcon: 'drawable/ic_action_play_circle_outline',
@@ -85,7 +86,9 @@ class MobileAudioPlayer {
     _local = (args[4] as String) == '1';
     var sp = args[5] as String;
     var episodeIdStr = args[6] as String;
+    var playbackSpeedStr = args[7] as String;
     _episodeId = int.parse(episodeIdStr);
+    _playbackSpeed = double.parse(playbackSpeedStr);
 
     _position = 0;
 
@@ -95,7 +98,7 @@ class MobileAudioPlayer {
       log.info('Failed to parse starting position of $sp');
     }
 
-    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId}');
+    log.fine('Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
 
@@ -111,13 +114,13 @@ class MobileAudioPlayer {
     log.fine('start()');
 
     _playerStateSubscription =
-        _audioPlayer.playbackStateStream.where((state) => state == AudioPlaybackState.completed).listen((state) async {
+        _audioPlayer.processingStateStream.where((state) => state == ProcessingState.completed).listen((state) async {
       await complete();
     });
 
     _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
-      if (event.state == AudioPlaybackState.playing) {
-        _position = event.position.inMilliseconds;
+      if (_audioPlayer.playing && event.updatePosition != null) {
+        _position = event.updatePosition.inMilliseconds;
       }
     });
   }
@@ -132,22 +135,24 @@ class MobileAudioPlayer {
 
       log.fine('loading new track $_uri - from position $_position');
 
-      _local ? await _audioPlayer.setFilePath(_uri) : await _audioPlayer.setUrl(_uri);
-
-      if (_position > 0) {
-        log.fine('moving position to ${_position}');
-        await _audioPlayer.seek(Duration(milliseconds: _position));
-      }
+      _local
+          ? await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position))
+          : await _audioPlayer.setUrl(_uri);
 
       _loadTrack = false;
     }
 
-    if (_audioPlayer.playbackEvent.state != AudioPlaybackState.connecting ||
-        _audioPlayer.playbackEvent.state != AudioPlaybackState.none) {
+    if (_audioPlayer.processingState != ProcessingState.idle) {
       try {
+        print('Checking current playback speed ${_audioPlayer.speed} with $_playbackSpeed');
+
+        if (_audioPlayer.speed != _playbackSpeed) {
+          await _audioPlayer.setSpeed(_playbackSpeed);
+        }
+
         unawaited(_audioPlayer.play());
       } catch (e) {
-        print('State error');
+        print('State error ${e.toString()}');
       }
     }
 
@@ -221,6 +226,12 @@ class MobileAudioPlayer {
         _playbackState = AudioProcessingState.rewinding;
         await _setState();
       }
+    }
+  }
+
+  Future<void> setSpeed(double speed) async {
+    if (_isPlaying) {
+      await _audioPlayer.setSpeed(speed);
     }
   }
 

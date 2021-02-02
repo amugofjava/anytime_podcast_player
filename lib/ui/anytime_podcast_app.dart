@@ -15,7 +15,8 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/services/audio/mobile_audio_service.dart';
+import 'package:anytime/services/audio/mobile_audio_player_service.dart';
+import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
@@ -35,7 +36,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,8 +45,8 @@ var theme = Themes.lightTheme().themeData;
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
-  static String applicationVersion = '0.1.3';
-  static String applicationBuildNumber = '22';
+  static String applicationVersion = '0.1.4';
+  static String applicationBuildNumber = '23';
 
   final Repository repository;
   final MobilePodcastApi podcastApi;
@@ -59,9 +59,10 @@ class AnytimePodcastApp extends StatefulWidget {
   AnytimePodcastApp(this.mobileSettingsService)
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
-    downloadService = MobileDownloadService(repository: repository);
-    podcastService = MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
-    audioPlayerService = MobileAudioPlayerService(repository: repository);
+    downloadService = MobileDownloadService(repository: repository, downloadManager: FlutterDownloaderManager());
+    podcastService =
+        MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
+    audioPlayerService = MobileAudioPlayerService(repository: repository, settingsService: mobileSettingsService);
     settingsBloc = SettingsBloc(mobileSettingsService);
   }
 
@@ -177,8 +178,9 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
 
 class AnytimeHomePage extends StatefulWidget {
   final String title;
+  final bool topBarVisible;
 
-  AnytimeHomePage({this.title});
+  AnytimeHomePage({this.title, this.topBarVisible = true});
 
   @override
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
@@ -235,48 +237,52 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         children: <Widget>[
           Expanded(
             child: CustomScrollView(
+              // physics: NeverScrollableScrollPhysics(),
               slivers: <Widget>[
-                SliverAppBar(
-                  title: TitleWidget(),
-                  brightness: brightness,
-                  backgroundColor: backgroundColour,
-                  floating: false,
-                  pinned: true,
-                  snap: false,
-                  actions: <Widget>[
-                    IconButton(
-                      tooltip: L.of(context).search_button_label,
-                      icon: Icon(Icons.search),
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          SlideRightRoute(widget: Search()),
-                        );
-                      },
-                    ),
-                    PopupMenuButton<String>(
-                      color: Theme.of(context).dialogBackgroundColor,
-                      onSelected: _menuSelect,
-                      icon: Icon(
-                        Icons.more_vert,
-                        // color: Theme.of(context).buttonColor,
+                SliverVisibility(
+                  visible: widget.topBarVisible,
+                  sliver: SliverAppBar(
+                    title: TitleWidget(),
+                    brightness: brightness,
+                    backgroundColor: backgroundColour,
+                    floating: false,
+                    pinned: true,
+                    snap: false,
+                    actions: <Widget>[
+                      IconButton(
+                        tooltip: L.of(context).search_button_label,
+                        icon: Icon(Icons.search),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            SlideRightRoute(widget: Search()),
+                          );
+                        },
                       ),
-                      itemBuilder: (BuildContext context) {
-                        return <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'settings',
-                            child: Text('Settings'), //TODO: FIX
-                          ),
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'about',
-                            child: Text(L.of(context).about_label),
-                          ),
-                        ];
-                      },
-                    ),
-                  ],
+                      PopupMenuButton<String>(
+                        color: Theme.of(context).dialogBackgroundColor,
+                        onSelected: _menuSelect,
+                        icon: Icon(
+                          Icons.more_vert,
+                          // color: Theme.of(context).buttonColor,
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return <PopupMenuEntry<String>>[
+                            PopupMenuItem<String>(
+                              textStyle: Theme.of(context).textTheme.subtitle1,
+                              value: 'settings',
+                              child: Text('Settings'), //TODO: FIX
+                            ),
+                            PopupMenuItem<String>(
+                              textStyle: Theme.of(context).textTheme.subtitle1,
+                              value: 'about',
+                              child: Text(L.of(context).about_label),
+                            ),
+                          ];
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 StreamBuilder<int>(
                     stream: pager.currentPage,
@@ -329,14 +335,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _menuSelect(String choice) async {
-    final packageInfo = await PackageInfo.fromPlatform();
-
     switch (choice) {
       case 'about':
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion: 'v${packageInfo.version} Alpha build ${packageInfo.buildNumber}',
+            applicationVersion:
+                'v${AnytimePodcastApp.applicationVersion} Beta build ${AnytimePodcastApp.applicationBuildNumber}',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,
@@ -374,14 +379,26 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 }
 
 class TitleWidget extends StatelessWidget {
-  final TextStyle _titleTheme1 = theme.textTheme.bodyText2
-      .copyWith(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme1 = theme.textTheme.bodyText2.copyWith(
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2
-      .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2.copyWith(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2
-      .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2.copyWith(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
   @override
   Widget build(BuildContext context) {

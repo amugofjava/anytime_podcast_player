@@ -2,6 +2,8 @@ import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// An implementation [SettingService] for mobile devices backed by
+/// shared preferences.
 class MobileSettingsService extends SettingsService {
   static SharedPreferences _sharedPreferences;
   static MobileSettingsService _instance;
@@ -44,6 +46,20 @@ class MobileSettingsService extends SettingsService {
   @override
   set themeDarkMode(bool value) {
     _sharedPreferences.setString('theme', value ? 'dark' : 'light');
+  }
+
+  @override
+  set playbackSpeed(double playbackSpeed) {
+    _sharedPreferences.setDouble('speed', playbackSpeed).then((value) => print('Saved playback speed of $playbackSpeed'));
+  }
+
+  @override
+  double get playbackSpeed {
+    var s = _sharedPreferences.getDouble('speed') ?? 1.0;
+
+    print('Returning playback speed of $s');
+    return s;
+    // return _sharedPreferences.getDouble('speed') ?? 1.0;
   }
 
   @override
