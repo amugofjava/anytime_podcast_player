@@ -66,8 +66,9 @@ class EpisodeTile extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                   onPressed: episode.downloaded
                       ? () {
-                          showPlatformDialog<void>(
+                          showDialog<void>(
                             context: context,
+                            useRootNavigator: false,
                             builder: (_) => BasicDialogAlert(
                               title: Text(
                                 L.of(context).delete_episode_title,
