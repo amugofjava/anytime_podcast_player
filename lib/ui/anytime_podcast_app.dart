@@ -335,6 +335,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       case 'about':
         showAboutDialog(
             context: context,
+            useRootNavigator: false,
             applicationName: 'Anytime Podcast Player',
             applicationVersion: 'v${packageInfo.version} Alpha build ${packageInfo.buildNumber}',
             applicationIcon: Image.asset(

@@ -337,8 +337,9 @@ class SubscriptionButton extends StatelessWidget {
                       label: Text(L.of(context).unsubscribe_label),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
-                        showPlatformDialog<void>(
+                        showDialog<void>(
                           context: context,
+                          useRootNavigator: false,
                           builder: (_) => BasicDialogAlert(
                             title: Text(L.of(context).unsubscribe_label),
                             content: Text(L.of(context).unsubscribe_message),
