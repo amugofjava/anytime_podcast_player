@@ -174,7 +174,7 @@ class _PlayButton extends StatelessWidget {
             child: const SpinKitRing(
               lineWidth: 2.0,
               color: Colors.blue,
-              size: 38.0,
+              size: 60,
             ),
           ));
     }
