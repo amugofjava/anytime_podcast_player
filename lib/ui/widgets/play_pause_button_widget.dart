@@ -67,7 +67,7 @@ class PlayPauseBusyButton extends StatelessWidget {
                 center: Icon(
                   icon,
                   size: 28.0,
-                  color: Colors.orange,
+                  color: Theme.of.(context).buttonColor,
                 ),
               ),
               const SpinKitRing(
