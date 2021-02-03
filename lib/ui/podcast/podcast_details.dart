@@ -170,20 +170,15 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                       fit: BoxFit.fitWidth,
                       placeholder: (context, url) {
                         return Container(
+                          color: Theme.of(context).primaryColor,
                           constraints: BoxConstraints.expand(height: 60, width: 60),
-                          child: Placeholder(
-                            color: Colors.grey,
-                            strokeWidth: 1,
-                            fallbackWidth: 60,
-                            fallbackHeight: 60,
-                          ),
                         );
                       },
                       errorWidget: (_, __, dynamic ___) {
                         return Container(
                           constraints: BoxConstraints.expand(height: 60, width: 60),
                           child: Placeholder(
-                            color: Colors.grey,
+                            color: Theme.of(context).errorColor,
                             strokeWidth: 1,
                             fallbackWidth: 60,
                             fallbackHeight: 60,
@@ -342,8 +337,9 @@ class SubscriptionButton extends StatelessWidget {
                       label: Text(L.of(context).unsubscribe_label),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
-                        showPlatformDialog<void>(
+                        showDialog<void>(
                           context: context,
+                          useRootNavigator: false,
                           builder: (_) => BasicDialogAlert(
                             title: Text(L.of(context).unsubscribe_label),
                             content: Text(L.of(context).unsubscribe_message),

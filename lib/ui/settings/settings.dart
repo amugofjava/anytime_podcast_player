@@ -103,8 +103,9 @@ class _SettingsState extends State<Settings> {
   }
 
   void _showStorageDialog({@required bool enableExternalStorage}) {
-    showPlatformDialog<void>(
+    showDialog<void>(
       context: context,
+      useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(L.of(context).settings_download_switch_label),
         content: Text(
