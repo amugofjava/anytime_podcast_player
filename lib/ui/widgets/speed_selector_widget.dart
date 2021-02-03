@@ -47,7 +47,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
               Text(' ',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   )),
               IconButton(
                 constraints: const BoxConstraints(
@@ -61,7 +61,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 icon: Icon(
                   Icons.speed,
                   size: 24.0,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).buttonColor,
                 ),
                 onPressed: () {
                   showDialog<void>(
@@ -102,7 +102,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   'x${snapshot.data.playbackSpeed}',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
                 ),
               ),

@@ -79,7 +79,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                       elevation: 0.0,
                       leading: IconButton(
                         tooltip: L.of(context).minimise_player_window_button_label,
-                        icon: Icon(Icons.keyboard_arrow_down),
+                        icon: Icon(Icons.keyboard_arrow_down, color: Theme.of(context).buttonColor,),
                         onPressed: () => {
                           Navigator.pop(context),
                         },
