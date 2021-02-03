@@ -16,6 +16,8 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadonSDCard = BehaviorSubject<bool>();
   final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
+  final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
+
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -27,14 +29,15 @@ class SettingsBloc extends Bloc {
     var markDeletedEpisodesAsPlayed = _settingsService.markDeletedEpisodesAsPlayed;
     var storeDownloadsSDCard = _settingsService.storeDownloadsSDCard;
     var playbackSpeed = _settingsService.playbackSpeed;
+    var autoOpenNowPlaying = _settingsService.autoOpenNowPlaying;
     var themeName = themeDarkMode ? 'dark' : 'light';
 
     var s = AppSettings(
-      theme: themeDarkMode ? 'dark' : 'light',
-      markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
-      storeDownloadsSDCard: storeDownloadsSDCard,
-      playbackSpeed: playbackSpeed,
-    );
+        theme: themeDarkMode ? 'dark' : 'light',
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        autoOpenNowPlaying: autoOpenNowPlaying);
 
     _settings.add(s);
 
@@ -42,11 +45,11 @@ class SettingsBloc extends Bloc {
       themeName = darkMode ? 'dark' : 'light';
 
       s = AppSettings(
-        theme: themeName,
-        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
-        storeDownloadsSDCard: storeDownloadsSDCard,
-        playbackSpeed: playbackSpeed,
-      );
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: playbackSpeed,
+          autoOpenNowPlaying: autoOpenNowPlaying);
 
       _settings.add(s);
 
@@ -57,11 +60,11 @@ class SettingsBloc extends Bloc {
       markDeletedEpisodesAsPlayed = mark;
 
       s = AppSettings(
-        theme: themeName,
-        markDeletedEpisodesAsPlayed: mark,
-        storeDownloadsSDCard: storeDownloadsSDCard,
-        playbackSpeed: playbackSpeed,
-      );
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: mark,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: playbackSpeed,
+          autoOpenNowPlaying: autoOpenNowPlaying);
 
       _settings.add(s);
 
@@ -72,11 +75,11 @@ class SettingsBloc extends Bloc {
       storeDownloadsSDCard = sdcard;
 
       s = AppSettings(
-        theme: themeName,
-        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
-        storeDownloadsSDCard: storeDownloadsSDCard,
-        playbackSpeed: playbackSpeed,
-      );
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: playbackSpeed,
+          autoOpenNowPlaying: autoOpenNowPlaying);
 
       _settings.add(s);
 
@@ -85,11 +88,11 @@ class SettingsBloc extends Bloc {
 
     _playbackSpeed.listen((double speed) {
       s = AppSettings(
-        theme: themeName,
-        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
-        storeDownloadsSDCard: storeDownloadsSDCard,
-        playbackSpeed: speed,
-      );
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: speed,
+          autoOpenNowPlaying: autoOpenNowPlaying);
 
       _settings.add(s);
 
@@ -97,6 +100,22 @@ class SettingsBloc extends Bloc {
 
       _settingsService.playbackSpeed = speed;
     });
+
+    _autoOpenNowPlaying.listen((bool autoOpen) {
+      autoOpenNowPlaying = autoOpen;
+
+      s = AppSettings(
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: playbackSpeed,
+          autoOpenNowPlaying: autoOpen);
+
+      _settings.add(s);
+
+      _settingsService.autoOpenNowPlaying = autoOpen;
+    });
+
   }
 
   Stream<AppSettings> get settings => _settings.stream;
@@ -108,6 +127,8 @@ class SettingsBloc extends Bloc {
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
 
   void Function(double) get setPlaybackSpeed => _playbackSpeed.add;
+
+  void Function(bool) get setAutoOpenNowPlaying => _autoOpenNowPlaying.add;
 
   @override
   void dispose() {
