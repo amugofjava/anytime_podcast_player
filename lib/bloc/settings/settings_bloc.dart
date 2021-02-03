@@ -18,6 +18,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
   final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
 
+
   SettingsBloc(this._settingsService) {
     _init();
   }
@@ -114,6 +115,7 @@ class SettingsBloc extends Bloc {
 
       _settingsService.autoOpenNowPlaying = autoOpen;
     });
+
   }
 
   Stream<AppSettings> get settings => _settings.stream;
