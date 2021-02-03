@@ -224,7 +224,7 @@ class DownloadControl extends StatelessWidget {
           BasicDialogAction(
             title: Text(
               L.of(context).cancel_button_label,
-              style: TextStyle(color: Colors.orange),
+              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -233,7 +233,7 @@ class DownloadControl extends StatelessWidget {
           BasicDialogAction(
             title: Text(
               L.of(context).stop_download_button_label,
-              style: TextStyle(color: Colors.orange),
+              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               _episodeBloc.deleteDownload(episode);
