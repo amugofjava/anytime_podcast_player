@@ -58,14 +58,14 @@ class PlayerPositionControls extends StatelessWidget {
                           value: p.toDouble(),
                           min: 0.0,
                           max: length.inSeconds.toDouble(),
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: Theme.of(context).buttonColor,
                         )
                       : Slider(
                     onChanged: null,
                           value: 0,
                           min: 0.0,
                           max: 1.0,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: Theme.of(context).buttonColor,
                         ),
                 ),
                 Text(_formatDuration(Duration(seconds: timeRemaining))),
