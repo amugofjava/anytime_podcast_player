@@ -70,9 +70,9 @@ class PlayPauseBusyButton extends StatelessWidget {
                   color: Theme.of(context).buttonColor,
                 ),
               ),
-              const SpinKitRing(
+              SpinKitRing(
                 lineWidth: 2.0,
-                color: Colors.blue,
+                color: Theme.of(context).accentColor,
                 size: 38.0,
               ),
             ],
