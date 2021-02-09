@@ -19,9 +19,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html/style.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// This Widget takes a search result and builds a list of currently available
 /// podcasts. From here a user can option to subscribe/unsubscribe or play a
@@ -285,29 +288,33 @@ class PodcastTitle extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(podcast.title ?? '', style: textTheme.headline6),
           Padding(
-            padding: EdgeInsets.only(top: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(podcast.title ?? '', style: textTheme.headline6),
           ),
-          Text(podcast.copyright ?? '', style: textTheme.caption),
           Padding(
-            padding: EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+            child: Text(podcast.copyright ?? '', style: textTheme.caption),
           ),
-          Text(podcast.description ?? '', style: textTheme.bodyText1),
+          Html(
+            data: podcast.description ?? '',
+            style: {'html': Style(fontWeight: textTheme.bodyText1.fontWeight)},
+            onLinkTap: (url) => canLaunch(url).then((value) => launch(url)),
+          ),
           Padding(
-            padding: EdgeInsets.only(top: 16.0),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SubscriptionButton(podcast),
-              PodcastContextMenu(podcast),
-            ],
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SubscriptionButton(podcast),
+                PodcastContextMenu(podcast),
+              ],
+            ),
           )
         ],
       ),
