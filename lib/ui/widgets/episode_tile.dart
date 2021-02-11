@@ -50,7 +50,7 @@ class EpisodeTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 5,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
+              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
             ),
           ),
         ),
@@ -103,6 +103,7 @@ class EpisodeTile extends StatelessWidget {
                       Icon(
                         Icons.delete_outline,
                         color: Theme.of(context).buttonColor,
+                        size: 20,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -112,6 +113,7 @@ class EpisodeTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
@@ -138,6 +140,7 @@ class EpisodeTile extends StatelessWidget {
                       Icon(
                         Icons.wysiwyg_outlined,
                         color: Theme.of(context).buttonColor,
+                        size: 20,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -147,6 +150,7 @@ class EpisodeTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
@@ -167,6 +171,7 @@ class EpisodeTile extends StatelessWidget {
                       Icon(
                         Icons.bookmark_border_outlined,
                         color: Theme.of(context).buttonColor,
+                        size: 20,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
@@ -176,6 +181,7 @@ class EpisodeTile extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
                         ),
                       ),
                     ],
@@ -245,7 +251,7 @@ class EpisodeTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
           softWrap: false,
-          style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.normal),
         ),
       ),
     );
