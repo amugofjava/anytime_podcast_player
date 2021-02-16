@@ -85,5 +85,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set autoOpenNowPlaying(bool autoOpenNowPlaying) {
+    _sharedPreferences.setBool('autoopennowplaying', autoOpenNowPlaying);
+  }
+
+  @override
+  bool get autoOpenNowPlaying {
+    return _sharedPreferences.getBool('autoopennowplaying') ?? false;
+  }
+
+  @override
   AppSettings settings;
 }
