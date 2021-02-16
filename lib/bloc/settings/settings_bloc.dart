@@ -23,6 +23,7 @@ class SettingsBloc extends Bloc {
   final _playbackSpeed = BehaviorSubject<double>();
   final _searchProvider = BehaviorSubject<String>();
   final _externalLinkConsent = BehaviorSubject<bool>();
+  final _autoOpenNowPlaying = BehaviorSubject<bool>();
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -34,6 +35,7 @@ class SettingsBloc extends Bloc {
     var markDeletedEpisodesAsPlayed = _settingsService.markDeletedEpisodesAsPlayed;
     var storeDownloadsSDCard = _settingsService.storeDownloadsSDCard;
     var playbackSpeed = _settingsService.playbackSpeed;
+    var autoOpenNowPlaying = _settingsService.autoOpenNowPlaying;
     var themeName = themeDarkMode ? 'dark' : 'light';
     var searchProvider = _settingsService.searchProvider;
     var externalLinkConsent = _settingsService.externalLinkConsent;
@@ -53,6 +55,7 @@ class SettingsBloc extends Bloc {
       searchProvider: searchProvider,
       searchProviders: providers,
       externalLinkConsent: externalLinkConsent,
+      autoOpenNowPlaying: autoOpenNowPlaying,
     );
 
     _settings.add(s);
@@ -68,6 +71,7 @@ class SettingsBloc extends Bloc {
         searchProvider: searchProvider,
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
@@ -86,6 +90,7 @@ class SettingsBloc extends Bloc {
         searchProvider: searchProvider,
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
@@ -104,6 +109,7 @@ class SettingsBloc extends Bloc {
         searchProvider: searchProvider,
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
@@ -120,11 +126,30 @@ class SettingsBloc extends Bloc {
         searchProvider: searchProvider,
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
 
       _settingsService.playbackSpeed = speed;
+    });
+
+    _autoOpenNowPlaying.listen((bool autoOpen) {
+      autoOpenNowPlaying = autoOpen;
+
+      s = AppSettings(
+          theme: themeName,
+          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+          storeDownloadsSDCard: storeDownloadsSDCard,
+          playbackSpeed: playbackSpeed,
+          searchProvider: searchProvider,
+          searchProviders: providers,
+          externalLinkConsent: externalLinkConsent,
+          autoOpenNowPlaying: autoOpen);
+
+      _settings.add(s);
+
+      _settingsService.autoOpenNowPlaying = autoOpen;
     });
 
     _searchProvider.listen((search) {
@@ -136,6 +161,7 @@ class SettingsBloc extends Bloc {
         searchProvider: search,
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
@@ -152,6 +178,7 @@ class SettingsBloc extends Bloc {
         searchProvider: searchProvider,
         searchProviders: providers,
         externalLinkConsent: consent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
       );
 
       _settings.add(s);
@@ -172,6 +199,8 @@ class SettingsBloc extends Bloc {
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
 
   void Function(double) get setPlaybackSpeed => _playbackSpeed.add;
+
+  void Function(bool) get setAutoOpenNowPlaying => _autoOpenNowPlaying.add;
 
   void Function(String) get setSearchProvider => _searchProvider.add;
 

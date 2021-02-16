@@ -28,4 +28,8 @@ abstract class SettingsService {
   set externalLinkConsent(bool consent);
 
   bool get externalLinkConsent;
+
+  set autoOpenNowPlaying(bool autoOpenNowPlaying);
+
+  bool get autoOpenNowPlaying;
 }

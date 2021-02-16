@@ -341,5 +341,11 @@
     "description": "Header on podcast funding consent dialog",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Full screen player mode on episode start",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
   }
 }

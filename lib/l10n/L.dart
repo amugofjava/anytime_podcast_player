@@ -551,6 +551,15 @@ class L {
       locale: localeName,
     );
   }
+
+  String get settings_auto_open_now_playing {
+    return Intl.message(
+      'Full screen player mode on episode start',
+      name: 'settings_auto_open_now_playing',
+      desc: 'Displayed when user switches to use full screen player automatically',
+      locale: localeName,
+    );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {
