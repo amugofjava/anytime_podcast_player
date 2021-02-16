@@ -33,6 +33,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final Repository repository;
   final SettingsService settingsService;
   final PodcastService podcastService;
+  final Color androidNotificationColor;
   double _playbackSpeed;
 
   Episode _episode;
@@ -52,6 +53,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
     @required this.repository,
     @required this.settingsService,
     @required this.podcastService,
+    this.androidNotificationColor,
   }) {
     _handleAudioServiceTransitions();
   }
@@ -312,7 +314,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       backgroundTaskEntrypoint: backgroundPlay,
       androidResumeOnClick: true,
       androidNotificationChannelName: 'Anytime Podcast Player',
-      androidNotificationColor: Colors.orange.value,
+      androidNotificationColor: androidNotificationColor?.value ?? Colors.orange.value,
       androidNotificationIcon: 'drawable/ic_stat_name',
       androidStopForegroundOnPause: true,
       fastForwardInterval: Duration(seconds: 30),
