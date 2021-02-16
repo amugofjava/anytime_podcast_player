@@ -116,12 +116,12 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                       }
                     },
                     shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
-                    color: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
+                    color: Theme.of(context).primaryColor,
                     padding: const EdgeInsets.all(8.0),
                     child: AnimatedIcon(
                       size: 60.0,
                       icon: AnimatedIcons.play_pause,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor == Colors.white ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
                       progress: _playPauseController,
                     ),
                   ),

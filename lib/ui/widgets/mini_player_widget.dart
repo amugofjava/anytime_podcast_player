@@ -93,8 +93,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
           decoration: BoxDecoration(
               color: Theme.of(context).bottomAppBarColor,
               border: Border(
-                top: Divider.createBorderSide(context, width: 1.0),
-                bottom: Divider.createBorderSide(context, width: 1.0),
+                top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
+                bottom: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
               )),
           child: StreamBuilder<Episode>(
               stream: audioBloc.nowPlaying,
