@@ -57,6 +57,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
+    final playerBuilder = PlayerControlsBuilder.of(context);
 
     return StreamBuilder<Episode>(
         stream: audioBloc.nowPlaying,
@@ -66,6 +67,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
           }
 
           var duration = snapshot.data == null ? 0 : snapshot.data.duration;
+          final transportBuilder = playerBuilder?.builder(duration);
 
           return DefaultTabController(
               length: snapshot.data.chaptersAreLoaded ? 3 : 2,
@@ -103,10 +105,12 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     : EpisodeTabBarView(
                         episode: snapshot.data,
                       ),
-                bottomNavigationBar: SizedBox(
-                  height: 140.0,
-                  child: NowPlayingTransport(duration: duration),
-                ),
+                bottomNavigationBar: transportBuilder != null
+                    ? transportBuilder(context)
+                    : SizedBox(
+                        height: 140.0,
+                        child: NowPlayingTransport(duration: duration),
+                      ),
               ));
         });
   }
@@ -380,5 +384,26 @@ class NowPlayingTransport extends StatelessWidget {
         PlayerTransportControls(),
       ],
     );
+  }
+}
+
+class PlayerControlsBuilder extends InheritedWidget {
+  final WidgetBuilder Function(int duration) builder;
+
+  PlayerControlsBuilder({
+    Key key,
+    @required this.builder,
+    @required Widget child,
+  })  : assert(builder != null),
+        assert(child != null),
+        super(key: key, child: child);
+
+  static PlayerControlsBuilder of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<PlayerControlsBuilder>();
+  }
+
+  @override
+  bool updateShouldNotify(PlayerControlsBuilder oldWidget) {
+    return builder != oldWidget.builder;
   }
 }
