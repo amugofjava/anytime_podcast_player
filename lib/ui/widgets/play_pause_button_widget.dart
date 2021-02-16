@@ -24,12 +24,12 @@ class PlayPauseButton extends StatelessWidget {
       label: '$label $title',
       child: CircularPercentIndicator(
         radius: 38.0,
-        lineWidth: 2.0,
+        lineWidth: 1.5,
         backgroundColor: Theme.of(context).buttonColor,
         percent: 0.0,
         center: Icon(
           icon,
-          size: 28.0,
+          size: 22.0,
           color: Theme.of(context).buttonColor,
         ),
       ),
@@ -61,17 +61,17 @@ class PlayPauseBusyButton extends StatelessWidget {
             children: <Widget>[
               CircularPercentIndicator(
                 radius: 38.0,
-                lineWidth: 2.0,
+                lineWidth: 1.5,
                 backgroundColor: Theme.of(context).backgroundColor,
                 percent: 0.0,
                 center: Icon(
                   icon,
-                  size: 28.0,
+                  size: 22.0,
                   color: Theme.of(context).buttonColor,
                 ),
               ),
               SpinKitRing(
-                lineWidth: 2.0,
+                lineWidth: 1.5,
                 color: Theme.of(context).buttonColor,
                 size: 38.0,
               ),
