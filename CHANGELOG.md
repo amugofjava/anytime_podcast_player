@@ -1,3 +1,9 @@
+## 0.3.0
+
+- Add support for searching via PodcastIndex (Beta).
+- Add support for podcast funding tag.
+- Add support for podcast chapters.
+
 ## 0.1.4
 
 - Add playback speed control.
