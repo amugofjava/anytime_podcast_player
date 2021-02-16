@@ -47,7 +47,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
               Text(' ',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   )),
               IconButton(
                 constraints: const BoxConstraints(
