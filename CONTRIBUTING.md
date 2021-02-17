@@ -9,7 +9,7 @@ Report a bug by [opening a new issue](https://github.com/amugofjava/anytime_podc
 
 ## Contributing code
 
-1. Fork the repo and create your branch from `master`. Give your a branch a descriptive name. If it's a bug please include the issue id, for example `bug/2-bug-name`; if it's a feature/enhancement give it a meaningful name, for example: `feature/sleep-timer`
+1. Fork the repo and create a branch from `master`, giving your a branch a descriptive name, for example `bug/2-bug-name`; if it's a feature/enhancement give it a meaningful name, for example: `feature/sleep-timer`
 2. If you've added code that should be tested: add tests.
 3. If the code you are contributing is not trivial, please ensure your code is commented. This not only helps when reviewing pull requests, but also helps other developers who may be new to the code.
 4. Ensure the test suite passes.
