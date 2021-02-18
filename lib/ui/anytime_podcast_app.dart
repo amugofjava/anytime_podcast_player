@@ -17,8 +17,8 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/audio/mobile_audio_player_service.dart';
-import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
+import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
@@ -46,9 +46,6 @@ var theme = Themes.lightTheme().themeData;
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
-  static String applicationVersion = '0.2.0';
-  static String applicationBuildNumber = '25';
-
   final Repository repository;
   final MobilePodcastApi podcastApi;
   DownloadService downloadService;
@@ -60,7 +57,7 @@ class AnytimePodcastApp extends StatefulWidget {
   AnytimePodcastApp(this.mobileSettingsService)
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
-    downloadService = MobileDownloadService(repository: repository, downloadManager: FlutterDownloaderManager());
+    downloadService = MobileDownloadService(repository: repository, downloadManager: MobileDownloaderManager());
     podcastService =
         MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
     audioPlayerService = MobileAudioPlayerService(
@@ -348,8 +345,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion:
-                'v${AnytimePodcastApp.applicationVersion} Beta build ${AnytimePodcastApp.applicationBuildNumber}',
+            applicationVersion: 'v${Environment.projectVersion} Beta',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,

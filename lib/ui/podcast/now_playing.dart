@@ -77,7 +77,10 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                   elevation: 0.0,
                   leading: IconButton(
                     tooltip: L.of(context).minimise_player_window_button_label,
-                    icon: Icon(Icons.keyboard_arrow_down),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Theme.of(context).primaryIconTheme.color,
+                    ),
                     onPressed: () => {
                       Navigator.pop(context),
                     },
@@ -127,13 +130,13 @@ class EpisodeTabBar extends StatelessWidget {
         Tab(
           child: Align(
             alignment: Alignment.center,
-            child: Text('Episode'),
+            child: Text(L.of(context).episode_label),
           ),
         ),
         Tab(
           child: Align(
             alignment: Alignment.center,
-            child: Text('Notes'),
+            child: Text(L.of(context).notes_label),
           ),
         ),
       ],
@@ -156,19 +159,19 @@ class EpisodeTabBarWithChapters extends StatelessWidget {
         Tab(
           child: Align(
             alignment: Alignment.center,
-            child: Text('Chapters'),
+            child: Text(L.of(context).chapters_label),
           ),
         ),
         Tab(
           child: Align(
             alignment: Alignment.center,
-            child: Text('Episode'),
+            child: Text(L.of(context).episode_label),
           ),
         ),
         Tab(
           child: Align(
             alignment: Alignment.center,
-            child: Text('Notes'),
+            child: Text(L.of(context).notes_label),
           ),
         ),
       ],
@@ -264,6 +267,8 @@ class NowPlayingHeader extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: OptimizedCacheImage(
+                      width: 360,
+                      height: 360,
                       imageUrl: imageUrl,
                       placeholder: (context, url) {
                         return Container(
@@ -305,14 +310,14 @@ class NowPlayingHeader extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
+                                fontSize: 16.0,
                               )),
                         ),
                         Text(subTitle ?? '',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.normal,
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                             )),
                       ],
                     ),

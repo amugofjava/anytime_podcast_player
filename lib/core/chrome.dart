@@ -38,7 +38,6 @@ class Chrome {
 
   static const _transparentDark = SystemUiOverlayStyle(
     statusBarColor: Color(0xff222222),
-    // Color(0x00FFFFFF),
     statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: Color(0xff222222),
     statusBarBrightness: Brightness.dark,
@@ -48,32 +47,24 @@ class Chrome {
   static var _last = _translucentDark;
 
   static void translucentLight() {
-    log.fine('translucentLight()');
-
     _last = _translucentLight;
 
     restoreLast();
   }
 
   static void transparentLight() {
-    log.fine('transparentLight()');
-
     _last = _transparentLight;
 
     restoreLast();
   }
 
   static void translucentDark() {
-    log.fine('translucentDark()');
-
     _last = _translucentDark;
 
     restoreLast();
   }
 
   static void transparentDark() {
-    log.fine('transparentDark()');
-
     _last = _transparentDark;
 
     restoreLast();
