@@ -24,7 +24,10 @@ class MiniPlayer extends StatelessWidget {
     return StreamBuilder<AudioState>(
         stream: audioBloc.playingState,
         builder: (context, snapshot) {
-          return (snapshot.hasData && !(snapshot.data == AudioState.stopped || snapshot.data == AudioState.none))
+          return (snapshot.hasData &&
+                  !(snapshot.data == AudioState.stopped ||
+                      snapshot.data == AudioState.none ||
+                      snapshot.data == AudioState.error))
               ? _MiniPlayerBuilder()
               : const SizedBox(
                   height: 0.0,

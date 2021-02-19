@@ -12,6 +12,7 @@ enum AudioState {
   playing,
   pausing,
   stopped,
+  error,
 }
 
 class PositionState {

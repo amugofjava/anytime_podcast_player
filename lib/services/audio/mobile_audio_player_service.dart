@@ -64,13 +64,19 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
+      var playing = AudioService.playbackState?.playing ?? false;
+
+      if (playing) {
+        await AudioService.stop();
+      }
+
       await _playingState.add(AudioState.playing);
 
       _playbackSpeed = await settingsService.playbackSpeed;
 
       var trackDetails = <String>[];
 
-      var download = false;
+      var streaming = false;
       var startPosition = 0;
       var uri = episode.contentUrl;
 
@@ -89,24 +95,26 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
           uri = downloadFile;
 
-          download = true;
+          streaming = true;
 
           episode.position = savedEpisode.position;
 
-          startPosition = download && resume ? savedEpisode.position : 0;
+          startPosition = streaming && resume ? savedEpisode.position : 0;
         } else {
           throw Exception('Insufficient storage permissions');
         }
       }
 
       // If we are streaming try and let the user know as soon as possible.
-      if (!download) {
+      if (!streaming) {
         await _playingState.add(AudioState.buffering);
       }
 
       // If we are currently playing a track - save the position of the current
       // track before switching to the next.
       var currentState = AudioService.playbackState?.processingState ?? AudioProcessingState.none;
+
+      log.fine('Current playback state is $currentState');
 
       if (currentState == AudioProcessingState.ready) {
         await _savePosition();
@@ -134,12 +142,21 @@ class MobileAudioPlayerService extends AudioPlayerService {
       }
 
       await AudioService.customAction('track', trackDetails);
-      await AudioService.play();
 
-      // If we are streaming and this episode has chapters we
-      // should fetch them now.
-      if (!download && _episode.hasChapters) {
-        _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
+      try {
+        await AudioService.play();
+
+        // If we are streaming and this episode has chapters we should fetch them now.
+        if (!streaming && _episode.hasChapters) {
+          _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
+        }
+      } catch (e) {
+        log.fine('Error during playback');
+        log.fine(e.toString());
+
+        await _playingState.add(AudioState.error);
+        await _playingState.add(AudioState.stopped);
+        await AudioService.stop();
       }
     }
   }
