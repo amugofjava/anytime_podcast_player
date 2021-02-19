@@ -142,6 +142,8 @@ class PlayControl extends StatelessWidget {
         });
   }
 
+  /// If we have the 'show now playing upon play' option set to true, launch
+  /// the [NowPlaying] widget automatically.
   void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
     if (settings.autoOpenNowPlaying) {
       Navigator.push(

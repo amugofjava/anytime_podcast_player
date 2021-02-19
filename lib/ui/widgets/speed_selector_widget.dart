@@ -9,9 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// This widget allows the user to change the playback speed.
-/// Selecting the playback speed icon will open a dailog box
-/// showing the speed options available.
+/// This widget allows the user to change the playback speed. Selecting the playback
+/// speed icon will open a dialog box showing the speed options available.
 class SpeedSelectorWidget extends StatefulWidget {
   final ValueChanged<double> onChanged;
 

@@ -64,19 +64,13 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
-      var playing = AudioService.playbackState?.playing ?? false;
-
-      if (playing) {
-        await AudioService.stop();
-      }
-
       await _playingState.add(AudioState.playing);
 
       _playbackSpeed = await settingsService.playbackSpeed;
 
       var trackDetails = <String>[];
 
-      var streaming = false;
+      var streaming = true;
       var startPosition = 0;
       var uri = episode.contentUrl;
 
@@ -95,18 +89,18 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
           uri = downloadFile;
 
-          streaming = true;
+          streaming = false;
 
           episode.position = savedEpisode.position;
 
-          startPosition = streaming && resume ? savedEpisode.position : 0;
+          startPosition = !streaming && resume ? savedEpisode.position : 0;
         } else {
           throw Exception('Insufficient storage permissions');
         }
       }
 
       // If we are streaming try and let the user know as soon as possible.
-      if (!streaming) {
+      if (streaming) {
         await _playingState.add(AudioState.buffering);
       }
 
@@ -147,7 +141,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         await AudioService.play();
 
         // If we are streaming and this episode has chapters we should fetch them now.
-        if (!streaming && _episode.hasChapters) {
+        if (streaming && _episode.hasChapters) {
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
         }
       } catch (e) {

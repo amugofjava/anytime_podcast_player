@@ -15,7 +15,12 @@ import 'package:logging/logging.dart';
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
 
+  /// A stream that listens for 'noisy' events. This allows Anytime to listen
+  /// for events such as the headphones being pulled from the audio jack.
   StreamSubscription<void> noisyStream;
+
+  /// Our [MobileAudioPlayer] instance that sits between the [AudioServce] and
+  /// the player that handles the actual playback.
   MobileAudioPlayer _anytimeAudioPlayer;
 
   /// As we are running in a separate Isolate, we need a separate Logger -

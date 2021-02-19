@@ -12,7 +12,10 @@ class TileImage extends StatelessWidget {
     @required this.size,
   }) : super(key: key);
 
+  /// The URL of the image to display.
   final String url;
+
+  /// The size of the image container; both height and width.
   final double size;
 
   @override
