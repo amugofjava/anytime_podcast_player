@@ -216,7 +216,7 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
 
     return TabBarView(
       children: [
-        ChapterSelectorWidget(
+        ChapterSelector(
           episode: episode,
           chapter: episode.chapters[0],
         ),
