@@ -294,10 +294,14 @@ class EpisodeSubtitle extends StatelessWidget {
 
     String title;
 
-    if (length.inSeconds < 60) {
-      title = '$date - ${length.inSeconds} sec';
+    if (length.inSeconds > 0) {
+      if (length.inSeconds < 60) {
+        title = '$date - ${length.inSeconds} sec';
+      } else {
+        title = '$date - ${length.inMinutes} min';
+      }
     } else {
-      title = '$date - ${length.inMinutes} min';
+      title = '$date';
     }
 
     if (timeRemaining.inSeconds > 0) {

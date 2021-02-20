@@ -8,12 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlayerPositionControls extends StatelessWidget {
-  final int duration;
-
-  PlayerPositionControls({
-    @required this.duration,
-  });
-
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
@@ -33,7 +27,7 @@ class PlayerPositionControls extends StatelessWidget {
             p = length.inSeconds;
           }
 
-          var timeRemaining = duration - position.inSeconds;
+          var timeRemaining = length.inSeconds - position.inSeconds;
 
           if (timeRemaining < 0) {
             timeRemaining = 0;

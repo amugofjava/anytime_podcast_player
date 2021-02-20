@@ -35,16 +35,16 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final PodcastService podcastService;
   final Color androidNotificationColor;
   double _playbackSpeed;
-
   Episode _episode;
 
-  StreamSubscription<dynamic> _positionSubscription;
+  /// Subscription to the position ticker.
+  StreamSubscription<int> _positionSubscription;
 
   /// Stream showing our current playing state.
   final BehaviorSubject<AudioState> _playingState = BehaviorSubject<AudioState>.seeded(AudioState.none);
 
   /// Ticks whilst playing. Updates our current position within an episode.
-  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 250)).asBroadcastStream();
+  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
 
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
@@ -123,6 +123,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         startPosition.toString(),
         episode.id == null ? '0' : episode.id.toString(),
         _playbackSpeed.toString(),
+        episode.duration?.toString() ?? '0',
       ];
 
       // Store reference
@@ -172,9 +173,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> seek({int position}) async {
     var duration = _episode == null ? 0 : _episode.duration;
-
     var complete = position > 0 ? (duration / position) * 100 : 0;
-
     var seconds = Duration(seconds: position);
 
     _updateChapter(seconds.inSeconds, duration);
@@ -301,17 +300,14 @@ class MobileAudioPlayerService extends AudioPlayerService {
     var playbackState = await AudioService.playbackState;
 
     if (playbackState != null) {
-      var duration = _episode == null ? 0 : _episode.duration;
+      var currentMediaItem = AudioService.currentMediaItem;
+      var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
+      var position = playbackState?.currentPosition;
+      var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
 
-      if (duration > 0) {
-        var position = playbackState?.currentPosition;
+      _updateChapter(position.inSeconds, duration.inSeconds);
 
-        var complete = position.inSeconds > 0 ? (duration / position.inSeconds) * 100 : 0;
-
-        _updateChapter(position.inSeconds, duration);
-
-        _playPosition.add(PositionState(position, Duration(seconds: _episode.duration), complete.toInt(), _episode));
-      }
+      _playPosition.add(PositionState(position, duration, complete.toInt(), _episode));
     }
   }
 

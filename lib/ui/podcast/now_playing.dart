@@ -108,7 +108,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                       ),
                 bottomNavigationBar: SizedBox(
                   height: 140.0,
-                  child: NowPlayingTransport(duration: duration),
+                  child: NowPlayingTransport(),
                 ),
               ));
         });
@@ -368,10 +368,6 @@ class NowPlayingDetails extends StatelessWidget {
 }
 
 class NowPlayingTransport extends StatelessWidget {
-  final int duration;
-
-  const NowPlayingTransport({@required this.duration});
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -379,9 +375,7 @@ class NowPlayingTransport extends StatelessWidget {
         Divider(
           height: 0.0,
         ),
-        PlayerPositionControls(
-          duration: duration,
-        ),
+        PlayerPositionControls(),
         PlayerTransportControls(),
       ],
     );

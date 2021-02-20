@@ -42,6 +42,7 @@ class MobileAudioPlayer {
   bool _local;
   int _episodeId = 0;
   double _playbackSpeed = 1.0;
+  MediaItem _mediaItem;
 
   MediaControl playControl = MediaControl(
     androidIcon: 'drawable/ic_action_play_circle_outline',
@@ -83,15 +84,16 @@ class MobileAudioPlayer {
   }
 
   Future<void> setMediaItem(dynamic args) async {
-    _uri = args[3] as String;
-    _local = (args[4] as String) == '1';
     var sp = args[5] as String;
     var episodeIdStr = args[6] as String;
     var playbackSpeedStr = args[7] as String;
+    var durationStr = args[8] as String;
     _episodeId = int.parse(episodeIdStr);
     _playbackSpeed = double.parse(playbackSpeedStr);
-
+    _uri = args[3] as String;
+    _local = (args[4] as String) == '1';
     _position = 0;
+    Duration duration;
 
     if (int.tryParse(sp) != null) {
       _position = int.parse(sp);
@@ -99,17 +101,23 @@ class MobileAudioPlayer {
       log.info('Failed to parse starting position of $sp');
     }
 
+    if (int.tryParse(durationStr) != null) {
+      duration = Duration(seconds: int.parse(durationStr));
+    }
+
     log.fine(
         'Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
-
-    await AudioServiceBackground.setMediaItem(MediaItem(
+    _mediaItem = MediaItem(
       id: episodeIdStr,
       title: args[1] as String,
       album: args[0] as String,
       artUri: args[2] as String,
-    ));
+      duration: duration,
+    );
+
+    await AudioServiceBackground.setMediaItem(_mediaItem);
   }
 
   Future<void> start() async {
@@ -143,9 +151,18 @@ class MobileAudioPlayer {
         'User-Agent': '$userAgent',
       };
 
-      _local
-          ? await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position))
-          : await _audioPlayer.setUrl(_uri, headers: headers);
+      if (_local) {
+        await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position));
+      } else {
+        var d = await _audioPlayer.setUrl(_uri, headers: headers);
+
+        /// If we don't already have a duration and we have been able to calculate it from
+        /// beginning to fetch the media, update the current media item with the duration.
+        if (d != null && _mediaItem != null && (_mediaItem.duration == null || _mediaItem.duration.inSeconds == 0)) {
+          _mediaItem = _mediaItem.copyWith(duration: d);
+          await AudioServiceBackground.setMediaItem(_mediaItem);
+        }
+      }
 
       _loadTrack = false;
     }
