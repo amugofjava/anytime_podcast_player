@@ -188,37 +188,34 @@ class MobileAudioPlayerService extends AudioPlayerService {
     await AudioService.stop();
   }
 
+  /// When resuming from a paused state we first need to reconnect to the [AudioService].
+  /// Next we need to restore the state of either the current playing episode or the last
+  /// played episode. We do this in one of three ways. If Anytime has only been placed in
+  /// the background when we resume [_episode] may still be valid and we can continue as
+  /// normal. If not, we check to see if the [AudioService] has a current media item and,
+  /// if so, we restore [_episode] that way. Failing that, we look to see if we have a
+  /// persisted state file and use that to re-fetch the episode.
   @override
   Future<Episode> resume() async {
     await AudioService.connect();
 
-    if (_episode != null) {
+    if (_episode == null) {
+      if (AudioService.currentMediaItem == null) {
+        await _updateEpisodeFromSavedState();
+      } else {
+        _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
+      }
+    } else {
       var playbackState = await AudioService.playbackState;
 
       final basicState = playbackState?.processingState ?? AudioProcessingState.none;
 
       // If we have no state we'll have to assume we stopped whilst suspended.
       if (basicState == AudioProcessingState.none) {
-        var persistedState = await PersistentState.fetchState();
-
-        await _updateEpisodeState(persistedState);
+        await _updateEpisodeFromSavedState();
         await _playingState.add(AudioState.stopped);
       } else {
         await _startTicker();
-      }
-    } else {
-      if (AudioService.currentMediaItem == null) {
-        var persistedState = await PersistentState.fetchState();
-
-        if (persistedState != null && persistedState.episodeId != 0) {
-          _episode = await repository.findEpisodeById(persistedState.episodeId);
-
-          if (_episode != null) {
-            await _updateEpisodeState(persistedState);
-          }
-        }
-      } else {
-        _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
       }
     }
 
@@ -230,15 +227,27 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> setPlaybackSpeed(double speed) => AudioService.setSpeed(speed);
 
-  Future _updateEpisodeState(Persistable persistedState) async {
-    if (persistedState.state == LastState.completed) {
-      _episode.position = 0;
-      _episode.played = true;
-    } else {
-      _episode.position = persistedState.position;
-    }
+  /// This method opens a saved state file. If it exists we fetch the episode ID from
+  /// the saved state and fetch it from the database. If the last updated value of the
+  /// saved state is later than the episode last updated date, we update the episode
+  /// properties from the saved state.
+  Future<void> _updateEpisodeFromSavedState() async {
+    var persistedState = await PersistentState.fetchState();
 
-    await repository.saveEpisode(_episode);
+    if (persistedState != null) {
+      _episode = await repository.findEpisodeById(persistedState.episodeId);
+
+      if (_episode != null && persistedState.lastUpdated.isAfter(_episode?.lastUpdated)) {
+        if (persistedState.state == LastState.completed) {
+          _episode.position = 0;
+          _episode.played = true;
+        } else {
+          _episode.position = persistedState.position;
+        }
+
+        await repository.saveEpisode(_episode);
+      }
+    }
   }
 
   @override

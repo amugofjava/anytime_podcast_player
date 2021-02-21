@@ -65,8 +65,6 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
             return Container();
           }
 
-          var duration = snapshot.data == null ? 0 : snapshot.data.duration;
-
           return DefaultTabController(
               length: snapshot.data.chaptersAreLoaded ? 3 : 2,
               initialIndex: snapshot.data.chaptersAreLoaded ? 1 : 0,
@@ -274,6 +272,8 @@ class NowPlayingHeader extends StatelessWidget {
                         return Container(
                           constraints: BoxConstraints.expand(),
                           child: Placeholder(
+                            fallbackHeight: 360,
+                            fallbackWidth: 360,
                             color: Colors.grey,
                             strokeWidth: 1,
                           ),
@@ -283,6 +283,8 @@ class NowPlayingHeader extends StatelessWidget {
                         return Container(
                           constraints: BoxConstraints.expand(),
                           child: Placeholder(
+                            fallbackHeight: 360,
+                            fallbackWidth: 360,
                             color: Colors.grey,
                             strokeWidth: 1,
                           ),

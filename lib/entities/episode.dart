@@ -39,6 +39,7 @@ class Episode {
   String chaptersUrl;
   String _descriptionText;
   List<Chapter> chapters;
+  DateTime lastUpdated;
 
   // Index of the currently playing chapter it available. Transient.
   int chapterIndex;
@@ -69,6 +70,7 @@ class Episode {
     this.played = false,
     this.chaptersUrl,
     this.chapters,
+    this.lastUpdated,
   });
 
   Map<String, dynamic> toMap() {
@@ -96,6 +98,7 @@ class Episode {
       'played': played ? 'true' : 'false',
       'chaptersUrl': chaptersUrl,
       'chapters': (chapters ?? <Chapter>[]).map((chapter) => chapter.toMap())?.toList(growable: false),
+      'lastUpdated': lastUpdated?.millisecondsSinceEpoch.toString() ?? '',
     };
   }
 
@@ -126,7 +129,7 @@ class Episode {
       link: episode['link'] as String,
       imageUrl: episode['imageUrl'] as String,
       thumbImageUrl: episode['thumbImageUrl'] as String,
-      publicationDate: episode['publicationDate'] == 'null'
+      publicationDate: episode['publicationDate'] == null
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
       contentUrl: episode['contentUrl'] as String,
@@ -139,6 +142,9 @@ class Episode {
       played: episode['played'] == 'true' ? true : false,
       chaptersUrl: episode['chaptersUrl'] as String,
       chapters: chapters,
+      lastUpdated: episode['lastUpdated'] == null || episode['lastUpdated'] == 'null'
+          ? DateTime.now()
+          : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['lastUpdated'] as String)),
     );
   }
 

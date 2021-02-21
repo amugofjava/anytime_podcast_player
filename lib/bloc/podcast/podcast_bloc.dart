@@ -108,9 +108,10 @@ class PodcastBloc extends Bloc {
         _episodesStream.add(_episodes);
 
         _podcastStream.sink.add(BlocPopulatedState<Podcast>(_podcast));
-      } on Exception {
+      } catch (e) {
         // For now we'll assume a network error as this is the most likely.
         _podcastStream.sink.add(BlocErrorState<Podcast>());
+        log.fine('Error loading podcast', e);
       }
     });
   }

@@ -14,14 +14,22 @@ class Persistable {
   int episodeId;
   int position;
   LastState state;
+  DateTime lastUpdated;
 
-  Persistable({this.pguid, this.episodeId, this.position, this.state});
+  Persistable({
+    this.pguid,
+    this.episodeId,
+    this.position,
+    this.state,
+    this.lastUpdated,
+  });
 
   Persistable.empty() {
     pguid = '';
     episodeId = 0;
     position = 0;
     state = LastState.none;
+    lastUpdated = DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -29,7 +37,8 @@ class Persistable {
       'pguid': pguid ?? '',
       'episodeId': episodeId ?? episodeId.toString(),
       'position': position ?? position.toString(),
-      'state': state == null ? LastState.none.toString() : state.toString()
+      'state': state == null ? LastState.none.toString() : state.toString(),
+      'lastUpdated': lastUpdated == null ? DateTime.now().millisecondsSinceEpoch : lastUpdated.millisecondsSinceEpoch,
     };
   }
 
@@ -51,11 +60,14 @@ class Persistable {
       }
     }
 
+    var lastUpdated = persistable['lastUpdated'] as int;
+
     return Persistable(
-      pguid: persistable['pgui'] as String,
+      pguid: persistable['pguig'] as String,
       episodeId: persistable['episodeId'] as int,
       position: persistable['position'] as int,
       state: state,
+      lastUpdated: lastUpdated == null ? DateTime.now() : DateTime.fromMillisecondsSinceEpoch(lastUpdated),
     );
   }
 }

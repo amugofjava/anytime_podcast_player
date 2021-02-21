@@ -67,10 +67,10 @@ class Podcast {
   static Podcast fromMap(int key, Map<String, dynamic> podcast) {
     final sds = podcast['subscribedDate'] as String;
     final funding = <Funding>[];
-    DateTime sd;
+    var sd = DateTime.now();
 
-    if (sds.isNotEmpty && sds != 'null') {
-      sd = DateTime.fromMicrosecondsSinceEpoch(int.parse(podcast['subscribedDate'] as String));
+    if (sds != null && sds.isNotEmpty && int.tryParse(sds) != null) {
+      sd = DateTime.fromMicrosecondsSinceEpoch(int.parse(sds));
     }
 
     if (podcast['funding'] != null) {

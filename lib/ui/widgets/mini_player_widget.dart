@@ -117,10 +117,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
                                 },
                                 errorWidget: (_, __, dynamic ___) {
-                                  return Placeholder(
-                                    color: Colors.grey,
-                                    strokeWidth: 1,
-                                  );
+                                  return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
                                 },
                               )
                             : Container(),
