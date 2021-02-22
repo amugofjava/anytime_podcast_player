@@ -8,6 +8,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
+import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -25,9 +26,7 @@ class MiniPlayer extends StatelessWidget {
         stream: audioBloc.playingState,
         builder: (context, snapshot) {
           return (snapshot.hasData &&
-                  !(snapshot.data == AudioState.stopped ||
-                      snapshot.data == AudioState.none ||
-                      snapshot.data == AudioState.error))
+                  !(snapshot.data == AudioState.stopped || snapshot.data == AudioState.none || snapshot.data == AudioState.error))
               ? _MiniPlayerBuilder()
               : const SizedBox(
                   height: 0.0,
@@ -102,6 +101,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
           child: StreamBuilder<Episode>(
               stream: audioBloc.nowPlaying,
               builder: (context, snapshot) {
+                final placeholderBuilder = PlaceholderBuilder.of(context);
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
@@ -114,10 +114,14 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                             ? OptimizedCacheImage(
                                 imageUrl: snapshot.data.imageUrl,
                                 placeholder: (context, url) {
-                                  return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
+                                  return placeholderBuilder != null
+                                      ? placeholderBuilder?.builder()(context)
+                                      : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
                                 },
                                 errorWidget: (_, __, dynamic ___) {
-                                  return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
+                                  return placeholderBuilder != null
+                                      ? placeholderBuilder?.errorBuilder()(context)
+                                      : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
                                 },
                               )
                             : Container(),
@@ -158,8 +162,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   _play(audioBloc);
                                 }
                               },
-                              shape: CircleBorder(
-                                  side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
+                              shape: CircleBorder(side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
                               child: AnimatedIcon(
                                 size: 48.0,
                                 icon: AnimatedIcons.play_pause,
