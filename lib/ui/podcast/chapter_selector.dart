@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -15,15 +16,19 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 /// podcasts that support that chapter tag.
 // ignore: must_be_immutable
 class ChapterSelector extends StatefulWidget {
-  final Episode episode;
   final ItemScrollController itemScrollController = ItemScrollController();
+  Episode episode;
   StreamSubscription positionSubscription;
   Chapter chapter;
+  var chapters = <Chapter>[];
 
   ChapterSelector({
-    @required this.episode,
-    @required this.chapter,
-  });
+    this.episode,
+  }) {
+    if (episode.chapters != null) {
+      chapters = episode.chapters.where((c) => c.toc).toList(growable: false);
+    }
+  }
 
   @override
   _ChapterSelectorState createState() => _ChapterSelectorState();
@@ -44,8 +49,10 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     // TODO: Calculate which items are currently visible. Only jump/scroll
     // if the current chapter is not visible.
     widget.positionSubscription = audioBloc.playPosition.listen((event) {
-      if (lastChapter == null || lastChapter != event.episode.currentChapter) {
-        lastChapter = event.episode.currentChapter;
+      var episode = event.episode;
+
+      if (lastChapter == null || lastChapter != episode.currentChapter) {
+        lastChapter = episode.currentChapter;
 
         var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
 
@@ -54,11 +61,20 @@ class _ChapterSelectorState extends State<ChapterSelector> {
             widget.chapter = lastChapter;
           });
 
-          if (firstRender) {
-            widget.itemScrollController.jumpTo(index: index);
-            firstRender = false;
-          } else {
-            widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
+          if (!episode.chaptersLoading && episode.chapters.isNotEmpty && widget.itemScrollController.isAttached) {
+            // The chapters may have updated since the widget was built.
+            if (widget.chapters.length != episode.chapters.length) {
+              setState(() {
+                widget.chapters = episode.chapters;
+              });
+            }
+
+            if (firstRender) {
+              widget.itemScrollController.jumpTo(index: index);
+              firstRender = false;
+            } else {
+              widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
+            }
           }
         }
       }
@@ -69,45 +85,54 @@ class _ChapterSelectorState extends State<ChapterSelector> {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
 
+    final episode = widget.episode;
     final chapters = widget.episode.chapters;
 
-    return ScrollablePositionedList.builder(
-      itemScrollController: widget.itemScrollController,
-      itemCount: chapters.length,
-      itemBuilder: (context, index) {
-        final chapter = chapters[index];
-        final chapterSelected = widget.chapter == chapter;
+    return episode.chaptersLoading && episode.chaptersAreNotLoaded
+        ? Align(
+            alignment: Alignment.center,
+            child: PlatformProgressIndicator(),
+          )
+        : ScrollablePositionedList.builder(
+            itemScrollController: widget.itemScrollController,
+            itemCount: chapters.length,
+            itemBuilder: (context, index) {
+              final chapter = chapters[index];
+              final chapterSelected = widget?.chapter == chapter;
 
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-          child: ListTile(
-            onTap: () {
-              audioBloc.transitionPosition(chapter.startTime.toDouble());
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+                child: ListTile(
+                  onTap: () {
+                    audioBloc.transitionPosition(chapter.startTime.toDouble());
+                  },
+                  selected: chapterSelected,
+                  selectedTileColor: Theme.of(context).selectedRowColor,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      '${index + 1}.',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                    ),
+                  ),
+                  title: Text(
+                    '${chapters[index].title?.trim()}',
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    maxLines: 3,
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+                  ),
+                  trailing: Text(
+                    _formatStartTime(chapters[index].startTime),
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+                  ),
+                ),
+              );
             },
-            selected: chapterSelected,
-            selectedTileColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-            leading: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                '${index + 1}.',
-                style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
-              ),
-            ),
-            title: Text(
-              '${chapters[index].title?.trim()}',
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              maxLines: 3,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
-            ),
-            trailing: Text(
-              _formatStartTime(chapters[index].startTime),
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
-            ),
-          ),
-        );
-      },
-    );
+          );
   }
 
   @override

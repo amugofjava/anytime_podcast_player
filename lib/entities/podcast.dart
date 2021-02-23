@@ -8,18 +8,44 @@ import 'package:podcast_search/podcast_search.dart' as search;
 
 import 'episode.dart';
 
+/// A class that represents an instance of a podcast. When persisted to disk
+/// this represents a podcast that has been subscribed to.
 class Podcast {
+  /// Database ID
   int id;
+
+  /// Unique identifier for podcast.
   final String guid;
+
+  /// The link to the podcast RSS feed.
   final String url;
+
+  /// RSS link URL.
   final String link;
+
+  /// Podcast title.
   final String title;
+
+  /// Podcast description. Can be either plain text or HTML.
   final String description;
+
+  /// URL to the full size artwork image.
   final String imageUrl;
+
+  /// URL for thumbnail version of artwork image. Not contained within
+  /// the RSS but may be calculated or provided within search results.
   final String thumbImageUrl;
+
+  /// Copyright owner of the podcast.
   final String copyright;
+
+  /// Zero or more funding links.
   final List<Funding> funding;
+
+  /// Date and time user subscribed to the podcast.
   DateTime subscribedDate;
+
+  /// One or more episodes for this podcast.
   List<Episode> episodes;
 
   Podcast({

@@ -29,7 +29,7 @@ import 'package:anytime/ui/library/library.dart';
 import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
-import 'package:anytime/ui/widgets/mini_player_widget.dart';
+import 'package:anytime/ui/widgets/mini_player.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -166,6 +166,7 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           const LocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
           const Locale('en', ''),

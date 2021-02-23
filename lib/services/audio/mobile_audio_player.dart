@@ -9,6 +9,7 @@ import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:pedantic/pedantic.dart';
@@ -132,6 +133,17 @@ class MobileAudioPlayer {
       if (_audioPlayer.playing && event.updatePosition != null) {
         _position = event.updatePosition.inMilliseconds;
       }
+    }, onError: (Object e, StackTrace t) async {
+      log.fine('Playback event stream - playback error', e);
+      log.fine(t?.toString());
+
+      if (e is PlatformException) {
+        log.fine(e.code);
+        log.fine(e.stacktrace);
+      }
+
+      await _audioPlayer.stop();
+      await _setStoppedState(completed: true);
     });
   }
 
@@ -214,7 +226,7 @@ class MobileAudioPlayer {
 
     _position = _latestPosition();
 
-    await _audioPlayer.seek(Duration(milliseconds: _position + 30000));
+    await seekTo(Duration(milliseconds: _position + 30000));
 
     if (_isPlaying) {
       await _setPlayingState();
@@ -241,7 +253,7 @@ class MobileAudioPlayer {
         _position = 0;
       }
 
-      await _audioPlayer.seek(Duration(milliseconds: _position));
+      await seekTo(Duration(milliseconds: _position));
 
       if (_isPlaying) {
         await _setPlayingState();
@@ -278,12 +290,14 @@ class MobileAudioPlayer {
   }
 
   Future<void> _setBufferingState() async {
-    log.fine('_setBufferingState()');
+    if (!_local) {
+      log.fine('_setBufferingState()');
 
-    _playbackState = AudioProcessingState.buffering;
-    _controls = [rewindControl, pauseControl, fastforwardControl];
+      _playbackState = AudioProcessingState.buffering;
+      _controls = [rewindControl, pauseControl, fastforwardControl];
 
-    await _setState();
+      await _setState();
+    }
   }
 
   Future<void> _setPlayingState() async {
@@ -327,9 +341,14 @@ class MobileAudioPlayer {
   Future<void> seekTo(Duration position) async {
     log.fine('seekTo() ${_playbackState ?? AudioProcessingState.stopped}');
 
+    var currentState = _playbackState;
+    await _setBufferingState();
+
     await _audioPlayer.seek(position);
 
     _position = position.inMilliseconds;
+
+    _playbackState = currentState;
 
     await AudioServiceBackground.setState(
         controls: [pauseControl],

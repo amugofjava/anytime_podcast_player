@@ -12,6 +12,7 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/podcast/funding_menu.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
+import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
@@ -172,13 +173,14 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
                     child: OptimizedCacheImage(
+                      useScaleCacheManager: true,
+                      width: 560,
+                      height: 560,
                       imageUrl: widget.podcast.imageUrl,
                       fit: BoxFit.fitWidth,
+                      filterQuality: FilterQuality.medium,
                       placeholder: (context, url) {
-                        return Placeholder(
-                          color: Colors.grey,
-                          strokeWidth: 1,
-                        );
+                        return DelayedCircularProgressIndicator();
                       },
                       errorWidget: (_, __, dynamic ___) {
                         return Placeholder(

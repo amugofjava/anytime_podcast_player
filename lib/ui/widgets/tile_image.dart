@@ -20,17 +20,21 @@ class TileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OptimizedCacheImage(
-      imageUrl: url,
-      filterQuality: FilterQuality.low,
-      width: size,
-      height: size,
-      placeholder: (context, url) {
-        return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-      },
-      errorWidget: (_, __, dynamic ___) {
-        return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-      },
-    );
+    return SizedBox(
+        height: size,
+        width: size,
+        child: OptimizedCacheImage(
+          useScaleCacheManager: true,
+          imageUrl: url,
+          filterQuality: FilterQuality.low,
+          width: 120,
+          height: 120,
+          placeholder: (context, url) {
+            return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
+          },
+          errorWidget: (_, __, dynamic ___) {
+            return Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
+          },
+        ));
   }
 }

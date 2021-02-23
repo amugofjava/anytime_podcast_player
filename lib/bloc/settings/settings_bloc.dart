@@ -16,14 +16,14 @@ class SettingsBloc extends Bloc {
   final log = Logger('SettingsBloc');
   final SettingsService _settingsService;
 
-  final _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
-  final _darkMode = BehaviorSubject<bool>();
-  final _markDeletedAsPlayed = BehaviorSubject<bool>();
-  final _storeDownloadonSDCard = BehaviorSubject<bool>();
-  final _playbackSpeed = BehaviorSubject<double>();
-  final _searchProvider = BehaviorSubject<String>();
-  final _externalLinkConsent = BehaviorSubject<bool>();
-  final _autoOpenNowPlaying = BehaviorSubject<bool>();
+  final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
+  final BehaviorSubject<bool> _darkMode = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _storeDownloadonSDCard = BehaviorSubject<bool>();
+  final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
+  final BehaviorSubject<String> _searchProvider = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _externalLinkConsent = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
 
   SettingsBloc(this._settingsService) {
     _init();

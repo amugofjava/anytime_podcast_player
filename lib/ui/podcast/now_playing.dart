@@ -12,6 +12,7 @@ import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
+import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -70,8 +71,8 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
           final transportBuilder = playerBuilder?.builder(duration);
 
           return DefaultTabController(
-              length: snapshot.data.chaptersAreLoaded ? 3 : 2,
-              initialIndex: snapshot.data.chaptersAreLoaded ? 1 : 0,
+              length: snapshot.data.hasChapters ? 3 : 2,
+              initialIndex: snapshot.data.hasChapters ? 1 : 0,
               child: Scaffold(
                 appBar: AppBar(
                   brightness: Theme.of(context).brightness,
@@ -87,7 +88,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                       Navigator.pop(context),
                     },
                   ),
-                  flexibleSpace: snapshot.data.chaptersAreLoaded
+                  flexibleSpace: snapshot.data.hasChapters
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -101,7 +102,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                           ],
                         ),
                 ),
-                body: snapshot.data.chaptersAreLoaded
+                body: snapshot.data.hasChapters
                     ? EpisodeTabBarViewWithChapters(
                         episode: snapshot.data,
                       )
@@ -222,7 +223,6 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
       children: [
         ChapterSelector(
           episode: episode,
-          chapter: episode.chapters[0],
         ),
         StreamBuilder<PositionState>(
             stream: audioBloc.playPosition,
@@ -271,19 +271,12 @@ class NowPlayingHeader extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: OptimizedCacheImage(
+                      useScaleCacheManager: true,
                       width: 360,
                       height: 360,
                       imageUrl: imageUrl,
                       placeholder: (context, url) {
-                        return Container(
-                          constraints: BoxConstraints.expand(),
-                          child: Placeholder(
-                            fallbackHeight: 360,
-                            fallbackWidth: 360,
-                            color: Colors.grey,
-                            strokeWidth: 1,
-                          ),
-                        );
+                        return DelayedCircularProgressIndicator();
                       },
                       errorWidget: (_, __, dynamic ___) {
                         return Container(

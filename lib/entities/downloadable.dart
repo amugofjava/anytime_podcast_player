@@ -12,13 +12,28 @@ enum DownloadState { none, queued, downloading, failed, cancelled, paused, downl
 /// Downloadables can be used to determine if a download has been successful and
 /// if an episode can be played from the filesystem.
 class Downloadable {
+  /// Database ID
   int id;
+
+  /// Unique identifier for the download
   final String guid;
+
+  /// URL of the file to download
   final String url;
+
+  /// Destination directory
   String directory;
+
+  /// Name of file
   String filename;
+
+  /// Current task ID for the download
   String taskId;
+
+  /// Current state of the download
   DownloadState state;
+
+  /// Percentage of MP3 downloaded
   int percentage;
 
   Downloadable({

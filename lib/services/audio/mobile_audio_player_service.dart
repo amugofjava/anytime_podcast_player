@@ -64,15 +64,14 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
     if (episode.guid != '') {
-      await _playingState.add(AudioState.playing);
-
-      _playbackSpeed = await settingsService.playbackSpeed;
-
       var trackDetails = <String>[];
-
       var streaming = true;
       var startPosition = 0;
       var uri = episode.contentUrl;
+
+      await _playingState.add(AudioState.playing);
+
+      _playbackSpeed = await settingsService.playbackSpeed;
 
       log.info('Playing episode ${episode.title} - ${episode.id}');
 
@@ -143,7 +142,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
         // If we are streaming and this episode has chapters we should fetch them now.
         if (streaming && _episode.hasChapters) {
+          _episode.chaptersLoading = true;
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
+          _episode.chaptersLoading = false;
         }
       } catch (e) {
         log.fine('Error during playback');
@@ -157,9 +158,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> fastforward() {
-    return AudioService.fastForward();
-  }
+  Future<void> fastforward() => AudioService.fastForward();
+
+  @override
+  Future<void> rewind() => AudioService.rewind();
 
   @override
   Future<void> pause() => AudioService.pause();
@@ -168,19 +170,22 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<void> play() => AudioService.play();
 
   @override
-  Future<void> rewind() => AudioService.rewind();
-
-  @override
   Future<void> seek({int position}) async {
-    var duration = _episode == null ? 0 : _episode.duration;
-    var complete = position > 0 ? (duration / position) * 100 : 0;
-    var seconds = Duration(seconds: position);
+    var currentMediaItem = AudioService.currentMediaItem;
+    var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
+    var p = Duration(seconds: position);
+    var complete = p.inSeconds > 0 ? (duration.inSeconds / p.inSeconds) * 100 : 0;
 
-    _updateChapter(seconds.inSeconds, duration);
+    _updateChapter(p.inSeconds, duration.inSeconds);
 
-    _playPosition.add(PositionState(seconds, Duration(seconds: _episode.duration), complete.toInt(), _episode));
+    _playPosition.add(PositionState(p, duration, complete.toInt(), _episode));
 
-    return await AudioService.seekTo(seconds);
+    // Pause the ticker whilst we seek to prevent jumpy UI.
+    _positionSubscription?.pause();
+
+    await AudioService.seekTo(Duration(seconds: position));
+
+    _positionSubscription?.resume();
   }
 
   @override

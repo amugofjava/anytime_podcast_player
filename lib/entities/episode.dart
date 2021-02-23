@@ -14,36 +14,95 @@ import 'package:logging/logging.dart';
 class Episode {
   final log = Logger('Episode');
 
-  final String guid;
-  String pguid;
+  /// Database ID
   int id;
+
+  /// A String GUID for the episode.
+  final String guid;
+
+  /// The GUID for an associated podcast. If an episode has been downloaded
+  /// without subscribing to a podcast this may be null.
+  String pguid;
+
+  /// If the episode is currently being downloaded, this contains the unique
+  /// ID supplied by the download manager for the episode.
   String downloadTaskId;
+
+  /// The path to the directory containing the download for this episode; or null.
   String filepath;
+
+  /// The filename of the downloaded episode; or null.
   String filename;
+
+  /// The current downloading state of the episode.
   DownloadState downloadState = DownloadState.none;
+
+  /// The name of the podcast the episode is part of.
   String podcast;
+
+  /// The episode title.
   String title;
+
+  /// The episode description. This could be plain text or HTML.
   String description;
+
+  /// External link
   String link;
+
+  /// URL to the episode artwork image.
   String imageUrl;
+
+  /// URL to a thumbnail version of the episode artwork image.
   String thumbImageUrl;
+
+  /// The date the episode was published (if known).
   DateTime publicationDate;
+
+  /// The URL for the episode location.
   String contentUrl;
+
+  /// Author of the episode if known.
   String author;
+
+  /// The season the episode is part of if available.
   int season;
+
+  /// The episode number within a season if available.
   int episode;
+
+  /// The duration of the episode in milliseconds. This can be populated either from
+  /// the RSS if available, or determined from the MP3 file at stream/download time.
   int duration;
+
+  /// Stores the current position within the episode in milliseconds. Used for resuming.
   int position;
+
+  /// Stores the progress of the current download progress if available.
   int downloadPercentage;
+
+  /// True if this episode is 'marked as played'.
   bool played;
+
+  /// URL pointing to a JSON file containing chapter information if available.
   String chaptersUrl;
-  String _descriptionText;
+
+  /// List of chapters for the episode if available.
   List<Chapter> chapters;
+
+  /// Date and time episode was last updated and persisted.
   DateTime lastUpdated;
 
-  // Index of the currently playing chapter it available. Transient.
+  /// Processed version of episode description.
+  String _descriptionText;
+
+  /// Index of the currently playing chapter it available. Transient.
   int chapterIndex;
+
+  /// Current chapter we are listening to if thie episode has chapters.  Transient.
   Chapter currentChapter;
+
+  /// Set to true if chapter data is currently being loaded.
+  bool chaptersLoading = false;
 
   Episode({
     @required this.guid,

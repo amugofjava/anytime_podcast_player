@@ -4,8 +4,13 @@
 
 import 'package:get_version/get_version.dart';
 
+/// The key required when searching via PodcastIndex.org.
 const podcastIndexKey = String.fromEnvironment('PINDEX_KEY', defaultValue: '');
+
+/// The secret required when searching via PodcastIndex.org.
 const podcastIndexSecret = String.fromEnvironment('PINDEX_SECRET', defaultValue: '');
+
+/// Allows a user to override the default user agent string.
 const userAgentAppString = String.fromEnvironment('USER_AGENT', defaultValue: '');
 
 class Environment {

@@ -26,12 +26,11 @@ dependencies:
   path_provider: ^1.6.27
   percent_indicator: ^2.1.9+1
   permission_handler: ^5.1.0+2
-  #  podcast_search: ^0.3.9
   # Use direct from GitHub until dependent also updates
   podcast_search:
     git:
       url: https://github.com/amugofjava/podcast_search
-      ref: f776fc7
+      ref: 6c4526f
   provider: ^4.3.3
   rxdart: ^0.24.1
   scrollable_positioned_list: ^0.1.9

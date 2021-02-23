@@ -11,5 +11,10 @@ class Feed {
   String thumbImageUrl;
   bool refresh;
 
-  Feed({@required this.podcast, this.imageUrl, this.thumbImageUrl, this.refresh = false});
+  Feed({
+    @required this.podcast,
+    this.imageUrl,
+    this.thumbImageUrl,
+    this.refresh = false,
+  });
 }

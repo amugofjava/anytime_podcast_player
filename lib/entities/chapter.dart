@@ -4,22 +4,40 @@
 
 import 'package:flutter/foundation.dart';
 
+/// A class that represents an individual chapter within an [Episode]. Chapters
+/// may, or may not, exist for an episode.
+///
+/// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
 class Chapter {
+  /// Database ID
   int id;
+
+  /// Title of this chapter.
   final String title;
+
+  /// URL for the chapter image if one is available.
   final String imageUrl;
+
+  /// URL of an external link for this chapter if available.
   final String url;
+
+  /// Table of contents flag. If this is false the chapter should be treated as
+  /// meta data only and not be displayed.
   final bool toc;
+
+  /// The start time of the chapter in seconds.
   final double startTime;
+
+  /// The optional end time of the chapter in seconds.
   final double endTime;
 
   Chapter({
     @required this.title,
     @required this.imageUrl,
-    @required this.url,
-    @required this.toc,
     @required this.startTime,
-    @required this.endTime,
+    this.url,
+    this.toc = true,
+    this.endTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,7 +56,7 @@ class Chapter {
       title: chapter['title'] as String,
       imageUrl: chapter['imageUrl'] as String,
       url: chapter['url'] as String,
-      toc: chapter['toc'] == 'true' ? true : false,
+      toc: chapter['toc'] == 'false' ? false : true,
       startTime: double.parse(chapter['startTime'] as String),
       endTime: double.parse(chapter['endTime'] as String),
     );

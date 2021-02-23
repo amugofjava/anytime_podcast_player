@@ -11,8 +11,6 @@ import 'package:podcast_search/podcast_search.dart';
 /// interacts with the iTunes search API via the podcast_search package.
 class MobilePodcastApi extends PodcastApi {
   final Search api = Search();
-  // static String userAgent =
-  //     'Anytime/${AnytimePodcastApp.applicationVersion}  (https://github.com/amugofjava/anytime_podcast_player)';
 
   @override
   Future<SearchResult> search(
