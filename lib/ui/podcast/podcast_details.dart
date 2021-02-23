@@ -10,6 +10,7 @@ import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/podcast/funding_menu.dart';
+import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
@@ -238,12 +239,14 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
                     if (state is BlocPopulatedState<Podcast>) {
                       return SliverToBoxAdapter(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          PodcastTitle(state.results),
-                          Divider(),
-                        ],
+                          child: PlaybackErrorListener(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            PodcastTitle(state.results),
+                            Divider(),
+                          ],
+                        ),
                       ));
                     }
 

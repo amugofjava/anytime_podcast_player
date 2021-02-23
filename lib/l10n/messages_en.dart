@@ -40,6 +40,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_episode_button_label" : MessageLookupByLibrary.simpleMessage("Download episode"),
     "downloads" : MessageLookupByLibrary.simpleMessage("Downloads"),
     "episode_label" : MessageLookupByLibrary.simpleMessage("Episode"),
+    "error_no_connection" : MessageLookupByLibrary.simpleMessage("Unable to play episode. Please check your connection and try again."),
+    "error_playback_fail" : MessageLookupByLibrary.simpleMessage("An unexpected error occurred during playback. Please check your connection and try again."),
     "fast_forward_button_label" : MessageLookupByLibrary.simpleMessage("Fast-forward episode 30 seconds"),
     "go_back_button_label" : MessageLookupByLibrary.simpleMessage("GO BACK"),
     "library" : MessageLookupByLibrary.simpleMessage("Library"),

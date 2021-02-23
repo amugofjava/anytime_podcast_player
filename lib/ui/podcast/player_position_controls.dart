@@ -47,7 +47,7 @@ class PlayerPositionControls extends StatelessWidget {
                   child: snapshot.hasData
                       ? Slider(
                           onChanged: (value) {
-                            audioBloc.transitionPosition(value);
+                            snapshot.data.buffering ? null : audioBloc.transitionPosition(value);
                           },
                           value: p.toDouble(),
                           min: 0.0,

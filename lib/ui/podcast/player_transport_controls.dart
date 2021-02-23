@@ -96,7 +96,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                 ),
                 IconButton(
                   onPressed: () {
-                    _rewind(audioBloc);
+                    return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
                   },
                   tooltip: L.of(context).rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
@@ -113,7 +113,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                     playPauseController: _playPauseController),
                 IconButton(
                   onPressed: () {
-                    _fastforward(audioBloc);
+                    return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
                   padding: const EdgeInsets.all(0.0),
                   icon: Icon(

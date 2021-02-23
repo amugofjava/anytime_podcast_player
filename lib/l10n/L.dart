@@ -560,6 +560,24 @@ class L {
       locale: localeName,
     );
   }
+
+  String get error_no_connection {
+    return Intl.message(
+      'Unable to play episode. Please check your connection and try again',
+      name: 'error_no_connection',
+      desc: 'Displayed when attempting to start streaming an episode with no data connection',
+      locale: localeName,
+    );
+  }
+
+  String get error_playback_fail {
+    return Intl.message(
+      'An unexpected error occurred during playback. Please check your connection and try again',
+      name: 'error_playback_fail',
+      desc: 'Displayed when attempting to start streaming an episode with no data connection',
+      locale: localeName,
+    );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

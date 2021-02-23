@@ -347,5 +347,17 @@
     "description": "Displayed when user switches to use full screen player automatically",
     "type": "text",
     "placeholders": {}
+  },
+  "error_no_connection": "Episode kann nicht abgespielt werden. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "Während der Wiedergabe ist ein unerwarteter Fehler aufgetreten. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
   }
 }

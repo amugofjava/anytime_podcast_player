@@ -16,6 +16,7 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
@@ -48,6 +49,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
+
+  /// Stream for the last audio error as an integer code.
+  final PublishSubject<int> _playbackError = PublishSubject<int>();
 
   MobileAudioPlayerService({
     @required this.repository,
@@ -101,6 +105,16 @@ class MobileAudioPlayerService extends AudioPlayerService {
       // If we are streaming try and let the user know as soon as possible.
       if (streaming) {
         await _playingState.add(AudioState.buffering);
+
+        // Check we have connectivity
+        var connectivityResult = await Connectivity().checkConnectivity();
+
+        if (connectivityResult == ConnectivityResult.none) {
+          await _playbackError.add(401);
+          await _playingState.add(AudioState.none);
+          await AudioService.stop();
+          return;
+        }
       }
 
       // If we are currently playing a track - save the position of the current
@@ -178,7 +192,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
     _updateChapter(p.inSeconds, duration.inSeconds);
 
-    _playPosition.add(PositionState(p, duration, complete.toInt(), _episode));
+    _playPosition.add(PositionState(p, duration, complete.toInt(), _episode, true));
 
     // Pause the ticker whilst we seek to prevent jumpy UI.
     _positionSubscription?.pause();
@@ -310,6 +324,11 @@ class MobileAudioPlayerService extends AudioPlayerService {
     _playingState.add(AudioState.buffering);
   }
 
+  Future<void> _onError() async {
+    log.fine('Pushing error code 501');
+    _playbackError.add(501);
+  }
+
   Future<void> _onUpdatePosition() async {
     var playbackState = await AudioService.playbackState;
 
@@ -382,6 +401,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
             await _onBuffering();
             break;
           case AudioProcessingState.error:
+            await _onError();
             break;
           case AudioProcessingState.connecting:
             break;
@@ -467,6 +487,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<PositionState> get playPosition => _playPosition.stream;
+
+  @override
+  Stream<int> get playbackError => _playbackError.stream;
 }
 
 void backgroundPlay() {

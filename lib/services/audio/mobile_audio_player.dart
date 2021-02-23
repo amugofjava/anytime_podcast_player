@@ -133,18 +133,25 @@ class MobileAudioPlayer {
       if (_audioPlayer.playing && event.updatePosition != null) {
         _position = event.updatePosition.inMilliseconds;
       }
-    }, onError: (Object e, StackTrace t) async {
-      log.fine('Playback event stream - playback error', e);
-      log.fine(t?.toString());
-
-      if (e is PlatformException) {
-        log.fine(e.code);
-        log.fine(e.stacktrace);
-      }
+    }, onError: (Object error, StackTrace t) async {
+      _reportError(error);
 
       await _audioPlayer.stop();
-      await _setStoppedState(completed: true);
+      await complete();
     });
+  }
+
+  void _reportError(Object e) async {
+    log.fine('Playback event stream - playback error', e);
+    log.fine('Object is of type ${e.runtimeType}');
+
+    if (e is PlatformException) {
+      log.fine(e.code);
+      log.fine(e.message);
+      log.fine(e.stacktrace);
+    }
+
+    await _setErrorState();
   }
 
   Future<void> play() async {
@@ -287,6 +294,14 @@ class MobileAudioPlayer {
         await play();
       }
     }
+  }
+
+  Future<void> _setErrorState() async {
+    _playbackState = AudioProcessingState.error;
+    _controls = [rewindControl, pauseControl, fastforwardControl];
+    _isPlaying = false;
+
+    await _setState();
   }
 
   Future<void> _setBufferingState() async {

@@ -20,11 +20,12 @@ class PositionState {
   Duration length;
   int percentage;
   Episode episode;
+  bool buffering;
 
-  PositionState(this.position, this.length, this.percentage, this.episode);
+  PositionState(this.position, this.length, this.percentage, this.episode, [this.buffering = false]);
 
   PositionState.emptyState() {
-    PositionState(Duration(seconds: 0), Duration(seconds: 0), 0, null);
+    PositionState(Duration(seconds: 0), Duration(seconds: 0), 0, null, false);
   }
 }
 
@@ -69,4 +70,5 @@ abstract class AudioPlayerService {
   /// Event listeners
   Stream<AudioState> playingState;
   Stream<PositionState> playPosition;
+  Stream<int> playbackError;
 }

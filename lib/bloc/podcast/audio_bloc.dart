@@ -146,6 +146,9 @@ class AudioBloc extends Bloc {
   /// Get the current playing state
   Stream<AudioState> get playingState => audioPlayerService.playingState;
 
+  /// Listen for any playback errors
+  Stream<int> get playbackError => audioPlayerService.playbackError;
+
   /// Get the current playing track
   Stream<Episode> get nowPlaying => _nowPlaying.stream;
 

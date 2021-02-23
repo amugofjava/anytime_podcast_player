@@ -10,6 +10,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
+import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
@@ -88,19 +89,21 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                       Navigator.pop(context),
                     },
                   ),
-                  flexibleSpace: snapshot.data.hasChapters
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            EpisodeTabBarWithChapters(),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            EpisodeTabBar(),
-                          ],
-                        ),
+                  flexibleSpace: PlaybackErrorListener(
+                    child: snapshot.data.hasChapters
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              EpisodeTabBarWithChapters(),
+                            ],
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              EpisodeTabBar(),
+                            ],
+                          ),
+                  ),
                 ),
                 body: snapshot.data.hasChapters
                     ? EpisodeTabBarViewWithChapters(
