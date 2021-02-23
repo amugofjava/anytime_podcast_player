@@ -188,7 +188,7 @@ class Episode {
       link: episode['link'] as String,
       imageUrl: episode['imageUrl'] as String,
       thumbImageUrl: episode['thumbImageUrl'] as String,
-      publicationDate: episode['publicationDate'] == null
+      publicationDate: episode['publicationDate'] == null || episode['publicationDate'] == 'null'
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
       contentUrl: episode['contentUrl'] as String,
