@@ -157,8 +157,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
         // If we are streaming and this episode has chapters we should fetch them now.
         if (streaming && _episode.hasChapters) {
           _episode.chaptersLoading = true;
+          await _onUpdatePosition();
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
           _episode.chaptersLoading = false;
+          await _onUpdatePosition();
         }
       } catch (e) {
         log.fine('Error during playback');

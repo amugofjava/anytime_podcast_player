@@ -29,7 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chapters_label" : MessageLookupByLibrary.simpleMessage("Chapters"),
     "clear_search_button_label" : MessageLookupByLibrary.simpleMessage("Clear search text"),
     "close_button_label" : MessageLookupByLibrary.simpleMessage("Close"),
-    "consent_message" : MessageLookupByLibrary.simpleMessage("The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime"),
+    "consent_message" : MessageLookupByLibrary.simpleMessage("This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime."),
     "continue_button_label" : MessageLookupByLibrary.simpleMessage("CONTINUE"),
     "delete_button_label" : MessageLookupByLibrary.simpleMessage("DELETE"),
     "delete_episode_button_label" : MessageLookupByLibrary.simpleMessage("Delete episode"),

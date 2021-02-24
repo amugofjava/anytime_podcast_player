@@ -54,14 +54,14 @@ class _ChapterSelectorState extends State<ChapterSelector> {
       if (lastChapter == null || lastChapter != episode.currentChapter) {
         lastChapter = episode.currentChapter;
 
-        var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
+        if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
+          var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
 
-        if (index >= 0) {
-          setState(() {
-            widget.chapter = lastChapter;
-          });
+          if (index >= 0) {
+            setState(() {
+              widget.chapter = lastChapter;
+            });
 
-          if (!episode.chaptersLoading && episode.chapters.isNotEmpty && widget.itemScrollController.isAttached) {
             // The chapters may have updated since the widget was built.
             if (widget.chapters.length != episode.chapters.length) {
               setState(() {
@@ -69,11 +69,13 @@ class _ChapterSelectorState extends State<ChapterSelector> {
               });
             }
 
-            if (firstRender) {
-              widget.itemScrollController.jumpTo(index: index);
-              firstRender = false;
-            } else {
-              widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
+            if (widget.itemScrollController.isAttached) {
+              if (firstRender) {
+                widget.itemScrollController.jumpTo(index: index);
+                firstRender = false;
+              } else {
+                widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
+              }
             }
           }
         }
@@ -88,7 +90,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     final episode = widget.episode;
     final chapters = widget.episode.chapters;
 
-    return episode.chaptersLoading && episode.chaptersAreNotLoaded
+    return episode.chaptersLoading || episode.chaptersAreNotLoaded
         ? Align(
             alignment: Alignment.center,
             child: PlatformProgressIndicator(),
