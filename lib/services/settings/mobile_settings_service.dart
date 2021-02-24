@@ -95,5 +95,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set showFunding(bool show) {
+    _sharedPreferences.setBool('showFunding', show);
+  }
+
+  @override
+  bool get showFunding {
+    return _sharedPreferences.getBool('showFunding') ?? true;
+  }
+
+  @override
   AppSettings settings;
 }
