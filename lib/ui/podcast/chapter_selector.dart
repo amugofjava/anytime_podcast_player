@@ -101,6 +101,15 @@ class _ChapterSelectorState extends State<ChapterSelector> {
             itemBuilder: (context, index) {
               final chapter = chapters[index];
               final chapterSelected = widget?.chapter == chapter;
+              final textStyle = chapterSelected
+                  ? Theme.of(context).accentTextTheme.bodyText1.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      )
+                  : Theme.of(context).textTheme.bodyText1.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      );
 
               return Padding(
                 padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
@@ -114,10 +123,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
                       '${index + 1}.',
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal,
-                          ),
+                      style: textStyle,
                     ),
                   ),
                   title: Text(
@@ -125,11 +131,11 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     maxLines: 3,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+                    style: textStyle,
                   ),
                   trailing: Text(
                     _formatStartTime(chapters[index].startTime),
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+                    style: textStyle,
                   ),
                 ),
               );
