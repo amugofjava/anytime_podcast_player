@@ -210,7 +210,7 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<List<Chapter>> loadChaptersByUrl({@required String url}) async {
-    var c = await psapi.Podcast.loadChaptersByUrl(url: url);
+    var c = await api.loadChapters(url);
     var chapters = <Chapter>[];
 
     if (c != null) {
