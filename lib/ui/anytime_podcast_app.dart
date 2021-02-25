@@ -72,12 +72,19 @@ class AnytimePodcastApp extends StatefulWidget {
   _AnytimePodcastAppState createState() => _AnytimePodcastAppState();
 }
 
-class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
+class _AnytimePodcastAppState extends State<AnytimePodcastApp> with WidgetsBindingObserver {
   ThemeData theme;
+  AudioBloc audioBloc;
 
   @override
   void initState() {
     super.initState();
+
+    audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    WidgetsBinding.instance.addObserver(this);
+
+    audioBloc.transitionLifecycleState(LifecyleState.resume);
 
     widget.settingsBloc.settings.listen((event) {
       setState(() {
@@ -104,6 +111,29 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
       Chrome.transparentLight();
 
       theme = Themes.lightTheme().themeData;
+    }
+  }
+
+  @override
+  void dispose() {
+    audioBloc.transitionLifecycleState(LifecyleState.pause);
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        audioBloc.transitionLifecycleState(LifecyleState.resume);
+        break;
+      case AppLifecycleState.paused:
+        audioBloc.transitionLifecycleState(LifecyleState.pause);
+        break;
+      default:
+        break;
     }
   }
 
@@ -189,45 +219,14 @@ class AnytimeHomePage extends StatefulWidget {
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
 }
 
-class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingObserver {
+class _AnytimeHomePageState extends State<AnytimeHomePage> {
   final log = Logger('_AnytimeHomePageState');
   Widget library;
 
   @override
   void initState() {
     super.initState();
-
-    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-
-    WidgetsBinding.instance.addObserver(this);
-
-    audioBloc.transitionLifecycleState(LifecyleState.resume);
-
     Environment.loadEnvironment();
-  }
-
-  @override
-  void dispose() {
-    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    audioBloc.transitionLifecycleState(LifecyleState.pause);
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        audioBloc.transitionLifecycleState(LifecyleState.resume);
-        break;
-      case AppLifecycleState.paused:
-        audioBloc.transitionLifecycleState(LifecyleState.pause);
-        break;
-      default:
-        break;
-    }
   }
 
   @override
