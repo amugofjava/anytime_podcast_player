@@ -271,28 +271,25 @@ class NowPlayingHeader extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 7,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: OptimizedCacheImage(
-                      useScaleCacheManager: true,
-                      width: 360,
-                      height: 360,
-                      imageUrl: imageUrl,
-                      placeholder: (context, url) {
-                        return DelayedCircularProgressIndicator();
-                      },
-                      errorWidget: (_, __, dynamic ___) {
-                        return Container(
-                          constraints: BoxConstraints.expand(),
-                          child: Placeholder(
-                            fallbackHeight: 360,
-                            fallbackWidth: 360,
-                            color: Colors.grey,
-                            strokeWidth: 1,
-                          ),
-                        );
-                      },
-                    ),
+                  child: OptimizedCacheImage(
+                    useScaleCacheManager: true,
+                    width: 360,
+                    height: 360,
+                    imageUrl: imageUrl,
+                    placeholder: (context, url) {
+                      return DelayedCircularProgressIndicator();
+                    },
+                    errorWidget: (_, __, dynamic ___) {
+                      return Container(
+                        constraints: BoxConstraints.expand(),
+                        child: Placeholder(
+                          fallbackHeight: 360,
+                          fallbackWidth: 360,
+                          color: Colors.grey,
+                          strokeWidth: 1,
+                        ),
+                      );
+                    },
                   ),
                 ),
                 Expanded(

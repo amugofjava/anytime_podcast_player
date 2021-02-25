@@ -30,6 +30,7 @@ import 'package:rxdart/rxdart.dart';
 /// instance of [BackgroundPlayerTask] is used to handle events from
 /// the background Isolate and pass them on to the audio player.
 class MobileAudioPlayerService extends AudioPlayerService {
+  final zeroDuration = const Duration(seconds: 0);
   final log = Logger('MobileAudioPlayerService');
   final Repository repository;
   final SettingsService settingsService;
@@ -74,6 +75,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var uri = episode.contentUrl;
 
       await _playingState.add(AudioState.playing);
+      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
 
       _playbackSpeed = await settingsService.playbackSpeed;
 
@@ -339,10 +341,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
       var position = playbackState?.currentPosition;
       var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
-
+      var buffering = await AudioService.playbackState.processingState == AudioProcessingState.buffering;
       _updateChapter(position.inSeconds, duration.inSeconds);
 
-      _playPosition.add(PositionState(position, duration, complete.toInt(), _episode));
+      _playPosition.add(PositionState(position, duration, complete.toInt(), _episode, buffering));
     }
   }
 
@@ -370,8 +372,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// stream, but as Audio Service handles input from external sources such
   /// as the notification bar or a WearOS device we need this second listener
   /// to ensure the necessary Anytime is code is run upon state change.
-  void _handleAudioServiceTransitions() async {
-    AudioService.playbackStateStream.listen((state) async {
+  void _handleAudioServiceTransitions() {
+    AudioService.playbackStateStream.listen((state) {
       if (state != null && state is PlaybackState) {
         final ps = state.processingState;
 
@@ -381,29 +383,29 @@ class MobileAudioPlayerService extends AudioPlayerService {
           case AudioProcessingState.none:
             break;
           case AudioProcessingState.completed:
-            await _onComplete();
+            _onComplete();
             break;
           case AudioProcessingState.stopped:
-            await _onStop();
+            _onStop();
             break;
           case AudioProcessingState.ready:
             if (state.playing) {
-              await _onPlay();
+              _onPlay();
             } else {
-              await _onPause();
+              _onPause();
             }
             break;
           case AudioProcessingState.fastForwarding:
-            await _onUpdatePosition();
+            _onUpdatePosition();
             break;
           case AudioProcessingState.rewinding:
-            await _onUpdatePosition();
+            _onUpdatePosition();
             break;
           case AudioProcessingState.buffering:
-            await _onBuffering();
+            _onBuffering();
             break;
           case AudioProcessingState.error:
-            await _onError();
+            _onError();
             break;
           case AudioProcessingState.connecting:
             break;
@@ -446,7 +448,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       _positionSubscription = _durationTicker.listen((int period) async {
         await _onUpdatePosition();
       });
-    } else {
+    } else if (_positionSubscription.isPaused) {
       _positionSubscription.resume();
     }
   }

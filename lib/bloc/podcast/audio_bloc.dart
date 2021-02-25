@@ -127,7 +127,7 @@ class AudioBloc extends Bloc {
     var ep = await audioPlayerService.resume();
 
     if (ep != null) {
-      log.fine('Resuming with episode');
+      log.fine('Resuming with episode ${ep?.title} - ${ep?.position} - ${ep?.played}');
       _nowPlaying.add(ep);
     } else {
       log.fine('Resuming without an episode ${_nowPlaying.value}');

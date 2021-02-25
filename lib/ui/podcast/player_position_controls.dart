@@ -15,7 +15,7 @@ class PlayerPositionControls extends StatelessWidget {
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 1);
+          var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
           var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
           var p = position.inSeconds;
 

@@ -33,11 +33,8 @@ class MobileAudioPlayer {
   StreamSubscription<ProcessingState> _playerStateSubscription;
   StreamSubscription<PlaybackEvent> _eventSubscription;
 
-  AudioProcessingState _playbackState;
-  List<MediaControl> _controls = [];
   String _uri;
-  int _position = 0;
-  bool _isPlaying = false;
+  int _startPosition = 0;
   bool _loadTrack = false;
   bool _clearedCompletedState = false;
   bool _local;
@@ -77,10 +74,14 @@ class MobileAudioPlayer {
 
   Future<void> updatePosition() async {
     await AudioServiceBackground.setState(
-      controls: _controls,
+      controls: [
+        rewindControl,
+        if (_audioPlayer.playing) pauseControl else playControl,
+        fastforwardControl,
+      ],
       processingState: AudioProcessingState.none,
-      playing: _isPlaying,
-      position: Duration(milliseconds: _position),
+      playing: _audioPlayer.playing,
+      position: _audioPlayer.position,
     );
   }
 
@@ -93,11 +94,11 @@ class MobileAudioPlayer {
     _playbackSpeed = double.parse(playbackSpeedStr);
     _uri = args[3] as String;
     _local = (args[4] as String) == '1';
-    _position = 0;
+    _startPosition = 0;
     Duration duration;
 
     if (int.tryParse(sp) != null) {
-      _position = int.parse(sp);
+      _startPosition = int.parse(sp);
     } else {
       log.info('Failed to parse starting position of $sp');
     }
@@ -107,7 +108,7 @@ class MobileAudioPlayer {
     }
 
     log.fine(
-        'Setting play URI to $_uri, isLocal $_local and position $_position id $_episodeId speed $_playbackSpeed}');
+        'Setting play URI to $_uri, isLocal $_local and position ${_audioPlayer.position?.inSeconds} id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
     _mediaItem = MediaItem(
@@ -130,11 +131,12 @@ class MobileAudioPlayer {
     });
 
     _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
-      if (_audioPlayer.playing && event.updatePosition != null) {
-        _position = event.updatePosition.inMilliseconds;
-      }
+      _setState();
     }, onError: (Object error, StackTrace t) async {
       _reportError(error);
+
+      log.fine('Playback stream error');
+      log.fine(error.toString());
 
       await _audioPlayer.stop();
       await complete();
@@ -164,14 +166,14 @@ class MobileAudioPlayer {
 
       var userAgent = await Environment.userAgent();
 
-      log.fine('loading new track $_uri - from position $_position');
+      log.fine('loading new track $_uri - from position $_startPosition}');
 
       var headers = <String, String>{
         'User-Agent': '$userAgent',
       };
 
       if (_local) {
-        await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _position));
+        await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _startPosition));
       } else {
         var d = await _audioPlayer.setUrl(_uri, headers: headers);
 
@@ -198,22 +200,16 @@ class MobileAudioPlayer {
       }
     }
 
-    await _setPlayingState();
+    await _setState();
   }
 
   Future<void> pause() async {
-    log.fine('pause()');
-
-    _position = _latestPosition();
-
     await _audioPlayer.pause();
     await _setPausedState();
   }
 
   Future<void> stop() async {
     log.fine('stop()');
-
-    _position = _latestPosition();
 
     await _setStoppedState();
   }
@@ -231,64 +227,47 @@ class MobileAudioPlayer {
   Future<void> fastforward() async {
     log.fine('fastforward()');
 
-    _position = _latestPosition();
+    var forwardPosition = _latestPosition();
 
-    await seekTo(Duration(milliseconds: _position + 30000));
-
-    if (_isPlaying) {
-      await _setPlayingState();
-    } else {
-      _playbackState = AudioProcessingState.fastForwarding;
-
-      await _setState();
-    }
+    await seekTo(Duration(milliseconds: forwardPosition + 30000));
   }
 
   Future<void> rewind() async {
     log.fine('rewind()');
 
-    _position = _latestPosition();
+    var rewindPosition = _latestPosition();
 
     log.fine('Positions:');
-    log.fine(' - Stored position is $_position');
     log.fine(' - Player position is ${_audioPlayer.position.inMilliseconds}');
 
-    if (_position > 0) {
-      _position -= 30000;
+    if (rewindPosition > 0) {
+      rewindPosition -= 30000;
 
-      if (_position < 0) {
-        _position = 0;
+      if (rewindPosition < 0) {
+        rewindPosition = 0;
       }
 
-      await seekTo(Duration(milliseconds: _position));
-
-      if (_isPlaying) {
-        await _setPlayingState();
-      } else {
-        _playbackState = AudioProcessingState.rewinding;
-        await _setState();
-      }
+      await seekTo(Duration(milliseconds: rewindPosition));
     }
   }
 
   Future<void> setSpeed(double speed) async {
-    if (_isPlaying) {
+    if (_audioPlayer.playing) {
       _playbackSpeed = speed;
 
       await _audioPlayer.setSpeed(speed);
-      await _setPlayingState();
     }
   }
 
   Future<void> onNoise() async {
-    if (_isPlaying) {
+    if (_audioPlayer.playing) {
       await pause();
     }
   }
 
   Future<void> onClick() async {
     if (_uri.isNotEmpty) {
-      if (_isPlaying) {
+      if (_audioPlayer.playing) {
         await pause();
       } else {
         await play();
@@ -297,46 +276,23 @@ class MobileAudioPlayer {
   }
 
   Future<void> _setErrorState() async {
-    _playbackState = AudioProcessingState.error;
-    _controls = [rewindControl, pauseControl, fastforwardControl];
-    _isPlaying = false;
-
-    await _setState();
+    await _setState(fixedState: AudioProcessingState.error);
   }
 
   Future<void> _setBufferingState() async {
     if (!_local) {
-      log.fine('_setBufferingState()');
-
-      _playbackState = AudioProcessingState.buffering;
-      _controls = [rewindControl, pauseControl, fastforwardControl];
-
-      await _setState();
+      await _setState(fixedState: AudioProcessingState.buffering);
     }
   }
 
-  Future<void> _setPlayingState() async {
-    log.fine('setPlayingState()');
-
-    _playbackState = AudioProcessingState.ready;
-    _controls = [rewindControl, pauseControl, fastforwardControl];
-    _isPlaying = true;
-
-    await _setState();
-  }
-
   Future<void> _setPausedState() async {
-    log.fine('setPausedState()');
-
-    _playbackState = AudioProcessingState.ready;
-    _controls = [rewindControl, playControl, fastforwardControl];
-    _isPlaying = false;
-
-    await _setState(state: LastState.paused);
+    await _setState(
+      state: LastState.paused,
+    );
   }
 
   Future<void> _setStoppedState({bool completed = false}) async {
-    log.fine('setStoppedState()');
+    log.fine('setStoppedState() - completed is $completed');
 
     await _playerStateSubscription.cancel();
     await _eventSubscription.cancel();
@@ -344,60 +300,71 @@ class MobileAudioPlayer {
     await _audioPlayer.stop();
     await _audioPlayer.dispose();
 
-    _playbackState = completed ? AudioProcessingState.completed : AudioProcessingState.stopped;
-    _controls = [playControl];
-    _isPlaying = false;
-
-    await _setState(state: completed ? LastState.completed : LastState.stopped);
+    await _setState(
+      state: completed ? LastState.completed : LastState.stopped,
+      fixedState: AudioProcessingState.stopped,
+    );
 
     _completer.complete();
   }
 
   Future<void> seekTo(Duration position) async {
-    log.fine('seekTo() ${_playbackState ?? AudioProcessingState.stopped}');
-
-    var currentState = _playbackState;
     await _setBufferingState();
-
     await _audioPlayer.seek(position);
-
-    _position = position.inMilliseconds;
-
-    _playbackState = currentState;
-
-    await AudioServiceBackground.setState(
-        controls: [pauseControl],
-        systemActions: [MediaAction.seekTo],
-        position: position,
-        processingState: _playbackState ?? AudioProcessingState.stopped,
-        playing: _isPlaying);
   }
 
-  Future<void> _setState({LastState state = LastState.none}) async {
-    log.fine('_setState() to ${_playbackState.toString()} - $_position - state: $state');
+  Future<void> _setState({
+    LastState state = LastState.none,
+    AudioProcessingState fixedState,
+  }) async {
+    log.fine('_setState() to ${_mapPlayerStateToServiceState()}');
 
     if (state == LastState.none) {
+      log.fine('Clearing persisted state');
       await _clearPersistentState();
     } else {
-      await _persistState(state);
+      log.fine('Saving persisted state $state - ${_audioPlayer.position}');
+      await _persistState(state, _audioPlayer.position);
     }
 
     await AudioServiceBackground.setState(
-      controls: _controls,
-      processingState: _playbackState,
-      position: Duration(milliseconds: _position),
-      playing: _isPlaying,
-      speed: _playbackSpeed,
+      controls: [
+        rewindControl,
+        if (_audioPlayer.playing) pauseControl else playControl,
+        fastforwardControl,
+      ],
+      processingState: fixedState ?? _mapPlayerStateToServiceState(),
+      position: _audioPlayer.position,
+      playing: _audioPlayer.playing,
+      speed: _audioPlayer.speed,
     );
   }
 
-  Future<void> _persistState(LastState state) async {
+  AudioProcessingState _mapPlayerStateToServiceState() {
+    log.fine('Mapping just audio state ${_audioPlayer.processingState}');
+    switch (_audioPlayer.processingState) {
+      case ProcessingState.idle:
+        return AudioProcessingState.none;
+      case ProcessingState.loading:
+        return AudioProcessingState.connecting;
+      case ProcessingState.buffering:
+        return AudioProcessingState.buffering;
+      case ProcessingState.ready:
+        return AudioProcessingState.ready;
+      case ProcessingState.completed:
+        return AudioProcessingState.completed;
+      default:
+        return AudioProcessingState.none;
+    }
+  }
+
+  Future<void> _persistState(LastState state, Duration position) async {
     // Save our completion state to disk so we can query this later
-    log.fine('Saving ${state.toString()} state - episode id $_episodeId - position $_position');
+    log.fine('Saving ${state.toString()} state - episode id $_episodeId - position ${position?.inSeconds}');
 
     await PersistentState.persistState(Persistable(
       episodeId: _episodeId,
-      position: _position,
+      position: position.inMilliseconds,
       state: state,
     ));
 
@@ -420,9 +387,8 @@ class MobileAudioPlayer {
 
   int _latestPosition() {
     log.fine('Fetching latest position:');
-    log.fine(' - Stored position is $_position');
     log.fine(' - Player position is ${_audioPlayer.position?.inMilliseconds}');
 
-    return _audioPlayer.position == null ? _position : _audioPlayer.position.inMilliseconds;
+    return _audioPlayer.position == null ? 0 : _audioPlayer.position.inMilliseconds;
   }
 }
