@@ -65,7 +65,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme.of(context).accentTextTheme;
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return Dismissible(
@@ -163,7 +163,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                               child: AnimatedIcon(
                                 size: 48.0,
                                 icon: AnimatedIcons.play_pause,
-                                color: Theme.of(context).buttonColor,
+                                color: Theme.of(context).iconTheme.color,
                                 progress: _playPauseController,
                               ),
                             );
