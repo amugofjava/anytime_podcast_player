@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Discovery extends StatefulWidget {
+  final bool inlineSearch;
+
+  Discovery({this.inlineSearch});
+
   @override
   State<StatefulWidget> createState() => _DiscoveryState();
 }
@@ -28,6 +32,6 @@ class _DiscoveryState extends State<Discovery> {
   Widget build(BuildContext context) {
     final bloc = Provider.of<DiscoveryBloc>(context);
 
-    return DiscoveryResults(data: bloc.results);
+    return DiscoveryResults(data: bloc.results, inlineSearch: widget.inlineSearch);
   }
 }
