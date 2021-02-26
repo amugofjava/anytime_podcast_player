@@ -65,7 +65,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).accentTextTheme;
+    final textTheme = Theme.of(context).textTheme;
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return Dismissible(
@@ -94,10 +94,10 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
         child: Container(
           height: 64,
           decoration: BoxDecoration(
-              color: Theme.of(context).bottomAppBarColor,
+              color: Theme.of(context).backgroundColor,
               border: Border(
-                top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
-                bottom: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
+                top: Divider.createBorderSide(context, width: 0.5, color: Theme.of(context).dividerColor),
+                bottom: Divider.createBorderSide(context, width: 0.5, color: Theme.of(context).dividerColor),
               )),
           child: StreamBuilder<Episode>(
               stream: audioBloc.nowPlaying,
@@ -124,32 +124,37 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                       ),
                     ),
                     Expanded(
-                        flex: 1,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              snapshot.data?.title ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              style: textTheme.subtitle1,
-                            ),
-                            Text(
-                              snapshot.data?.author ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              style: textTheme.bodyText1,
-                            ),
-                          ],
-                        )),
-                    SizedBox(
-                      height: 64.0,
-                      width: 64.0,
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            snapshot.data?.title ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme.bodyText1.copyWith(height: 1.22, fontSize: 14),
+                          ),
+                          Text(
+                            snapshot.data?.author ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme.subtitle1.copyWith(letterSpacing: 0.25, height: 1.22, fontSize: 12.3),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 56.0,
+                      width: 56.0,
+                      padding: EdgeInsets.only(right: 16),
                       child: StreamBuilder<AudioState>(
                           stream: audioBloc.playingState,
                           builder: (context, snapshot) {
                             var playing = snapshot.data == AudioState.playing;
 
                             return FlatButton(
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? Theme.of(context).buttonColor
+                                  : Theme.of(context).bottomAppBarColor,
                               padding: const EdgeInsets.symmetric(horizontal: 0.0),
                               onPressed: () {
                                 if (playing) {
@@ -158,12 +163,11 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                   _play(audioBloc);
                                 }
                               },
-                              shape: CircleBorder(
-                                  side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
+                              shape: CircleBorder(),
                               child: AnimatedIcon(
-                                size: 48.0,
+                                size: 24.0,
                                 icon: AnimatedIcons.play_pause,
-                                color: Theme.of(context).iconTheme.color,
+                                color: Colors.white,
                                 progress: _playPauseController,
                               ),
                             );

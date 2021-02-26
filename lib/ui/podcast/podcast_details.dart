@@ -119,7 +119,6 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColour = Theme.of(context).backgroundColor;
     final defaultBrightness = Theme.of(context).brightness;
     final _podcastBloc = Provider.of<PodcastBloc>(context);
 
@@ -132,7 +131,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: backgroundColour,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: LiquidPullToRefresh(
           onRefresh: _handleRefresh,
           showChildOpacityTransition: false,
