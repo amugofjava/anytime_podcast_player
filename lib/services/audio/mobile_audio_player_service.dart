@@ -75,8 +75,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var uri = episode.contentUrl;
 
       await _playingState.add(AudioState.playing);
-      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
 
+      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
       _playbackSpeed = await settingsService.playbackSpeed;
 
       log.info('Playing episode ${episode.title} - ${episode.id}');
@@ -159,9 +159,12 @@ class MobileAudioPlayerService extends AudioPlayerService {
         // If we are streaming and this episode has chapters we should fetch them now.
         if (streaming && _episode.hasChapters) {
           _episode.chaptersLoading = true;
+
           await _onUpdatePosition();
+
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
           _episode.chaptersLoading = false;
+
           await _onUpdatePosition();
         }
       } catch (e) {
@@ -281,12 +284,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onStop() async {
-    var playbackState = await AudioService.playbackState;
-
     await _stopTicker();
-
-    log.fine('_onStop() ${playbackState.position}');
-
     await _savePosition();
 
     _episode = null;
@@ -295,11 +293,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onComplete() async {
-    var playbackState = await AudioService.playbackState;
-
     await _stopTicker();
-
-    log.fine('_onStop() ${playbackState.position}');
 
     _episode.position = 0;
     _episode.played = true;
@@ -329,7 +323,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onError() async {
-    log.fine('Pushing error code 501');
     _playbackError.add(501);
   }
 

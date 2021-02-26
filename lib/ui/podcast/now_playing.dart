@@ -14,6 +14,7 @@ import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -33,6 +34,7 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   StreamSubscription<AudioState> playingStateSubscription;
+  var textGroup = AutoSizeGroup();
 
   @override
   void initState() {
@@ -189,10 +191,12 @@ class EpisodeTabBarWithChapters extends StatelessWidget {
 
 class EpisodeTabBarView extends StatelessWidget {
   final Episode episode;
+  final AutoSizeGroup textGroup;
 
   EpisodeTabBarView({
     Key key,
     this.episode,
+    this.textGroup,
   }) : super(key: key);
 
   @override
@@ -203,6 +207,7 @@ class EpisodeTabBarView extends StatelessWidget {
           imageUrl: episode.imageUrl,
           title: episode.title,
           description: episode.description,
+          textGroup: textGroup,
         ),
         NowPlayingDetails(title: episode.title, description: episode.description),
       ],
@@ -212,10 +217,12 @@ class EpisodeTabBarView extends StatelessWidget {
 
 class EpisodeTabBarViewWithChapters extends StatelessWidget {
   final Episode episode;
+  final AutoSizeGroup textGroup;
 
   EpisodeTabBarViewWithChapters({
     Key key,
     this.episode,
+    this.textGroup,
   }) : super(key: key);
 
   @override
@@ -236,6 +243,7 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
                 title: e.title,
                 description: e.description,
                 subTitle: e.currentChapter == null ? '' : e.currentChapter.title,
+                textGroup: textGroup,
               );
             }),
         NowPlayingDetails(title: episode.title, description: episode.description),
@@ -249,11 +257,13 @@ class NowPlayingHeader extends StatelessWidget {
   final String title;
   final String description;
   final String subTitle;
+  final AutoSizeGroup textGroup;
 
   const NowPlayingHeader({
     @required this.imageUrl,
     @required this.title,
     @required this.description,
+    @required this.textGroup,
     this.subTitle,
   });
 
@@ -305,21 +315,37 @@ class NowPlayingHeader extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 8.0),
-                          child: Text(title ?? '',
+                        Expanded(
+                          flex: 2,
+                          child: AutoSizeText(
+                            title ?? '',
+                            group: textGroup,
+                            textAlign: TextAlign.center,
+                            minFontSize: 12.0,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                            maxLines: 3,
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
+                            child: AutoSizeText(
+                              subTitle ?? '',
+                              group: textGroup,
+                              minFontSize: 10.0,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.normal,
                                 fontSize: 16.0,
-                              )),
+                              ),
+                              maxLines: 2,
+                            ),
+                          ),
                         ),
-                        Text(subTitle ?? '',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14.0,
-                            )),
                       ],
                     ),
                   ),

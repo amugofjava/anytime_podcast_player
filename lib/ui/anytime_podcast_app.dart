@@ -57,9 +57,15 @@ class AnytimePodcastApp extends StatefulWidget {
   AnytimePodcastApp(this.mobileSettingsService)
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
-    downloadService = MobileDownloadService(repository: repository, downloadManager: MobileDownloaderManager());
-    podcastService =
-        MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
+    downloadService = MobileDownloadService(
+      repository: repository,
+      downloadManager: MobileDownloaderManager(),
+    );
+    podcastService = MobilePodcastService(
+      api: podcastApi,
+      repository: repository,
+      settingsService: mobileSettingsService,
+    );
     audioPlayerService = MobileAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
