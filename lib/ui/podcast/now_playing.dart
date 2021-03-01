@@ -42,11 +42,15 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    var popped = false;
 
     // If the episode finishes we can close.
-    playingStateSubscription = audioBloc.playingState.listen((playingState) async {
-      if (playingState == AudioState.stopped) {
+    playingStateSubscription =
+        audioBloc.playingState.where((state) => state == AudioState.stopped).listen((playingState) async {
+      // Prevent responding to multiple stop events after we've popped and lost context.
+      if (!popped) {
         Navigator.pop(context);
+        popped = true;
       }
     });
   }

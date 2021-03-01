@@ -57,8 +57,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
   @override
   void dispose() {
-    _playPauseController.dispose();
     _audioStateSubscription.cancel();
+    _playPauseController.dispose();
 
     super.dispose();
   }
