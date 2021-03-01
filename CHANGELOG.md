@@ -1,4 +1,12 @@
-## 0.3.0
+## 0.4.2
+
+- State bug fixes
+
+## 0.4.1
+
+- Dynamically size text on NowPlaying screen.
+
+## 0.4.0
 
 - Add support for searching via PodcastIndex (Beta).
 - Add support for podcast funding tag.

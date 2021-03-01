@@ -27,10 +27,10 @@ class MobileAudioPlayer {
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Completer _completer = Completer<dynamic>();
   VoidCallback completionHandler;
+  PlaybackEvent lastState;
 
   MobileAudioPlayer({this.completionHandler});
 
-  StreamSubscription<ProcessingState> _playerStateSubscription;
   StreamSubscription<PlaybackEvent> _eventSubscription;
 
   String _uri;
@@ -125,11 +125,6 @@ class MobileAudioPlayer {
   Future<void> start() async {
     log.fine('start()');
 
-    _playerStateSubscription =
-        _audioPlayer.processingStateStream.where((state) => state == ProcessingState.completed).listen((state) async {
-      await complete();
-    });
-
     _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
       _setState();
     }, onError: (Object error, StackTrace t) async {
@@ -217,7 +212,7 @@ class MobileAudioPlayer {
   Future<void> complete() async {
     log.fine('complete()');
 
-    await _setStoppedState(completed: true);
+    // await _setStoppedState(completed: true);
 
     if (completionHandler != null) {
       completionHandler();
@@ -294,7 +289,6 @@ class MobileAudioPlayer {
   Future<void> _setStoppedState({bool completed = false}) async {
     log.fine('setStoppedState() - completed is $completed');
 
-    await _playerStateSubscription.cancel();
     await _eventSubscription.cancel();
 
     await _audioPlayer.stop();
@@ -302,7 +296,7 @@ class MobileAudioPlayer {
 
     await _setState(
       state: completed ? LastState.completed : LastState.stopped,
-      fixedState: AudioProcessingState.stopped,
+      fixedState: completed ? AudioProcessingState.completed : AudioProcessingState.stopped,
     );
 
     _completer.complete();
@@ -317,13 +311,11 @@ class MobileAudioPlayer {
     LastState state = LastState.none,
     AudioProcessingState fixedState,
   }) async {
-    log.fine('_setState() to ${_mapPlayerStateToServiceState()}');
+    var mapped = fixedState ?? _mapPlayerStateToServiceState();
 
     if (state == LastState.none) {
-      log.fine('Clearing persisted state');
       await _clearPersistentState();
     } else {
-      log.fine('Saving persisted state $state - ${_audioPlayer.position}');
       await _persistState(state, _audioPlayer.position);
     }
 
@@ -333,7 +325,7 @@ class MobileAudioPlayer {
         if (_audioPlayer.playing) pauseControl else playControl,
         fastforwardControl,
       ],
-      processingState: fixedState ?? _mapPlayerStateToServiceState(),
+      processingState: mapped,
       position: _audioPlayer.position,
       playing: _audioPlayer.playing,
       speed: _audioPlayer.speed,
@@ -341,7 +333,6 @@ class MobileAudioPlayer {
   }
 
   AudioProcessingState _mapPlayerStateToServiceState() {
-    log.fine('Mapping just audio state ${_audioPlayer.processingState}');
     switch (_audioPlayer.processingState) {
       case ProcessingState.idle:
         return AudioProcessingState.none;
@@ -372,8 +363,6 @@ class MobileAudioPlayer {
   }
 
   Future<void> _clearPersistentState() async {
-    log.fine('Clearing completed status $_clearedCompletedState');
-
     if (!_clearedCompletedState) {
       await PersistentState.persistState(Persistable(
         episodeId: 0,
