@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -61,6 +62,7 @@ class MobileDownloaderManager implements DownloadManager {
       fileName: fileName,
       showNotification: true,
       openFileFromNotification: false,
+      headers: {'User-Agent': Environment.userAgent()},
     );
   }
 
