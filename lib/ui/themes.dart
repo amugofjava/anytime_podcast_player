@@ -90,6 +90,7 @@ ThemeData _buildDarktheme() {
     dividerTheme: base.dividerTheme.copyWith(
       color: Color(0xff444444),
     ),
+    sliderTheme: SliderThemeData().copyWith(valueIndicatorColor: Color(0xff222222)),
     appBarTheme: base.appBarTheme.copyWith(
       color: Color(0xff222222),
       shadowColor: Color(0xff222222),
