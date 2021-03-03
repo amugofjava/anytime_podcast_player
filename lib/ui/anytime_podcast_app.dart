@@ -188,8 +188,9 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
 class AnytimeHomePage extends StatefulWidget {
   final String title;
   final bool topBarVisible;
+  final bool inlineSearch;
 
-  AnytimeHomePage({this.title, this.topBarVisible = true});
+  AnytimeHomePage({this.title, this.topBarVisible = true, this.inlineSearch = false});
 
   @override
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
@@ -340,7 +341,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     if (index == 0) {
       return Library();
     } else if (index == 1) {
-      return Discovery();
+      return Discovery(inlineSearch: widget.inlineSearch);
     } else {
       return Downloads();
     }
