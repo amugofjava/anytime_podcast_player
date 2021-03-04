@@ -225,22 +225,30 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<Episode> resume() async {
     await AudioService.connect();
 
+    log.fine('resume()');
+
     if (_episode == null) {
+      log.fine('_episode is null. Check current media item');
       if (AudioService.currentMediaItem == null) {
+        log.fine(' - media item is null. Call load state');
         await _updateEpisodeFromSavedState();
       } else {
+        log.fine(' - media item exists');
         _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
       }
     } else {
+      log.fine('_episode is not null. Fetch state from service');
       var playbackState = await AudioService.playbackState;
 
       final basicState = playbackState?.processingState ?? AudioProcessingState.none;
 
       // If we have no state we'll have to assume we stopped whilst suspended.
       if (basicState == AudioProcessingState.none) {
+        log.fine(' - Fetched none state from service. Call load state');
         await _updateEpisodeFromSavedState();
         await _playingState.add(AudioState.stopped);
       } else {
+        log.fine(' - Fetched $basicState. Start ticker');
         await _startTicker();
       }
     }
@@ -258,9 +266,12 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// saved state is later than the episode last updated date, we update the episode
   /// properties from the saved state.
   Future<void> _updateEpisodeFromSavedState() async {
+    log.fine('_updateEpisodeFromSavedState()');
     var persistedState = await PersistentState.fetchState();
 
     if (persistedState != null) {
+      log.fine(
+          ' - Loaded state ${persistedState.state} - for episode ${persistedState.episodeId} - ${persistedState.position}');
       _episode = await repository.findEpisodeById(persistedState.episodeId);
 
       if (_episode != null && persistedState.lastUpdated.isAfter(_episode?.lastUpdated)) {
@@ -422,13 +433,16 @@ class MobileAudioPlayerService extends AudioPlayerService {
     if (_episode != null && _episode.downloaded) {
       // The episode may have been updated elsewhere - re-fetch it.
       _episode = await repository.findEpisodeByGuid(_episode.guid);
+      var currentPosition = playbackState.currentPosition?.inMilliseconds ?? 0;
 
-      _episode.position = playbackState.currentPosition?.inMilliseconds;
+      if (currentPosition != _episode.position) {
+        _episode.position = playbackState.currentPosition?.inMilliseconds;
 
-      log.fine('Saving position for episode ${_episode.title} - ${_episode.position}');
-      log.fine('Current state is ${playbackState.processingState}');
+        log.fine('Saving position for episode ${_episode.title} - ${_episode.position}');
+        log.fine('Current state is ${playbackState.processingState}');
 
-      await repository.saveEpisode(_episode);
+        await repository.saveEpisode(_episode);
+      }
     }
   }
 

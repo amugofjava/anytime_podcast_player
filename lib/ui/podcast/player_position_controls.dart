@@ -34,6 +34,8 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
         builder: (context, snapshot) {
           var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
           var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
+          var divisions = length.inSeconds == null || length.inSeconds == 0 ? 1 : length.inSeconds;
+
           if (!dragging) {
             p = position.inSeconds;
 
@@ -91,7 +93,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           value: p.toDouble(),
                           min: 0.0,
                           max: length.inSeconds.toDouble(),
-                          divisions: length.inSeconds,
+                          divisions: divisions,
                           activeColor: Theme.of(context).buttonColor,
                         )
                       : Slider(

@@ -195,6 +195,7 @@ class MobileAudioPlayer {
       }
     }
 
+    await _clearPersistentState();
     await _setState();
   }
 
@@ -211,8 +212,6 @@ class MobileAudioPlayer {
 
   Future<void> complete() async {
     log.fine('complete()');
-
-    // await _setStoppedState(completed: true);
 
     if (completionHandler != null) {
       completionHandler();
@@ -292,12 +291,14 @@ class MobileAudioPlayer {
     await _eventSubscription.cancel();
 
     await _audioPlayer.stop();
-    await _audioPlayer.dispose();
 
     await _setState(
       state: completed ? LastState.completed : LastState.stopped,
       fixedState: completed ? AudioProcessingState.completed : AudioProcessingState.stopped,
     );
+
+    await _audioPlayer.dispose();
+    await complete();
 
     _completer.complete();
   }
@@ -313,9 +314,7 @@ class MobileAudioPlayer {
   }) async {
     var mapped = fixedState ?? _mapPlayerStateToServiceState();
 
-    if (state == LastState.none) {
-      await _clearPersistentState();
-    } else {
+    if (state != LastState.none) {
       await _persistState(state, _audioPlayer.position);
     }
 
@@ -330,6 +329,10 @@ class MobileAudioPlayer {
       playing: _audioPlayer.playing,
       speed: _audioPlayer.speed,
     );
+
+    if (mapped == AudioProcessingState.completed) {
+      await complete();
+    }
   }
 
   AudioProcessingState _mapPlayerStateToServiceState() {
@@ -351,7 +354,7 @@ class MobileAudioPlayer {
 
   Future<void> _persistState(LastState state, Duration position) async {
     // Save our completion state to disk so we can query this later
-    log.fine('Saving ${state.toString()} state - episode id $_episodeId - position ${position?.inSeconds}');
+    log.fine('Saving ${state.toString()} state - episode id $_episodeId - position ${position?.inMilliseconds}');
 
     await PersistentState.persistState(Persistable(
       episodeId: _episodeId,
