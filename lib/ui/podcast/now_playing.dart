@@ -14,6 +14,7 @@ import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
+import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -274,6 +275,7 @@ class NowPlayingHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
+    final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return StreamBuilder<AudioState>(
         stream: audioBloc.playingState,
@@ -291,17 +293,21 @@ class NowPlayingHeader extends StatelessWidget {
                     height: 360,
                     imageUrl: imageUrl,
                     placeholder: (context, url) {
-                      return DelayedCircularProgressIndicator();
+                      return placeholderBuilder != null
+                          ? placeholderBuilder?.builder()(context)
+                          : DelayedCircularProgressIndicator();
                     },
                     errorWidget: (_, __, dynamic ___) {
                       return Container(
                         constraints: BoxConstraints.expand(),
-                        child: Placeholder(
-                          fallbackHeight: 360,
-                          fallbackWidth: 360,
-                          color: Colors.grey,
-                          strokeWidth: 1,
-                        ),
+                        child: placeholderBuilder != null
+                            ? placeholderBuilder?.errorBuilder()(context)
+                            : Placeholder(
+                                fallbackHeight: 360,
+                                fallbackWidth: 360,
+                                color: Colors.grey,
+                                strokeWidth: 1,
+                              ),
                       );
                     },
                   ),
