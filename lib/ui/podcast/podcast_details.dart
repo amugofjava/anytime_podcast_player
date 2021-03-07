@@ -64,7 +64,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     // collapsed state. Add a listener and set toollbarCollapsed variable
     // as required. The text display property is then based on this boolean.
     _sliverScrollController.addListener(() {
-      if (!toolbarCollpased && _sliverScrollController.hasClients && _sliverScrollController.offset > (300 - kToolbarHeight)) {
+      if (!toolbarCollpased &&
+          _sliverScrollController.hasClients &&
+          _sliverScrollController.offset > (300 - kToolbarHeight)) {
         setState(() {
           if (widget._darkMode) {
             Chrome.transparentDark();
@@ -132,7 +134,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         return Future.value(true);
       },
       child: Scaffold(
-        backgroundColor: backgroundColour,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: LiquidPullToRefresh(
           onRefresh: _handleRefresh,
           showChildOpacityTransition: false,

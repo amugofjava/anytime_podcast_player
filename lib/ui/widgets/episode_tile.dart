@@ -229,7 +229,7 @@ class EpisodeTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
           softWrap: false,
-          style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.normal),
+          style: textTheme.bodyText2,
         ),
       ),
     );
