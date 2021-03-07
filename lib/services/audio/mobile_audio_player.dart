@@ -201,7 +201,7 @@ class MobileAudioPlayer {
 
   Future<void> pause() async {
     await _audioPlayer.pause();
-    await _setPausedState();
+    await _persistState(LastState.paused, _audioPlayer.position);
   }
 
   Future<void> stop() async {
@@ -212,6 +212,8 @@ class MobileAudioPlayer {
 
   Future<void> complete() async {
     log.fine('complete()');
+
+    await _persistState(LastState.completed, _audioPlayer.position);
 
     if (completionHandler != null) {
       completionHandler();
@@ -279,12 +281,6 @@ class MobileAudioPlayer {
     }
   }
 
-  Future<void> _setPausedState() async {
-    await _setState(
-      state: LastState.paused,
-    );
-  }
-
   Future<void> _setStoppedState({bool completed = false}) async {
     log.fine('setStoppedState() - completed is $completed');
 
@@ -293,10 +289,10 @@ class MobileAudioPlayer {
     await _audioPlayer.stop();
 
     await _setState(
-      state: completed ? LastState.completed : LastState.stopped,
       fixedState: completed ? AudioProcessingState.completed : AudioProcessingState.stopped,
     );
 
+    await _persistState(LastState.stopped, _audioPlayer.position);
     await _audioPlayer.dispose();
     await complete();
 
@@ -309,14 +305,9 @@ class MobileAudioPlayer {
   }
 
   Future<void> _setState({
-    LastState state = LastState.none,
     AudioProcessingState fixedState,
   }) async {
     var mapped = fixedState ?? _mapPlayerStateToServiceState();
-
-    if (state != LastState.none) {
-      await _persistState(state, _audioPlayer.position);
-    }
 
     await AudioServiceBackground.setState(
       controls: [
