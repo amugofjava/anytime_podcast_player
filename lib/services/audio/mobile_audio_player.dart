@@ -294,7 +294,6 @@ class MobileAudioPlayer {
 
     await _persistState(LastState.stopped, _audioPlayer.position);
     await _audioPlayer.dispose();
-    await complete();
 
     _completer.complete();
   }
