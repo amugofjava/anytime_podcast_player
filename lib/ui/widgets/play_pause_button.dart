@@ -62,7 +62,7 @@ class PlayPauseBusyButton extends StatelessWidget {
               CircularPercentIndicator(
                 radius: 38.0,
                 lineWidth: 1.5,
-                backgroundColor: Theme.of(context).backgroundColor,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 percent: 0.0,
                 center: Icon(
                   icon,

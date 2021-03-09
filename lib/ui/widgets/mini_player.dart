@@ -78,7 +78,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
       },
       direction: DismissDirection.startToEnd,
       background: Container(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).backgroundColor,
         height: 64.0,
       ),
       child: GestureDetector(
@@ -96,7 +96,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
         child: Container(
           height: 66,
           decoration: BoxDecoration(
-              color: Theme.of(context).bottomAppBarColor,
+              color: Theme.of(context).backgroundColor,
               border: Border(
                 top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
                 bottom: Divider.createBorderSide(context, width: 0.0, color: Theme.of(context).dividerColor),
@@ -172,7 +172,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                     }
                                   },
                                   shape: CircleBorder(
-                                      side: BorderSide(color: Theme.of(context).bottomAppBarColor, width: 0.0)),
+                                      side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
                                   child: AnimatedIcon(
                                     size: 48.0,
                                     icon: AnimatedIcons.play_pause,

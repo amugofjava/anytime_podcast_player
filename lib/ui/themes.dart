@@ -77,7 +77,7 @@ ThemeData _buildDarktheme() {
     textSelectionColor: Color(0xffffcc80),
     cursorColor: Colors.orange,
     textSelectionHandleColor: Color(0xffffb74d),
-    backgroundColor: Color(0xff000000),
+    backgroundColor: Color(0xff222222),
     dialogBackgroundColor: Color(0xff222222),
     indicatorColor: Color(0xfff5f5f5),
     hintColor: Color(0x80ffffff),
