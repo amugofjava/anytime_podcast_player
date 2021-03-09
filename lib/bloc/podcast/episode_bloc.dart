@@ -77,7 +77,7 @@ class EpisodeBloc extends Bloc {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
       if (_episodes != null) {
-        var episode = _episodes.indexOf(state.episode);
+        var episode = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
 
         if (episode != -1) {
           fetchDownloads(true);

@@ -76,10 +76,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "stop_download_button_label" : MessageLookupByLibrary.simpleMessage("STOP"),
     "stop_download_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you wish to stop this download and delete the episode?"),
     "stop_download_title" : MessageLookupByLibrary.simpleMessage("Stop Download"),
-    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("SUBSCRIBE"),
-    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Subscribe"),
-    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("UNSUBSCRIBE"),
-    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Unsubscribe"),
-    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Unsubscribing will delete all downloaded episodes of this podcast.")
+    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("FOLLOW"),
+    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Follow"),
+    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("UNFOLLOW"),
+    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Unfollow"),
+    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Unfollowing will delete all downloaded episodes of this podcast.")
   };
 }

@@ -76,10 +76,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "stop_download_button_label" : MessageLookupByLibrary.simpleMessage("HALT"),
     "stop_download_confirmation" : MessageLookupByLibrary.simpleMessage("Möchten Sie diesen Download wirklich beenden und die Episode löschen?"),
     "stop_download_title" : MessageLookupByLibrary.simpleMessage("Stop Download"),
-    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("ABONNIEREN"),
-    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Abonnieren"),
-    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("ABMELDEN"),
-    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Abmelden"),
-    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Durch das Abbestellen werden alle heruntergeladenen Folgen dieses Podcasts gelöscht.")
+    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("FOLGEN"),
+    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Folgen"),
+    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("NICHT MEHR FOLGEN"),
+    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Nicht mehr folgen"),
+    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Wenn Sie nicht mehr folgen, werden alle heruntergeladenen Folgen dieses Podcasts gelöscht.")
   };
 }

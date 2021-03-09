@@ -177,7 +177,8 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Episode>> findDownloads() async {
-    final finder = Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
+    final finder =
+        Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
 
     final recordSnapshots = await _episodeStore.find(await _db, finder: finder);
 
@@ -205,10 +206,10 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<Episode> saveEpisode(Episode episode) async {
-    var e = await _saveEpisode(episode);
+  Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
+    var e = await _saveEpisode(episode, updateIfSame);
 
-    _episodeSubject.add(EpisodeUpdateState(episode));
+    _episodeSubject.add(EpisodeUpdateState(e));
 
     return e;
   }
@@ -235,15 +236,21 @@ class SembastRepository extends Repository {
     });
   }
 
-  Future<Episode> _saveEpisode(Episode episode) async {
+  Future<Episode> _saveEpisode(Episode episode, bool updateIfSame) async {
     final finder = Finder(filter: Filter.byKey(episode.id));
 
     final snapshot = await _episodeStore.findFirst(await _db, finder: finder);
 
     if (snapshot == null) {
+      episode.lastUpdated = DateTime.now();
       episode.id = await _episodeStore.add(await _db, episode.toMap());
     } else {
-      await _episodeStore.update(await _db, episode.toMap(), finder: finder);
+      var e = Episode.fromMap(episode.id, snapshot.value);
+      episode.lastUpdated = DateTime.now();
+
+      if (updateIfSame || episode != e) {
+        await _episodeStore.update(await _db, episode.toMap(), finder: finder);
+      }
     }
 
     return episode;

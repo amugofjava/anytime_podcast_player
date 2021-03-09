@@ -98,7 +98,7 @@ class Episode {
   /// Index of the currently playing chapter it available. Transient.
   int chapterIndex;
 
-  /// Current chapter we are listening to if thie episode has chapters.  Transient.
+  /// Current chapter we are listening to if this episode has chapters.  Transient.
   Chapter currentChapter;
 
   /// Set to true if chapter data is currently being loaded.
@@ -238,10 +238,61 @@ class Episode {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Episode && runtimeType == other.runtimeType && guid == other.guid && pguid == other.pguid;
+      other is Episode &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          guid == other.guid &&
+          pguid == other.pguid &&
+          downloadTaskId == other.downloadTaskId &&
+          filepath == other.filepath &&
+          filename == other.filename &&
+          downloadState == other.downloadState &&
+          podcast == other.podcast &&
+          title == other.title &&
+          description == other.description &&
+          link == other.link &&
+          imageUrl == other.imageUrl &&
+          thumbImageUrl == other.thumbImageUrl &&
+          publicationDate == other.publicationDate &&
+          contentUrl == other.contentUrl &&
+          author == other.author &&
+          season == other.season &&
+          episode == other.episode &&
+          duration == other.duration &&
+          position == other.position &&
+          downloadPercentage == other.downloadPercentage &&
+          played == other.played &&
+          chaptersUrl == other.chaptersUrl &&
+          chapters == other.chapters &&
+          lastUpdated == other.lastUpdated;
 
   @override
-  int get hashCode => guid.hashCode ^ pguid.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      guid.hashCode ^
+      pguid.hashCode ^
+      downloadTaskId.hashCode ^
+      filepath.hashCode ^
+      filename.hashCode ^
+      downloadState.hashCode ^
+      podcast.hashCode ^
+      title.hashCode ^
+      description.hashCode ^
+      link.hashCode ^
+      imageUrl.hashCode ^
+      thumbImageUrl.hashCode ^
+      publicationDate.hashCode ^
+      contentUrl.hashCode ^
+      author.hashCode ^
+      season.hashCode ^
+      episode.hashCode ^
+      duration.hashCode ^
+      position.hashCode ^
+      downloadPercentage.hashCode ^
+      played.hashCode ^
+      chaptersUrl.hashCode ^
+      chapters.hashCode ^
+      lastUpdated.hashCode;
 
   bool get downloaded => downloadPercentage == 100;
 

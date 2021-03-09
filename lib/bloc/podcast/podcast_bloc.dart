@@ -189,10 +189,10 @@ class PodcastBloc extends Bloc {
   void _listenEpisodeRepositoryEvents() {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
-      var episode = _episodes.indexOf(state.episode);
+      var eidx = _episodes.indexWhere((e) => e.guid == state.episode.guid && e.pguid == state.episode.pguid);
 
-      if (episode != -1) {
-        _episodes[episode] = state.episode;
+      if (eidx != -1) {
+        _episodes[eidx] = state.episode;
         _episodesStream.add(_episodes);
       }
     });

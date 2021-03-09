@@ -108,7 +108,7 @@ class MobileAudioPlayer {
     }
 
     log.fine(
-        'Setting play URI to $_uri, isLocal $_local and position ${_audioPlayer.position?.inSeconds} id $_episodeId speed $_playbackSpeed}');
+        'Setting play URI to $_uri, isLocal $_local and position ${_startPosition} id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
     _mediaItem = MediaItem(
@@ -167,10 +167,19 @@ class MobileAudioPlayer {
         'User-Agent': '$userAgent',
       };
 
+      var start = _startPosition > 0 ? Duration(milliseconds: _startPosition) : Duration.zero;
+
       if (_local) {
-        await _audioPlayer.setFilePath(_uri, initialPosition: Duration(milliseconds: _startPosition));
+        await _audioPlayer.setFilePath(
+          _uri,
+          initialPosition: start,
+        );
       } else {
-        var d = await _audioPlayer.setUrl(_uri, headers: headers);
+        var d = await _audioPlayer.setUrl(
+          _uri,
+          headers: headers,
+          initialPosition: start,
+        );
 
         /// If we don't already have a duration and we have been able to calculate it from
         /// beginning to fetch the media, update the current media item with the duration.
@@ -282,17 +291,17 @@ class MobileAudioPlayer {
   }
 
   Future<void> _setStoppedState({bool completed = false}) async {
-    log.fine('setStoppedState() - completed is $completed');
+    log.fine('setStoppedState() - position is ${_audioPlayer.position.inMilliseconds} - completed is $completed');
+
+    await _persistState(LastState.stopped, _audioPlayer.position);
 
     await _eventSubscription.cancel();
-
     await _audioPlayer.stop();
 
     await _setState(
       fixedState: completed ? AudioProcessingState.completed : AudioProcessingState.stopped,
     );
 
-    await _persistState(LastState.stopped, _audioPlayer.position);
     await _audioPlayer.dispose();
 
     _completer.complete();

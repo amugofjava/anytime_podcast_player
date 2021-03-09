@@ -85,22 +85,26 @@ class MobileAudioPlayerService extends AudioPlayerService {
       final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
 
       // If we have a downloaded copy of the episode, set the URI to the file path.
-      if (savedEpisode != null && episode.downloadState == DownloadState.downloaded) {
-        if (await hasStoragePermission()) {
-          final filepath = episode.filepath == null || episode.filepath.isEmpty
-              ? join(await getStorageDirectory(), safePath(episode.podcast))
-              : episode.filepath;
-          final downloadFile = join(filepath, episode.filename);
+      if (savedEpisode != null) {
+        episode.position = savedEpisode.position;
 
-          uri = downloadFile;
+        if (resume) {
+          startPosition = savedEpisode?.position ?? 0;
+        }
 
-          streaming = false;
+        if (episode.downloadState == DownloadState.downloaded) {
+          if (await hasStoragePermission()) {
+            final filepath = episode.filepath == null || episode.filepath.isEmpty
+                ? join(await getStorageDirectory(), safePath(episode.podcast))
+                : episode.filepath;
+            final downloadFile = join(filepath, episode.filename);
 
-          episode.position = savedEpisode.position;
+            uri = downloadFile;
 
-          startPosition = !streaming && resume ? savedEpisode.position : 0;
-        } else {
-          throw Exception('Insufficient storage permissions');
+            streaming = false;
+          } else {
+            throw Exception('Insufficient storage permissions');
+          }
         }
       }
 
@@ -129,23 +133,23 @@ class MobileAudioPlayerService extends AudioPlayerService {
         await _savePosition();
       }
 
-      trackDetails = [
-        episode.author ?? 'Unknown Author',
-        episode.title ?? 'Unknown Title',
-        episode.imageUrl,
-        uri,
-        episode.downloaded ? '1' : '0',
-        startPosition.toString(),
-        episode.id == null ? '0' : episode.id.toString(),
-        _playbackSpeed.toString(),
-        episode.duration?.toString() ?? '0',
-      ];
-
       // Store reference
       _episode = episode;
       _episode.played = false;
 
       await repository.saveEpisode(_episode);
+
+      trackDetails = [
+        _episode.author ?? 'Unknown Author',
+        _episode.title ?? 'Unknown Title',
+        _episode.imageUrl,
+        uri,
+        _episode.downloaded ? '1' : '0',
+        startPosition.toString(),
+        _episode.id == null ? '0' : episode.id.toString(),
+        _playbackSpeed.toString(),
+        _episode.duration?.toString() ?? '0',
+      ];
 
       if (!await AudioService.running) {
         await _start();
@@ -233,7 +237,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         log.fine(' - media item is null. Call load state');
         await _updateEpisodeFromSavedState();
       } else {
-        log.fine(' - media item exists');
+        log.fine(' - media item exists loading item id ${AudioService.currentMediaItem?.id ?? -1}');
         _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
       }
     } else {
@@ -430,19 +434,21 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<void> _savePosition() async {
     var playbackState = await AudioService.playbackState;
 
-    if (_episode != null && _episode.downloaded) {
+    if (_episode != null) {
       // The episode may have been updated elsewhere - re-fetch it.
       _episode = await repository.findEpisodeByGuid(_episode.guid);
       var currentPosition = playbackState.currentPosition?.inMilliseconds ?? 0;
 
-      if (currentPosition != _episode.position) {
-        _episode.position = playbackState.currentPosition?.inMilliseconds;
+      log.fine('_savePosition(): Current position is $currentPosition - stored position is ${_episode.position}');
+      log.fine('Current state is ${playbackState.processingState}');
 
-        log.fine('Saving position for episode ${_episode.title} - ${_episode.position}');
-        log.fine('Current state is ${playbackState.processingState}');
+      if (currentPosition != _episode.position) {
+        _episode.position = currentPosition;
 
         await repository.saveEpisode(_episode);
       }
+    } else {
+      log.fine(' - Cannot save position as episode is null');
     }
   }
 
