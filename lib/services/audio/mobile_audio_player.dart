@@ -126,7 +126,7 @@ class MobileAudioPlayer {
     log.fine('start()');
 
     _eventSubscription = _audioPlayer.playbackEventStream.listen((event) {
-      _setState();
+      _setState(position: _audioPlayer.position);
     }, onError: (Object error, StackTrace t) async {
       _reportError(error);
 
@@ -205,7 +205,7 @@ class MobileAudioPlayer {
     }
 
     await _clearPersistentState();
-    await _setState();
+    await _setState(position: _audioPlayer.position);
   }
 
   Future<void> pause() async {
@@ -281,25 +281,28 @@ class MobileAudioPlayer {
   }
 
   Future<void> _setErrorState() async {
-    await _setState(fixedState: AudioProcessingState.error);
+    await _setState(fixedState: AudioProcessingState.error, position: Duration(milliseconds: 0));
   }
 
   Future<void> _setBufferingState() async {
     if (!_local) {
-      await _setState(fixedState: AudioProcessingState.buffering);
+      await _setState(fixedState: AudioProcessingState.buffering, position: _audioPlayer.position);
     }
   }
 
   Future<void> _setStoppedState({bool completed = false}) async {
-    log.fine('setStoppedState() - position is ${_audioPlayer.position.inMilliseconds} - completed is $completed');
+    var p = _audioPlayer.position;
 
-    await _persistState(LastState.stopped, _audioPlayer.position);
+    log.fine('setStoppedState() - position is ${p.inMilliseconds} - completed is $completed');
+
+    await _persistState(LastState.stopped, p);
 
     await _eventSubscription.cancel();
     await _audioPlayer.stop();
 
     await _setState(
       fixedState: completed ? AudioProcessingState.completed : AudioProcessingState.stopped,
+      position: p,
     );
 
     await _audioPlayer.dispose();
@@ -314,8 +317,11 @@ class MobileAudioPlayer {
 
   Future<void> _setState({
     AudioProcessingState fixedState,
+    @required Duration position,
   }) async {
     var mapped = fixedState ?? _mapPlayerStateToServiceState();
+
+    log.fine('_setState: position is ${_audioPlayer.position.inMilliseconds}');
 
     await AudioServiceBackground.setState(
       controls: [
@@ -324,7 +330,7 @@ class MobileAudioPlayer {
         fastforwardControl,
       ],
       processingState: mapped,
-      position: _audioPlayer.position,
+      position: position,
       playing: _audioPlayer.playing,
       speed: _audioPlayer.speed,
     );
