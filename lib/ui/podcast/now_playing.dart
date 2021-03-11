@@ -288,7 +288,6 @@ class NowPlayingHeader extends StatelessWidget {
                 Expanded(
                   flex: 7,
                   child: OptimizedCacheImage(
-                    useScaleCacheManager: true,
                     width: 360,
                     height: 360,
                     imageUrl: imageUrl,

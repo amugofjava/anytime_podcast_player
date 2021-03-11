@@ -175,7 +175,6 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
                     child: OptimizedCacheImage(
-                      useScaleCacheManager: true,
                       width: 560,
                       height: 560,
                       imageUrl: widget.podcast.imageUrl,

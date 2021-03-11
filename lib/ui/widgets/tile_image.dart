@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/widgets.dart';
+import 'package:optimized_cached_image/optimized_cached_image.dart';
 
 import 'placeholder_builder.dart';
 
@@ -27,7 +27,6 @@ class TileImage extends StatelessWidget {
         height: size,
         width: size,
         child: OptimizedCacheImage(
-          useScaleCacheManager: true,
           imageUrl: url,
           filterQuality: FilterQuality.low,
           width: 120,
