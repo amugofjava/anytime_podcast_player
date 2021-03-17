@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-02-23T17:16:41.899376",
+  "@@last_modified": "2021-03-12T06:44:31.913024",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -30,13 +30,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_button_label": "FOLLOW",
+  "subscribe_button_label": "SUBSCRIBE",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_button_label": "UNFOLLOW",
+  "unsubscribe_button_label": "UNSUBSCRIBE",
   "@unsubscribe_button_label": {
     "description": "Unsubscribe button label",
     "type": "text",
@@ -54,19 +54,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_label": "Follow",
+  "subscribe_label": "Subscribe",
   "@subscribe_label": {
     "description": "Subscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_label": "Unfollow",
+  "unsubscribe_label": "Unsubscribe",
   "@unsubscribe_label": {
     "description": "Unsubscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_message": "Unfollowing will delete all downloaded episodes of this podcast.",
+  "unsubscribe_message": "Unsubscribing will delete all downloaded episodes of this podcast.",
   "@unsubscribe_message": {
     "description": "Displayed when the user unsubscribes from a podcast.",
     "type": "text",
@@ -318,7 +318,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "consent_message": "This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime.",
+  "consent_message": "The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime",
   "@consent_message": {
     "description": "Display when first accessing external funding link",
     "type": "text",
@@ -354,15 +354,21 @@
     "type": "text",
     "placeholders": {}
   },
-  "error_no_connection": "Unable to play episode. Please check your connection and try again.",
+  "error_no_connection": "Unable to play episode. Please check your connection and try again",
   "@error_no_connection": {
     "description": "Displayed when attempting to start streaming an episode with no data connection",
     "type": "text",
     "placeholders": {}
   },
-  "error_playback_fail": "An unexpected error occurred during playback. Please check your connection and try again.",
+  "error_playback_fail": "An unexpected error occurred during playback. Please check your connection and try again",
   "@error_playback_fail": {
     "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "Add RSS Feed",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
     "type": "text",
     "placeholders": {}
   }

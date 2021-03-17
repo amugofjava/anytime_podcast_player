@@ -121,11 +121,11 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   @override
   Widget build(BuildContext context) {
     final defaultBrightness = Theme.of(context).brightness;
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final placeholderBuilder = PlaceholderBuilder.of(context);
 
     brightness = toolbarCollpased ? defaultBrightness : Brightness.dark;
 
-    final placeholderBuilder = PlaceholderBuilder.of(context);
     return WillPopScope(
       onWillPop: () {
         _setChrome(darkMode: widget._darkMode);
@@ -174,27 +174,30 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     background: Hero(
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
-                    child: OptimizedCacheImage(
-                      useScaleCacheManager: true,
-                      width: 560,
-                      height: 560,
-                      imageUrl: widget.podcast.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                      placeholder: (context, url) {
-                        return placeholderBuilder != null
-                            ? placeholderBuilder?.builder()(context)
-                            : DelayedCircularProgressIndicator();
-                      },
-                      errorWidget: (_, __, dynamic ___) {
-                        return placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
-                            : Placeholder(
-                                color: Theme.of(context).errorColor,
-                                strokeWidth: 1,
-                              );
-                      },
-                    ),
+                    child: StreamBuilder<BlocState<Podcast>>(
+                        initialData: BlocEmptyState<Podcast>(),
+                        stream: _podcastBloc.details,
+                        builder: (context, snapshot) {
+                          final state = snapshot.data;
+                          var podcast = widget.podcast;
+
+                          // print('DEF: Image is ${podcast?.imageUrl}');
+
+                          if (state is BlocLoadingState<Podcast>) {
+                            // print('LOL: Image is ${state.data.imageUrl}');
+                            podcast = state.data;
+                          }
+
+                          if (state is BlocPopulatedState<Podcast>) {
+                            // print('POP: Image is ${state.results.imageUrl}');
+                            podcast = state.results;
+                          }
+
+                          return PodcastHeaderImage(
+                            podcast: podcast,
+                            placeholderBuilder: placeholderBuilder,
+                          );
+                        }),
                   ),
                 )),
               ),
@@ -281,6 +284,46 @@ class _PodcastDetailsState extends State<PodcastDetails> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class PodcastHeaderImage extends StatelessWidget {
+  const PodcastHeaderImage({
+    Key key,
+    @required this.podcast,
+    @required this.placeholderBuilder,
+  }) : super(key: key);
+
+  final Podcast podcast;
+  final PlaceholderBuilder placeholderBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    if (podcast == null || podcast.imageUrl == null || podcast.imageUrl.isEmpty) {
+      return Container(
+        height: 560,
+      );
+    }
+
+    return OptimizedCacheImage(
+      useScaleCacheManager: true,
+      width: 560,
+      height: 560,
+      imageUrl: podcast.imageUrl,
+      fit: BoxFit.fitWidth,
+      filterQuality: FilterQuality.medium,
+      placeholder: (context, url) {
+        return placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator();
+      },
+      errorWidget: (_, __, dynamic ___) {
+        return placeholderBuilder != null
+            ? placeholderBuilder?.errorBuilder()(context)
+            : Placeholder(
+                color: Theme.of(context).errorColor,
+                strokeWidth: 1,
+              );
+      },
     );
   }
 }

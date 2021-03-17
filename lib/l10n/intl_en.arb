@@ -359,5 +359,11 @@
     "description": "Displayed when attempting to start streaming an episode with no data connection",
     "type": "text",
     "placeholders": {}
+  },
+  "add_rss_feed_option": "Add RSS Feed",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
+    "type": "text",
+    "placeholders": {}
   }
 }

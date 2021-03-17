@@ -65,7 +65,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final playerBuilder = PlayerControlsBuilder.of(context);
 
     return StreamBuilder<Episode>(
@@ -239,10 +239,10 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
         ChapterSelector(
           episode: episode,
         ),
-        StreamBuilder<PositionState>(
-            stream: audioBloc.playPosition,
+        StreamBuilder<Episode>(
+            stream: audioBloc.chapterEvent,
             builder: (context, snapshot) {
-              final e = snapshot.hasData ? snapshot.data.episode : episode;
+              final e = snapshot.hasData ? snapshot.data : episode;
               return NowPlayingHeader(
                 imageUrl: e.positionalImageUrl,
                 title: e.title,
@@ -274,11 +274,11 @@ class NowPlayingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final audioBloc = Provider.of<AudioBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
-    return StreamBuilder<AudioState>(
-        stream: audioBloc.playingState,
+    return StreamBuilder<Episode>(
+        stream: audioBloc.nowPlaying,
         builder: (context, statesnap) {
           return Padding(
             padding: const EdgeInsets.all(16.0),

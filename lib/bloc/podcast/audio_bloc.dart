@@ -152,6 +152,9 @@ class AudioBloc extends Bloc {
   /// Get the current playing track
   Stream<Episode> get nowPlaying => _nowPlaying.stream;
 
+  /// Get the current playing chapter
+  Stream<Episode> get chapterEvent => audioPlayerService.chapterEvent;
+
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;
 

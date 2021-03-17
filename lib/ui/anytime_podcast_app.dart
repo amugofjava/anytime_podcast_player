@@ -12,6 +12,7 @@ import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
 import 'package:anytime/core/chrome.dart';
 import 'package:anytime/core/environment.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
@@ -26,6 +27,7 @@ import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
+import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
@@ -35,6 +37,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -281,6 +284,11 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           return <PopupMenuEntry<String>>[
                             PopupMenuItem<String>(
                               textStyle: Theme.of(context).textTheme.subtitle1,
+                              value: 'rss',
+                              child: Text(L.of(context).add_rss_feed_option),
+                            ),
+                            PopupMenuItem<String>(
+                              textStyle: Theme.of(context).textTheme.subtitle1,
                               value: 'settings',
                               child: Text(L.of(context).settings_label),
                             ),
@@ -348,6 +356,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _menuSelect(String choice) async {
+    var _textFieldController = TextEditingController();
+    var _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    var url = '';
+    final _theme = Theme.of(context);
+    final darkMode = _theme.brightness == Brightness.dark;
+
     switch (choice) {
       case 'about':
         showAboutDialog(
@@ -375,6 +389,41 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         await Navigator.push(
           context,
           MaterialPageRoute<void>(builder: (context) => Settings()),
+        );
+        break;
+      case 'rss':
+        await showPlatformDialog<void>(
+          context: context,
+          builder: (_) => BasicDialogAlert(
+            title: Text(L.of(context).add_rss_feed_option),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  url = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: 'https://'),
+            ),
+            actions: <Widget>[
+              BasicDialogAction(
+                title: Text(L.of(context).cancel_button_label),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              BasicDialogAction(
+                title: Text(L.of(context).ok_button_label),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc, darkMode)),
+                  ).then((value) => Navigator.pop(context));
+                },
+              ),
+            ],
+          ),
         );
         break;
     }

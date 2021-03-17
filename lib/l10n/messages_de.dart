@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "about_label" : MessageLookupByLibrary.simpleMessage("Über"),
+    "add_rss_feed_option" : MessageLookupByLibrary.simpleMessage("RSS-Feed hinzufügen"),
     "app_title" : MessageLookupByLibrary.simpleMessage("Anytime Podcast Player"),
     "app_title_short" : MessageLookupByLibrary.simpleMessage("Anytime Player"),
     "cancel_button_label" : MessageLookupByLibrary.simpleMessage("STORNIEREN"),

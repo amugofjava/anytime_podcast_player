@@ -29,6 +29,9 @@ class Podcast {
   /// Podcast description. Can be either plain text or HTML.
   final String description;
 
+  /// Link to any previous image URL. Helpful when detecting artwork change.
+  final String previousImageUrl;
+
   /// URL to the full size artwork image.
   final String imageUrl;
 
@@ -55,6 +58,7 @@ class Podcast {
     @required this.title,
     this.id,
     this.description,
+    this.previousImageUrl,
     this.imageUrl,
     this.thumbImageUrl,
     this.copyright,
@@ -65,12 +69,25 @@ class Podcast {
     episodes ??= [];
   }
 
+  Podcast.fromUrl({@required String url})
+      : guid = '',
+        link = '',
+        title = '',
+        description = '',
+        thumbImageUrl = null,
+        previousImageUrl = null,
+        imageUrl = null,
+        copyright = '',
+        funding = <Funding>[],
+        url = url;
+
   Podcast.fromSearchResultItem(search.Item item)
       : guid = item.guid,
         url = item.feedUrl,
         link = item.feedUrl,
         title = item.trackName,
         description = '',
+        previousImageUrl = null,
         imageUrl = item.bestArtworkUrl ?? item.artworkUrl,
         thumbImageUrl = item.thumbnailArtworkUrl,
         funding = const <Funding>[],
@@ -84,6 +101,7 @@ class Podcast {
       'description': description ?? '',
       'url': url,
       'imageUrl': imageUrl ?? '',
+      'previousImageUrl': previousImageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap())?.toList(growable: false),
@@ -115,6 +133,7 @@ class Podcast {
       copyright: podcast['copyright'] as String,
       description: podcast['description'] as String,
       url: podcast['url'] as String,
+      previousImageUrl: podcast['previousImageUrl'] as String,
       imageUrl: podcast['imageUrl'] as String,
       thumbImageUrl: podcast['thumbImageUrl'] as String,
       funding: funding,

@@ -51,6 +51,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
+  final BehaviorSubject<Episode> _chapterEvent = BehaviorSubject<Episode>();
+
   /// Stream for the last audio error as an integer code.
   final PublishSubject<int> _playbackError = PublishSubject<int>();
 
@@ -169,6 +171,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
           _episode.chaptersLoading = false;
 
+          await repository.saveEpisode(_episode);
           await _onUpdatePosition();
         }
       } catch (e) {
@@ -350,6 +353,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var position = playbackState?.currentPosition;
       var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
       var buffering = await AudioService.playbackState.processingState == AudioProcessingState.buffering;
+
       _updateChapter(position.inSeconds, duration.inSeconds);
 
       _playPosition.add(PositionState(position, duration, complete.toInt(), _episode, buffering));
@@ -486,6 +490,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         if (seconds >= startTime && seconds < endTime) {
           if (chapters[x] != _episode.currentChapter) {
             _episode.currentChapter = chapters[x];
+            _chapterEvent.sink.add(_episode);
             break;
           }
         }
@@ -504,6 +509,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<PositionState> get playPosition => _playPosition.stream;
+
+  @override
+  Stream<Episode> get chapterEvent => _chapterEvent.stream;
 
   @override
   Stream<int> get playbackError => _playbackError.stream;

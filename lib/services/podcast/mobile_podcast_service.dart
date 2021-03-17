@@ -18,10 +18,12 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as psapi;
 
 class MobilePodcastService extends PodcastService {
+  final log = Logger('MobilePodcastService');
   final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
 
   MobilePodcastService({
@@ -69,6 +71,9 @@ class MobilePodcastService extends PodcastService {
       var title = '';
       var description = '';
       var copyright = '';
+      var imageUrl = podcast.imageUrl;
+      var thumbImageUrl = podcast.thumbImageUrl;
+      var previousImageUrl = '';
 
       if (!refresh) {
         loadedPodcast = _cache.item(podcast.url);
@@ -98,6 +103,20 @@ class MobilePodcastService extends PodcastService {
         copyright = loadedPodcast.copyright.replaceAll('\n', '').trim();
       }
 
+      // If imageUrl is null we have not loaded the podcast as a result of a search
+      // so we need to set it now to the loaded image. This may seem odd logic
+      // but as the podcast url may be different to the image url in the search results
+      // even though it may be the 'same' image, this stops the image from flashing
+      // when rendering which can look a little odd.
+      if (imageUrl == null || imageUrl.isEmpty) {
+        imageUrl = loadedPodcast.image;
+        previousImageUrl = loadedPodcast.image;
+        thumbImageUrl = loadedPodcast.image;
+      } else if (previousImageUrl != null && previousImageUrl.isNotEmpty && previousImageUrl != loadedPodcast.image) {
+        imageUrl = loadedPodcast.image;
+        thumbImageUrl = loadedPodcast.image;
+      }
+
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
       var funding = <Funding>[];
 
@@ -109,8 +128,9 @@ class MobilePodcastService extends PodcastService {
         link: loadedPodcast.link,
         title: title,
         description: description,
-        imageUrl: podcast.imageUrl ?? loadedPodcast.image,
-        thumbImageUrl: podcast.thumbImageUrl ?? loadedPodcast.image,
+        previousImageUrl: previousImageUrl,
+        imageUrl: imageUrl,
+        thumbImageUrl: thumbImageUrl,
         copyright: copyright,
         funding: funding,
         episodes: <Episode>[],
@@ -140,21 +160,9 @@ class MobilePodcastService extends PodcastService {
           var existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
 
           if (existingEpisode == null) {
-            var author = episode.author;
-            var title = episode.title;
-            var description = episode.description;
-
-            if (author != null) {
-              author = author.replaceAll('\n', '').trim();
-            }
-
-            if (title != null) {
-              title = title.replaceAll('\n', '').trim();
-            }
-
-            if (description != null) {
-              description = description.replaceAll('\n', '').trim();
-            }
+            var author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
+            var title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
+            var description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
 
             pc.episodes.add(Episode(
               pguid: pc.guid,

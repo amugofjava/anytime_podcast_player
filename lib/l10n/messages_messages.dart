@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "about_label" : MessageLookupByLibrary.simpleMessage("About"),
+    "add_rss_feed_option" : MessageLookupByLibrary.simpleMessage("Add RSS Feed"),
     "app_title" : MessageLookupByLibrary.simpleMessage("Anytime Podcast Player"),
     "app_title_short" : MessageLookupByLibrary.simpleMessage("Anytime Player"),
     "cancel_button_label" : MessageLookupByLibrary.simpleMessage("CANCEL"),
@@ -29,7 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "chapters_label" : MessageLookupByLibrary.simpleMessage("Chapters"),
     "clear_search_button_label" : MessageLookupByLibrary.simpleMessage("Clear search text"),
     "close_button_label" : MessageLookupByLibrary.simpleMessage("Close"),
-    "consent_message" : MessageLookupByLibrary.simpleMessage("This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime."),
+    "consent_message" : MessageLookupByLibrary.simpleMessage("The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime"),
     "continue_button_label" : MessageLookupByLibrary.simpleMessage("CONTINUE"),
     "delete_button_label" : MessageLookupByLibrary.simpleMessage("DELETE"),
     "delete_episode_button_label" : MessageLookupByLibrary.simpleMessage("Delete episode"),
@@ -40,8 +41,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "download_episode_button_label" : MessageLookupByLibrary.simpleMessage("Download episode"),
     "downloads" : MessageLookupByLibrary.simpleMessage("Downloads"),
     "episode_label" : MessageLookupByLibrary.simpleMessage("Episode"),
-    "error_no_connection" : MessageLookupByLibrary.simpleMessage("Unable to play episode. Please check your connection and try again."),
-    "error_playback_fail" : MessageLookupByLibrary.simpleMessage("An unexpected error occurred during playback. Please check your connection and try again."),
+    "error_no_connection" : MessageLookupByLibrary.simpleMessage("Unable to play episode. Please check your connection and try again"),
+    "error_playback_fail" : MessageLookupByLibrary.simpleMessage("An unexpected error occurred during playback. Please check your connection and try again"),
     "fast_forward_button_label" : MessageLookupByLibrary.simpleMessage("Fast-forward episode 30 seconds"),
     "go_back_button_label" : MessageLookupByLibrary.simpleMessage("GO BACK"),
     "library" : MessageLookupByLibrary.simpleMessage("Library"),
@@ -77,10 +78,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "stop_download_button_label" : MessageLookupByLibrary.simpleMessage("STOP"),
     "stop_download_confirmation" : MessageLookupByLibrary.simpleMessage("Are you sure you wish to stop this download and delete the episode?"),
     "stop_download_title" : MessageLookupByLibrary.simpleMessage("Stop Download"),
-    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("FOLLOW"),
-    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Follow"),
-    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("UNFOLLOW"),
-    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Unfollow"),
-    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Unfollowing will delete all downloaded episodes of this podcast.")
+    "subscribe_button_label" : MessageLookupByLibrary.simpleMessage("SUBSCRIBE"),
+    "subscribe_label" : MessageLookupByLibrary.simpleMessage("Subscribe"),
+    "unsubscribe_button_label" : MessageLookupByLibrary.simpleMessage("UNSUBSCRIBE"),
+    "unsubscribe_label" : MessageLookupByLibrary.simpleMessage("Unsubscribe"),
+    "unsubscribe_message" : MessageLookupByLibrary.simpleMessage("Unsubscribing will delete all downloaded episodes of this podcast.")
   };
 }

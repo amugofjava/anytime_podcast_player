@@ -93,7 +93,7 @@ class PodcastBloc extends Bloc {
   /// containing the Podcast.
   void _listenPodcastLoad() async {
     _podcastFeed.listen((feed) async {
-      _podcastStream.sink.add(BlocLoadingState<Podcast>());
+      _podcastStream.sink.add(BlocLoadingState<Podcast>(feed.podcast));
 
       _episodes = [];
       _episodesStream.add(_episodes);

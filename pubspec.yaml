@@ -31,7 +31,7 @@ dependencies:
   podcast_search:
     git:
       url: https://github.com/amugofjava/podcast_search
-      ref: 6c4526f
+      ref: bc97a32bb9a013b5fa97a3234e5acc876cf7fed1
   provider: ^4.3.3
   rxdart: ^0.24.1
   scrollable_positioned_list: ^0.1.9
