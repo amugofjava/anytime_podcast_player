@@ -24,6 +24,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<String> _searchProvider = BehaviorSubject<String>();
   final BehaviorSubject<bool> _externalLinkConsent = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _showFunding = BehaviorSubject<bool>();
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -39,6 +40,7 @@ class SettingsBloc extends Bloc {
     var themeName = themeDarkMode ? 'dark' : 'light';
     var searchProvider = _settingsService.searchProvider;
     var externalLinkConsent = _settingsService.externalLinkConsent;
+    var showFunding = _settingsService.showFunding;
 
     // Add our available search providers.
     var providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
@@ -56,6 +58,7 @@ class SettingsBloc extends Bloc {
       searchProviders: providers,
       externalLinkConsent: externalLinkConsent,
       autoOpenNowPlaying: autoOpenNowPlaying,
+      showFunding: showFunding,
     );
 
     _settings.add(s);
@@ -72,6 +75,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -91,6 +95,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -110,6 +115,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -127,6 +133,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -138,18 +145,41 @@ class SettingsBloc extends Bloc {
       autoOpenNowPlaying = autoOpen;
 
       s = AppSettings(
-          theme: themeName,
-          markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
-          storeDownloadsSDCard: storeDownloadsSDCard,
-          playbackSpeed: playbackSpeed,
-          searchProvider: searchProvider,
-          searchProviders: providers,
-          externalLinkConsent: externalLinkConsent,
-          autoOpenNowPlaying: autoOpen);
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpen,
+        showFunding: showFunding,
+      );
 
       _settings.add(s);
 
       _settingsService.autoOpenNowPlaying = autoOpen;
+    });
+
+    _showFunding.listen((show) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: show,
+      );
+
+      _settings.add(s);
+
+      // If the setting has not changed, don't bother updating it
+      if (show != showFunding) {
+        _settingsService.showFunding = show;
+      }
     });
 
     _searchProvider.listen((search) {
@@ -162,6 +192,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -179,6 +210,7 @@ class SettingsBloc extends Bloc {
         searchProviders: providers,
         externalLinkConsent: consent,
         autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
       );
 
       _settings.add(s);
@@ -205,6 +237,8 @@ class SettingsBloc extends Bloc {
   void Function(String) get setSearchProvider => _searchProvider.add;
 
   void Function(bool) get setExternalLinkConsent => _externalLinkConsent.add;
+
+  void Function(bool) get setShowFunding => _showFunding.add;
 
   @override
   void dispose() {

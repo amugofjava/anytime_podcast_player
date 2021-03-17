@@ -32,4 +32,8 @@ abstract class SettingsService {
   set autoOpenNowPlaying(bool autoOpenNowPlaying);
 
   bool get autoOpenNowPlaying;
+
+  set showFunding(bool show);
+
+  bool get showFunding;
 }
