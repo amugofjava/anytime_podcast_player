@@ -14,6 +14,7 @@ class AppSettings {
   final List<SearchProvider> searchProviders;
   final bool externalLinkConsent;
   final bool autoOpenNowPlaying;
+  final bool showFunding;
 
   AppSettings({
     @required this.theme,
@@ -24,6 +25,7 @@ class AppSettings {
     @required this.searchProviders,
     @required this.externalLinkConsent,
     @required this.autoOpenNowPlaying,
+    @required this.showFunding,
   });
 
   AppSettings.sensibleDefaults()
@@ -34,5 +36,6 @@ class AppSettings {
         searchProvider = 'itunes',
         searchProviders = <SearchProvider>[],
         externalLinkConsent = false,
-        autoOpenNowPlaying = false;
+        autoOpenNowPlaying = false,
+        showFunding = true;
 }

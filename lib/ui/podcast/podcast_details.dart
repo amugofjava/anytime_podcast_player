@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/chrome.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -336,40 +338,48 @@ class PodcastTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final _settingsBloc = Provider.of<SettingsBloc>(context);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(podcast.title ?? '', style: textTheme.headline6),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-            child: Text(podcast.copyright ?? '', style: textTheme.caption),
-          ),
-          Html(
-            data: podcast.description ?? '',
-            style: {'html': Style(fontWeight: textTheme.bodyText1.fontWeight)},
-            onLinkTap: (url) => canLaunch(url).then((value) => launch(url)),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Row(
+    return StreamBuilder<AppSettings>(
+        stream: _settingsBloc.settings,
+        initialData: AppSettings.sensibleDefaults(),
+        builder: (context, settingsSnapshot) {
+          final settings = settingsSnapshot.data;
+
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SubscriptionButton(podcast),
-                PodcastContextMenu(podcast),
-                FundingMenu(podcast.funding),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(podcast.title ?? '', style: textTheme.headline6),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+                  child: Text(podcast.copyright ?? '', style: textTheme.caption),
+                ),
+                Html(
+                  data: podcast.description ?? '',
+                  style: {'html': Style(fontWeight: textTheme.bodyText1.fontWeight)},
+                  onLinkTap: (url) => canLaunch(url).then((value) => launch(url)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SubscriptionButton(podcast),
+                      PodcastContextMenu(podcast),
+                      settings.showFunding ? FundingMenu(podcast.funding) : Container(),
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 
