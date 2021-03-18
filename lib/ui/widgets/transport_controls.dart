@@ -6,7 +6,6 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
-import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
@@ -33,118 +32,110 @@ class PlayControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _audioBloc = Provider.of<AudioBloc>(context);
-    final _settingsBloc = Provider.of<SettingsBloc>(context);
 
-    return StreamBuilder<AppSettings>(
-        stream: _settingsBloc.settings,
-        builder: (context, settingsSnapshot) {
-          if (!settingsSnapshot.hasData) {
-            return SizedBox();
-          }
-          final settings = settingsSnapshot.data;
+    return StreamBuilder<PlayerControlState>(
+        stream: Rx.combineLatest2(_audioBloc.playingState, _audioBloc.nowPlaying,
+            (AudioState audioState, Episode episode) => PlayerControlState(audioState, episode)),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final audioState = snapshot.data.audioState;
+            final nowPlaying = snapshot.data.episode;
 
-          return StreamBuilder<PlayerControlState>(
-              stream: Rx.combineLatest2(_audioBloc.playingState, _audioBloc.nowPlaying,
-                  (AudioState audioState, Episode episode) => PlayerControlState(audioState, episode)),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final audioState = snapshot.data.audioState;
-                  final nowPlaying = snapshot.data.episode;
-
-                  if (episode.downloadState != DownloadState.downloading) {
-                    // If this episode is the one we are playing, allow the user
-                    // to toggle between play and pause.
-                    if (snapshot.hasData && nowPlaying.guid == episode.guid) {
-                      if (audioState == AudioState.playing) {
-                        return InkWell(
-                          onTap: () {
-                            _audioBloc.transitionState(TransitionState.pause);
-                          },
-                          child: PlayPauseButton(
-                            title: episode.title,
-                            label: L.of(context).pause_button_label,
-                            icon: Icons.pause,
-                          ),
-                        );
-                      } else if (audioState == AudioState.buffering) {
-                        return PlayPauseBusyButton(
-                          title: episode.title,
-                          label: L.of(context).pause_button_label,
-                          icon: Icons.pause,
-                        );
-                      } else if (audioState == AudioState.pausing) {
-                        return InkWell(
-                          onTap: () {
-                            _audioBloc.transitionState(TransitionState.play);
-                            optionalShowNowPlaying(context, settings);
-                          },
-                          child: PlayPauseButton(
-                            title: episode.title,
-                            label: L.of(context).play_button_label,
-                            icon: Icons.play_arrow,
-                          ),
-                        );
-                      }
-                    }
-
-                    // If this episode is not the one we are playing, allow the
-                    // user to start playing this episode.
-                    return InkWell(
-                      onTap: () {
-                        _audioBloc.play(episode);
-                        optionalShowNowPlaying(context, settings);
-                      },
-                      child: PlayPauseButton(
-                        title: episode.title,
-                        label: L.of(context).play_button_label,
-                        icon: Icons.play_arrow,
-                      ),
-                    );
-                  } else {
-                    // We are currently downloading this episode. Do not allow
-                    // the user to play it until the download is complete.
-                    return Opacity(
-                      opacity: 0.2,
-                      child: PlayPauseButton(
-                        title: episode.title,
-                        label: L.of(context).play_button_label,
-                        icon: Icons.play_arrow,
-                      ),
-                    );
-                  }
-                } else {
-                  // We have no playing information at the moment. Show a play button
-                  // until the stream wakes up.
-                  if (episode.downloadState != DownloadState.downloading) {
-                    return InkWell(
-                      onTap: () {
-                        _audioBloc.play(episode);
-                        optionalShowNowPlaying(context, settings);
-                      },
-                      child: PlayPauseButton(
-                        title: episode.title,
-                        label: L.of(context).play_button_label,
-                        icon: Icons.play_arrow,
-                      ),
-                    );
-                  } else {
-                    return Opacity(
-                      opacity: 0.2,
-                      child: PlayPauseButton(
-                        title: episode.title,
-                        label: L.of(context).play_button_label,
-                        icon: Icons.play_arrow,
-                      ),
-                    );
-                  }
+            if (episode.downloadState != DownloadState.downloading) {
+              // If this episode is the one we are playing, allow the user
+              // to toggle between play and pause.
+              if (snapshot.hasData && nowPlaying.guid == episode.guid) {
+                if (audioState == AudioState.playing) {
+                  return InkWell(
+                    onTap: () {
+                      _audioBloc.transitionState(TransitionState.pause);
+                    },
+                    child: PlayPauseButton(
+                      title: episode.title,
+                      label: L.of(context).pause_button_label,
+                      icon: Icons.pause,
+                    ),
+                  );
+                } else if (audioState == AudioState.buffering) {
+                  return PlayPauseBusyButton(
+                    title: episode.title,
+                    label: L.of(context).pause_button_label,
+                    icon: Icons.pause,
+                  );
+                } else if (audioState == AudioState.pausing) {
+                  return InkWell(
+                    onTap: () {
+                      _audioBloc.transitionState(TransitionState.play);
+                      optionalShowNowPlaying(context);
+                    },
+                    child: PlayPauseButton(
+                      title: episode.title,
+                      label: L.of(context).play_button_label,
+                      icon: Icons.play_arrow,
+                    ),
+                  );
                 }
-              });
+              }
+
+              // If this episode is not the one we are playing, allow the
+              // user to start playing this episode.
+              return InkWell(
+                onTap: () {
+                  _audioBloc.play(episode);
+                  optionalShowNowPlaying(context);
+                },
+                child: PlayPauseButton(
+                  title: episode.title,
+                  label: L.of(context).play_button_label,
+                  icon: Icons.play_arrow,
+                ),
+              );
+            } else {
+              // We are currently downloading this episode. Do not allow
+              // the user to play it until the download is complete.
+              return Opacity(
+                opacity: 0.2,
+                child: PlayPauseButton(
+                  title: episode.title,
+                  label: L.of(context).play_button_label,
+                  icon: Icons.play_arrow,
+                ),
+              );
+            }
+          } else {
+            // We have no playing information at the moment. Show a play button
+            // until the stream wakes up.
+            if (episode.downloadState != DownloadState.downloading) {
+              return InkWell(
+                onTap: () {
+                  _audioBloc.play(episode);
+                  optionalShowNowPlaying(context);
+                },
+                child: PlayPauseButton(
+                  title: episode.title,
+                  label: L.of(context).play_button_label,
+                  icon: Icons.play_arrow,
+                ),
+              );
+            } else {
+              return Opacity(
+                opacity: 0.2,
+                child: PlayPauseButton(
+                  title: episode.title,
+                  label: L.of(context).play_button_label,
+                  icon: Icons.play_arrow,
+                ),
+              );
+            }
+          }
         });
   }
 
   /// If we have the 'show now playing upon play' option set to true, launch
   /// the [NowPlaying] widget automatically.
-  void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
+  void optionalShowNowPlaying(BuildContext context) {
+    final settings = Provider.of<SettingsBloc>(context).currentSettings;
+
     if (settings.autoOpenNowPlaying) {
       Navigator.push(
         context,

@@ -240,6 +240,8 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get setShowFunding => _showFunding.add;
 
+  AppSettings get currentSettings => _settings.value;
+
   @override
   void dispose() {
     _settings.close();
