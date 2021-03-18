@@ -240,7 +240,6 @@ class Episode {
       identical(this, other) ||
       other is Episode &&
           runtimeType == other.runtimeType &&
-          id == other.id &&
           guid == other.guid &&
           pguid == other.pguid &&
           downloadTaskId == other.downloadTaskId &&
@@ -253,7 +252,7 @@ class Episode {
           link == other.link &&
           imageUrl == other.imageUrl &&
           thumbImageUrl == other.thumbImageUrl &&
-          publicationDate == other.publicationDate &&
+          publicationDate?.millisecondsSinceEpoch == other.publicationDate?.millisecondsSinceEpoch &&
           contentUrl == other.contentUrl &&
           author == other.author &&
           season == other.season &&
@@ -262,9 +261,7 @@ class Episode {
           position == other.position &&
           downloadPercentage == other.downloadPercentage &&
           played == other.played &&
-          chaptersUrl == other.chaptersUrl &&
-          chapters == other.chapters &&
-          lastUpdated == other.lastUpdated;
+          chaptersUrl == other.chaptersUrl;
 
   @override
   int get hashCode =>

@@ -37,14 +37,26 @@ void main() {
     PathProviderPlatform.instance = mockPath;
     persistenceService = SembastRepository();
 
-    podcast1 =
-        Podcast(title: 'Podcast 1', description: '1st podcast', guid: 'http://p1.com', link: 'http://p1.com', url: 'http://p1.com');
+    podcast1 = Podcast(
+        title: 'Podcast 1',
+        description: '1st podcast',
+        guid: 'http://p1.com',
+        link: 'http://p1.com',
+        url: 'http://p1.com');
 
-    podcast2 =
-        Podcast(title: 'Podcast 2', description: '2nd podcast', guid: 'http://p2.com', link: 'http://p2.com', url: 'http://p2.com');
+    podcast2 = Podcast(
+        title: 'Podcast 2',
+        description: '2nd podcast',
+        guid: 'http://p2.com',
+        link: 'http://p2.com',
+        url: 'http://p2.com');
 
-    podcast3 =
-        Podcast(title: 'Podcast 3', description: '3rd podcast', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
+    podcast3 = Podcast(
+        title: 'Podcast 3',
+        description: '3rd podcast',
+        guid: 'http://p3.com',
+        link: 'http://p3.com',
+        url: 'http://p3.com');
   });
 
   tearDown(() async {
@@ -86,8 +98,8 @@ void main() {
 
       await persistenceService.savePodcast(podcast2);
 
-      expect(true, (podcast2.id > 0));
-      expect(true, podcast2.episodes.isNotEmpty);
+      expect((podcast2.id > 0), true);
+      expect(podcast2.episodes.isNotEmpty, true);
     });
 
     test('Create and save a single Podcast & attach episodes later', () async {
@@ -95,8 +107,8 @@ void main() {
 
       var previousId = podcast3.id;
 
-      expect(true, (podcast3.id > 0));
-      expect(true, podcast3.episodes.isEmpty);
+      expect((podcast3.id > 0), true);
+      expect(podcast3.episodes.isEmpty, true);
 
       podcast3.episodes = <Episode>[
         Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast3.guid, podcast: podcast3.title),
@@ -106,63 +118,106 @@ void main() {
 
       await persistenceService.savePodcast(podcast3);
 
-      expect(previousId, podcast3.id);
-      expect(true, podcast3.episodes.isNotEmpty);
+      expect(podcast3.id, previousId);
+      expect(podcast3.episodes.isNotEmpty, true);
     });
 
     test('Retrieve an existing Podcast without episodes', () async {
       var podcast1 = Podcast(
-          title: 'Podcast 1B', description: '1st podcast', guid: 'http://p1.com', link: 'http://p1.com', url: 'http://p1.com');
+          title: 'Podcast 1B',
+          description: '1st podcast',
+          guid: 'http://p1.com',
+          link: 'http://p1.com',
+          url: 'http://p1.com');
 
       await persistenceService.savePodcast(podcast1);
 
-      expect(true, (podcast1.id > 0));
+      expect((podcast1.id > 0), true);
 
       var podcast = await persistenceService.findPodcastById(podcast1.id);
 
-      expect(true, podcast == podcast1);
+      expect(podcast == podcast1, true);
     });
 
     test('Retrieve an existing Podcast with episodes', () async {
       var podcast3 = Podcast(
-          title: 'Podcast 3', description: '3rd podcast', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
+          title: 'Podcast 3',
+          description: '3rd podcast',
+          guid: 'http://p3.com',
+          link: 'http://p3.com',
+          url: 'http://p3.com');
 
       podcast3.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast3.guid, podcast: podcast3.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast3.guid, podcast: podcast3.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast3.guid, podcast: podcast3.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast3.guid,
+            podcast: podcast3.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast3.guid,
+            podcast: podcast3.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast3.guid,
+            podcast: podcast3.title,
+            publicationDate: DateTime.now()),
       ];
 
       await persistenceService.savePodcast(podcast3);
 
       var podcast = await persistenceService.findPodcastById(podcast3.id);
 
-      expect(true, podcast == podcast3);
-      expect(true, listEquals(podcast.episodes, podcast3.episodes));
+      expect(podcast == podcast3, true);
+
+      expect(listEquals(podcast.episodes, podcast3.episodes), true);
 
       // Retrieve same Podcast via GUID and test it is still the same.
       var podcastByGuid = await persistenceService.findPodcastByGuid(podcast3.guid);
 
-      expect(true, podcastByGuid == podcast3);
-      expect(true, listEquals(podcast.episodes, podcast3.episodes));
+      expect(podcastByGuid == podcast3, true);
+      expect(listEquals(podcast.episodes, podcast3.episodes), true);
     });
 
     test('Retrieve an existing Podcast with episodes and update episodes', () async {
       var podcast4 = Podcast(
-          title: 'Podcast 3', description: '3rd podcast', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
+          title: 'Podcast 3',
+          description: '3rd podcast',
+          guid: 'http://p3.com',
+          link: 'http://p3.com',
+          url: 'http://p3.com');
 
       podcast4.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast4.guid, podcast: podcast4.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast4.guid, podcast: podcast4.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast4.guid, podcast: podcast4.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now()),
       ];
 
       await persistenceService.savePodcast(podcast4);
 
       var podcast = await persistenceService.findPodcastById(podcast4.id);
 
-      expect(true, podcast == podcast4);
-      expect(true, listEquals(podcast.episodes, podcast4.episodes));
+      expect(podcast == podcast4, true);
+      expect(listEquals(podcast.episodes, podcast4.episodes), true);
 
       // Update episodes and save batch
       expect(true, podcast.episodes.length == 3);
@@ -177,9 +232,9 @@ void main() {
       // Re-fetch and ensure all episodes played.
       podcast = await persistenceService.findPodcastById(podcast4.id);
 
-      expect(true, podcast.episodes[0].played);
-      expect(true, podcast.episodes[1].played);
-      expect(true, podcast.episodes[2].played);
+      expect(podcast.episodes[0].played, true);
+      expect(podcast.episodes[1].played, true);
+      expect(podcast.episodes[2].played, true);
     });
   });
 
@@ -195,7 +250,7 @@ void main() {
 
       var results = await persistenceService.subscriptions();
 
-      await expect(true, listEquals(results, [podcast1]));
+      await expect(listEquals(results, [podcast1]), true);
 
       await persistenceService.savePodcast(podcast2);
       await persistenceService.savePodcast(podcast3);
@@ -203,37 +258,52 @@ void main() {
       results = await persistenceService.subscriptions();
 
       await expect(
-          true,
           listEquals(results, [
             podcast1,
             podcast2,
             podcast3,
-          ]));
+          ]),
+          true);
 
       await persistenceService.deletePodcast(podcast2);
 
       results = await persistenceService.subscriptions();
 
       await expect(
-          true,
           listEquals(results, [
             podcast1,
             podcast3,
-          ]));
+          ]),
+          true);
     });
   });
 
   group('Saving, updating and retrieving episodes', () {
     test('Subscribe to podcasts and retrieve', () async {
       podcast2.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast2.guid, podcast: podcast2.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
       ];
 
       var episode2 = podcast2.episodes[1];
 
-      expect(true, episode2.id == null);
+      expect(episode2.id == null, true);
 
       await persistenceService.savePodcast(podcast1);
       await persistenceService.savePodcast(podcast2);
@@ -241,17 +311,17 @@ void main() {
 
       var podcast = await persistenceService.findPodcastByGuid(podcast2.guid);
 
-      expect(true, listEquals(podcast2.episodes, podcast.episodes));
+      expect(listEquals(podcast2.episodes, podcast.episodes), true);
 
       var episode = await persistenceService.findEpisodeByGuid(podcast.episodes[1].guid);
 
-      expect(true, episode == episode2);
+      expect(episode == episode2, true);
 
       var episodeById = await persistenceService.findEpisodeById(podcast.episodes[1].id);
 
-      expect(true, episode == episodeById);
+      expect(episode == episodeById, true);
 
-      expect(true, podcast3.subscribed);
+      expect(podcast3.subscribed, true);
     });
   });
 
@@ -264,19 +334,69 @@ void main() {
       var pubDate1 = DateTime.now().subtract(Duration(days: 4));
 
       podcast1.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate1),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate2),
-        Episode(guid: 'EP005', title: 'Episode 5', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate5),
-        Episode(guid: 'EP004', title: 'Episode 4', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate4),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate3),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate5),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate4),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3),
       ];
 
       var orderedEpisodes = <Episode>[
-        Episode(guid: 'EP005', title: 'Episode 5', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate5),
-        Episode(guid: 'EP004', title: 'Episode 4', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate4),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate3),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate2),
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate1),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate5),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate4),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1),
       ];
 
       await persistenceService.savePodcast(podcast1);
@@ -286,7 +406,7 @@ void main() {
       // Episodes should be returned in reverse publication-date order.
       var episodes = await persistenceService.findEpisodesByPodcastGuid(podcast1.guid);
 
-      expect(true, listEquals(episodes, orderedEpisodes));
+      expect(listEquals(episodes, orderedEpisodes), true);
     });
 
     test('Fetch downloaded episodes', () async {
@@ -297,11 +417,36 @@ void main() {
       var pubDate1 = DateTime.now().subtract(Duration(days: 4));
 
       podcast1.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate1),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate2),
-        Episode(guid: 'EP005', title: 'Episode 5', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate5),
-        Episode(guid: 'EP004', title: 'Episode 4', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate4),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate3),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate5),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate4),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3),
       ];
 
       await persistenceService.savePodcast(podcast1);
@@ -316,8 +461,8 @@ void main() {
       var episode1 = await persistenceService.findEpisodeByGuid('EP001');
       var episode2 = await persistenceService.findEpisodeByGuid('EP002');
 
-      expect(true, episode1 == podcast1.episodes[0]);
-      expect(true, episode2 == podcast1.episodes[1]);
+      expect(episode1 == podcast1.episodes[0], true);
+      expect(episode2 == podcast1.episodes[1], true);
 
       // Save one episode as downloaded and re-fetch
       episode1.downloadPercentage = 100;
@@ -332,7 +477,7 @@ void main() {
       var downloaded = <Episode>[episode1];
       var singleDownload = await persistenceService.findDownloads();
 
-      expect(true, listEquals(singleDownload, downloaded));
+      expect(listEquals(singleDownload, downloaded), true);
     });
 
     test('Test download state', () async {
@@ -355,25 +500,25 @@ void main() {
 
       // Check states
       json['state'] = 0;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.none);
+      expect(Downloadable.fromMap(json).state == DownloadState.none, true);
 
       json['state'] = 1;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.queued);
+      expect(Downloadable.fromMap(json).state == DownloadState.queued, true);
 
       json['state'] = 2;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.downloading);
+      expect(Downloadable.fromMap(json).state == DownloadState.downloading, true);
 
       json['state'] = 3;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.failed);
+      expect(Downloadable.fromMap(json).state == DownloadState.failed, true);
 
       json['state'] = 4;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.cancelled);
+      expect(Downloadable.fromMap(json).state == DownloadState.cancelled, true);
 
       json['state'] = 5;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.paused);
+      expect(Downloadable.fromMap(json).state == DownloadState.paused, true);
 
       json['state'] = 6;
-      expect(true, Downloadable.fromMap(json).state == DownloadState.downloaded);
+      expect(Downloadable.fromMap(json).state == DownloadState.downloaded, true);
     });
 
     test('Delete downloaded episodes', () async {
@@ -384,11 +529,36 @@ void main() {
       var pubDate1 = DateTime.now().subtract(Duration(days: 4));
 
       podcast1.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate1),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate2),
-        Episode(guid: 'EP005', title: 'Episode 5', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate5),
-        Episode(guid: 'EP004', title: 'Episode 4', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate4),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast1.guid, podcast: podcast1.title, publicationDate: pubDate3),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate5),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate4),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3),
       ];
 
       await persistenceService.savePodcast(podcast1);
@@ -398,8 +568,8 @@ void main() {
       var episode1 = await persistenceService.findEpisodeByGuid('EP001');
       var episode2 = await persistenceService.findEpisodeByGuid('EP002');
 
-      expect(true, episode1 == podcast1.episodes[0]);
-      expect(true, episode2 == podcast1.episodes[1]);
+      expect(episode1 == podcast1.episodes[0], true);
+      expect(episode2 == podcast1.episodes[1], true);
 
       episode1.downloadPercentage = 100;
       episode1.downloadState = DownloadState.downloaded;
@@ -412,13 +582,13 @@ void main() {
 
       var downloads = await persistenceService.findDownloads();
 
-      expect(true, listEquals(downloads, <Episode>[episode2, episode1]));
+      expect(listEquals(downloads, <Episode>[episode2, episode1]), true);
 
       await persistenceService.deleteEpisode(episode1);
 
       downloads = await persistenceService.findDownloads();
 
-      expect(true, listEquals(downloads, <Episode>[episode2]));
+      expect(listEquals(downloads, <Episode>[episode2]), true);
     });
 
     test('Subscribe after downloading episodes', () async {
@@ -502,11 +672,11 @@ void main() {
       var ep4 = p.episodes.firstWhere((e) => e.guid == 'EP004');
       var ep5 = p.episodes.firstWhere((e) => e.guid == 'EP005');
 
-      expect(true, ep1.downloadPercentage == 0);
-      expect(true, ep2.downloadPercentage == 100);
-      expect(true, ep3.downloadPercentage == 0);
-      expect(true, ep4.downloadPercentage == 0);
-      expect(true, ep5.downloadPercentage == 100);
+      expect(ep1.downloadPercentage == 0, true);
+      expect(ep2.downloadPercentage == 100, true);
+      expect(ep3.downloadPercentage == 0, true);
+      expect(ep4.downloadPercentage == 0, true);
+      expect(ep5.downloadPercentage == 100, true);
     });
 
     test('Fetch downloads for podcast', () async {
@@ -582,8 +752,8 @@ void main() {
       var pd1 = await persistenceService.findDownloadsByPodcastGuid(podcast1.guid);
       var pd2 = await persistenceService.findDownloadsByPodcastGuid(podcast2.guid);
 
-      expect(true, listEquals(pd1, <Episode>[episode5, episode2]));
-      expect(true, listEquals(pd2, <Episode>[]));
+      expect(listEquals(pd1, <Episode>[episode5, episode2]), true);
+      expect(listEquals(pd2, <Episode>[]), true);
     });
 
     test('Fetch downloads by task ID', () async {
@@ -717,17 +887,17 @@ void main() {
       // Fetch the downloaded podcast
       var episode = await persistenceService.findEpisodeByGuid('EP001');
 
-      expect(false, episode.downloaded);
-      expect(true, episode.descriptionText == 'Episode 1 description');
+      expect(episode.downloaded, false);
+      expect(episode.descriptionText == 'Episode 1 description', true);
 
       episode = await persistenceService.findEpisodeByGuid('EP002');
 
-      expect(true, episode.descriptionText == '');
+      expect(episode.descriptionText == '', true);
 
       episode = await persistenceService.findEpisodeByGuid('EP003');
 
-      expect(true, episode.downloaded);
-      expect(true, episode.descriptionText == 'Episode 3 description');
+      expect(episode.downloaded, true);
+      expect(episode.descriptionText == 'Episode 3 description', true);
     });
 
     test('Test episode duration', () async {
@@ -764,17 +934,17 @@ void main() {
       // Fetch the downloaded podcast
       var episode = await persistenceService.findEpisodeByGuid('EP001');
 
-      expect(true, episode.timeRemaining.inSeconds == 60);
-      expect(true, episode.percentagePlayed == 50.0);
+      expect(episode.timeRemaining.inSeconds == 60, true);
+      expect(episode.percentagePlayed == 50.0, true);
 
       episode = await persistenceService.findEpisodeByGuid('EP002');
 
-      expect(true, episode.timeRemaining.inSeconds == 0);
-      expect(true, episode.percentagePlayed == 0.0);
+      expect(episode.timeRemaining.inSeconds == 0, true);
+      expect(episode.percentagePlayed == 0.0, true);
 
       // Invalid position
       episode.position = 500000;
-      expect(true, episode.percentagePlayed == 100.0);
+      expect(episode.percentagePlayed == 100.0, true);
     });
   });
 }
