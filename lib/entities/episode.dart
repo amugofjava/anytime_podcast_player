@@ -334,8 +334,8 @@ class Episode {
   }
 
   bool get hasChapters => chaptersUrl != null && chaptersUrl.isNotEmpty;
-  bool get chaptersAreLoaded => chapters != null && chapters.isNotEmpty;
-  bool get chaptersAreNotLoaded => chapters == null || chapters.isEmpty;
+  bool get chaptersAreLoaded => chapters != null;
+  bool get chaptersAreNotLoaded => chapters == null;
 
   String get positionalImageUrl {
     if (currentChapter != null && currentChapter.imageUrl != null && currentChapter.imageUrl.isNotEmpty) {

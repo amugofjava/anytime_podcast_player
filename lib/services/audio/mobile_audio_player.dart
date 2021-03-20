@@ -321,8 +321,6 @@ class MobileAudioPlayer {
   }) async {
     var mapped = fixedState ?? _mapPlayerStateToServiceState();
 
-    log.fine('_setState: position is ${_audioPlayer.position.inMilliseconds}');
-
     await AudioServiceBackground.setState(
       controls: [
         rewindControl,

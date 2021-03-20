@@ -448,16 +448,18 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                AutoSizeText(
-                                  chapterTitle ?? '',
-                                  group: textGroup,
-                                  minFontSize: 10.0,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 16.0,
+                                Expanded(
+                                  child: AutoSizeText(
+                                    chapterTitle ?? '',
+                                    group: textGroup,
+                                    minFontSize: 10.0,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 16.0,
+                                    ),
+                                    maxLines: 2,
                                   ),
-                                  maxLines: 2,
                                 ),
                                 chapterUrl.isEmpty
                                     ? SizedBox(
