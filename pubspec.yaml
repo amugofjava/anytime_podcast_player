@@ -19,7 +19,7 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   get_version: ^0.2.2
   html: ^0.14.0+4
-  just_audio: ^0.6.14+1
+  just_audio: ^0.6.15+1
   liquid_pull_to_refresh: ^2.0.0
   logging: ^0.11.4
   mp3_info: ^0.1.4
@@ -34,7 +34,7 @@ dependencies:
       ref: bc97a32bb9a013b5fa97a3234e5acc876cf7fed1
   provider: ^4.3.3
   rxdart: ^0.24.1
-  scrollable_positioned_list: ^0.1.9
+  scrollable_positioned_list: ^0.1.10
   sembast: ^2.4.10
   shared_preferences: ^0.5.12+4
   url_launcher: ^5.7.10

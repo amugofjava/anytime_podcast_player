@@ -105,7 +105,7 @@ class AudioBloc extends Bloc {
   /// Listen for requests to change the position of the current episode.
   void _handlePositionTransitions() async {
     _transitionPosition.listen((pos) async {
-      await audioPlayerService.seek(position: pos.toInt());
+      await audioPlayerService.seek(position: pos.ceil());
     });
   }
 
