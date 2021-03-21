@@ -131,8 +131,7 @@ class PodcastBloc extends Bloc {
       _episodesStream.add(_episodes);
 
       // If this episode contains chapter, fetch them first.
-      if (episode.hasChapters && episode.chaptersAreNotLoaded) {
-        log.fine('This episode has some chapters! Let us load them: ${episode.chaptersUrl}');
+      if (episode.hasChapters && episode.chaptersAreNotLoaded || episode.chapters.isEmpty) {
         var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl);
 
         e.chapters = chapters;

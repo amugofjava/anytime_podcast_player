@@ -432,6 +432,7 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                             title ?? '',
                             group: textGroup,
                             textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                             minFontSize: 12.0,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -448,12 +449,13 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Expanded(
+                                Flexible(
                                   child: AutoSizeText(
                                     chapterTitle ?? '',
                                     group: textGroup,
                                     minFontSize: 10.0,
                                     textAlign: TextAlign.center,
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.normal,
                                       fontSize: 16.0,
