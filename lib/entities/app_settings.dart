@@ -15,6 +15,7 @@ class AppSettings {
   final bool externalLinkConsent;
   final bool autoOpenNowPlaying;
   final bool showFunding;
+  final bool useMaterialDesign;
 
   AppSettings({
     @required this.theme,
@@ -26,6 +27,7 @@ class AppSettings {
     @required this.externalLinkConsent,
     @required this.autoOpenNowPlaying,
     @required this.showFunding,
+    @required this.useMaterialDesign,
   });
 
   AppSettings.sensibleDefaults()
@@ -37,5 +39,6 @@ class AppSettings {
         searchProviders = <SearchProvider>[],
         externalLinkConsent = false,
         autoOpenNowPlaying = false,
-        showFunding = true;
+        showFunding = true,
+        useMaterialDesign = false;
 }

@@ -105,5 +105,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set useMaterialDesign(bool useMaterialDesign) {
+    _sharedPreferences.setBool('useMaterialDesign', useMaterialDesign);
+  }
+
+  @override
+  bool get useMaterialDesign {
+    return _sharedPreferences.getBool('useMaterialDesign') ?? false;
+  }
+
+  @override
   AppSettings settings;
 }

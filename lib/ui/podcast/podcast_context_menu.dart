@@ -14,11 +14,16 @@ import 'package:provider/provider.dart';
 /// The target platform is based on the current [Theme]: [ThemeData.platform].
 class PodcastContextMenu extends StatelessWidget {
   final Podcast podcast;
+  final bool useMaterialDesign;
 
-  PodcastContextMenu(this.podcast);
+  PodcastContextMenu(this.podcast, {this.useMaterialDesign});
 
   @override
   Widget build(BuildContext context) {
+    if (useMaterialDesign) {
+      return _MaterialPodcastMenu(podcast);
+    }
+
     var theme = Theme.of(context);
 
     switch (theme.platform) {

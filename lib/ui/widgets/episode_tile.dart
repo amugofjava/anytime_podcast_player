@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/show_notes.dart';
@@ -34,6 +35,7 @@ class EpisodeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final bloc = Provider.of<EpisodeBloc>(context);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     return ExpansionTile(
       key: Key('PT${episode.guid}'),
@@ -66,36 +68,69 @@ class EpisodeTile extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
                   onPressed: episode.downloaded
                       ? () {
-                          showPlatformDialog<void>(
-                            context: context,
-                            builder: (_) => BasicDialogAlert(
-                              title: Text(
-                                L.of(context).delete_episode_title,
+                          if (settings.useMaterialDesign) {
+                            showDialog<void>(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(
+                                  L.of(context).delete_episode_title,
+                                ),
+                                content: Text(L.of(context).delete_episode_confirmation),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      L.of(context).cancel_button_label,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      bloc.deleteDownload(episode);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      L.of(context).delete_button_label,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              content: Text(L.of(context).delete_episode_confirmation),
-                              actions: <Widget>[
-                                BasicDialogAction(
-                                  title: Text(
-                                    L.of(context).cancel_button_label,
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
+                            );
+                          } else {
+                            showPlatformDialog<void>(
+                              context: context,
+                              builder: (_) => BasicDialogAlert(
+                                title: Text(
+                                  L.of(context).delete_episode_title,
                                 ),
-                                BasicDialogAction(
-                                  title: Text(
-                                    L.of(context).delete_button_label,
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                content: Text(L.of(context).delete_episode_confirmation),
+                                actions: <Widget>[
+                                  BasicDialogAction(
+                                    title: Text(
+                                      L.of(context).cancel_button_label,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                  onPressed: () {
-                                    bloc.deleteDownload(episode);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
+                                  BasicDialogAction(
+                                    title: Text(
+                                      L.of(context).delete_button_label,
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                    onPressed: () {
+                                      bloc.deleteDownload(episode);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
                         }
                       : null,
                   child: Column(

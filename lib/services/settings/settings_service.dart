@@ -36,4 +36,8 @@ abstract class SettingsService {
   set showFunding(bool show);
 
   bool get showFunding;
+
+  set useMaterialDesign(bool useMaterialDesign);
+
+  bool get useMaterialDesign;
 }
