@@ -359,5 +359,11 @@
     "description": "Displayed when attempting to start streaming an episode with no data connection",
     "type": "text",
     "placeholders": {}
+  },
+  "xxx_generation_test": "An unexpected error occurred during playback. Please check your connection and try again.",
+  "@xxx_generation_test": {
+    "description": "Test generation1",
+    "type": "text",
+    "placeholders": {}
   }
 }

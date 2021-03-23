@@ -54,7 +54,6 @@ dependency_overrides:
 dev_dependencies:
   mockito: ^4.1.4
   pedantic: ^1.9.2
-#  intl_translation:
   flutter_test:
     sdk: flutter
 
@@ -64,8 +63,8 @@ flutter_icons:
   ios: true
 
 flutter:
-
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/images/anytime-logo.png

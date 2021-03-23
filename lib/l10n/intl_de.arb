@@ -359,5 +359,6 @@
     "description": "Displayed when attempting to start streaming an episode with no data connection",
     "type": "text",
     "placeholders": {}
-  }
+  },
+  "xxx_generation_test": "German test 1"
 }
