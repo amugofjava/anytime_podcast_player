@@ -8,9 +8,9 @@ environment:
 
 dependencies:
   auto_size_text: ^2.1.0
-  audio_service: ^0.16.2+1
-  audio_session: ^0.0.11
-  connectivity: ^0.4.8+6
+  audio_service: ^0.17.0-nullsafety.0
+  audio_session: ^0.1.0
+  connectivity: ^3.0.3
   cupertino_icons: ^1.0.0
   flutter_dialogs: ^1.0.3
   flutter_downloader: ^1.5.2
@@ -19,17 +19,16 @@ dependencies:
   flutter_spinkit: ^4.1.2+1
   get_version: ^0.2.2
   html: ^0.14.0+4
-  just_audio: ^0.6.14+1
+  just_audio: ^0.7.2
   liquid_pull_to_refresh: ^2.0.0
   logging: ^0.11.4
   mp3_info: ^0.1.4
-#  optimized_cached_image: ^1.0.0
-#  optimized_cached_image: ^2.0.0-dev.1
+#  optimized_cached_image: ^2.0.0
   optimized_cached_image:
     path: /home/ben/Development/scratch/optimized_cached_image
   path_provider: ^2.0.1
   percent_indicator: ^2.1.9+1
-  permission_handler: ^5.1.0+2
+  permission_handler: ^6.1.1
   # Use direct from GitHub until dependent also updates
   podcast_search:
     path: /home/ben/Development/projects/podcast_search
@@ -37,26 +36,25 @@ dependencies:
 #      url: https://github.com/amugofjava/podcast_search
 #      ref: 6c4526f
   provider: ^4.3.3
-  rxdart: ^0.24.1
+  rxdart: ^0.26.0
   scrollable_positioned_list: ^0.1.9
-  sembast: ^2.4.10
+  sembast: ^3.0.0+4
   shared_preferences: ^2.0.4
-  url_launcher: ^5.7.10
+  url_launcher: ^6.0.2
 
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
-#  intl_translation:
 
 dependency_overrides:
   uuid: ^3.0.0
-  path_provider: ^2.0.1
 
 dev_dependencies:
   mockito: ^4.1.4
   pedantic: ^1.9.2
+#  intl_translation:
   flutter_test:
     sdk: flutter
 

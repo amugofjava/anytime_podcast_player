@@ -108,14 +108,15 @@ class MobileAudioPlayer {
     }
 
     log.fine(
-        'Setting play URI to $_uri, isLocal $_local and position ${_startPosition} id $_episodeId speed $_playbackSpeed}');
+        'Setting play URI to $_uri, isLocal $_local and position $_startPosition id $_episodeId speed $_playbackSpeed}');
 
     _loadTrack = true;
+
     _mediaItem = MediaItem(
       id: episodeIdStr,
       title: args[1] as String,
       album: args[0] as String,
-      artUri: args[2] as String,
+      artUri: Uri.parse(args[2] as String),
       duration: duration,
     );
 
