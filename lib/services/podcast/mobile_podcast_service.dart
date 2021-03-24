@@ -291,7 +291,7 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<void> unsubscribe(Podcast podcast) async {
     if (await hasStoragePermission()) {
-      final filename = join(await getStorageDirectory(), safePath(podcast.title));
+      final filename = join(await getStorageDirectory(), safeFile(podcast.title));
 
       final d = Directory.fromUri(Uri.file(filename));
 

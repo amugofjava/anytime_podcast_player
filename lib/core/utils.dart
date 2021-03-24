@@ -74,5 +74,9 @@ Future<Directory> _getSDCard() async {
 
 /// Strips characters that are invalid for file and directory names.
 String safePath(String s) {
-  return s == null ? null : s.replaceAll(RegExp(r'[^\w\s\.]+'), '');
+  return s == null ? null : s.replaceAll(RegExp(r'[^\w\s]+'), '').trim();
+}
+
+String safeFile(String s) {
+  return s == null ? null : s.replaceAll(RegExp(r'[^\w\s\.]+'), '').trim();
 }
