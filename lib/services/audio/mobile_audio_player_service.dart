@@ -51,6 +51,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
+  final BehaviorSubject<Episode> _chapterEvent = BehaviorSubject<Episode>();
+
   /// Stream for the last audio error as an integer code.
   final PublishSubject<int> _playbackError = PublishSubject<int>();
 
@@ -169,6 +171,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
           _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
           _episode.chaptersLoading = false;
 
+          _episode = await repository.saveEpisode(_episode);
           await _onUpdatePosition();
         }
       } catch (e) {
@@ -350,6 +353,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var position = playbackState?.currentPosition;
       var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
       var buffering = await AudioService.playbackState.processingState == AudioProcessingState.buffering;
+
       _updateChapter(position.inSeconds, duration.inSeconds);
 
       _playPosition.add(PositionState(position, duration, complete.toInt(), _episode, buffering));
@@ -445,7 +449,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       if (currentPosition != _episode.position) {
         _episode.position = currentPosition;
 
-        await repository.saveEpisode(_episode);
+        _episode = await repository.saveEpisode(_episode);
       }
     } else {
       log.fine(' - Cannot save position as episode is null');
@@ -475,7 +479,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   void _updateChapter(int seconds, int duration) {
-    if (_episode.hasChapters && _episode.chaptersAreLoaded) {
+    if (_episode == null) {
+      log.fine('Warning. Attempting to update chapter information on a null _episode');
+    } else if (_episode.hasChapters && _episode.chaptersAreLoaded) {
       final chapters = _episode.chapters;
 
       // What is our current chapter?
@@ -486,6 +492,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         if (seconds >= startTime && seconds < endTime) {
           if (chapters[x] != _episode.currentChapter) {
             _episode.currentChapter = chapters[x];
+            _chapterEvent.sink.add(_episode);
             break;
           }
         }
@@ -504,6 +511,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<PositionState> get playPosition => _playPosition.stream;
+
+  @override
+  Stream<Episode> get chapterEvent => _chapterEvent.stream;
 
   @override
   Stream<int> get playbackError => _playbackError.stream;

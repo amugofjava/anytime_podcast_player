@@ -647,6 +647,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get add_rss_feed_option {
+    return message('add_rss_feed_option') ??
+        Intl.message(
+          'Add RSS Feed',
+          name: 'add_rss_feed_option',
+          desc: 'Option label for adding manual RSS feed url',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

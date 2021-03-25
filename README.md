@@ -2,14 +2,18 @@
 
 This is the official repository for the Anytime Podcast Player - the simple Podcast playing app built with Dart & Flutter.
 ***
-![screenshot1.png](docs/screenshot1.png)
-![screenshot2.png](docs/screenshot2.png)
-![screenshot3.png](docs/screenshot3.png)
+
+![screenshot1.png](docs/screenshot1b.png)&nbsp;
+![screenshot2.png](docs/screenshot2b.png)&nbsp;
+![screenshot3.png](docs/screenshot3b.png)&nbsp;
+![screenshot3.png](docs/screenshot4b.png)&nbsp;
 
 ## Getting Started
 
 Anytime is currently in *Beta* - so please expect bugs! Only Android is supported at the moment,
-but an iOS version is in the works.
+but an iOS version is in the works. *Please also note that Anytime currently does not support
+Flutter 2 so you will need to build against Flutter 1.22.6. Once all dependencies have updated
+Anytime will be migrated to Flutter 2.*
 
 #### Testers
 

@@ -105,7 +105,7 @@ class AudioBloc extends Bloc {
   /// Listen for requests to change the position of the current episode.
   void _handlePositionTransitions() async {
     _transitionPosition.listen((pos) async {
-      await audioPlayerService.seek(position: pos.toInt());
+      await audioPlayerService.seek(position: pos.ceil());
     });
   }
 
@@ -151,6 +151,9 @@ class AudioBloc extends Bloc {
 
   /// Get the current playing track
   Stream<Episode> get nowPlaying => _nowPlaying.stream;
+
+  /// Get the current playing chapter
+  Stream<Episode> get chapterEvent => audioPlayerService.chapterEvent;
 
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;

@@ -43,7 +43,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     Chapter lastChapter;
     var firstRender = true;
 
-    // List for changes in position. If the change in position results in
+    // Listen for changes in position. If the change in position results in
     // a change in chapter we scroll to it. This ensures that the current
     // chapter is always visible.
     // TODO: Calculate which items are currently visible. Only jump/scroll
@@ -52,6 +52,10 @@ class _ChapterSelectorState extends State<ChapterSelector> {
       var episode = event.episode;
 
       if (lastChapter == null || lastChapter != episode.currentChapter) {
+        setState(() {
+          widget.episode = episode;
+        });
+
         lastChapter = episode.currentChapter;
 
         if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {

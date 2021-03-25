@@ -93,7 +93,7 @@ class PodcastBloc extends Bloc {
   /// containing the Podcast.
   void _listenPodcastLoad() async {
     _podcastFeed.listen((feed) async {
-      _podcastStream.sink.add(BlocLoadingState<Podcast>());
+      _podcastStream.sink.add(BlocLoadingState<Podcast>(feed.podcast));
 
       _episodes = [];
       _episodesStream.add(_episodes);
@@ -131,8 +131,7 @@ class PodcastBloc extends Bloc {
       _episodesStream.add(_episodes);
 
       // If this episode contains chapter, fetch them first.
-      if (episode.hasChapters && episode.chaptersAreNotLoaded) {
-        log.fine('This episode has some chapters! Let us load them: ${episode.chaptersUrl}');
+      if (episode.hasChapters && (episode.chaptersAreNotLoaded || episode.chapters.isEmpty)) {
         var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl);
 
         e.chapters = chapters;

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
@@ -121,11 +122,11 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   @override
   Widget build(BuildContext context) {
     final defaultBrightness = Theme.of(context).brightness;
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
+    final _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final placeholderBuilder = PlaceholderBuilder.of(context);
 
     brightness = toolbarCollpased ? defaultBrightness : Brightness.dark;
 
-    final placeholderBuilder = PlaceholderBuilder.of(context);
     return WillPopScope(
       onWillPop: () {
         _setChrome(darkMode: widget._darkMode);
@@ -174,26 +175,26 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     background: Hero(
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
-                    child: OptimizedCacheImage(
-                      width: 560,
-                      height: 560,
-                      imageUrl: widget.podcast.imageUrl,
-                      fit: BoxFit.fitWidth,
-                      filterQuality: FilterQuality.medium,
-                      placeholder: (context, url) {
-                        return placeholderBuilder != null
-                            ? placeholderBuilder?.builder()(context)
-                            : DelayedCircularProgressIndicator();
-                      },
-                      errorWidget: (_, __, dynamic ___) {
-                        return placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
-                            : Placeholder(
-                                color: Theme.of(context).errorColor,
-                                strokeWidth: 1,
-                              );
-                      },
-                    ),
+                    child: StreamBuilder<BlocState<Podcast>>(
+                        initialData: BlocEmptyState<Podcast>(),
+                        stream: _podcastBloc.details,
+                        builder: (context, snapshot) {
+                          final state = snapshot.data;
+                          var podcast = widget.podcast;
+
+                          if (state is BlocLoadingState<Podcast>) {
+                            podcast = state.data;
+                          }
+
+                          if (state is BlocPopulatedState<Podcast>) {
+                            podcast = state.results;
+                          }
+
+                          return PodcastHeaderImage(
+                            podcast: podcast,
+                            placeholderBuilder: placeholderBuilder,
+                          );
+                        }),
                   ),
                 )),
               ),
@@ -284,6 +285,45 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   }
 }
 
+class PodcastHeaderImage extends StatelessWidget {
+  const PodcastHeaderImage({
+    Key key,
+    @required this.podcast,
+    @required this.placeholderBuilder,
+  }) : super(key: key);
+
+  final Podcast podcast;
+  final PlaceholderBuilder placeholderBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    if (podcast == null || podcast.imageUrl == null || podcast.imageUrl.isEmpty) {
+      return Container(
+        height: 560,
+      );
+    }
+
+    return OptimizedCacheImage(
+      width: 560,
+      height: 560,
+      imageUrl: podcast.imageUrl,
+      fit: BoxFit.fitWidth,
+      filterQuality: FilterQuality.medium,
+      placeholder: (context, url) {
+        return placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator();
+      },
+      errorWidget: (_, __, dynamic ___) {
+        return placeholderBuilder != null
+            ? placeholderBuilder?.errorBuilder()(context)
+            : Placeholder(
+                color: Theme.of(context).errorColor,
+                strokeWidth: 1,
+              );
+      },
+    );
+  }
+}
+
 class PodcastTitle extends StatelessWidget {
   final Podcast podcast;
 
@@ -292,6 +332,7 @@ class PodcastTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final settings = Provider.of<SettingsBloc>(context).currentSettings;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
@@ -319,7 +360,7 @@ class PodcastTitle extends StatelessWidget {
               children: <Widget>[
                 SubscriptionButton(podcast),
                 PodcastContextMenu(podcast),
-                FundingMenu(podcast.funding),
+                settings.showFunding ? FundingMenu(podcast.funding) : Container(),
               ],
             ),
           )

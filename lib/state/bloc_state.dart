@@ -11,7 +11,11 @@ abstract class BlocState<T> {}
 
 class BlocDefaultState<T> extends BlocState<T> {}
 
-class BlocLoadingState<T> extends BlocState<T> {}
+class BlocLoadingState<T> extends BlocState<T> {
+  final T data;
+
+  BlocLoadingState([this.data]);
+}
 
 class BlocSuccessfulState<T> extends BlocState<T> {}
 

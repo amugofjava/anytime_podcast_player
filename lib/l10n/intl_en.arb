@@ -360,9 +360,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "xxx_generation_test": "An unexpected error occurred during playback. Please check your connection and try again.",
-  "@xxx_generation_test": {
-    "description": "Test generation1",
+  "add_rss_feed_option": "Add RSS Feed",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
     "type": "text",
     "placeholders": {}
   }
