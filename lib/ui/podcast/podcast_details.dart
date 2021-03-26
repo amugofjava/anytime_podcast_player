@@ -14,7 +14,6 @@ import 'package:anytime/ui/podcast/funding_menu.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
-import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
@@ -310,7 +309,8 @@ class PodcastHeaderImage extends StatelessWidget {
       fit: BoxFit.fitWidth,
       filterQuality: FilterQuality.medium,
       placeholder: (context, url) {
-        return placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator();
+        return Container();
+        //return placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator();
       },
       errorWidget: (_, __, dynamic ___) {
         return placeholderBuilder != null
@@ -389,13 +389,15 @@ class SubscriptionButton extends StatelessWidget {
               var p = state.results;
 
               return p.subscribed
-                  ? OutlineButton.icon(
+                  ? OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                      ),
                       icon: Icon(
                         Icons.delete_outline,
                         color: Theme.of(context).buttonColor,
                       ),
                       label: Text(L.of(context).unsubscribe_label),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
                         showPlatformDialog<void>(
                           context: context,
@@ -425,13 +427,15 @@ class SubscriptionButton extends StatelessWidget {
                         );
                       },
                     )
-                  : OutlineButton.icon(
+                  : OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                      ),
                       icon: Icon(
                         Icons.add,
                         color: Theme.of(context).buttonColor,
                       ),
                       label: Text(L.of(context).subscribe_label),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       onPressed: () {
                         bloc.podcastEvent(PodcastEvent.subscribe);
                       },

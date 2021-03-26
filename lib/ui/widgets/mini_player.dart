@@ -73,7 +73,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     return Dismissible(
       key: Key('miniplayerdismissable'),
       confirmDismiss: (direction) async {
-        await audioBloc.transitionState(TransitionState.stop);
+        audioBloc.transitionState(TransitionState.stop);
         return true;
       },
       direction: DismissDirection.startToEnd,
@@ -163,8 +163,12 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                               builder: (context, snapshot) {
                                 var playing = snapshot.data == AudioState.playing;
 
-                                return FlatButton(
-                                  padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                return TextButton(
+                                  style: TextButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                    shape: CircleBorder(
+                                        side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
+                                  ),
                                   onPressed: () {
                                     if (playing) {
                                       _pause(audioBloc);
@@ -172,8 +176,6 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       _play(audioBloc);
                                     }
                                   },
-                                  shape: CircleBorder(
-                                      side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
                                   child: AnimatedIcon(
                                     size: 48.0,
                                     icon: AnimatedIcons.play_pause,

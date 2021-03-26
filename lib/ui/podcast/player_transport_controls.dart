@@ -163,13 +163,16 @@ class _PlayButton extends StatelessWidget {
     final playing = audioState == AudioState.playing;
     final bufferring = audioState == null || audioState == AudioState.buffering;
 
-    // in case we are bufferring show progress indicator.
+    // in case we are buffering show progress indicator.
     if (bufferring) {
       return Tooltip(
           message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
-          child: FlatButton(
+          child: TextButton(
+            style: TextButton.styleFrom(
+              shape: CircleBorder(side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
+              padding: const EdgeInsets.all(8.0),
+            ),
             onPressed: null,
-            padding: const EdgeInsets.all(8.0),
             child: SpinKitRing(
               lineWidth: 2.0,
               color: Theme.of(context).primaryColor,
@@ -180,7 +183,13 @@ class _PlayButton extends StatelessWidget {
 
     return Tooltip(
       message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
-      child: FlatButton(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
+          backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
+          primary: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
+          padding: const EdgeInsets.all(8.0),
+        ),
         onPressed: () {
           if (playing) {
             onPause();
@@ -188,9 +197,6 @@ class _PlayButton extends StatelessWidget {
             onPlay();
           }
         },
-        shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
-        color: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-        padding: const EdgeInsets.all(8.0),
         child: AnimatedIcon(
           size: 60.0,
           icon: AnimatedIcons.play_pause,

@@ -160,7 +160,7 @@ class MobileAudioPlayer {
         await _setBufferingState();
       }
 
-      var userAgent = await Environment.userAgent();
+      var userAgent = Environment.userAgent();
 
       log.fine('loading new track $_uri - from position $_startPosition}');
 

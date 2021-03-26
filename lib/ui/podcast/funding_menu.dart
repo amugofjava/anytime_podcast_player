@@ -126,10 +126,10 @@ class _CupertinoFundingMenu extends StatelessWidget {
                 ],
                 cancelButton: CupertinoActionSheetAction(
                   isDefaultAction: true,
-                  child: Text(L.of(context).cancel_option_label),
                   onPressed: () {
                     Navigator.pop(context, 'Cancel');
                   },
+                  child: Text(L.of(context).cancel_option_label),
                 ),
               );
             });

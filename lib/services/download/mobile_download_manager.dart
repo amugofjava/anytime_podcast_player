@@ -29,7 +29,7 @@ class MobileDownloaderManager implements DownloadManager {
     log.fine('Initialising download manager');
 
     await FlutterDownloader.initialize();
-    await IsolateNameServer.removePortNameMapping('downloader_send_port');
+    IsolateNameServer.removePortNameMapping('downloader_send_port');
 
     IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
 

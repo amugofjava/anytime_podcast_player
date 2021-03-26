@@ -37,6 +37,46 @@ class EpisodeTile extends StatelessWidget {
 
     return ExpansionTile(
       key: Key('PT${episode.guid}'),
+      trailing: Opacity(
+        opacity: episode.played ? 0.5 : 1.0,
+        child: EpisodeTransportControls(
+          episode: episode,
+          download: download,
+          play: play,
+        ),
+      ),
+      leading: Stack(
+        alignment: Alignment.bottomLeft,
+        fit: StackFit.passthrough,
+        children: <Widget>[
+          Opacity(
+            opacity: episode.played ? 0.5 : 1.0,
+            child: TileImage(
+              url: episode.thumbImageUrl ?? episode.imageUrl,
+              size: 56.0,
+            ),
+          ),
+          Container(
+            height: 4.0,
+            width: 56.0 * (episode.percentagePlayed / 100),
+            color: Theme.of(context).primaryColor,
+          ),
+        ],
+      ),
+      subtitle: Opacity(
+        opacity: episode.played ? 0.5 : 1.0,
+        child: EpisodeSubtitle(episode),
+      ),
+      title: Opacity(
+        opacity: episode.played ? 0.5 : 1.0,
+        child: Text(
+          episode.title,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          softWrap: false,
+          style: textTheme.bodyText2,
+        ),
+      ),
       children: <Widget>[
         Align(
           alignment: Alignment.centerLeft,
@@ -50,7 +90,10 @@ class EpisodeTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 5,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
             ),
           ),
         ),
@@ -61,9 +104,11 @@ class EpisodeTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: FlatButton(
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                  ),
                   onPressed: episode.downloaded
                       ? () {
                           showPlatformDialog<void>(
@@ -121,9 +166,11 @@ class EpisodeTile extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: FlatButton(
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  ),
                   onPressed: () {
                     return Navigator.push(
                       context,
@@ -158,9 +205,11 @@ class EpisodeTile extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: FlatButton(
-                  padding: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  ),
                   onPressed: () {
                     bloc.togglePlayed(episode);
                   },
@@ -192,46 +241,6 @@ class EpisodeTile extends StatelessWidget {
           ),
         ),
       ],
-      trailing: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: EpisodeTransportControls(
-          episode: episode,
-          download: download,
-          play: play,
-        ),
-      ),
-      leading: Stack(
-        alignment: Alignment.bottomLeft,
-        fit: StackFit.passthrough,
-        children: <Widget>[
-          Opacity(
-            opacity: episode.played ? 0.5 : 1.0,
-            child: TileImage(
-              url: episode.thumbImageUrl ?? episode.imageUrl,
-              size: 56.0,
-            ),
-          ),
-          Container(
-            height: 4.0,
-            width: 56.0 * (episode.percentagePlayed / 100),
-            color: Theme.of(context).primaryColor,
-          ),
-        ],
-      ),
-      subtitle: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: EpisodeSubtitle(episode),
-      ),
-      title: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: Text(
-          episode.title,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          softWrap: false,
-          style: textTheme.bodyText2,
-        ),
-      ),
     );
   }
 }

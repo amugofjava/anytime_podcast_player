@@ -113,27 +113,27 @@ class _CupertinoContextMenu extends StatelessWidget {
                   actions: <Widget>[
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
-                      child: Text(L.of(context).mark_episodes_played_label),
                       onPressed: () {
                         bloc.podcastEvent(PodcastEvent.markAllPlayed);
                         Navigator.pop(context, 'Cancel');
                       },
+                      child: Text(L.of(context).mark_episodes_played_label),
                     ),
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
-                      child: Text(L.of(context).mark_episodes_not_played_label),
                       onPressed: () {
                         bloc.podcastEvent(PodcastEvent.clearAllPlayed);
                         Navigator.pop(context, 'Cancel');
                       },
+                      child: Text(L.of(context).mark_episodes_not_played_label),
                     ),
                   ],
                   cancelButton: CupertinoActionSheetAction(
                     isDefaultAction: true,
-                    child: Text(L.of(context).cancel_option_label),
                     onPressed: () {
                       Navigator.pop(context, 'Cancel');
                     },
+                    child: Text(L.of(context).cancel_option_label),
                   ),
                 );
               },

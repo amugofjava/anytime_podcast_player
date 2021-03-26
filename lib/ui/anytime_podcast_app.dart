@@ -376,13 +376,14 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             children: <Widget>[
               Text('\u00a9 2020-2021 Ben Hills'),
               GestureDetector(
-                  child: Text(
-                    'anytime@amugofjava.me.uk',
-                    style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor),
-                  ),
-                  onTap: () {
-                    _launchEmail();
-                  }),
+                onTap: () {
+                  _launchEmail();
+                },
+                child: Text(
+                  'anytime@amugofjava.me.uk',
+                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor),
+                ),
+              ),
             ]);
         break;
       case 'settings':

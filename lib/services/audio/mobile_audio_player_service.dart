@@ -76,10 +76,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var startPosition = 0;
       var uri = episode.contentUrl;
 
-      await _playingState.add(AudioState.playing);
-
+      _playingState.add(AudioState.playing);
       _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
-      _playbackSpeed = await settingsService.playbackSpeed;
+      _playbackSpeed = settingsService.playbackSpeed;
 
       log.info('Playing episode ${episode.title} - ${episode.id}');
 
@@ -112,14 +111,15 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
       // If we are streaming try and let the user know as soon as possible.
       if (streaming) {
-        await _playingState.add(AudioState.buffering);
+        _playingState.add(AudioState.buffering);
 
         // Check we have connectivity
         var connectivityResult = await Connectivity().checkConnectivity();
 
         if (connectivityResult == ConnectivityResult.none) {
-          await _playbackError.add(401);
-          await _playingState.add(AudioState.none);
+          _playbackError.add(401);
+          _playingState.add(AudioState.none);
+
           await AudioService.stop();
           return;
         }
@@ -153,7 +153,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         _episode.duration?.toString() ?? '0',
       ];
 
-      if (!await AudioService.running) {
+      if (!AudioService.running) {
         await _start();
       }
 
@@ -178,8 +178,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
         log.fine('Error during playback');
         log.fine(e.toString());
 
-        await _playingState.add(AudioState.error);
-        await _playingState.add(AudioState.stopped);
+        _playingState.add(AudioState.error);
+        _playingState.add(AudioState.stopped);
         await AudioService.stop();
       }
     }
@@ -245,7 +245,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       }
     } else {
       log.fine('_episode is not null. Fetch state from service');
-      var playbackState = await AudioService.playbackState;
+      var playbackState = AudioService.playbackState;
 
       final basicState = playbackState?.processingState ?? AudioProcessingState.none;
 
@@ -253,10 +253,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
       if (basicState == AudioProcessingState.none) {
         log.fine(' - Fetched none state from service. Call load state');
         await _updateEpisodeFromSavedState();
-        await _playingState.add(AudioState.stopped);
+        _playingState.add(AudioState.stopped);
       } else {
         log.fine(' - Fetched $basicState. Start ticker');
-        await _startTicker();
+        _startTicker();
       }
     }
 
@@ -296,13 +296,13 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<void> suspend() async {
-    await _stopTicker();
+    _stopTicker();
 
     await AudioService.disconnect();
   }
 
   Future<void> _onStop() async {
-    await _stopTicker();
+    _stopTicker();
     await _savePosition();
 
     _episode = null;
@@ -311,7 +311,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onComplete() async {
-    await _stopTicker();
+    _stopTicker();
 
     _episode.position = 0;
     _episode.played = true;
@@ -326,14 +326,14 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<void> _onPause() async {
     _playingState.add(AudioState.pausing);
 
-    await _stopTicker();
+    _stopTicker();
     await _savePosition();
   }
 
   Future<void> _onPlay() async {
     _playingState.add(AudioState.playing);
 
-    await _startTicker();
+    _startTicker();
   }
 
   Future<void> _onBuffering() async {
@@ -345,14 +345,14 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onUpdatePosition() async {
-    var playbackState = await AudioService.playbackState;
+    var playbackState = AudioService.playbackState;
 
     if (playbackState != null) {
       var currentMediaItem = AudioService.currentMediaItem;
       var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
       var position = playbackState?.currentPosition;
       var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
-      var buffering = await AudioService.playbackState.processingState == AudioProcessingState.buffering;
+      var buffering = AudioService.playbackState.processingState == AudioProcessingState.buffering;
 
       _updateChapter(position.inSeconds, duration.inSeconds);
 
@@ -436,7 +436,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// podcast to continue playing where it left off if played at a later
   /// time.
   Future<void> _savePosition() async {
-    var playbackState = await AudioService.playbackState;
+    var playbackState = AudioService.playbackState;
 
     if (_episode != null) {
       // The episode may have been updated elsewhere - re-fetch it.

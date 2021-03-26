@@ -250,14 +250,14 @@ void main() {
 
       var results = await persistenceService.subscriptions();
 
-      await expect(listEquals(results, [podcast1]), true);
+      expect(listEquals(results, [podcast1]), true);
 
       await persistenceService.savePodcast(podcast2);
       await persistenceService.savePodcast(podcast3);
 
       results = await persistenceService.subscriptions();
 
-      await expect(
+      expect(
           listEquals(results, [
             podcast1,
             podcast2,
@@ -269,7 +269,7 @@ void main() {
 
       results = await persistenceService.subscriptions();
 
-      await expect(
+      expect(
           listEquals(results, [
             podcast1,
             podcast3,

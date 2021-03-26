@@ -25,7 +25,9 @@ class DelayedCircularProgressIndicator extends StatelessWidget {
         future: Future.delayed(Duration(milliseconds: delayInMilliseconds)),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return PlatformProgressIndicator();
+            return Center(
+              child: PlatformProgressIndicator(),
+            );
           } else {
             return Container();
           }

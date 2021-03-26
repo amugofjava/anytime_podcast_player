@@ -23,33 +23,25 @@ dependencies:
   liquid_pull_to_refresh: ^2.0.0
   logging: ^0.11.4
   mp3_info: ^0.1.4
-#  optimized_cached_image: ^2.0.0
   optimized_cached_image:
-    path: /home/ben/Development/scratch/optimized_cached_image
+    git: https://github.com/amugofjava/optimized_cached_image
   path_provider: ^2.0.1
   percent_indicator: ^2.1.9+1
   permission_handler: ^6.1.1
   # Use direct from GitHub until dependent also updates
   podcast_search:
-    path: /home/ben/Development/projects/podcast_search
-#    git:
-#      url: https://github.com/amugofjava/podcast_search
-#      ref: 6c4526f
+    git: https://github.com/amugofjava/podcast_search
   provider: ^4.3.3
   rxdart: ^0.26.0
   scrollable_positioned_list: ^0.1.9
   sembast: ^3.0.0+4
   shared_preferences: ^2.0.4
-  url_launcher: ^6.0.2
+  url_launcher: ^6.0.3
 
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.17.0
-
-dependency_overrides:
-  uuid: ^3.0.0
 
 dev_dependencies:
   mockito: ^4.1.4
@@ -64,7 +56,6 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
-  generate: true
 
   assets:
     - assets/images/anytime-logo.png

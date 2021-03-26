@@ -33,7 +33,7 @@ class DownloadButton extends StatelessWidget {
           radius: 38.0,
           lineWidth: 1.5,
           backgroundColor: Theme.of(context).buttonColor,
-          progressColor: Theme.of(context).cursorColor,
+          progressColor: Theme.of(context).indicatorColor,
           animation: true,
           animateFromLastPercent: true,
           percent: progress,
