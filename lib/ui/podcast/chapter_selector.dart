@@ -102,7 +102,8 @@ class _ChapterSelectorState extends State<ChapterSelector> {
         : ScrollablePositionedList.builder(
             itemScrollController: widget.itemScrollController,
             itemCount: chapters.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (context, i) {
+              final index = i < 0 ? 0 : i;
               final chapter = chapters[index];
               final chapterSelected = widget?.chapter == chapter;
               final textStyle = chapterSelected

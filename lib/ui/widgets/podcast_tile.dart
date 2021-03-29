@@ -43,6 +43,7 @@ class PodcastTile extends StatelessWidget {
               );
             },
             leading: Hero(
+              key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
               tag: '${podcast.imageUrl}:${podcast.link}',
               child: TileImage(
                 url: podcast.thumbImageUrl,

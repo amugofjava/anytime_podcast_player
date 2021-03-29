@@ -1,17 +1,18 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 0.4.3+32
+version: 0.4.5+42
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   auto_size_text: ^2.1.0
-  audio_service: ^0.17.0-nullsafety.0
+  audio_service: ^0.17.0
   audio_session: ^0.1.0
   connectivity: ^3.0.3
   cupertino_icons: ^1.0.0
+  extended_image: ^4.0.0
   flutter_dialogs: ^1.0.3
   flutter_downloader: ^1.5.2
   flutter_html: ^1.2.0
@@ -23,8 +24,6 @@ dependencies:
   liquid_pull_to_refresh: ^2.0.0
   logging: ^0.11.4
   mp3_info: ^0.1.4
-  optimized_cached_image:
-    git: https://github.com/amugofjava/optimized_cached_image
   path_provider: ^2.0.1
   percent_indicator: ^2.1.9+1
   permission_handler: ^6.1.1

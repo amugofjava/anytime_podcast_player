@@ -8,11 +8,10 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
-import 'package:anytime/ui/widgets/placeholder_builder.dart';
+import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 
 /// Displays a mini podcast player widget if a podcast is playing or paused. If stopped a zero height
@@ -108,7 +107,6 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
               StreamBuilder<Episode>(
                   stream: audioBloc.nowPlaying,
                   builder: (context, snapshot) {
-                    final placeholderBuilder = PlaceholderBuilder.of(context);
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -118,18 +116,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: snapshot.hasData
-                                ? OptimizedCacheImage(
-                                    imageUrl: snapshot.data.imageUrl,
-                                    placeholder: (context, url) {
-                                      return placeholderBuilder != null
-                                          ? placeholderBuilder?.builder()(context)
-                                          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-                                    },
-                                    errorWidget: (_, __, dynamic ___) {
-                                      return placeholderBuilder != null
-                                          ? placeholderBuilder?.errorBuilder()(context)
-                                          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-                                    },
+                                ? PodcastImage(
+                                    url: snapshot.data.imageUrl,
                                   )
                                 : Container(),
                           ),

@@ -16,13 +16,13 @@ import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
+import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -123,7 +123,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                 bottomNavigationBar: transportBuilder != null
                     ? transportBuilder(context)
                     : SizedBox(
-                        height: 140.0,
+                        height: 148.0,
                         child: NowPlayingTransport(),
                       ),
               ));
@@ -293,28 +293,15 @@ class NowPlayingHeader extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 7,
-                  child: OptimizedCacheImage(
-                    width: 360,
+                  child: PodcastImage(
+                    key: Key('nowplaying$imageUrl'),
+                    url: imageUrl,
                     height: 360,
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) {
-                      return placeholderBuilder != null
-                          ? placeholderBuilder?.builder()(context)
-                          : DelayedCircularProgressIndicator();
-                    },
-                    errorWidget: (_, __, dynamic ___) {
-                      return Container(
-                        constraints: BoxConstraints.expand(),
-                        child: placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
-                            : Placeholder(
-                                fallbackHeight: 360,
-                                fallbackWidth: 360,
-                                color: Colors.grey,
-                                strokeWidth: 1,
-                              ),
-                      );
-                    },
+                    width: 360,
+                    fit: BoxFit.contain,
+                    placeholder: placeholderBuilder != null
+                        ? placeholderBuilder?.builder()(context)
+                        : DelayedCircularProgressIndicator(),
                   ),
                 ),
                 Expanded(
@@ -341,7 +328,7 @@ class NowPlayingHeader extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,
                             ),
-                            maxLines: 3,
+                            maxLines: 4,
                           ),
                         ),
                       ],
@@ -381,34 +368,21 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
         stream: audioBloc.nowPlaying,
         builder: (context, statesnap) {
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   flex: 7,
-                  child: OptimizedCacheImage(
-                    width: 360,
+                  child: PodcastImage(
+                    key: Key('nowplaying$imageUrl'),
+                    url: imageUrl,
                     height: 360,
-                    imageUrl: imageUrl,
-                    placeholder: (context, url) {
-                      return placeholderBuilder != null
-                          ? placeholderBuilder?.builder()(context)
-                          : DelayedCircularProgressIndicator();
-                    },
-                    errorWidget: (_, __, dynamic ___) {
-                      return Container(
-                        constraints: BoxConstraints.expand(),
-                        child: placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
-                            : Placeholder(
-                                fallbackHeight: 360,
-                                fallbackWidth: 360,
-                                color: Colors.grey,
-                                strokeWidth: 1,
-                              ),
-                      );
-                    },
+                    width: 360,
+                    fit: BoxFit.contain,
+                    placeholder: placeholderBuilder != null
+                        ? placeholderBuilder?.builder()(context)
+                        : DelayedCircularProgressIndicator(),
                   ),
                 ),
                 Expanded(
@@ -436,11 +410,11 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,
                             ),
-                            maxLines: 3,
+                            maxLines: 4,
                           ),
                         ),
                         Expanded(
-                          flex: 1,
+                          flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
                             child: Row(
@@ -451,14 +425,14 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                                   child: AutoSizeText(
                                     chapterTitle ?? '',
                                     group: textGroup,
-                                    minFontSize: 10.0,
+                                    minFontSize: 12.0,
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.normal,
-                                      fontSize: 16.0,
+                                      fontSize: 14.0,
                                     ),
-                                    maxLines: 2,
+                                    maxLines: 3,
                                   ),
                                 ),
                                 chapterUrl.isEmpty

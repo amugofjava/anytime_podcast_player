@@ -44,6 +44,9 @@ ThemeData _buildLightTheme() {
     appBarTheme: base.appBarTheme.copyWith(
       color: Colors.white,
     ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(primary: Colors.grey[800]),
+    ),
   );
 }
 
@@ -89,6 +92,15 @@ ThemeData _buildDarktheme() {
       color: Color(0xff222222),
       shadowColor: Color(0xff222222),
       elevation: 1.0,
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        primary: Color(0xffffffff),
+        side: BorderSide(
+          color: Color(0xffffffff),
+          style: BorderStyle.solid,
+        ),
+      ),
     ),
   );
 }

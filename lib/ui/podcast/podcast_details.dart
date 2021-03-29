@@ -14,9 +14,11 @@ import 'package:anytime/ui/podcast/funding_menu.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
+import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
+import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -26,7 +28,6 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:logging/logging.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -172,6 +173,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                 snap: false,
                 flexibleSpace: FlexibleSpaceBar(
                     background: Hero(
+                  key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
                     child: StreamBuilder<BlocState<Podcast>>(
@@ -299,27 +301,18 @@ class PodcastHeaderImage extends StatelessWidget {
     if (podcast == null || podcast.imageUrl == null || podcast.imageUrl.isEmpty) {
       return Container(
         height: 560,
+        width: 560,
       );
     }
 
-    return OptimizedCacheImage(
-      width: 560,
-      height: 560,
-      imageUrl: podcast.imageUrl,
-      fit: BoxFit.fitWidth,
-      filterQuality: FilterQuality.medium,
-      placeholder: (context, url) {
-        return Container();
-        //return placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator();
-      },
-      errorWidget: (_, __, dynamic ___) {
-        return placeholderBuilder != null
-            ? placeholderBuilder?.errorBuilder()(context)
-            : Placeholder(
-                color: Theme.of(context).errorColor,
-                strokeWidth: 1,
-              );
-      },
+    return PodcastImage(
+      key: Key('details${podcast.imageUrl}'),
+      url: podcast.imageUrl,
+      placeholder:
+          placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator(),
+      errorPlaceholder: placeholderBuilder != null
+          ? placeholderBuilder?.errorBuilder()(context)
+          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
     );
   }
 }

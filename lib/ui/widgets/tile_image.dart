@@ -2,10 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/ui/widgets/placeholder_builder.dart';
+import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:flutter/material.dart';
-import 'package:optimized_cached_image/optimized_cached_image.dart';
-
-import 'placeholder_builder.dart';
 
 class TileImage extends StatelessWidget {
   const TileImage({
@@ -23,24 +22,15 @@ class TileImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placeholderBuilder = PlaceholderBuilder.of(context);
-    return SizedBox(
-        height: size,
-        width: size,
-        child: OptimizedCacheImage(
-          imageUrl: url,
-          filterQuality: FilterQuality.low,
-          width: 120,
-          height: 120,
-          placeholder: (context, url) {
-            return placeholderBuilder != null
-                ? placeholderBuilder?.builder()(context)
-                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-          },
-          errorWidget: (_, __, dynamic ___) {
-            return placeholderBuilder != null
-                ? placeholderBuilder?.errorBuilder()(context)
-                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png'));
-          },
-        ));
+
+    return PodcastImage(
+      key: Key('tile$url'),
+      url: url,
+      height: size,
+      width: size,
+      placeholder: placeholderBuilder != null
+          ? placeholderBuilder?.builder()(context)
+          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+    );
   }
 }
