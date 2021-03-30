@@ -26,7 +26,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html/style.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,9 +134,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: LiquidPullToRefresh(
+        body: RefreshIndicator(
+          displacement: 60.0,
           onRefresh: _handleRefresh,
-          showChildOpacityTransition: false,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             controller: _sliverScrollController,
