@@ -302,6 +302,9 @@ class NowPlayingHeader extends StatelessWidget {
                     placeholder: placeholderBuilder != null
                         ? placeholderBuilder?.builder()(context)
                         : DelayedCircularProgressIndicator(),
+                    errorPlaceholder: placeholderBuilder != null
+                        ? placeholderBuilder?.errorBuilder()(context)
+                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                   ),
                 ),
                 Expanded(
@@ -383,6 +386,9 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                     placeholder: placeholderBuilder != null
                         ? placeholderBuilder?.builder()(context)
                         : DelayedCircularProgressIndicator(),
+                    errorPlaceholder: placeholderBuilder != null
+                        ? placeholderBuilder?.errorBuilder()(context)
+                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                   ),
                 ),
                 Expanded(

@@ -8,6 +8,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
+import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,6 +69,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     final textTheme = Theme.of(context).accentTextTheme;
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final width = MediaQuery.of(context).size.width;
+    final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return Dismissible(
       key: Key('miniplayerdismissable'),
@@ -118,6 +120,12 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                             child: snapshot.hasData
                                 ? PodcastImage(
                                     url: snapshot.data.imageUrl,
+                                    placeholder: placeholderBuilder != null
+                                        ? placeholderBuilder?.builder()(context)
+                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                    errorPlaceholder: placeholderBuilder != null
+                                        ? placeholderBuilder?.errorBuilder()(context)
+                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                                   )
                                 : Container(),
                           ),

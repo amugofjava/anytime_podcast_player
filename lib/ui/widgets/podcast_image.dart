@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 /// application down and the same image rendered at different sizes will return
 /// the same cache hit reducing the need for fetching the image several times for
 /// differing render sizes.
+// ignore: must_be_immutable
 class PodcastImage extends StatefulWidget {
   @override
   Key key;
