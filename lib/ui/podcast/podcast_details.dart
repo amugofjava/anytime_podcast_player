@@ -139,6 +139,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
           onRefresh: _handleRefresh,
           showChildOpacityTransition: false,
           child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             controller: _sliverScrollController,
             slivers: <Widget>[
               SliverAppBar(
