@@ -218,7 +218,7 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<List<Chapter>> loadChaptersByUrl({@required String url}) async {
-    var c = await api.loadChapters(url);
+    var c = await _loadChaptersByUrl(url);
     var chapters = <Chapter>[];
 
     if (c != null) {
@@ -326,6 +326,14 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<Episode> saveEpisode(Episode episode) async {
     return repository.saveEpisode(episode);
+  }
+
+  Future<psapi.Chapters> _loadChaptersByUrl(String url) {
+    return compute<_FeedComputer, psapi.Chapters>(_loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
+  }
+
+  static Future<psapi.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) {
+    return c.api.loadChapters(c.url);
   }
 
   /// Loading and parsing a podcast feed can take several seconds. Larger feeds
