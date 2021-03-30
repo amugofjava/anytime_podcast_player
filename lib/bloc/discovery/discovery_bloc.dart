@@ -11,8 +11,10 @@ import 'package:podcast_search/podcast_search.dart' as pcast;
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC to interact with the Discovery UI page and the [PodcastService] to
-/// fetch the iTunes charts.
+/// fetch the iTunes charts. As charts will not change very frequently the
+/// results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
+  final cacheMinutes = 30;
   final log = Logger('DiscoveryBloc');
   final PodcastService podcastService;
 
@@ -33,7 +35,9 @@ class DiscoveryBloc extends Bloc {
     yield DiscoveryLoadingState();
 
     if (event is DiscoveryChartEvent) {
-      _resultsCache ??= await podcastService.charts(size: event.count);
+      if (_resultsCache == null || DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
+        _resultsCache = await podcastService.charts(size: event.count);
+      }
 
       yield DiscoveryPopulatedState<pcast.SearchResult>(_resultsCache);
     }
