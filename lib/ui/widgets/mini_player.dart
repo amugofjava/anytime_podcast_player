@@ -15,8 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-/// Displays a mini podcast player widget if a podcast is playing or paused. If stopped a zero height
-/// box is built instead.
+/// Displays a mini podcast player widget if a podcast is playing or paused.
+/// If stopped a zero height box is built instead.
 class MiniPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

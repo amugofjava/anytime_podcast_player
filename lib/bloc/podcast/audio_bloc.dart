@@ -30,9 +30,6 @@ enum LifecyleState {
 class AudioBloc extends Bloc {
   final log = Logger('AudioBloc');
 
-  /// Stream for our currently playing Episode
-  final BehaviorSubject<Episode> _nowPlaying = BehaviorSubject<Episode>();
-
   /// Listen for new episode play requests.
   final BehaviorSubject<Episode> _play = BehaviorSubject<Episode>();
 
@@ -98,7 +95,6 @@ class AudioBloc extends Bloc {
   void _handleEpisodeRequests() async {
     _play.listen((episode) {
       audioPlayerService.playEpisode(episode: episode, resume: true);
-      _nowPlaying.add(episode);
     });
   }
 
@@ -128,9 +124,8 @@ class AudioBloc extends Bloc {
 
     if (ep != null) {
       log.fine('Resuming with episode ${ep?.title} - ${ep?.position} - ${ep?.played}');
-      _nowPlaying.add(ep);
     } else {
-      log.fine('Resuming without an episode ${_nowPlaying.value}');
+      log.fine('Resuming without an episode');
     }
   }
 
@@ -149,11 +144,8 @@ class AudioBloc extends Bloc {
   /// Listen for any playback errors
   Stream<int> get playbackError => audioPlayerService.playbackError;
 
-  /// Get the current playing track
-  Stream<Episode> get nowPlaying => _nowPlaying.stream;
-
-  /// Get the current playing chapter
-  Stream<Episode> get chapterEvent => audioPlayerService.chapterEvent;
+  /// Get the current playing episode
+  Stream<Episode> get nowPlaying => audioPlayerService.episodeEvent;
 
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;
@@ -164,7 +156,6 @@ class AudioBloc extends Bloc {
   @override
   void dispose() {
     _play.close();
-    _nowPlaying.close();
     _transitionPlayingState.close();
     _transitionPosition.close();
     _playbackSpeedSubject.close();

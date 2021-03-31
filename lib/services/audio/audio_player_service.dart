@@ -70,6 +70,6 @@ abstract class AudioPlayerService {
   /// Event listeners
   Stream<AudioState> playingState;
   Stream<PositionState> playPosition;
-  Stream<Episode> chapterEvent;
+  Stream<Episode> episodeEvent;
   Stream<int> playbackError;
 }

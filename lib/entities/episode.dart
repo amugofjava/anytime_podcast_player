@@ -261,7 +261,8 @@ class Episode {
           position == other.position &&
           downloadPercentage == other.downloadPercentage &&
           played == other.played &&
-          chaptersUrl == other.chaptersUrl;
+          chaptersUrl == other.chaptersUrl &&
+          listEquals(chapters, other.chapters);
 
   @override
   int get hashCode =>
@@ -334,7 +335,9 @@ class Episode {
   }
 
   bool get hasChapters => chaptersUrl != null && chaptersUrl.isNotEmpty;
+
   bool get chaptersAreLoaded => chapters != null;
+
   bool get chaptersAreNotLoaded => chapters == null;
 
   String get positionalImageUrl {

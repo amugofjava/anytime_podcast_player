@@ -46,7 +46,7 @@ class PlayControl extends StatelessWidget {
             if (episode.downloadState != DownloadState.downloading) {
               // If this episode is the one we are playing, allow the user
               // to toggle between play and pause.
-              if (snapshot.hasData && nowPlaying.guid == episode.guid) {
+              if (snapshot.hasData && nowPlaying?.guid == episode.guid) {
                 if (audioState == AudioState.playing) {
                   return InkWell(
                     onTap: () {
@@ -165,7 +165,7 @@ class DownloadControl extends StatelessWidget {
             final audioState = snapshot.data.audioState;
             final nowPlaying = snapshot.data.episode;
 
-            if (nowPlaying.guid == episode.guid &&
+            if (nowPlaying?.guid == episode.guid &&
                 (audioState == AudioState.playing || audioState == AudioState.buffering)) {
               if (episode.downloadState != DownloadState.downloaded) {
                 return Opacity(

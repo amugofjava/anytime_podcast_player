@@ -241,9 +241,10 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
           episode: episode,
         ),
         StreamBuilder<Episode>(
-            stream: audioBloc.chapterEvent,
+            stream: audioBloc.nowPlaying,
             builder: (context, snapshot) {
               final e = snapshot.hasData ? snapshot.data : episode;
+
               return e.hasChapters
                   ? NowPlayingHeaderWithChapters(
                       imageUrl: e.positionalImageUrl,
@@ -416,7 +417,7 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,
                             ),
-                            maxLines: 4,
+                            maxLines: 3,
                           ),
                         ),
                         Expanded(

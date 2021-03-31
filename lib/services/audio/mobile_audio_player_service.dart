@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/persistable.dart';
@@ -51,7 +52,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
-  final BehaviorSubject<Episode> _chapterEvent = BehaviorSubject<Episode>();
+  final BehaviorSubject<Episode> _episodeEvent = BehaviorSubject<Episode>();
 
   /// Stream for the last audio error as an integer code.
   final PublishSubject<int> _playbackError = PublishSubject<int>();
@@ -70,6 +71,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// we will stream the episode directly.
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
+    log.info('Playing episode ${episode?.guid} - ${episode?.title} - ${episode?.id}');
+
     if (episode.guid != '') {
       var trackDetails = <String>[];
       var streaming = true;
@@ -77,40 +80,37 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var uri = episode.contentUrl;
 
       _playingState.add(AudioState.playing);
-      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
-      _playbackSpeed = settingsService.playbackSpeed;
 
-      log.info('Playing episode ${episode.title} - ${episode.id}');
-
-      // See if we have the details for this episode already in storage.
-      final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
-
-      // If we have a downloaded copy of the episode, set the URI to the file path.
-      if (savedEpisode != null) {
-        episode.position = savedEpisode.position;
-
-        if (resume) {
-          startPosition = savedEpisode?.position ?? 0;
-        }
-
-        if (episode.downloadState == DownloadState.downloaded) {
-          if (await hasStoragePermission()) {
-            final filepath = episode.filepath == null || episode.filepath.isEmpty
-                ? join(await getStorageDirectory(), safePath(episode.podcast))
-                : episode.filepath;
-            final downloadFile = join(filepath, episode.filename);
-
-            uri = downloadFile;
-
-            streaming = false;
-          } else {
-            throw Exception('Insufficient storage permissions');
-          }
-        }
+      if (resume) {
+        startPosition = episode?.position ?? 0;
       }
 
-      // If we are streaming try and let the user know as soon as possible.
+      if (episode.downloadState == DownloadState.downloaded) {
+        if (await hasStoragePermission()) {
+          final filepath = episode.filepath == null || episode.filepath.isEmpty
+              ? join(await getStorageDirectory(), safePath(episode.podcast))
+              : episode.filepath;
+          final downloadFile = join(filepath, episode.filename);
+
+          uri = downloadFile;
+
+          streaming = false;
+        } else {
+          throw Exception('Insufficient storage permissions');
+        }
+        // } else if (episode.hasChapters) {
+        //   // We are streaming. Clear any chapters as we'll (re)fetch them
+        //   episode.chapters = <Chapter>[];
+        //   episode.currentChapter = null;
+      }
+
+      // If we are streaming try and let the user know as soon as possible and
+      // clear any chapters as we'll fetch them again.
       if (streaming) {
+        // We are streaming. Clear any chapters as we'll (re)fetch them
+        episode.chapters = <Chapter>[];
+        episode.currentChapter = null;
+
         _playingState.add(AudioState.buffering);
 
         // Check we have connectivity
@@ -124,6 +124,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
           return;
         }
       }
+
+      _episodeEvent.sink.add(episode);
+      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
+      _playbackSpeed = settingsService.playbackSpeed;
 
       // If we are currently playing a track - save the position of the current
       // track before switching to the next.
@@ -162,9 +166,10 @@ class MobileAudioPlayerService extends AudioPlayerService {
       try {
         await AudioService.play();
 
-        // If we are streaming and this episode has chapters we should fetch them now.
+        // If we are streaming and this episode has chapters we should (re)fetch them now.
         if (streaming && _episode.hasChapters) {
           _episode.chaptersLoading = true;
+          _episode.chapters = <Chapter>[];
 
           await _onUpdatePosition();
 
@@ -172,6 +177,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
           _episode.chaptersLoading = false;
 
           _episode = await repository.saveEpisode(_episode);
+          _episodeEvent.sink.add(_episode);
           await _onUpdatePosition();
         }
       } catch (e) {
@@ -261,6 +267,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
     }
 
     await PersistentState.clearState();
+
+    _episodeEvent.sink.add(_episode);
 
     return Future.value(_episode);
   }
@@ -492,7 +500,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         if (seconds >= startTime && seconds < endTime) {
           if (chapters[x] != _episode.currentChapter) {
             _episode.currentChapter = chapters[x];
-            _chapterEvent.sink.add(_episode);
+            _episodeEvent.sink.add(_episode);
             break;
           }
         }
@@ -513,7 +521,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Stream<PositionState> get playPosition => _playPosition.stream;
 
   @override
-  Stream<Episode> get chapterEvent => _chapterEvent.stream;
+  Stream<Episode> get episodeEvent => _episodeEvent.stream;
 
   @override
   Stream<int> get playbackError => _playbackError.stream;
