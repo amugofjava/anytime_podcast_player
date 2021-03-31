@@ -74,7 +74,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
     log.info('Playing episode ${episode?.guid} - ${episode?.title} - ${episode?.id}');
 
     if (episode.guid != '') {
-      var trackDetails = <String>[];
       var streaming = true;
       var startPosition = 0;
       var uri = episode.contentUrl;
@@ -98,10 +97,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
         } else {
           throw Exception('Insufficient storage permissions');
         }
-        // } else if (episode.hasChapters) {
-        //   // We are streaming. Clear any chapters as we'll (re)fetch them
-        //   episode.chapters = <Chapter>[];
-        //   episode.currentChapter = null;
       }
 
       // If we are streaming try and let the user know as soon as possible and
@@ -145,23 +140,11 @@ class MobileAudioPlayerService extends AudioPlayerService {
 
       await repository.saveEpisode(_episode);
 
-      trackDetails = [
-        _episode.author ?? 'Unknown Author',
-        _episode.title ?? 'Unknown Title',
-        _episode.imageUrl,
-        uri,
-        _episode.downloaded ? '1' : '0',
-        startPosition.toString(),
-        _episode.id == null ? '0' : episode.id.toString(),
-        _playbackSpeed.toString(),
-        _episode.duration?.toString() ?? '0',
-      ];
-
       if (!AudioService.running) {
         await _start();
       }
 
-      await AudioService.customAction('track', trackDetails);
+      await AudioService.customAction('track', _loadTrackDetails(uri, startPosition));
 
       try {
         await AudioService.play();
@@ -506,6 +489,22 @@ class MobileAudioPlayerService extends AudioPlayerService {
         }
       }
     }
+  }
+
+  List<String> _loadTrackDetails(String uri, int startPosition) {
+    var track = <String>[
+      _episode.author ?? 'Unknown Author',
+      _episode.title ?? 'Unknown Title',
+      _episode.imageUrl,
+      uri,
+      _episode.downloaded ? '1' : '0',
+      startPosition.toString(),
+      _episode.id == null ? '0' : _episode.id.toString(),
+      _playbackSpeed.toString(),
+      _episode.duration?.toString() ?? '0',
+    ];
+
+    return track;
   }
 
   @override
