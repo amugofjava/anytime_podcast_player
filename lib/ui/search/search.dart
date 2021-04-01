@@ -57,7 +57,7 @@ class _SearchState extends State<Search> {
             brightness: Theme.of(context).brightness,
             leading: IconButton(
               tooltip: L.of(context).search_back_button_label,
-              icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryIconTheme.color),
+              icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor),
               onPressed: () => Navigator.pop(context),
             ),
             title: TextField(

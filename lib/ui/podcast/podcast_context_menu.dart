@@ -105,7 +105,7 @@ class _CupertinoContextMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return IconButton(
-            icon: Icon(CupertinoIcons.ellipsis),
+            icon: Icon(CupertinoIcons.ellipsis, color: Theme.of(context).buttonColor),
             onPressed: () => showCupertinoModalPopup<void>(
               context: context,
               builder: (BuildContext context) {
