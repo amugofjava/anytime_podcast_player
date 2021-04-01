@@ -212,8 +212,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     WidgetsBinding.instance.addObserver(this);
 
     audioBloc.transitionLifecycleState(LifecyleState.resume);
-
-    Environment.loadEnvironment();
   }
 
   @override

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/environment.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
@@ -46,6 +47,10 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
 
   AnimationController _controller;
   Animation<double> _animation;
+
+  /// There appears to be a bug in extended image that causes images to
+  /// be re-fetched if headers have been set. We'll leave headers for now.
+  final headers = <String, String>{'User-Agent': Environment.userAgent()};
 
   @override
   void initState() {
