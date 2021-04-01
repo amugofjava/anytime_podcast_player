@@ -31,4 +31,6 @@ class Environment {
 
     return _agentString;
   }
+
+  static String get projectVersion => _projectVersion;
 }

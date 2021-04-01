@@ -73,7 +73,6 @@ class MobilePodcastService extends PodcastService {
       var copyright = '';
       var imageUrl = podcast.imageUrl;
       var thumbImageUrl = podcast.thumbImageUrl;
-      var previousImageUrl = '';
 
       if (!refresh) {
         loadedPodcast = _cache.item(podcast.url);
@@ -103,16 +102,8 @@ class MobilePodcastService extends PodcastService {
         copyright = loadedPodcast.copyright.replaceAll('\n', '').trim();
       }
 
-      // If imageUrl is null we have not loaded the podcast as a result of a search
-      // so we need to set it now to the loaded image. This may seem odd logic
-      // but as the podcast url may be different to the image url in the search results
-      // even though it may be the 'same' image, this stops the image from flashing
-      // when rendering which can look a little odd.
-      if (imageUrl == null || imageUrl.isEmpty) {
-        imageUrl = loadedPodcast.image;
-        previousImageUrl = loadedPodcast.image;
-        thumbImageUrl = loadedPodcast.image;
-      } else if (previousImageUrl != null && previousImageUrl.isNotEmpty && previousImageUrl != loadedPodcast.image) {
+      // If imageUrl is null we have not loaded the podcast as a result of a search.
+      if (imageUrl == null || imageUrl.isEmpty || refresh) {
         imageUrl = loadedPodcast.image;
         thumbImageUrl = loadedPodcast.image;
       }
@@ -128,7 +119,6 @@ class MobilePodcastService extends PodcastService {
         link: loadedPodcast.link,
         title: title,
         description: description,
-        previousImageUrl: previousImageUrl,
         imageUrl: imageUrl,
         thumbImageUrl: thumbImageUrl,
         copyright: copyright,
@@ -183,6 +173,19 @@ class MobilePodcastService extends PodcastService {
               chapters: <Chapter>[],
             ));
           } else {
+            existingEpisode.title = episode.title;
+            existingEpisode.description = episode.description;
+            existingEpisode.author = episode.author;
+            existingEpisode.season = episode.season ?? 0;
+            existingEpisode.episode = episode.episode ?? 0;
+            existingEpisode.contentUrl = episode.contentUrl;
+            existingEpisode.link = episode.link;
+            existingEpisode.imageUrl = pc.imageUrl;
+            existingEpisode.thumbImageUrl = pc.thumbImageUrl;
+            existingEpisode.duration = episode.duration?.inSeconds ?? 0;
+            existingEpisode.publicationDate = episode.publicationDate;
+            existingEpisode.chaptersUrl = episode.chapters?.url;
+
             pc.episodes.add(existingEpisode);
           }
         }
