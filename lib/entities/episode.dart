@@ -327,7 +327,9 @@ class Episode {
       if (description == null || description.isEmpty) {
         _descriptionText = '';
       } else {
-        _descriptionText = parseFragment(description).text;
+        // Replace break tags with space character for readability
+        var formattedDescription = description.replaceAll(RegExp(r'(\<br\/?>)+'), ' ');
+        _descriptionText = parseFragment(formattedDescription).text;
       }
     }
 
