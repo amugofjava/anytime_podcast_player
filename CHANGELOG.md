@@ -1,3 +1,13 @@
+## 0.5.0
+
+- Upgrade dependencies for Flutter 2.
+- Re-work the image routines to improve caching, reduce the number of cached images and improve performance.
+- Add option to manually add RSS feed.
+- Refreshing a podcast will now update existing podcast and episode details as appropriate.
+- Change pull-to-refresh; now simpler, faster and the 'standard implementation'. Fixed issue with pull to refresh where it wasn't possible to 'pull' if the window did not need to scroll.
+- Combined episode and chapter events into single event and improved chapter widget.
+- Charts are now cached only for 30 mins rather than indefinitely.
+
 ## 0.4.2
 
 - State bug fixes
