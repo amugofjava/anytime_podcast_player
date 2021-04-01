@@ -78,7 +78,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     return StreamBuilder<Episode>(
         stream: audioBloc.nowPlaying,
         builder: (context, snapshot) {
-          return !snapshot.hasData || (snapshot.data.chaptersLoading || snapshot.data.chaptersAreNotLoaded)
+          return !snapshot.hasData || snapshot.data.chaptersLoading
               ? Align(
                   alignment: Alignment.center,
                   child: PlatformProgressIndicator(),

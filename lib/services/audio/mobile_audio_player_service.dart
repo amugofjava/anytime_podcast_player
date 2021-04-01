@@ -153,6 +153,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
         if (streaming && _episode.hasChapters) {
           _episode.chaptersLoading = true;
           _episode.chapters = <Chapter>[];
+          _episodeEvent.sink.add(_episode);
 
           await _onUpdatePosition();
 

@@ -42,7 +42,6 @@ class PodcastImage extends StatefulWidget {
 }
 
 class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMixin {
-  static const cacheHeight = 480;
   static const cacheWidth = 480;
 
   AnimationController _controller;
@@ -70,7 +69,6 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
       key: widget.key,
       width: widget.height,
       height: widget.width,
-      cacheHeight: cacheHeight,
       cacheWidth: cacheWidth,
       fit: widget.fit,
       cache: true,

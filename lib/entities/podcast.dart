@@ -114,7 +114,7 @@ class Podcast {
     var sd = DateTime.now();
 
     if (sds != null && sds.isNotEmpty && int.tryParse(sds) != null) {
-      sd = DateTime.fromMicrosecondsSinceEpoch(int.parse(sds));
+      sd = DateTime.fromMillisecondsSinceEpoch(int.parse(sds));
     }
 
     if (podcast['funding'] != null) {

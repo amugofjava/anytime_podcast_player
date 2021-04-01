@@ -54,12 +54,12 @@ class EpisodeBloc extends Bloc {
 
   void _handleDeleteDownloads() async {
     _deleteDownload.stream.listen((episode) async {
-      await podcastService.deleteDownload(episode);
-
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
       if (audioPlayerService.nowPlaying == episode) {
         await audioPlayerService.stop();
       }
+
+      await podcastService.deleteDownload(episode);
 
       fetchDownloads(true);
     });

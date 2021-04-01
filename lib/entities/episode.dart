@@ -128,7 +128,7 @@ class Episode {
     this.downloadPercentage = 0,
     this.played = false,
     this.chaptersUrl,
-    this.chapters,
+    this.chapters = const <Chapter>[],
     this.lastUpdated,
   });
 
