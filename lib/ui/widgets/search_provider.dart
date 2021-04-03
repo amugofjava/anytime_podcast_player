@@ -35,7 +35,7 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                   children: [
                     ListTile(
                       title: Text(L.of(context).search_provider_label),
-                      subtitle: Text(snapshot.data.searchProvider == 'itunes' ? 'iTunes' : 'PodcastIndex (Beta)'),
+                      subtitle: Text(snapshot.data.searchProvider == 'itunes' ? 'iTunes' : 'PodcastIndex'),
                       onTap: () {
                         showDialog<void>(
                           context: context,
