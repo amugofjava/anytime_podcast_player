@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.0.0+49
+version: 1.0.0+50
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -30,7 +30,7 @@ dependencies:
     git: https://github.com/amugofjava/podcast_search
   provider: ^5.0.0
   rxdart: ^0.26.0
-  scrollable_positioned_list: ^0.1.9
+  scrollable_positioned_list: ^0.1.10
   sembast: ^3.0.0+4
   shared_preferences: ^2.0.4
   url_launcher: ^6.0.3

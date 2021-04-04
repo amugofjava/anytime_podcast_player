@@ -50,20 +50,17 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     widget.positionSubscription = audioBloc.playPosition.listen((event) {
       var episode = event.episode;
 
-      if (lastChapter == null || lastChapter != episode.currentChapter) {
-        lastChapter = episode.currentChapter;
+      if (widget.itemScrollController.isAttached) {
+        lastChapter ??= episode.currentChapter;
 
-        if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
-          var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
+        if (lastChapter != episode.currentChapter) {
+          lastChapter = episode.currentChapter;
 
-          if (index >= 0) {
-            if (widget.itemScrollController.isAttached) {
-              if (firstRender) {
-                widget.itemScrollController.jumpTo(index: index);
-                firstRender = false;
-              } else {
-                widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
-              }
+          if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
+            var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
+
+            if (index >= 0) {
+              widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
             }
           }
         }
@@ -84,6 +81,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                   child: PlatformProgressIndicator(),
                 )
               : ScrollablePositionedList.builder(
+                  initialScrollIndex: snapshot.data.chapters.indexWhere((c) => c == snapshot.data.currentChapter),
                   itemScrollController: widget.itemScrollController,
                   itemCount: snapshot.data.chapters.length,
                   itemBuilder: (context, i) {
