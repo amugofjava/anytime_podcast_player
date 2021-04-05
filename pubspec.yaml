@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.0.0+50
+version: 1.0.0+51
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -25,9 +25,7 @@ dependencies:
   path_provider: ^2.0.1
   percent_indicator: ^2.1.9+1
   permission_handler: ^6.1.1
-  # Use direct from GitHub until dependent also updates
-  podcast_search:
-    git: https://github.com/amugofjava/podcast_search
+  podcast_search: ^0.4.0
   provider: ^5.0.0
   rxdart: ^0.26.0
   scrollable_positioned_list: ^0.1.10

@@ -41,7 +41,6 @@ class _ChapterSelectorState extends State<ChapterSelector> {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     Chapter lastChapter;
-    var firstRender = true;
 
     // Listen for changes in position. If the change in position results in
     // a change in chapter we scroll to it. This ensures that the current
@@ -81,7 +80,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                   child: PlatformProgressIndicator(),
                 )
               : ScrollablePositionedList.builder(
-                  initialScrollIndex: snapshot.data.chapters.indexWhere((c) => c == snapshot.data.currentChapter),
+                  initialScrollIndex: _initialIndex(snapshot.data),
                   itemScrollController: widget.itemScrollController,
                   itemCount: snapshot.data.chapters.length,
                   itemBuilder: (context, i) {
@@ -135,6 +134,20 @@ class _ChapterSelectorState extends State<ChapterSelector> {
   void dispose() {
     widget.positionSubscription?.cancel();
     super.dispose();
+  }
+
+  int _initialIndex(Episode e) {
+    var init = 0;
+
+    if (e != null && e.currentChapter != null) {
+      init = e.chapters.indexWhere((c) => c == e.currentChapter);
+
+      if (init < 0) {
+        init = 0;
+      }
+    }
+
+    return init;
   }
 
   String _formatStartTime(double startTime) {

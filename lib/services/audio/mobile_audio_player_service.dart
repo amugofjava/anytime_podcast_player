@@ -477,6 +477,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
       final chapters = _episode.chapters;
 
       // What is our current chapter?
+      _episode.currentChapter = null;
+
       for (var x = 0; x < _episode.chapters.length; x++) {
         final startTime = chapters[x].startTime;
         final endTime = x == (_episode.chapters.length - 1) ? duration : chapters[x + 1].startTime;
