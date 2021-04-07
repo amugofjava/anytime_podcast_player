@@ -10,10 +10,19 @@ enum LastState { none, completed, stopped, paused }
 /// position details to be restored when the UI becomes visible again -
 /// either when bringing it to the foreground or upon next start.
 class Persistable {
+  /// The Podcast GUID.
   String pguid;
+
+  /// The episode ID (provided by the DB layer).
   int episodeId;
+
+  /// The current position in seconds;
   int position;
+
+  /// The current playback state.
   LastState state;
+
+  /// Date & time episode was last updated.
   DateTime lastUpdated;
 
   Persistable({

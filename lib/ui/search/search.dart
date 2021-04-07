@@ -32,6 +32,7 @@ class _SearchState extends State<Search> {
 
     _searchFocusNode = FocusNode();
     _searchController = TextEditingController();
+
     if (widget.searchTerm != null) {
       bloc.search(SearchTermEvent(widget.searchTerm));
       _searchController.text = widget.searchTerm;
@@ -68,7 +69,6 @@ class _SearchState extends State<Search> {
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: L.of(context).search_for_podcasts_hint,
-                  // hintStyle: ,
                   border: InputBorder.none,
                 ),
                 style: const TextStyle(color: Colors.grey, fontSize: 18.0),

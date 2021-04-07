@@ -42,9 +42,8 @@ class AudioBloc extends Bloc {
   /// Handles persisting data to storage.
   final AudioPlayerService audioPlayerService;
 
+  /// Listens for playback speed change requests.
   final PublishSubject<double> _playbackSpeedSubject = PublishSubject<double>();
-
-  StreamSubscription<dynamic> _positionSubscription;
 
   AudioBloc({
     @required this.audioPlayerService,
@@ -159,7 +158,6 @@ class AudioBloc extends Bloc {
     _transitionPlayingState.close();
     _transitionPosition.close();
     _playbackSpeedSubject.close();
-    _positionSubscription.cancel();
     super.dispose();
   }
 }

@@ -9,7 +9,7 @@ import 'package:podcast_search/podcast_search.dart' as search;
 import 'episode.dart';
 
 /// A class that represents an instance of a podcast. When persisted to disk
-/// this represents a podcast that has been subscribed to.
+/// this represents a podcast that is being followed.
 class Podcast {
   /// Database ID
   int id;

@@ -14,7 +14,7 @@ import 'package:rxdart/rxdart.dart';
 /// fetch the iTunes charts. As charts will not change very frequently the
 /// results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
-  final cacheMinutes = 30;
+  static const cacheMinutes = 30;
   final log = Logger('DiscoveryBloc');
   final PodcastService podcastService;
 

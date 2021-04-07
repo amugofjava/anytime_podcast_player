@@ -8,7 +8,8 @@ import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 /// An implementation of the PodcastApi. A simple wrapper class that
-/// interacts with the iTunes search API via the podcast_search package.
+/// interacts with the iTunes/Podcastindex search API via the
+/// podcast_search package.
 class MobilePodcastApi extends PodcastApi {
   final Search api = Search();
 

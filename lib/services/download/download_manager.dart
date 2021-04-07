@@ -11,7 +11,11 @@ class DownloadProgress {
   final int percentage;
   final DownloadState status;
 
-  DownloadProgress(this.id, this.percentage, this.status);
+  DownloadProgress(
+    this.id,
+    this.percentage,
+    this.status,
+  );
 }
 
 abstract class DownloadManager {

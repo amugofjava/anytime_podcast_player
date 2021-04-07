@@ -5,9 +5,9 @@
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
-import 'package:anytime/ui/widgets/show_notes.dart';
+import 'package:anytime/ui/podcast/show_notes.dart';
+import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
-import 'package:anytime/ui/widgets/transport_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';

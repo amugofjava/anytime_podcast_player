@@ -7,7 +7,10 @@
 ///
 /// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
 class Funding {
+  /// The URL to the funding/donation/information page.
   final String url;
+
+  /// The label for the link which will be presented to the user.
   final String value;
 
   const Funding({

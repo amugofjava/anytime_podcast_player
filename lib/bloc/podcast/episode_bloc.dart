@@ -46,9 +46,7 @@ class EpisodeBloc extends Bloc {
     _downloadsOutput = _downloadsInput.switchMap<BlocState<List<Episode>>>((bool silent) => _downloads(silent));
 
     _handleDeleteDownloads();
-
     _handleMarkAsPlayed();
-
     _listenEpisodeEvents();
   }
 
