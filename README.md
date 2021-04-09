@@ -10,13 +10,15 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is currently in *Beta* - so please expect bugs! Only Android is officially supported at the  
+Anytime is now at v1.0! Only Android is officially supported at the  
 moment, but an iOS version is not far off. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
 
 #### Testers
 
-Anytime is in public Beta. Please click the image below to head over to the Play Store.
+If you would like to help test Anytime please click the image below to head over to the Play Store.
+You can download the current stable release or sign up to the Beta channel and help test
+current developments.
 
 <a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' width="40%" src='https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
