@@ -29,13 +29,13 @@ I would really appreciate all feedback - positive and negative - as it both help
 If you do not already have the Flutter SDK installed, follow the instructions from the
 Flutter site [here](https://flutter.dev/docs/get-started/install).
 
-To build from source fetch the latest from master:
+Fetch the latest from master:
 
 ```
-git clone https://github.com/amugofjava/podcast_search.git
+git clone https://github.com/amugofjava/anytime_podcast_player.git
 ```
 
-From the anytime directory fetch the dependencies:
+From the anytime_podcast_player directory fetch the dependencies:
 
 ```
 flutter packages get
