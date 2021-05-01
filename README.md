@@ -55,7 +55,7 @@ flutter build apk
 
 #### Search Engines
 
-Anytime can search for podcasts via iTunes and has Beta support for PodcastIndex. To use PodcastIndex, first create
+Anytime can search for podcasts via iTunes and PodcastIndex. To use PodcastIndex, first create
 an account at [https://podcastindex.org](https://podcastindex.org). This will generate the required key
 and secret. To enable searching with PodcastIndex in AnyTime, pass the key and secret as runtime arguments:
 

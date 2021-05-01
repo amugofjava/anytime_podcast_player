@@ -121,7 +121,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       }
 
       _episodeEvent.sink.add(episode);
-      _playPosition.add(PositionState(zeroDuration, zeroDuration, 0, episode));
+      updateCurrentPosition(episode);
       _playbackSpeed = settingsService.playbackSpeed;
 
       // If we are currently playing a track - save the position of the current
@@ -185,7 +185,13 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<void> pause() => AudioService.pause();
 
   @override
-  Future<void> play() => AudioService.play();
+  Future<void> play() {
+    if (AudioService.running) {
+      return AudioService.play();
+    } else {
+      return playEpisode(episode: _episode, resume: true);
+    }
+  }
 
   @override
   Future<void> seek({int position}) async {
@@ -273,12 +279,18 @@ class MobileAudioPlayerService extends AudioPlayerService {
           ' - Loaded state ${persistedState.state} - for episode ${persistedState.episodeId} - ${persistedState.position}');
       _episode = await repository.findEpisodeById(persistedState.episodeId);
 
-      if (_episode != null && persistedState.lastUpdated.isAfter(_episode?.lastUpdated)) {
+      // if (_episode != null && persistedState.lastUpdated.isAfter(_episode?.lastUpdated)) {
+      if (_episode != null) {
         if (persistedState.state == LastState.completed) {
           _episode.position = 0;
           _episode.played = true;
         } else {
           _episode.position = persistedState.position;
+
+          if (persistedState.state == LastState.paused) {
+            _playingState.add(AudioState.pausing);
+            updateCurrentPosition(_episode);
+          }
         }
 
         await repository.saveEpisode(_episode);
@@ -349,6 +361,15 @@ class MobileAudioPlayerService extends AudioPlayerService {
       _updateChapter(position.inSeconds, duration.inSeconds);
 
       _playPosition.add(PositionState(position, duration, complete.toInt(), _episode, buffering));
+    }
+  }
+
+  void updateCurrentPosition(Episode e) {
+    if (e != null) {
+      var duration = Duration(seconds: e.duration);
+      var complete = e.position > 0 ? (duration.inSeconds / e.position) * 100 : 0;
+
+      _playPosition.add(PositionState(Duration(milliseconds: e.position), duration, complete.toInt(), e, false));
     }
   }
 

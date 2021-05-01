@@ -36,58 +36,55 @@ class _SettingsState extends State<Settings> {
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
+        initialData: settingsBloc.currentSettings,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-                children: ListTile.divideTiles(
-              context: context,
-              tiles: [
-                ListTile(
-                  title: Text(L.of(context).settings_theme_switch_label),
-                  trailing: Switch.adaptive(
-                      value: snapshot.data.theme == 'dark',
-                      onChanged: (value) {
-                        settingsBloc.darkMode(value);
-                      }),
+          return ListView(
+              children: ListTile.divideTiles(
+            context: context,
+            tiles: [
+              ListTile(
+                title: Text(L.of(context).settings_theme_switch_label),
+                trailing: Switch.adaptive(
+                    value: snapshot.data.theme == 'dark',
+                    onChanged: (value) {
+                      settingsBloc.darkMode(value);
+                    }),
+              ),
+              ListTile(
+                title: Text(L.of(context).settings_mark_deleted_played_label),
+                trailing: Switch.adaptive(
+                  value: snapshot.data.markDeletedEpisodesAsPlayed,
+                  onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
-                ListTile(
-                  title: Text(L.of(context).settings_mark_deleted_played_label),
-                  trailing: Switch.adaptive(
-                    value: snapshot.data.markDeletedEpisodesAsPlayed,
-                    onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
-                  ),
-                ),
-                ListTile(
-                  title: Text(L.of(context).settings_download_sd_card_label),
-                  enabled: sdcard,
-                  trailing: Switch.adaptive(
-                    value: snapshot.data.storeDownloadsSDCard,
-                    onChanged: (value) => sdcard
-                        ? setState(() {
-                            if (value) {
-                              _showStorageDialog(enableExternalStorage: true);
-                            } else {
-                              _showStorageDialog(enableExternalStorage: false);
-                            }
+              ),
+              ListTile(
+                title: Text(L.of(context).settings_download_sd_card_label),
+                enabled: sdcard,
+                trailing: Switch.adaptive(
+                  value: snapshot.data.storeDownloadsSDCard,
+                  onChanged: (value) => sdcard
+                      ? setState(() {
+                          if (value) {
+                            _showStorageDialog(enableExternalStorage: true);
+                          } else {
+                            _showStorageDialog(enableExternalStorage: false);
+                          }
 
-                            settingsBloc.storeDownloadonSDCard(value);
-                          })
-                        : null,
-                  ),
+                          settingsBloc.storeDownloadonSDCard(value);
+                        })
+                      : null,
                 ),
-                ListTile(
-                  title: Text(L.of(context).settings_auto_open_now_playing),
-                  trailing: Switch.adaptive(
-                    value: snapshot.data.autoOpenNowPlaying,
-                    onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
-                  ),
+              ),
+              ListTile(
+                title: Text(L.of(context).settings_auto_open_now_playing),
+                trailing: Switch.adaptive(
+                  value: snapshot.data.autoOpenNowPlaying,
+                  onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
-                SearchProviderWidget(),
-              ],
-            ).toList());
-          } else {
-            return Container();
-          }
+              ),
+              SearchProviderWidget(),
+            ],
+          ).toList());
         });
   }
 

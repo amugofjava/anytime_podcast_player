@@ -183,6 +183,8 @@ class SettingsBloc extends Bloc {
     });
 
     _searchProvider.listen((search) {
+      searchProvider = search;
+
       s = AppSettings(
         theme: themeName,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
