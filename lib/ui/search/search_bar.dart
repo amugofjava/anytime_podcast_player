@@ -41,7 +41,7 @@ class _SearchBarState extends State<SearchBar> {
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(hintText: L.of(context).search_for_podcasts_hint, border: InputBorder.none),
-        style: TextStyle(color: Colors.grey, fontSize: 18.0, decorationColor: Theme.of(context).scaffoldBackgroundColor),
+        style: TextStyle(color: Theme.of(context).primaryIconTheme.color, fontSize: 18.0, decorationColor: Theme.of(context).scaffoldBackgroundColor),
         onSubmitted: (value) async {
           await Navigator.push(context, SlideRightRoute(widget: Search(searchTerm: value)));
           _searchController.clear();

@@ -71,7 +71,7 @@ class _SearchState extends State<Search> {
                   hintText: L.of(context).search_for_podcasts_hint,
                   border: InputBorder.none,
                 ),
-                style: TextStyle(color: Colors.grey, fontSize: 18.0, decorationColor: Theme.of(context).scaffoldBackgroundColor),
+                style: TextStyle(color: Theme.of(context).primaryIconTheme.color, fontSize: 18.0, decorationColor: Theme.of(context).scaffoldBackgroundColor),
                 onSubmitted: ((value) {
                   bloc.search(SearchTermEvent(value));
                 })),
