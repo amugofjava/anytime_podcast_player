@@ -45,27 +45,9 @@ class PodcastImage extends StatefulWidget {
 class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMixin {
   static const cacheWidth = 480;
 
-  AnimationController _controller;
-  Animation<double> _animation;
-
   /// There appears to be a bug in extended image that causes images to
   /// be re-fetched if headers have been set. We'll leave headers for now.
   final headers = <String, String>{'User-Agent': Environment.userAgent()};
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
-
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,48 +62,31 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
       loadStateChanged: (ExtendedImageState state) {
         Widget renderWidget;
 
-        switch (state.extendedImageLoadState) {
-          case LoadState.loading:
-            _controller.reset();
-
-            renderWidget = widget.placeholder ??
+        if (state.extendedImageLoadState == LoadState.failed) {
+          renderWidget = widget.errorPlaceholder ??
+              Container(
+                color: Colors.red,
+                width: widget.width,
+                height: widget.height,
+              );
+        } else {
+          renderWidget = AnimatedCrossFade(
+            crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(seconds: 1),
+            firstChild: widget.placeholder ??
                 SizedBox(
                   width: widget.width,
                   height: widget.height,
-                );
-            break;
-          case LoadState.completed:
-            if (state.wasSynchronouslyLoaded) {
-              renderWidget = ExtendedRawImage(
-                image: state.extendedImageInfo?.image,
-                width: widget.width,
-                height: widget.height,
-                fit: widget.fit,
-              );
-            } else {
-              _controller.forward();
-
-              renderWidget = FadeTransition(
-                opacity: _animation,
-                child: ExtendedRawImage(
-                  image: state.extendedImageInfo?.image,
-                  width: widget.width,
-                  height: widget.height,
-                  fit: widget.fit,
                 ),
-              );
-            }
-            break;
-          case LoadState.failed:
-            _controller.reset();
-
-            renderWidget = widget.errorPlaceholder ??
-                Container(
-                  color: Colors.red,
-                  width: widget.width,
-                  height: widget.height,
-                );
-            break;
+            secondChild: ExtendedRawImage(
+              image: state.extendedImageInfo?.image,
+              width: widget.width,
+              height: widget.height,
+              fit: widget.fit,
+            ),
+          );
         }
 
         return renderWidget;
