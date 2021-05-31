@@ -17,7 +17,9 @@ class PlatformProgressIndicator extends StatelessWidget {
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
-        return CircularProgressIndicator();
+        return CircularProgressIndicator(
+          color: theme.accentColor,
+        );
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
         return CupertinoActivityIndicator();
