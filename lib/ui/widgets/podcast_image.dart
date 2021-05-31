@@ -86,6 +86,29 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
               height: widget.height,
               fit: widget.fit,
             ),
+            layoutBuilder: (
+              Widget topChild,
+              Key topChildKey,
+              Widget bottomChild,
+              Key bottomChildKey,
+            ) {
+              return Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  PositionedDirectional(
+                    key: bottomChildKey,
+                    top: 0,
+                    child: bottomChild,
+                  ),
+                  PositionedDirectional(
+                    key: topChildKey,
+                    top: 0,
+                    child: topChild,
+                  ),
+                ],
+              );
+            },
           );
         }
 

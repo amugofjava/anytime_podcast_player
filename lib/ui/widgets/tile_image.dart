@@ -30,10 +30,20 @@ class TileImage extends StatelessWidget {
       width: size,
       placeholder: placeholderBuilder != null
           ? placeholderBuilder?.builder()(context)
-          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+          : Image(
+              fit: BoxFit.cover,
+              width: size,
+              height: size,
+              image: AssetImage('assets/images/anytime-placeholder-logo.png'),
+            ),
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
-          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+          : Image(
+              fit: BoxFit.cover,
+              width: size,
+              height: size,
+              image: AssetImage('assets/images/anytime-placeholder-logo.png'),
+            ),
     );
   }
 }

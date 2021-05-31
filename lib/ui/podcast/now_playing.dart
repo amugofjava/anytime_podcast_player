@@ -85,7 +85,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
               child: Scaffold(
                 appBar: AppBar(
                   brightness: Theme.of(context).brightness,
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   elevation: 0.0,
                   leading: IconButton(
                     tooltip: L.of(context).minimise_player_window_button_label,
