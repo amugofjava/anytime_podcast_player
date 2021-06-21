@@ -11,7 +11,10 @@ ThemeData _buildLightTheme() {
   final base = ThemeData.light();
 
   return base.copyWith(
-    colorScheme: ColorScheme.light(primary: Color(0xffff9800)),
+    colorScheme: ColorScheme.light(
+      primary: Color(0xffff9800),
+      background: Color(0xffffe0b2),
+    ),
     brightness: Brightness.light,
     primaryColor: Color(0xffff9800),
     primaryColorBrightness: Brightness.light,
@@ -55,7 +58,10 @@ ThemeData _buildDarktheme() {
   final base = ThemeData.dark();
 
   return base.copyWith(
-    colorScheme: ColorScheme.dark(primary: Color(0xffffffff)),
+    colorScheme: ColorScheme.dark(
+      primary: Color(0xffffffff),
+      background: Color(0x80ffffff),
+    ),
     brightness: Brightness.dark,
     primaryColor: Color(0xffffffff),
     primaryColorBrightness: Brightness.dark,

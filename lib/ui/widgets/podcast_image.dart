@@ -98,12 +98,10 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                 children: [
                   PositionedDirectional(
                     key: bottomChildKey,
-                    top: 0,
                     child: bottomChild,
                   ),
                   PositionedDirectional(
                     key: topChildKey,
-                    top: 0,
                     child: topChild,
                   ),
                 ],

@@ -2,11 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/library/opml_import.dart';
 import 'package:anytime/ui/widgets/search_provider.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +36,7 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildList(BuildContext context) {
     var settingsBloc = Provider.of<SettingsBloc>(context);
+    var podcastBloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
@@ -43,6 +47,7 @@ class _SettingsState extends State<Settings> {
             context: context,
             tiles: [
               ListTile(
+                shape: RoundedRectangleBorder(side: BorderSide.none),
                 title: Text(L.of(context).settings_theme_switch_label),
                 trailing: Switch.adaptive(
                     value: snapshot.data.theme == 'dark',
@@ -81,6 +86,26 @@ class _SettingsState extends State<Settings> {
                   value: snapshot.data.autoOpenNowPlaying,
                   onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
+              ),
+              ListTile(
+                title: Text('Import OPML'),
+                onTap: () async {
+                  var result = await FilePicker.platform.pickFiles();
+
+                  if (result.count > 0) {
+                    var file = result.files.first;
+
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => OPMLImport(file: file.path),
+                        fullscreenDialog: true,
+                      ),
+                    );
+
+                    podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
+                  }
+                },
               ),
               SearchProviderWidget(),
             ],

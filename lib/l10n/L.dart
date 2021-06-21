@@ -657,6 +657,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get settings_import_opml {
+    return message('settings_import_opml') ??
+        Intl.message(
+          'Import OPML',
+          name: 'settings_import_opml',
+          desc: 'Option label importing OPML file',
+          locale: localeName,
+        );
+  }
+
+  String get settings_export_opml {
+    return message('settings_export_opml') ??
+        Intl.message(
+          'Export OPML',
+          name: 'settings_export_opml',
+          desc: 'Option label exporting OPML file',
+          locale: localeName,
+        );
+  }
+
+  String get label_opml_importing {
+    return message('label_opml_importing') ??
+        Intl.message(
+          'Importing podcasts',
+          name: 'label_opml_importing',
+          desc: 'Label for importing OPML dialog',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

@@ -365,5 +365,23 @@
     "description": "Option label for adding manual RSS feed url",
     "type": "text",
     "placeholders": {}
+  },
+  "settings_import_opml": "Import OPML",
+  "@settings_import_opml": {
+    "description": "Option label importing OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_opml": "Import OPML",
+  "@settings_export_opml": {
+    "description": "Option label exporting OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_opml_importing": "Importing podcasts",
+  "@label_opml_importing": {
+    "description": "Label for importing OPML dialog",
+    "type": "text",
+    "placeholders": {}
   }
 }

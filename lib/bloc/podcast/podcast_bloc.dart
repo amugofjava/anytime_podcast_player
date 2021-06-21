@@ -21,6 +21,7 @@ enum PodcastEvent {
   unsubscribe,
   markAllPlayed,
   clearAllPlayed,
+  reloadSubscriptions,
 }
 
 /// The BLoC provides access to the details of a given Podcast. It takes a feed
@@ -200,17 +201,20 @@ class PodcastBloc extends Bloc {
 
   void _listenPodcastStateEvents() async {
     _podcastEvent.listen((event) async {
+      print('NEW PODCAST EVENT $event');
       switch (event) {
         case PodcastEvent.subscribe:
           _podcast = await podcastService.subscribe(_podcast);
           _podcastStream.add(BlocPopulatedState<Podcast>(_podcast));
           _loadSubscriptions();
+          _episodesStream.add(_podcast.episodes);
           break;
         case PodcastEvent.unsubscribe:
           await podcastService.unsubscribe(_podcast);
           _podcast.id = null;
           _podcastStream.add(BlocPopulatedState<Podcast>(_podcast));
           _loadSubscriptions();
+          _episodesStream.add(_podcast.episodes);
           break;
         case PodcastEvent.markAllPlayed:
           _podcast.episodes.forEach((e) {
@@ -218,6 +222,7 @@ class PodcastBloc extends Bloc {
             e.position = 0;
           });
           await podcastService.save(_podcast);
+          _episodesStream.add(_podcast.episodes);
           break;
         case PodcastEvent.clearAllPlayed:
           _podcast.episodes.forEach((e) {
@@ -225,10 +230,12 @@ class PodcastBloc extends Bloc {
             e.position = 0;
           });
           await podcastService.save(_podcast);
+          _episodesStream.add(_podcast.episodes);
+          break;
+        case PodcastEvent.reloadSubscriptions:
+          _loadSubscriptions();
           break;
       }
-
-      _episodesStream.add(_podcast.episodes);
     });
   }
 
