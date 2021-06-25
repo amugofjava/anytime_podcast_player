@@ -59,7 +59,8 @@ class _SettingsState extends State<Settings> {
                 title: Text(L.of(context).settings_mark_deleted_played_label),
                 trailing: Switch.adaptive(
                   value: snapshot.data.markDeletedEpisodesAsPlayed,
-                  onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
+                  onChanged: (value) =>
+                      setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
               ),
               ListTile(
@@ -84,7 +85,8 @@ class _SettingsState extends State<Settings> {
                 title: Text(L.of(context).settings_auto_open_now_playing),
                 trailing: Switch.adaptive(
                   value: snapshot.data.autoOpenNowPlaying,
-                  onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
+                  onChanged: (value) =>
+                      setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
               ),
               ListTile(
@@ -95,13 +97,29 @@ class _SettingsState extends State<Settings> {
                   if (result.count > 0) {
                     var file = result.files.first;
 
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => OPMLImport(file: file.path),
-                        fullscreenDialog: true,
+                    await showPlatformDialog<void>(
+                      context: context,
+                      builder: (_) => BasicDialogAlert(
+                        // title: Text(L.of(context).add_rss_feed_option),
+                        content: OPMLImport(file: file.path),
+                        // actions: <Widget>[
+                        //   BasicDialogAction(
+                        //     title: Text(L.of(context).cancel_button_label),
+                        //     onPressed: () {
+                        //       Navigator.pop(context);
+                        //     },
+                        //   ),
+                        // ],
                       ),
                     );
+
+                    // await Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute<void>(
+                    //     builder: (context) => OPMLImport(file: file.path),
+                    //     fullscreenDialog: true,
+                    //   ),
+                    // );
 
                     podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
                   }

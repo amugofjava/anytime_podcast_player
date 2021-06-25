@@ -378,7 +378,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "label_opml_importing": "Importing podcasts",
+  "label_opml_importing": "Importing",
   "@label_opml_importing": {
     "description": "Label for importing OPML dialog",
     "type": "text",
