@@ -32,7 +32,7 @@ class PodcastBloc extends Bloc {
   final PodcastService podcastService;
   final AudioPlayerService audioPlayerService;
   final DownloadService downloadService;
-  final PublishSubject<Feed> _podcastFeed = PublishSubject<Feed>(sync: true);
+  final BehaviorSubject<Feed> _podcastFeed = BehaviorSubject<Feed>(sync: true);
 
   /// Add to sink to start an Episode download
   final PublishSubject<Episode> _downloadEpisode = PublishSubject<Episode>();
@@ -104,6 +104,13 @@ class PodcastBloc extends Bloc {
           podcast: feed.podcast,
           refresh: feed.refresh,
         );
+
+        final lastFeed = _podcastFeed.value;
+        if (lastFeed != null && feed.podcast.id != lastFeed.podcast.id) {
+          log.fine('Not emitting episodes and podcast for id:${feed.podcast.id}'
+              ' because last requested podcast is id:${lastFeed.podcast.id}');
+          return;
+        }
 
         _episodes = _podcast?.episodes;
         _episodesStream.add(_episodes);
