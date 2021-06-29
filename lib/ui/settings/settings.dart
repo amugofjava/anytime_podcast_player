@@ -2,11 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/opml_state.dart';
+import 'package:anytime/ui/library/opml_export.dart';
 import 'package:anytime/ui/library/opml_import.dart';
 import 'package:anytime/ui/widgets/search_provider.dart';
 import 'package:file_picker/file_picker.dart';
@@ -37,6 +40,7 @@ class _SettingsState extends State<Settings> {
   Widget _buildList(BuildContext context) {
     var settingsBloc = Provider.of<SettingsBloc>(context);
     var podcastBloc = Provider.of<PodcastBloc>(context);
+    var opmlBloc = Provider.of<OPMLBloc>(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
@@ -90,39 +94,49 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
               ListTile(
-                title: Text('Import OPML'),
+                title: Text(L.of(context).settings_import_opml),
                 onTap: () async {
                   var result = await FilePicker.platform.pickFiles();
 
                   if (result.count > 0) {
                     var file = result.files.first;
 
-                    await showPlatformDialog<void>(
+                    var e = await showPlatformDialog<bool>(
+                      androidBarrierDismissible: false,
                       context: context,
-                      builder: (_) => BasicDialogAlert(
-                        // title: Text(L.of(context).add_rss_feed_option),
-                        content: OPMLImport(file: file.path),
-                        // actions: <Widget>[
-                        //   BasicDialogAction(
-                        //     title: Text(L.of(context).cancel_button_label),
-                        //     onPressed: () {
-                        //       Navigator.pop(context);
-                        //     },
-                        //   ),
-                        // ],
+                      builder: (_) => WillPopScope(
+                        onWillPop: () async => false,
+                        child: BasicDialogAlert(
+                          title: Text(L.of(context).settings_import_opml),
+                          content: OPMLImport(file: file.path),
+                          actions: <Widget>[
+                            BasicDialogAction(
+                              title: Text(L.of(context).cancel_button_label),
+                              onPressed: () {
+                                return Navigator.pop(context, true);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
 
-                    // await Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute<void>(
-                    //     builder: (context) => OPMLImport(file: file.path),
-                    //     fullscreenDialog: true,
-                    //   ),
-                    // );
-
+                    if (e != null && e) {
+                      opmlBloc.opmlEvent(OPMLCancelEvent());
+                    }
                     podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
                   }
+                },
+              ),
+              ListTile(
+                title: Text(L.of(context).settings_export_opml),
+                onTap: () async {
+                  await showPlatformDialog<void>(
+                    context: context,
+                    builder: (_) => BasicDialogAlert(
+                      content: OPMLExport(),
+                    ),
+                  );
                 },
               ),
               SearchProviderWidget(),

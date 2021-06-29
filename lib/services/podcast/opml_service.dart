@@ -4,29 +4,30 @@
 
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/state/opml_state.dart';
 import 'package:flutter/material.dart';
 
-enum OPMLImportState {
-  none,
-  parse,
-  load,
-  complete,
-  error,
-}
-
-class OPMLImportEvent {
-  final OPMLImportState state;
-  final int current;
-  final int total;
-  final String podcast;
-
-  OPMLImportEvent({
-    @required this.state,
-    this.current,
-    this.total,
-    this.podcast,
-  });
-}
+// enum OPMLState {
+//   none,
+//   parse,
+//   load,
+//   complete,
+//   error,
+// }
+//
+// class OPMLEvent {
+//   final OPMLState state;
+//   final int current;
+//   final int total;
+//   final String podcast;
+//
+//   OPMLEvent({
+//     @required this.state,
+//     this.current,
+//     this.total,
+//     this.podcast,
+//   });
+// }
 
 abstract class OPMLService {
   final PodcastService podcastService;
@@ -37,5 +38,7 @@ abstract class OPMLService {
     @required this.repository,
   });
 
-  Stream<OPMLImportEvent> loadOPMLFile(String file);
+  Stream<OPMLState> loadOPMLFile(String file);
+  Stream<OPMLState> saveOPMLFile();
+  void cancel();
 }

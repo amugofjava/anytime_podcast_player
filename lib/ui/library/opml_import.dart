@@ -4,7 +4,7 @@
 
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/l10n/L.dart';
-import 'package:anytime/services/podcast/opml_service.dart';
+import 'package:anytime/state/opml_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,61 +26,61 @@ class _OPMLImportState extends State<OPMLImport> {
     final bloc = Provider.of<OPMLBloc>(context, listen: false);
     final width = MediaQuery.of(context).size.width - 60.0;
 
-    return SizedBox(
-      height: 80,
-      width: width,
-      child: StreamBuilder<OPMLImportEvent>(
-          initialData: OPMLImportEvent(state: OPMLImportState.none),
-          stream: bloc.importEvent,
-          builder: (context, snapshot) {
-            var v = 0.0;
+    return IntrinsicHeight(
+      child: SizedBox(
+        width: width,
+        child: StreamBuilder<OPMLState>(
+            initialData: OPMLNoneState(),
+            stream: bloc.opmlState,
+            builder: (context, snapshot) {
+              var t = '';
+              var d = snapshot.data;
 
-            if (snapshot.data.state == OPMLImportState.load) {
-              v = snapshot.data.current / snapshot.data.total;
-            }
+              if (d is OPMLCompletedState) {
+                Navigator.pop(context);
+              } else if (d is OPMLLoadingState) {
+                t = d.podcast;
+              }
 
-            if (snapshot.data.state == OPMLImportState.complete) {
-              Navigator.pop(context);
-            }
-
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          L.of(context).label_opml_importing,
-                          maxLines: 1,
-                        ),
-                        SizedBox(
-                          width: 0.0,
-                          height: 2.0,
-                        ),
-                        Text(
-                          snapshot.data.podcast ?? '',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 12.0,
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            L.of(context).label_opml_importing,
+                            maxLines: 1,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: 0.0,
+                            height: 2.0,
+                          ),
+                          Text(
+                            t,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              );
+            }),
+      ),
     );
   }
 
@@ -90,6 +90,8 @@ class _OPMLImportState extends State<OPMLImport> {
 
     final bloc = Provider.of<OPMLBloc>(context, listen: false);
 
-    bloc.importFile(widget.file);
+    bloc.opmlEvent(
+      OPMLImportEvent(file: widget.file),
+    );
   }
 }
