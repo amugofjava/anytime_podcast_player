@@ -66,8 +66,9 @@ class MobilePodcastApi extends PodcastApi {
         .timeout(Duration(seconds: 30));
   }
 
-  Future<SearchResult> _charts(int size) {
-    return Search(userAgent: Environment.userAgent()).charts().timeout(Duration(seconds: 30));
+  static Future<SearchResult> _charts(int size) {
+    var result = Search(userAgent: Environment.userAgent()).charts().timeout(Duration(seconds: 30));
+    return result;
   }
 
   Future<Podcast> _loadFeed(String url) {
