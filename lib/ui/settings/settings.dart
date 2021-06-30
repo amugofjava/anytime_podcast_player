@@ -63,8 +63,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(L.of(context).settings_mark_deleted_played_label),
                 trailing: Switch.adaptive(
                   value: snapshot.data.markDeletedEpisodesAsPlayed,
-                  onChanged: (value) =>
-                      setState(() => settingsBloc.markDeletedAsPlayed(value)),
+                  onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
               ),
               ListTile(
@@ -89,8 +88,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(L.of(context).settings_auto_open_now_playing),
                 trailing: Switch.adaptive(
                   value: snapshot.data.autoOpenNowPlaying,
-                  onChanged: (value) =>
-                      setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
+                  onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
               ),
               ListTile(
@@ -160,7 +158,9 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(backgroundColor: Theme.of(context).backgroundColor,),
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+      ),
       child: Material(child: _buildList(context)),
     );
   }

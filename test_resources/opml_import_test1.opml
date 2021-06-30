@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?>
+<opml version="2.0">
+  <head>
+    <title>Anytime Unit Test 1</title>
+    <dateCreated>03 Jun 21 16:50:02 +0100</dateCreated>
+  </head>
+  <body>
+    <outline text="Podcast 1" xmlUrl="test_resources/podcast1.rss" />
+  </body>
+</opml>

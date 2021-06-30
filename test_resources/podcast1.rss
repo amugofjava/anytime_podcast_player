@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:media="http://search.yahoo.com/mrss/" xmlns:georss="http://www.georss.org/georss" xmlns:audioboom="https://audioboom.com/rss/1.0" version="2.0" xml:base="https://audioboom.com/">
+<channel>
+<title>Podcast Load Test 1</title>
+<description>Unit test podcast test 1</description>
+<link>https://nowhere.com/podcastsearchtest1</link>
+<pubDate>Thu, 24 Jun 2021 18:00:20 +0000</pubDate>
+<language>en</language>
+<image>
+  <url>https://nowhere.com/podcastsearchtest1/image1.png</url>
+  <title>Podcast Load Test 1</title>
+  <link>https://nowhere.com/podcastsearchtest1</link>
+</image>
+<itunes:image href="https://nowhere.com/podcastsearchtest1/image1.png" />
+<itunes:category text="Comedy"><itunes:category text="Comedy Interviews" /></itunes:category>
+<itunes:category text="Society &amp; Culture"><itunes:category text="Relationships" /></itunes:category>
+<itunes:category text="TV &amp; Film"><itunes:category text="After Shows" /></itunes:category>
+<itunes:explicit>no</itunes:explicit>
+<itunes:summary>Unit test podcast test 1</itunes:summary>
+<itunes:author>Podcast Search Author</itunes:author>
+<itunes:owner>
+  <itunes:name>Ben Hills</itunes:name>
+  <itunes:email>anytime@amugofjava.me.uk</itunes:email>
+</itunes:owner>
+<itunes:new-feed-url>podcast1.rss</itunes:new-feed-url>
+<itunes:type>episodic</itunes:type>
+
+<item>
+  <title>Episode 001</title>
+  <link>https://nowhere.com/podcastsearchtest1/podcast1</link>
+  <enclosure url="https://nowhere.com/podcastsearchtest1/podcast1/episode001.mp3" length="0" type="audio/mpeg" />
+  <itunes:duration>1200</itunes:duration>
+  <itunes:explicit>yes</itunes:explicit>
+  <itunes:episodeType>full</itunes:episodeType>
+  <description><![CDATA[<div>Test of episode 001</div>]]></description>
+  <itunes:summary>Episode summary 001</itunes:summary>
+  <pubDate>Thu, 24 Jun 2021 18:00:00 +0000</pubDate>
+  <guid isPermaLink="true"></guid>
+  <itunes:author>Ben Hills</itunes:author>
+  <dc:creator>Ben Hills</dc:creator>
+  <itunes:keywords>Podcast, NowPlaying, Listen, Test</itunes:keywords>
+  <media:keywords>Podcast, NowPlaying, Listen, Test</media:keywords>
+  <media:rights status="userCreated" />
+</item>
+</channel>
+</rss>

@@ -150,20 +150,15 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                 ),
                 leading: DecoratedIconButton(
                   icon: Icons.close,
-                  iconColour:
-                      toolbarCollpased && defaultBrightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white,
-                  decorationColour:
-                      toolbarCollpased ? Color(0x00000000) : Color(0x22000000),
+                  iconColour: toolbarCollpased && defaultBrightness == Brightness.light ? Colors.black : Colors.white,
+                  decorationColour: toolbarCollpased ? Color(0x00000000) : Color(0x22000000),
                   onPressed: () {
                     setState(() {
                       // We need to switch brightness to light here. If we do not,
                       // it will stay dark until the previous screen is rebuilt and
                       // that results in the status bar being blank for a few
                       // milliseconds which looks very odd.
-                      brightness =
-                          widget._darkMode ? Brightness.dark : Brightness.light;
+                      brightness = widget._darkMode ? Brightness.dark : Brightness.light;
                     });
 
                     _setChrome(darkMode: widget._darkMode);
@@ -178,8 +173,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                 snap: false,
                 flexibleSpace: FlexibleSpaceBar(
                     background: Hero(
-                  key: Key(
-                      'detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
+                  key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
                   tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
                   child: ExcludeSemantics(
                     child: StreamBuilder<BlocState<Podcast>>(
@@ -304,9 +298,7 @@ class PodcastHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (podcast == null ||
-        podcast.imageUrl == null ||
-        podcast.imageUrl.isEmpty) {
+    if (podcast == null || podcast.imageUrl == null || podcast.imageUrl.isEmpty) {
       return Container(
         height: 560,
         width: 560,
@@ -316,13 +308,11 @@ class PodcastHeaderImage extends StatelessWidget {
     return PodcastImage(
       key: Key('details${podcast.imageUrl}'),
       url: podcast.imageUrl,
-      placeholder: placeholderBuilder != null
-          ? placeholderBuilder?.builder()(context)
-          : DelayedCircularProgressIndicator(),
+      placeholder:
+          placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator(),
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
-          : Image(
-              image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
     );
   }
 }
@@ -363,9 +353,7 @@ class PodcastTitle extends StatelessWidget {
               children: <Widget>[
                 SubscriptionButton(podcast),
                 PodcastContextMenu(podcast),
-                settings.showFunding
-                    ? FundingMenu(podcast.funding)
-                    : Container(),
+                settings.showFunding ? FundingMenu(podcast.funding) : Container(),
               ],
             ),
           )
@@ -396,8 +384,7 @@ class SubscriptionButton extends StatelessWidget {
               return p.subscribed
                   ? OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       ),
                       icon: Icon(
                         Icons.delete_outline,
@@ -420,8 +407,7 @@ class SubscriptionButton extends StatelessWidget {
                                 },
                               ),
                               BasicDialogAction(
-                                title: Text(
-                                    L.of(context).unsubscribe_button_label),
+                                title: Text(L.of(context).unsubscribe_button_label),
                                 onPressed: () {
                                   bloc.podcastEvent(PodcastEvent.unsubscribe);
 
@@ -436,8 +422,7 @@ class SubscriptionButton extends StatelessWidget {
                     )
                   : OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       ),
                       icon: Icon(
                         Icons.add,

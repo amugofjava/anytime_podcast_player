@@ -13,16 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
-class MockPathProvder extends PathProviderPlatform {
-  Future<Directory> getApplicationDocumentsDirectory() {
-    return Future.value(Directory.systemTemp);
-  }
-
-  @override
-  Future<String> getApplicationDocumentsPath() {
-    return Future.value(Directory.systemTemp.path);
-  }
-}
+import '../mocks/mock_path_provider.dart';
 
 void main() {
   MockPathProvder mockPath;
@@ -91,9 +82,21 @@ void main() {
 
     test('Create and save a single Podcast with episodes', () async {
       podcast2.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast2.guid, podcast: podcast2.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
       ];
 
       await persistenceService.savePodcast(podcast2);
@@ -111,9 +114,21 @@ void main() {
       expect(podcast3.episodes.isEmpty, true);
 
       podcast3.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast3.guid, podcast: podcast3.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast3.guid, podcast: podcast3.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast3.guid, podcast: podcast3.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast3.guid,
+            podcast: podcast3.title),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast3.guid,
+            podcast: podcast3.title),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast3.guid,
+            podcast: podcast3.title),
       ];
 
       await persistenceService.savePodcast(podcast3);
@@ -177,13 +192,15 @@ void main() {
       expect(listEquals(podcast.episodes, podcast3.episodes), true);
 
       // Retrieve same Podcast via GUID and test it is still the same.
-      var podcastByGuid = await persistenceService.findPodcastByGuid(podcast3.guid);
+      var podcastByGuid =
+          await persistenceService.findPodcastByGuid(podcast3.guid);
 
       expect(podcastByGuid == podcast3, true);
       expect(listEquals(podcast.episodes, podcast3.episodes), true);
     });
 
-    test('Retrieve an existing Podcast with episodes and update episodes', () async {
+    test('Retrieve an existing Podcast with episodes and update episodes',
+        () async {
       var podcast4 = Podcast(
           title: 'Podcast 3',
           description: '3rd podcast',
@@ -241,9 +258,21 @@ void main() {
   group('Multiple Podcast subscription handling', () {
     test('Subscribe to 3 podcasts; one with episodes', () async {
       podcast2.episodes = <Episode>[
-        Episode(guid: 'EP001', title: 'Episode 1', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP002', title: 'Episode 2', pguid: podcast2.guid, podcast: podcast2.title),
-        Episode(guid: 'EP003', title: 'Episode 3', pguid: podcast2.guid, podcast: podcast2.title),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast2.guid,
+            podcast: podcast2.title),
       ];
 
       await persistenceService.savePodcast(podcast1);
@@ -313,11 +342,13 @@ void main() {
 
       expect(listEquals(podcast2.episodes, podcast.episodes), true);
 
-      var episode = await persistenceService.findEpisodeByGuid(podcast.episodes[1].guid);
+      var episode =
+          await persistenceService.findEpisodeByGuid(podcast.episodes[1].guid);
 
       expect(episode == episode2, true);
 
-      var episodeById = await persistenceService.findEpisodeById(podcast.episodes[1].id);
+      var episodeById =
+          await persistenceService.findEpisodeById(podcast.episodes[1].id);
 
       expect(episode == episodeById, true);
 
@@ -404,7 +435,8 @@ void main() {
       await persistenceService.savePodcast(podcast3);
 
       // Episodes should be returned in reverse publication-date order.
-      var episodes = await persistenceService.findEpisodesByPodcastGuid(podcast1.guid);
+      var episodes =
+          await persistenceService.findEpisodesByPodcastGuid(podcast1.guid);
 
       expect(listEquals(episodes, orderedEpisodes), true);
     });
@@ -506,7 +538,8 @@ void main() {
       expect(Downloadable.fromMap(json).state == DownloadState.queued, true);
 
       json['state'] = 2;
-      expect(Downloadable.fromMap(json).state == DownloadState.downloading, true);
+      expect(
+          Downloadable.fromMap(json).state == DownloadState.downloading, true);
 
       json['state'] = 3;
       expect(Downloadable.fromMap(json).state == DownloadState.failed, true);
@@ -518,7 +551,8 @@ void main() {
       expect(Downloadable.fromMap(json).state == DownloadState.paused, true);
 
       json['state'] = 6;
-      expect(Downloadable.fromMap(json).state == DownloadState.downloaded, true);
+      expect(
+          Downloadable.fromMap(json).state == DownloadState.downloaded, true);
     });
 
     test('Delete downloaded episodes', () async {
@@ -749,8 +783,10 @@ void main() {
       await persistenceService.savePodcast(podcast2);
       await persistenceService.savePodcast(podcast3);
 
-      var pd1 = await persistenceService.findDownloadsByPodcastGuid(podcast1.guid);
-      var pd2 = await persistenceService.findDownloadsByPodcastGuid(podcast2.guid);
+      var pd1 =
+          await persistenceService.findDownloadsByPodcastGuid(podcast1.guid);
+      var pd2 =
+          await persistenceService.findDownloadsByPodcastGuid(podcast2.guid);
 
       expect(listEquals(pd1, <Episode>[episode5, episode2]), true);
       expect(listEquals(pd2, <Episode>[]), true);
