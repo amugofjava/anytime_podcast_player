@@ -52,7 +52,7 @@ class ShowNotes extends StatelessWidget {
                         fontSize: FontSize.large,
                       ),
                     },
-                    onLinkTap: (url) {
+                    onLinkTap: (url, _, __, ___) {
                       canLaunch(url).then((value) => launch(url));
                     },
                   ),

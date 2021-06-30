@@ -344,7 +344,7 @@ class PodcastTitle extends StatelessWidget {
           Html(
             data: podcast.description ?? '',
             style: {'html': Style(fontWeight: textTheme.bodyText1.fontWeight)},
-            onLinkTap: (url) => canLaunch(url).then((value) => launch(url)),
+            onLinkTap: (url, _, __, ___) => canLaunch(url).then((value) => launch(url)),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
