@@ -94,6 +94,12 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         });
       }
     });
+
+    widget._podcastBloc.load(Feed(
+      podcast: widget.podcast,
+      refresh: true,
+      silently: true,
+    ));
   }
 
   @override
