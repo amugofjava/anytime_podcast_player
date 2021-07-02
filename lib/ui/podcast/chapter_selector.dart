@@ -113,7 +113,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                           ),
                         ),
                         title: Text(
-                          '${snapshot.data.chapters[index].title?.trim()}',
+                          snapshot.data.chapters[index].title?.trim(),
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
                           maxLines: 3,

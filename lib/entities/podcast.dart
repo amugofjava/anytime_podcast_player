@@ -65,7 +65,7 @@ class Podcast {
     episodes ??= [];
   }
 
-  Podcast.fromUrl({@required String url})
+  Podcast.fromUrl({@required this.url})
       : guid = '',
         link = '',
         title = '',
@@ -73,8 +73,7 @@ class Podcast {
         thumbImageUrl = null,
         imageUrl = null,
         copyright = '',
-        funding = <Funding>[],
-        url = url;
+        funding = <Funding>[];
 
   Podcast.fromSearchResultItem(search.Item item)
       : guid = item.guid,

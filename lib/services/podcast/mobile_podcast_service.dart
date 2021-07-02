@@ -111,7 +111,11 @@ class MobilePodcastService extends PodcastService {
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
       var funding = <Funding>[];
 
-      loadedPodcast.funding?.forEach((f) => funding.add(Funding(url: f.url, value: f.value)));
+      if (loadedPodcast.funding != null) {
+        for (var f in loadedPodcast?.funding) {
+          funding.add(Funding(url: f.url, value: f.value));
+        }
+      }
 
       final pc = Podcast(
         guid: loadedPodcast.url,
@@ -275,7 +279,7 @@ class MobilePodcastService extends PodcastService {
       }
     }
 
-    return null;
+    return;
   }
 
   @override

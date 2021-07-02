@@ -24,12 +24,10 @@ class MobileDownloadService extends DownloadService {
   static BehaviorSubject<DownloadProgress> downloadProgress = BehaviorSubject<DownloadProgress>();
 
   final log = Logger('MobileDownloadService');
-
-  @override
   final Repository repository;
   final DownloadManager downloadManager;
 
-  MobileDownloadService({@required this.repository, @required this.downloadManager}) : super(repository: repository) {
+  MobileDownloadService({@required this.repository, @required this.downloadManager}) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
       if (progress.status == DownloadState.downloaded) {

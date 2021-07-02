@@ -20,10 +20,7 @@ class MobileOPMLService extends OPMLService {
   final log = Logger('MobileOPMLService');
   var process = false;
 
-  @override
   final PodcastService podcastService;
-
-  @override
   final Repository repository;
 
   MobileOPMLService({

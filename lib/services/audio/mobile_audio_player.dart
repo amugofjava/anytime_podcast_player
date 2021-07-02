@@ -165,7 +165,7 @@ class MobileAudioPlayer {
       log.fine('loading new track $_uri - from position $_startPosition}');
 
       var headers = <String, String>{
-        'User-Agent': '$userAgent',
+        'User-Agent': userAgent,
       };
 
       var start = _startPosition > 0 ? Duration(milliseconds: _startPosition) : Duration.zero;

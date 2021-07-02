@@ -18,9 +18,6 @@ import 'package:flutter/material.dart';
 /// differing render sizes.
 // ignore: must_be_immutable
 class PodcastImage extends StatefulWidget {
-  @override
-  Key key;
-
   final String url;
   final double height;
   final double width;
@@ -29,7 +26,7 @@ class PodcastImage extends StatefulWidget {
   Widget errorPlaceholder;
 
   PodcastImage({
-    this.key,
+    Key key,
     @required this.url,
     this.height = 480.0,
     this.width = 480.0,

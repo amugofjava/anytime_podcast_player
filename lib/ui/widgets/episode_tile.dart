@@ -313,7 +313,7 @@ class EpisodeSubtitle extends StatelessWidget {
         title = '$date - ${length.inMinutes} min';
       }
     } else {
-      title = '$date';
+      title = date;
     }
 
     if (timeRemaining.inSeconds > 0) {
