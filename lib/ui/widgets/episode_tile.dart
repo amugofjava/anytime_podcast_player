@@ -113,6 +113,7 @@ class EpisodeTile extends StatelessWidget {
                       ? () {
                           showPlatformDialog<void>(
                             context: context,
+                            useRootNavigator: false,
                             builder: (_) => BasicDialogAlert(
                               title: Text(
                                 L.of(context).delete_episode_title,

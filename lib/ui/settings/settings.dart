@@ -101,6 +101,7 @@ class _SettingsState extends State<Settings> {
 
                     var e = await showPlatformDialog<bool>(
                       androidBarrierDismissible: false,
+                      useRootNavigator: false,
                       context: context,
                       builder: (_) => WillPopScope(
                         onWillPop: () async => false,
@@ -131,6 +132,7 @@ class _SettingsState extends State<Settings> {
                 onTap: () async {
                   await showPlatformDialog<void>(
                     context: context,
+                    useRootNavigator: false,
                     builder: (_) => BasicDialogAlert(
                       content: OPMLExport(),
                     ),
@@ -168,6 +170,7 @@ class _SettingsState extends State<Settings> {
   void _showStorageDialog({@required bool enableExternalStorage}) {
     showPlatformDialog<void>(
       context: context,
+      useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(L.of(context).settings_download_switch_label),
         content: Text(
