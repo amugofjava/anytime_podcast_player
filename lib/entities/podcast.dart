@@ -45,8 +45,13 @@ class Podcast {
   /// Date and time user subscribed to the podcast.
   DateTime subscribedDate;
 
+  /// Date and time podcast was last updated/refreshed.
+  DateTime _lastUpdated;
+
   /// One or more episodes for this podcast.
   List<Episode> episodes;
+
+  bool newEpisodes;
 
   Podcast({
     @required this.guid,
@@ -61,7 +66,10 @@ class Podcast {
     this.subscribedDate,
     this.funding,
     this.episodes,
+    this.newEpisodes = false,
+    DateTime lastUpdated,
   }) {
+    _lastUpdated = lastUpdated;
     episodes ??= [];
   }
 
@@ -98,16 +106,24 @@ class Podcast {
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap())?.toList(growable: false),
+      'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
 
   static Podcast fromMap(int key, Map<String, dynamic> podcast) {
     final sds = podcast['subscribedDate'] as String;
+    final lus = podcast['lastUpdated'] as int;
     final funding = <Funding>[];
+
     var sd = DateTime.now();
+    var lastUpdated = DateTime(1971, 1, 1);
 
     if (sds != null && sds.isNotEmpty && int.tryParse(sds) != null) {
       sd = DateTime.fromMillisecondsSinceEpoch(int.parse(sds));
+    }
+
+    if (lus != null) {
+      lastUpdated = DateTime.fromMillisecondsSinceEpoch(lus);
     }
 
     if (podcast['funding'] != null) {
@@ -130,10 +146,17 @@ class Podcast {
       thumbImageUrl: podcast['thumbImageUrl'] as String,
       funding: funding,
       subscribedDate: sd,
+      lastUpdated: lastUpdated,
     );
   }
 
   bool get subscribed => id != null;
+
+  DateTime get lastUpdated => _lastUpdated ?? DateTime(1970, 1, 1);
+
+  set lastUpdated(DateTime value) {
+    _lastUpdated = value;
+  }
 
   @override
   bool operator ==(Object other) =>

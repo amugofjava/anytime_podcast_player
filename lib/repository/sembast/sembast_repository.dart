@@ -2,16 +2,20 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_database_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 
 /// An implementation of [Repository] that is backed by Sembast.
 class SembastRepository extends Repository {
+  final log = Logger('SembastRepository');
+
   final _podcastSubject = BehaviorSubject<Podcast>();
   final _episodeSubject = BehaviorSubject<EpisodeState>();
 
@@ -27,8 +31,12 @@ class SembastRepository extends Repository {
   /// subscription date.
   @override
   Future<Podcast> savePodcast(Podcast podcast) async {
+    log.fine('Saving podcast ${podcast.url}');
+
     final finder = Finder(filter: Filter.equals('guid', podcast.guid));
     final snapshot = await _podcastStore.findFirst(await _db, finder: finder);
+
+    podcast.lastUpdated = DateTime.now();
 
     if (snapshot == null) {
       podcast.subscribedDate = DateTime.now();
@@ -214,26 +222,40 @@ class SembastRepository extends Repository {
     return e;
   }
 
+  /// Saves a list of episodes to the repository. To improve performance we
+  /// split the episodes into chunks of 100 and save any that have been updated
+  /// in that chunk in a single transaction.
   Future<void> _saveEpisodes(List<Episode> episodes) async {
     var d = await _db;
+    var dateStamp = DateTime.now();
 
-    await d.transaction((txn) async {
-      var futures = <Future<int>>[];
+    if (episodes != null && episodes.isNotEmpty) {
+      for (var chunk in episodes.chunk(100)) {
+        await d.transaction((txn) async {
+          var futures = <Future<int>>[];
 
-      for (var e in episodes) {
-        if (e.id == null) {
-          e.id = await _episodeStore.add(txn, e.toMap());
-        } else {
-          final finder = Finder(filter: Filter.byKey(e.id));
+          for (var episode in chunk) {
+            if (episode.id == null) {
+              episode.lastUpdated = dateStamp;
+              futures.add(_episodeStore.add(txn, episode.toMap()));
+            } else {
+              final finder = Finder(filter: Filter.byKey(episode.id));
 
-          futures.add(_episodeStore.update(txn, e.toMap(), finder: finder));
-        }
+              var existingEpisode = await findEpisodeById(episode.id);
+
+              if (existingEpisode == null || existingEpisode != episode) {
+                episode.lastUpdated = dateStamp;
+                futures.add(_episodeStore.update(txn, episode.toMap(), finder: finder));
+              }
+            }
+          }
+
+          if (futures.isNotEmpty) {
+            await Future.wait(futures);
+          }
+        });
       }
-
-      if (futures.isNotEmpty) {
-        await Future.wait(futures);
-      }
-    });
+    }
   }
 
   Future<Episode> _saveEpisode(Episode episode, bool updateIfSame) async {

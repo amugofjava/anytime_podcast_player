@@ -17,6 +17,12 @@ class BlocLoadingState<T> extends BlocState<T> {
   BlocLoadingState([this.data]);
 }
 
+class BlocBackgroundLoadingState<T> extends BlocState<T> {
+  final T data;
+
+  BlocBackgroundLoadingState([this.data]);
+}
+
 class BlocSuccessfulState<T> extends BlocState<T> {}
 
 class BlocEmptyState<T> extends BlocState<T> {}
@@ -35,4 +41,10 @@ class BlocPopulatedState<T> extends BlocState<T> {
   final T results;
 
   BlocPopulatedState(this.results);
+}
+
+class BlocNewEpisodesState<T> extends BlocState<T> {
+  final T results;
+
+  BlocNewEpisodesState(this.results);
 }

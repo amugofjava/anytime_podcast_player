@@ -104,6 +104,8 @@ class Episode {
   /// Set to true if chapter data is currently being loaded.
   bool chaptersLoading = false;
 
+  bool highlight = false;
+
   Episode({
     @required this.guid,
     @required this.pguid,
@@ -127,6 +129,7 @@ class Episode {
     this.position = 0,
     this.downloadPercentage = 0,
     this.played = false,
+    this.highlight = false,
     this.chaptersUrl,
     this.chapters = const <Chapter>[],
     this.lastUpdated,
@@ -236,33 +239,34 @@ class Episode {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Episode &&
-          runtimeType == other.runtimeType &&
-          guid == other.guid &&
-          pguid == other.pguid &&
-          downloadTaskId == other.downloadTaskId &&
-          filepath == other.filepath &&
-          filename == other.filename &&
-          downloadState == other.downloadState &&
-          podcast == other.podcast &&
-          title == other.title &&
-          description == other.description &&
-          link == other.link &&
-          imageUrl == other.imageUrl &&
-          thumbImageUrl == other.thumbImageUrl &&
-          publicationDate?.millisecondsSinceEpoch == other.publicationDate?.millisecondsSinceEpoch &&
-          contentUrl == other.contentUrl &&
-          author == other.author &&
-          season == other.season &&
-          episode == other.episode &&
-          duration == other.duration &&
-          position == other.position &&
-          downloadPercentage == other.downloadPercentage &&
-          played == other.played &&
-          chaptersUrl == other.chaptersUrl &&
-          listEquals(chapters, other.chapters);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Episode &&
+            runtimeType == other.runtimeType &&
+            guid == other.guid &&
+            pguid == other.pguid &&
+            downloadTaskId == other.downloadTaskId &&
+            filepath == other.filepath &&
+            filename == other.filename &&
+            downloadState == other.downloadState &&
+            podcast == other.podcast &&
+            title == other.title &&
+            description == other.description &&
+            link == other.link &&
+            imageUrl == other.imageUrl &&
+            thumbImageUrl == other.thumbImageUrl &&
+            publicationDate?.millisecondsSinceEpoch == other.publicationDate?.millisecondsSinceEpoch &&
+            contentUrl == other.contentUrl &&
+            author == other.author &&
+            season == other.season &&
+            episode == other.episode &&
+            duration == other.duration &&
+            position == other.position &&
+            downloadPercentage == other.downloadPercentage &&
+            played == other.played &&
+            chaptersUrl == other.chaptersUrl &&
+            listEquals(chapters, other.chapters);
+  }
 
   @override
   int get hashCode =>

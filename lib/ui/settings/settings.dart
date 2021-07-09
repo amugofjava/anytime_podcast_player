@@ -11,7 +11,9 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/opml_state.dart';
 import 'package:anytime/ui/library/opml_export.dart';
 import 'package:anytime/ui/library/opml_import.dart';
-import 'package:anytime/ui/widgets/search_provider.dart';
+import 'package:anytime/ui/settings/episode_refresh.dart';
+import 'package:anytime/ui/settings/search_provider.dart';
+import 'package:anytime/ui/settings/settings_section_label.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -47,9 +49,8 @@ class _SettingsState extends State<Settings> {
         initialData: settingsBloc.currentSettings,
         builder: (context, snapshot) {
           return ListView(
-              children: ListTile.divideTiles(
-            context: context,
-            tiles: [
+            children: [
+              SettingsDividerLabel(label: L.of(context).settings_personalisation_divider_label),
               ListTile(
                 shape: RoundedRectangleBorder(side: BorderSide.none),
                 title: Text(L.of(context).settings_theme_switch_label),
@@ -59,6 +60,7 @@ class _SettingsState extends State<Settings> {
                       settingsBloc.darkMode(value);
                     }),
               ),
+              SettingsDividerLabel(label: L.of(context).settings_episodes_divider_label),
               ListTile(
                 title: Text(L.of(context).settings_mark_deleted_played_label),
                 trailing: Switch.adaptive(
@@ -84,6 +86,7 @@ class _SettingsState extends State<Settings> {
                       : null,
                 ),
               ),
+              SettingsDividerLabel(label: L.of(context).settings_playback_divider_label),
               ListTile(
                 title: Text(L.of(context).settings_auto_open_now_playing),
                 trailing: Switch.adaptive(
@@ -91,6 +94,8 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
               ),
+              EpisodeRefreshWidget(),
+              SettingsDividerLabel(label: L.of(context).settings_data_divider_label),
               ListTile(
                 title: Text(L.of(context).settings_import_opml),
                 onTap: () async {
@@ -139,7 +144,7 @@ class _SettingsState extends State<Settings> {
               ),
               SearchProviderWidget(),
             ],
-          ).toList());
+          );
         });
   }
 

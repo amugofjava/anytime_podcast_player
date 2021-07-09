@@ -54,6 +54,7 @@ class EpisodeTile extends StatelessWidget {
             child: TileImage(
               url: episode.thumbImageUrl ?? episode.imageUrl,
               size: 56.0,
+              highlight: episode.highlight,
             ),
           ),
           Container(

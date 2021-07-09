@@ -33,6 +33,9 @@ class AppSettings {
   /// If true the funding link icon will appear (if the podcast supports it).
   final bool showFunding;
 
+  /// If -1 never; 0 always; otherwise time in minutes.
+  final int autoUpdateEpisodePeriod;
+
   AppSettings({
     @required this.theme,
     @required this.markDeletedEpisodesAsPlayed,
@@ -43,6 +46,7 @@ class AppSettings {
     @required this.externalLinkConsent,
     @required this.autoOpenNowPlaying,
     @required this.showFunding,
+    @required this.autoUpdateEpisodePeriod,
   });
 
   AppSettings.sensibleDefaults()
@@ -54,5 +58,6 @@ class AppSettings {
         searchProviders = <SearchProvider>[],
         externalLinkConsent = false,
         autoOpenNowPlaying = false,
-        showFunding = true;
+        showFunding = true,
+        autoUpdateEpisodePeriod = -1;
 }

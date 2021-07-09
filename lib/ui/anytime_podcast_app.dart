@@ -160,7 +160,8 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           create: (_) => PodcastBloc(
               podcastService: widget.podcastService,
               audioPlayerService: widget.audioPlayerService,
-              downloadService: widget.downloadService),
+              downloadService: widget.downloadService,
+              settingsService: widget.mobileSettingsService),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PagerBloc>(

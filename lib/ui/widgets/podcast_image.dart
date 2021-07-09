@@ -25,6 +25,7 @@ class PodcastImage extends StatefulWidget {
   final double height;
   final double width;
   final BoxFit fit;
+  final bool highlight;
   Widget placeholder;
   Widget errorPlaceholder;
 
@@ -36,6 +37,7 @@ class PodcastImage extends StatefulWidget {
     this.fit = BoxFit.cover,
     this.placeholder,
     this.errorPlaceholder,
+    this.highlight = false,
   }) : super(key: key);
 
   @override
@@ -59,6 +61,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
       cacheWidth: cacheWidth,
       fit: widget.fit,
       cache: true,
+      color: Colors.pink,
       loadStateChanged: (ExtendedImageState state) {
         Widget renderWidget;
 
@@ -66,8 +69,8 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
           renderWidget = widget.errorPlaceholder ??
               Container(
                 color: Colors.red,
-                width: widget.width,
-                height: widget.height,
+                width: widget.width - 2.0,
+                height: widget.height - 2.0,
               );
         } else {
           renderWidget = AnimatedCrossFade(
@@ -77,13 +80,14 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
             duration: Duration(seconds: 1),
             firstChild: widget.placeholder ??
                 SizedBox(
-                  width: widget.width,
-                  height: widget.height,
+                  width: widget.width - 2.0,
+                  height: widget.height - 2.0,
                 ),
             secondChild: ExtendedRawImage(
+              // color: Colors.blue,
               image: state.extendedImageInfo?.image,
-              width: widget.width,
-              height: widget.height,
+              width: widget.width - 2.0,
+              height: widget.height - 2.0,
               fit: widget.fit,
             ),
             layoutBuilder: (
@@ -95,16 +99,51 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
-                children: [
-                  PositionedDirectional(
-                    key: bottomChildKey,
-                    child: bottomChild,
-                  ),
-                  PositionedDirectional(
-                    key: topChildKey,
-                    child: topChild,
-                  ),
-                ],
+                children: widget.highlight
+                    ? [
+                        PositionedDirectional(
+                          key: bottomChildKey,
+                          child: bottomChild,
+                        ),
+                        PositionedDirectional(
+                          key: topChildKey,
+                          child: topChild,
+                        ),
+                        Positioned(
+                          height: 14.0,
+                          top: -2.0,
+                          right: -2.0,
+                          width: 14.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).canvasColor,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          height: 10.0,
+                          top: 0.0,
+                          right: 0.0,
+                          width: 10.0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).indicatorColor,
+                            ),
+                          ),
+                        ),
+                      ]
+                    : [
+                        PositionedDirectional(
+                          key: bottomChildKey,
+                          child: bottomChild,
+                        ),
+                        PositionedDirectional(
+                          key: topChildKey,
+                          child: topChild,
+                        ),
+                      ],
               );
             },
           );
