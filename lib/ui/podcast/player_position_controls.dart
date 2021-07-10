@@ -32,9 +32,13 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
-          var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
-          var divisions = length.inSeconds == null || length.inSeconds == 0 ? 1 : length.inSeconds;
+          var position =
+              snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
+          var length =
+              snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
+          var divisions = length.inSeconds == null || length.inSeconds == 0
+              ? 1
+              : length.inSeconds;
 
           if (!dragging) {
             p = position.inSeconds;
@@ -62,9 +66,14 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
               bottom: 4.0,
             ),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(_formatDuration(position)),
                 Expanded(
+                  flex: 2,
+                  child: Text(_formatDuration(position)),
+                ),
+                Expanded(
+                  flex: 6,
                   child: snapshot.hasData
                       ? Slider(
                           label: _formatDuration(Duration(seconds: p)),
@@ -88,7 +97,9 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                               dragging = false;
                             });
 
-                            return snapshot.data.buffering ? null : audioBloc.transitionPosition(value);
+                            return snapshot.data.buffering
+                                ? null
+                                : audioBloc.transitionPosition(value);
                           },
                           value: p.toDouble(),
                           min: 0.0,
@@ -104,7 +115,13 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           activeColor: Theme.of(context).buttonColor,
                         ),
                 ),
-                Text(_formatDuration(Duration(seconds: timeRemaining))),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    _formatDuration(Duration(seconds: timeRemaining)),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
               ],
             ),
           );
