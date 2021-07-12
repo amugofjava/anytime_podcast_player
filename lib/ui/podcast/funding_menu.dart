@@ -56,7 +56,10 @@ class _MaterialFundingMenu extends StatelessWidget {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return funding == null || funding.isEmpty
-        ? Container()
+        ? SizedBox(
+            width: 0.0,
+            height: 0.0,
+          )
         : StreamBuilder<AppSettings>(
             stream: settingsBloc.settings,
             initialData: AppSettings.sensibleDefaults(),
@@ -102,34 +105,46 @@ class _CupertinoFundingMenu extends StatelessWidget {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return funding == null || funding.isEmpty
-        ? Container()
+        ? SizedBox(
+            width: 0.0,
+            height: 0.0,
+          )
         : StreamBuilder<AppSettings>(
             stream: settingsBloc.settings,
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
-              return CupertinoActionSheet(
-                actions: <Widget>[
-                  ...List<CupertinoActionSheetAction>.generate(funding.length, (index) {
-                    return CupertinoActionSheetAction(
-                      onPressed: () {
-                        FundingLink.fundingLink(
-                          funding[index].url,
-                          snapshot.data.externalLinkConsent,
-                          context,
-                        ).then((value) {
-                          settingsBloc.setExternalLinkConsent(value);
-                        });
-                      },
-                      child: Text(L.of(context).mark_episodes_played_label),
+              return IconButton(
+                icon: Icon(Icons.payment, color: Theme.of(context).buttonColor),
+                onPressed: () => showCupertinoModalPopup<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                      actions: <Widget>[
+                        ...List<CupertinoActionSheetAction>.generate(funding.length, (index) {
+                          return CupertinoActionSheetAction(
+                            onPressed: () {
+                              FundingLink.fundingLink(
+                                funding[index].url,
+                                snapshot.data.externalLinkConsent,
+                                context,
+                              ).then((value) {
+                                settingsBloc.setExternalLinkConsent(value);
+                                Navigator.pop(context, 'Cancel');
+                              });
+                            },
+                            child: Text(funding[index].value),
+                          );
+                        }),
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
+                        isDefaultAction: true,
+                        onPressed: () {
+                          Navigator.pop(context, 'Cancel');
+                        },
+                        child: Text(L.of(context).cancel_option_label),
+                      ),
                     );
-                  }),
-                ],
-                cancelButton: CupertinoActionSheetAction(
-                  isDefaultAction: true,
-                  onPressed: () {
-                    Navigator.pop(context, 'Cancel');
                   },
-                  child: Text(L.of(context).cancel_option_label),
                 ),
               );
             });
