@@ -153,7 +153,7 @@ class MobileAudioPlayer {
   }
 
   Future<void> play() async {
-    log.fine('play()');
+    log.fine('play() - loadTrack is $_loadTrack');
 
     if (_loadTrack) {
       if (!_local) {
@@ -162,13 +162,13 @@ class MobileAudioPlayer {
 
       var userAgent = Environment.userAgent();
 
-      log.fine('loading new track $_uri - from position $_startPosition}');
-
       var headers = <String, String>{
         'User-Agent': '$userAgent',
       };
 
       var start = _startPosition > 0 ? Duration(milliseconds: _startPosition) : Duration.zero;
+
+      log.fine('loading new track $_uri - from position ${start.inSeconds} (${start.inMilliseconds})');
 
       if (_local) {
         await _audioPlayer.setFilePath(
@@ -387,4 +387,6 @@ class MobileAudioPlayer {
 
     return _audioPlayer.position == null ? 0 : _audioPlayer.position.inMilliseconds;
   }
+
+  bool get playing => _audioPlayer.playing;
 }

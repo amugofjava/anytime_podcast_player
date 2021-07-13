@@ -74,6 +74,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     return Dismissible(
       key: Key('miniplayerdismissable'),
       confirmDismiss: (direction) async {
+        await _audioStateSubscription.cancel();
         audioBloc.transitionState(TransitionState.stop);
         return true;
       },

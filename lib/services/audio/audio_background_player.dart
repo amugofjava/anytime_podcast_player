@@ -110,6 +110,14 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
     log.fine('onCustomAction()');
     switch (name) {
       case 'track':
+
+        /// Temp fix. In current just_audio version switching tracks whilst
+        /// playing causes the position to be reset to 0. By pausing first
+        /// this problem does not seem to occur.
+        if (_anytimeAudioPlayer.playing) {
+          await _anytimeAudioPlayer.pause();
+        }
+
         await _anytimeAudioPlayer.setMediaItem(arguments);
         break;
       case 'position':

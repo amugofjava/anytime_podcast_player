@@ -71,8 +71,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// we will stream the episode directly.
   @override
   Future<void> playEpisode({@required Episode episode, bool resume = true}) async {
-    log.info('Playing episode ${episode?.guid} - ${episode?.title} - ${episode?.id}');
-
     if (episode.guid != '') {
       var streaming = true;
       var startPosition = 0;
@@ -83,6 +81,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
       if (resume) {
         startPosition = episode?.position ?? 0;
       }
+
+      log.info('Playing episode ${episode?.id} - ${episode?.title} from position $startPosition');
 
       if (episode.downloadState == DownloadState.downloaded) {
         if (await hasStoragePermission()) {
@@ -228,30 +228,22 @@ class MobileAudioPlayerService extends AudioPlayerService {
   Future<Episode> resume() async {
     await AudioService.connect();
 
-    log.fine('resume()');
-
     if (_episode == null) {
-      log.fine('_episode is null. Check current media item');
       if (AudioService.currentMediaItem == null) {
-        log.fine(' - media item is null. Call load state');
         await _updateEpisodeFromSavedState();
       } else {
-        log.fine(' - media item exists loading item id ${AudioService.currentMediaItem?.id ?? -1}');
         _episode = await repository.findEpisodeById(int.parse(AudioService.currentMediaItem.id));
       }
     } else {
-      log.fine('_episode is not null. Fetch state from service');
       var playbackState = AudioService.playbackState;
 
       final basicState = playbackState?.processingState ?? AudioProcessingState.none;
 
       // If we have no state we'll have to assume we stopped whilst suspended.
       if (basicState == AudioProcessingState.none) {
-        log.fine(' - Fetched none state from service. Call load state');
         await _updateEpisodeFromSavedState();
         _playingState.add(AudioState.stopped);
       } else {
-        log.fine(' - Fetched $basicState. Start ticker');
         _startTicker();
       }
     }
@@ -457,7 +449,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var currentPosition = playbackState.currentPosition?.inMilliseconds ?? 0;
 
       log.fine('_savePosition(): Current position is $currentPosition - stored position is ${_episode.position}');
-      log.fine('Current state is ${playbackState.processingState}');
 
       if (currentPosition != _episode.position) {
         _episode.position = currentPosition;
