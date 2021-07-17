@@ -53,6 +53,8 @@ class PodcastBloc extends Bloc {
   /// Receives subscription and mark/clear as played events.
   final PublishSubject<PodcastEvent> _podcastEvent = PublishSubject<PodcastEvent>();
 
+  final BehaviorSubject<BlocState<void>> _backgroundLoadStream = BehaviorSubject<BlocState<void>>();
+
   Podcast _podcast;
   List<Episode> _episodes = [];
   Feed lastFeed;
@@ -110,14 +112,17 @@ class PodcastBloc extends Bloc {
         /// Do we also need to perform a background refresh?
         if (feed.backgroundFresh && _shouldAutoRefresh()) {
           log.fine('Performing background refresh of ${feed.podcast.url}');
+          _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
           await _loadNewEpisodes(feed);
 
           if (_podcast.newEpisodes) {
             log.fine('We have new episodes available');
-            _podcastStream.sink.add(BlocNewEpisodesState<Podcast>(_podcast));
-            _podcastStream.sink.add(BlocPopulatedState<Podcast>(_podcast));
+            _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
+            _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
           }
+
+          _backgroundLoadStream.sink.add(BlocDefaultState<void>());
         }
       } catch (e) {
         // For now we'll assume a network error as this is the most likely.
@@ -162,7 +167,7 @@ class PodcastBloc extends Bloc {
       _episodes = _podcast?.episodes;
       _episodesStream.add(_episodes);
 
-      _podcastStream.sink.add(BlocPopulatedState<Podcast>(_podcast));
+      _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
     }
   }
 
@@ -269,14 +274,14 @@ class PodcastBloc extends Bloc {
       switch (event) {
         case PodcastEvent.subscribe:
           _podcast = await podcastService.subscribe(_podcast);
-          _podcastStream.add(BlocPopulatedState<Podcast>(_podcast));
+          _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
           _loadSubscriptions();
           _episodesStream.add(_podcast.episodes);
           break;
         case PodcastEvent.unsubscribe:
           await podcastService.unsubscribe(_podcast);
           _podcast.id = null;
-          _podcastStream.add(BlocPopulatedState<Podcast>(_podcast));
+          _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
           _loadSubscriptions();
           _episodesStream.add(_podcast.episodes);
           break;
@@ -334,6 +339,8 @@ class PodcastBloc extends Bloc {
 
   /// Stream containing the current state of the podcast load.
   Stream<BlocState<Podcast>> get details => _podcastStream.stream;
+
+  Stream<BlocState<void>> get backgroundLoading => _backgroundLoadStream.stream;
 
   /// Stream containing the current list of Podcast episodes.
   Stream<List<Episode>> get episodes => _episodesStream;

@@ -93,7 +93,7 @@ class EpisodeBloc extends Bloc {
 
     _episodes = await podcastService.loadDownloads();
 
-    yield BlocPopulatedState<List<Episode>>(_episodes);
+    yield BlocPopulatedState<List<Episode>>(results: _episodes);
   }
 
   @override

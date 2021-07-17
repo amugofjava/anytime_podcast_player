@@ -19,6 +19,7 @@ import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
+import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -101,9 +102,13 @@ class _PodcastDetailsState extends State<PodcastDetails> {
       }
     });
 
-    widget._podcastBloc.details.listen((event) {
-      if (event is BlocNewEpisodesState<Podcast>) {
-        if (mounted) {
+    widget._podcastBloc.backgroundLoading.where((event) => event is BlocPopulatedState<void>).listen((event) {
+      if (mounted) {
+        /// If we have not scrolled (save a few pixels) just refresh the episode list;
+        /// otherwise prompt the user to prevent unexpected list jumping
+        if (_sliverScrollController.offset < 20) {
+          widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
+        } else {
           scaffoldMessengerKey.currentState.showSnackBar(SnackBar(
             content: Text(L.of(context).new_episodes_label),
             behavior: SnackBarBehavior.floating,
@@ -385,6 +390,7 @@ class PodcastTitle extends StatelessWidget {
                 SubscriptionButton(podcast),
                 PodcastContextMenu(podcast),
                 settings.showFunding ? FundingMenu(podcast.funding) : Container(),
+                SyncSpinner(),
               ],
             ),
           )

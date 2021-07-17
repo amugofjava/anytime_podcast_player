@@ -40,11 +40,11 @@ class BlocNoInputState<T> extends BlocState<T> {}
 class BlocPopulatedState<T> extends BlocState<T> {
   final T results;
 
-  BlocPopulatedState(this.results);
+  BlocPopulatedState({this.results});
 }
 
-class BlocNewEpisodesState<T> extends BlocState<T> {
-  final T results;
-
-  BlocNewEpisodesState(this.results);
-}
+// class BlocNewEpisodesState<T> extends BlocState<T> {
+//   final T results;
+//
+//   BlocNewEpisodesState(this.results);
+// }

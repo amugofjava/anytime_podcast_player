@@ -52,7 +52,7 @@ class SearchBloc extends Bloc {
 
       _resultsCache ??= await podcastService.charts(size: 10);
 
-      yield BlocPopulatedState<pcast.SearchResult>(_resultsCache);
+      yield BlocPopulatedState<pcast.SearchResult>(results: _resultsCache);
     } else if (event is SearchTermEvent) {
       final term = event.term;
 
@@ -71,7 +71,7 @@ class SearchBloc extends Bloc {
 
           // Was the search successful?
           if (results.successful) {
-            yield BlocPopulatedState<pcast.SearchResult>(results);
+            yield BlocPopulatedState<pcast.SearchResult>(results: results);
           } else {
             yield BlocErrorState();
           }
