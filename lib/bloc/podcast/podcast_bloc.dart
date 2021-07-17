@@ -115,14 +115,6 @@ class PodcastBloc extends Bloc {
           _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
           await _loadNewEpisodes(feed);
-
-          if (_podcast.newEpisodes) {
-            log.fine('We have new episodes available');
-            _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
-            _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
-          }
-
-          _backgroundLoadStream.sink.add(BlocDefaultState<void>());
         }
       } catch (e) {
         // For now we'll assume a network error as this is the most likely.
@@ -185,6 +177,13 @@ class PodcastBloc extends Bloc {
     /// same as the one we have ended up with.
     if (lastFeed.podcast.url == _podcast.url) {
       _episodes = _podcast?.episodes;
+
+      if (_podcast.newEpisodes) {
+        _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
+        _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+      }
+
+      _backgroundLoadStream.sink.add(BlocDefaultState<void>());
     }
   }
 
