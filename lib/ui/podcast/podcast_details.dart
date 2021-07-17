@@ -111,7 +111,6 @@ class _PodcastDetailsState extends State<PodcastDetails> {
               label: L.of(context).new_episodes_view_now_label,
               onPressed: () {
                 _sliverScrollController.animateTo(100, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                // widget._podcastBloc.load(Feed(podcast: widget.podcast, backgroundFresh: false, silently: true));
                 widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
               },
             ),

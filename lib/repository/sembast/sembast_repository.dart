@@ -215,6 +215,7 @@ class SembastRepository extends Repository {
 
   @override
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
+    log.fine('saveEpisode. Chapter count is ${episode?.chapters?.length}');
     var e = await _saveEpisode(episode, updateIfSame);
 
     _episodeSubject.add(EpisodeUpdateState(e));
@@ -235,16 +236,16 @@ class SembastRepository extends Repository {
           var futures = <Future<int>>[];
 
           for (var episode in chunk) {
+            episode.lastUpdated = dateStamp;
+
             if (episode.id == null) {
-              episode.lastUpdated = dateStamp;
-              futures.add(_episodeStore.add(txn, episode.toMap()));
+              futures.add(_episodeStore.add(txn, episode.toMap()).then((id) => episode.id = id));
             } else {
               final finder = Finder(filter: Filter.byKey(episode.id));
 
               var existingEpisode = await findEpisodeById(episode.id);
 
               if (existingEpisode == null || existingEpisode != episode) {
-                episode.lastUpdated = dateStamp;
                 futures.add(_episodeStore.update(txn, episode.toMap(), finder: finder));
               }
             }

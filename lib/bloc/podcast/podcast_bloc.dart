@@ -55,7 +55,6 @@ class PodcastBloc extends Bloc {
 
   Podcast _podcast;
   List<Episode> _episodes = [];
-  List<Episode> _newEpisodes = [];
   Feed lastFeed;
   bool first = true;
 
@@ -169,7 +168,6 @@ class PodcastBloc extends Bloc {
 
   void _refresh() {
     _episodesStream.add(_episodes);
-    // _podcastStream.sink.add(BlocPopulatedState<Podcast>(_podcast));
   }
 
   Future<void> _loadNewEpisodes(Feed feed) async {
@@ -181,7 +179,6 @@ class PodcastBloc extends Bloc {
     /// Only populate episodes if the ID we started the load with is the
     /// same as the one we have ended up with.
     if (lastFeed.podcast.url == _podcast.url) {
-      // _newEpisodes = _podcast?.episodes;
       _episodes = _podcast?.episodes;
     }
   }

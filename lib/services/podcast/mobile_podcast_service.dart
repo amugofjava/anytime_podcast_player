@@ -130,12 +130,12 @@ class MobilePodcastService extends PodcastService {
         episodes: <Episode>[],
       );
 
-      /// We could be subscribed to this podcast already. Let's check.
-      var r = await repository.findPodcastByGuid(loadedPodcast.url);
+      /// We could be following this podcast already. Let's check.
+      var follow = await repository.findPodcastByGuid(loadedPodcast.url);
 
-      if (r != null) {
+      if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
-        pc.id = r.id;
+        pc.id = follow.id;
       }
 
       // Find all episodes from the feed.
