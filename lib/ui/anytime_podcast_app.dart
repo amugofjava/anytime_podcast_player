@@ -420,13 +420,19 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             ),
             actions: <Widget>[
               BasicDialogAction(
-                title: Text(L.of(context).cancel_button_label),
+                title: Text(
+                  L.of(context).cancel_button_label,
+                  style: TextStyle(color: Theme.of(context).buttonColor),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               BasicDialogAction(
-                title: Text(L.of(context).ok_button_label),
+                title: Text(
+                  L.of(context).ok_button_label,
+                  style: TextStyle(color: Theme.of(context).buttonColor),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
