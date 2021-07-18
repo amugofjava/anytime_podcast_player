@@ -406,6 +406,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       case 'rss':
         await showPlatformDialog<void>(
           context: context,
+          useRootNavigator: false,
           builder: (_) => BasicDialogAlert(
             title: Text(L.of(context).add_rss_feed_option),
             content: TextField(

@@ -7,6 +7,7 @@ import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 class SearchProviderWidget extends StatefulWidget {
@@ -37,8 +38,9 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                       title: Text(L.of(context).search_provider_label),
                       subtitle: Text(snapshot.data.searchProvider == 'itunes' ? 'iTunes' : 'PodcastIndex'),
                       onTap: () {
-                        showDialog<void>(
+                        showPlatformDialog<void>(
                           context: context,
+                          useRootNavigator: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
                                 title: Text(L.of(context).search_provider_label,

@@ -234,6 +234,7 @@ class DownloadControl extends StatelessWidget {
 
     return showPlatformDialog<void>(
       context: context,
+      useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(
           L.of(context).stop_download_title,

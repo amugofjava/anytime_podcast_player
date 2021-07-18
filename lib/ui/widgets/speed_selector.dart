@@ -7,6 +7,7 @@ import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 /// This widget allows the user to change the playback speed. Selecting the playback
@@ -63,8 +64,9 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   color: Theme.of(context).buttonColor,
                 ),
                 onPressed: () {
-                  showDialog<void>(
+                  showPlatformDialog<void>(
                     context: context,
+                    useRootNavigator: false,
                     builder: (BuildContext context) {
                       return AlertDialog(
                           title: Text(
