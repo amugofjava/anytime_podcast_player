@@ -11,6 +11,7 @@ class TileImage extends StatelessWidget {
     Key key,
     @required this.url,
     @required this.size,
+    this.highlight = false,
   }) : super(key: key);
 
   /// The URL of the image to display.
@@ -19,12 +20,15 @@ class TileImage extends StatelessWidget {
   /// The size of the image container; both height and width.
   final double size;
 
+  final bool highlight;
+
   @override
   Widget build(BuildContext context) {
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return PodcastImage(
       key: Key('tile$url'),
+      highlight: highlight,
       url: url,
       height: size,
       width: size,

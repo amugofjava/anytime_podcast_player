@@ -687,6 +687,166 @@ class L {
           locale: localeName,
         );
   }
+
+  String get settings_auto_update_episodes {
+    return message('settings_auto_update_episodes') ??
+        Intl.message(
+          'Auto update episodes',
+          name: 'settings_auto_update_episodes',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_never {
+    return message('settings_auto_update_episodes_never') ??
+        Intl.message(
+          'Never',
+          name: 'settings_auto_update_episodes_never',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_heading {
+    return message('settings_auto_update_episodes_heading') ??
+        Intl.message(
+          'Refresh episodes on details screen after',
+          name: 'settings_auto_update_episodes_heading',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_always {
+    return message('settings_auto_update_episodes_always') ??
+        Intl.message(
+          'Always',
+          name: 'settings_auto_update_episodes_always',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_10min {
+    return message('settings_auto_update_episodes_10min') ??
+        Intl.message(
+          '10 minutes since last update',
+          name: 'settings_auto_update_episodes_10min',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_30min {
+    return message('settings_auto_update_episodes_30min') ??
+        Intl.message(
+          '30 minutes since last update',
+          name: 'settings_auto_update_episodes_30min',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_1hour {
+    return message('settings_auto_update_episodes_1hour') ??
+        Intl.message(
+          '1 hour since last update',
+          name: 'settings_auto_update_episodes_1hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_3hour {
+    return message('settings_auto_update_episodes_3hour') ??
+        Intl.message(
+          '3 hours since last update',
+          name: 'settings_auto_update_episodes_3hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_6hour {
+    return message('settings_auto_update_episodes_6hour') ??
+        Intl.message(
+          '6 hours since last update',
+          name: 'settings_auto_update_episodes_6hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_12hour {
+    return message('settings_auto_update_episodes_12hour') ??
+        Intl.message(
+          '12 hours since last update',
+          name: 'settings_auto_update_episodes_12hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get new_episodes_label {
+    return message('new_episodes_label') ??
+        Intl.message(
+          'New episodes are available',
+          name: 'new_episodes_label',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get new_episodes_view_now_label {
+    return message('new_episodes_view_now_label') ??
+        Intl.message(
+          'VIEW NOW',
+          name: 'new_episodes_view_now_label',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_personalisation_divider_label {
+    return message('settings_personalisation_divider_label') ??
+        Intl.message(
+          'PERSONALISATION',
+          name: 'settings_personalisation_divider_label',
+          desc: 'Settings divider label for personalisation',
+          locale: localeName,
+        );
+  }
+
+  String get settings_episodes_divider_label {
+    return message('settings_episodes_divider_label') ??
+        Intl.message(
+          'EPISODES',
+          name: 'settings_episodes_divider_label',
+          desc: 'Settings divider label for episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_playback_divider_label {
+    return message('settings_playback_divider_label') ??
+        Intl.message(
+          'PLAYBACK',
+          name: 'settings_playback_divider_label',
+          desc: 'Settings divider label for playback',
+          locale: localeName,
+        );
+  }
+
+  String get settings_data_divider_label {
+    return message('settings_data_divider_label') ??
+        Intl.message(
+          'DATA',
+          name: 'settings_data_divider_label',
+          desc: 'Settings divider label for data',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

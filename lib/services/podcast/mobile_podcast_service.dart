@@ -66,6 +66,8 @@ class MobilePodcastService extends PodcastService {
   /// it from the network.
   @override
   Future<Podcast> loadPodcast({@required Podcast podcast, bool refresh}) async {
+    log.fine('loadPodcast. ID ${podcast.id} - refresh $refresh');
+
     if (podcast.id == null || refresh) {
       psapi.Podcast loadedPodcast;
       var title = '';
@@ -75,12 +77,14 @@ class MobilePodcastService extends PodcastService {
       var thumbImageUrl = podcast.thumbImageUrl;
 
       if (!refresh) {
+        log.fine('Not a refresh so try to fetch from cache');
         loadedPodcast = _cache.item(podcast.url);
       }
 
       // If we didn't get a cache hit load the podcast feed.
       if (loadedPodcast == null) {
         try {
+          log.fine('Loading podcast from feed ${podcast.url}');
           loadedPodcast = await _loadPodcastFeed(url: podcast.url);
         } on Exception {
           rethrow;
@@ -117,7 +121,7 @@ class MobilePodcastService extends PodcastService {
         }
       }
 
-      final pc = Podcast(
+      var pc = Podcast(
         guid: loadedPodcast.url,
         url: loadedPodcast.url,
         link: loadedPodcast.link,
@@ -130,12 +134,12 @@ class MobilePodcastService extends PodcastService {
         episodes: <Episode>[],
       );
 
-      /// We could be subscribed to this podcast already. Let's check.
-      var r = await repository.findPodcastByGuid(loadedPodcast.url);
+      /// We could be following this podcast already. Let's check.
+      var follow = await repository.findPodcastByGuid(loadedPodcast.url);
 
-      if (r != null) {
+      if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
-        pc.id = r.id;
+        pc.id = follow.id;
       }
 
       // Find all episodes from the feed.
@@ -152,13 +156,17 @@ class MobilePodcastService extends PodcastService {
 
         for (final episode in loadedPodcast.episodes) {
           var existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
+          var author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
+          var title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
+          var description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
 
           if (existingEpisode == null) {
-            var author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
-            var title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
-            var description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
+            if (pc.id != null) {
+              pc.newEpisodes = true;
+            }
 
             pc.episodes.add(Episode(
+              highlight: pc.newEpisodes,
               pguid: pc.guid,
               guid: episode.guid,
               podcast: pc.title,
@@ -177,9 +185,9 @@ class MobilePodcastService extends PodcastService {
               chapters: <Chapter>[],
             ));
           } else {
-            existingEpisode.title = episode.title;
-            existingEpisode.description = episode.description;
-            existingEpisode.author = episode.author;
+            existingEpisode.title = title;
+            existingEpisode.description = description;
+            existingEpisode.author = author;
             existingEpisode.season = episode.season ?? 0;
             existingEpisode.episode = episode.episode ?? 0;
             existingEpisode.contentUrl = episode.contentUrl;
@@ -209,7 +217,7 @@ class MobilePodcastService extends PodcastService {
       // need to save the updated subscription. A non-null ID indicates this
       // podcast is subscribed too.
       if (podcast.id != null && refresh) {
-        await repository.savePodcast(pc);
+        pc = await repository.savePodcast(pc);
       }
 
       return pc;

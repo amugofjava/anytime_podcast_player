@@ -26,6 +26,12 @@ void main() {
   Repository repository;
 
   setUp(() async {
+    var f = File('${Directory.systemTemp.path}/anytime.db');
+
+    if (f.existsSync()) {
+      f.deleteSync();
+    }
+
     final settingService = await MobileSettingsService.instance();
     PathProviderPlatform.instance = mockPath;
     repository = SembastRepository();
@@ -36,8 +42,7 @@ void main() {
       settingsService: settingService,
     );
 
-    opmlService = MobileOPMLService(
-        podcastService: podcastService, repository: repository);
+    opmlService = MobileOPMLService(podcastService: podcastService, repository: repository);
   });
 
   tearDown(() async {
@@ -49,8 +54,7 @@ void main() {
   });
 
   test('Load test OPML file. Single Podcast. Single episode.', () async {
-    var stream =
-        opmlService.loadOPMLFile('test_resources/opml_import_test1.opml');
+    var stream = opmlService.loadOPMLFile('test_resources/opml_import_test1.opml');
 
     await expectLater(
         stream,

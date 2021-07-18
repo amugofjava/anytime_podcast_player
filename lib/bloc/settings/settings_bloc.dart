@@ -25,6 +25,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _externalLinkConsent = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _showFunding = BehaviorSubject<bool>();
+  final BehaviorSubject<int> _autoUpdatePeriod = BehaviorSubject<int>();
 
   SettingsBloc(this._settingsService) {
     _init();
@@ -41,6 +42,7 @@ class SettingsBloc extends Bloc {
     var searchProvider = _settingsService.searchProvider;
     var externalLinkConsent = _settingsService.externalLinkConsent;
     var showFunding = _settingsService.showFunding;
+    var autoUpdateEpisodePeriod = _settingsService.autoUpdateEpisodePeriod;
 
     // Add our available search providers.
     var providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
@@ -59,6 +61,7 @@ class SettingsBloc extends Bloc {
       externalLinkConsent: externalLinkConsent,
       autoOpenNowPlaying: autoOpenNowPlaying,
       showFunding: showFunding,
+      autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
     );
 
     _settings.add(s);
@@ -76,6 +79,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -96,6 +100,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -116,6 +121,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -134,6 +140,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -154,6 +161,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpen,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -172,6 +180,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: show,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -195,6 +204,7 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: externalLinkConsent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -213,6 +223,50 @@ class SettingsBloc extends Bloc {
         externalLinkConsent: consent,
         autoOpenNowPlaying: autoOpenNowPlaying,
         showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
+      );
+
+      _settings.add(s);
+
+      // If the setting has not changed, don't bother updating it
+      if (consent != externalLinkConsent) {
+        _settingsService.externalLinkConsent = consent;
+      }
+    });
+
+    _autoUpdatePeriod.listen((period) {
+      autoUpdateEpisodePeriod = period;
+
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
+        autoUpdateEpisodePeriod: period,
+      );
+
+      _settings.add(s);
+
+      _settingsService.autoUpdateEpisodePeriod = period;
+    });
+
+    _externalLinkConsent.listen((consent) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: consent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       );
 
       _settings.add(s);
@@ -241,6 +295,8 @@ class SettingsBloc extends Bloc {
   void Function(bool) get setExternalLinkConsent => _externalLinkConsent.add;
 
   void Function(bool) get setShowFunding => _showFunding.add;
+
+  void Function(int) get autoUpdatePeriod => _autoUpdatePeriod.add;
 
   AppSettings get currentSettings => _settings.value;
 

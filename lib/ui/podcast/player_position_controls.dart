@@ -63,7 +63,9 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
             ),
             child: Row(
               children: <Widget>[
-                Text(_formatDuration(position)),
+                FittedBox(
+                  child: Text(_formatDuration(position)),
+                ),
                 Expanded(
                   child: snapshot.hasData
                       ? Slider(
@@ -104,7 +106,12 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           activeColor: Theme.of(context).buttonColor,
                         ),
                 ),
-                Text(_formatDuration(Duration(seconds: timeRemaining))),
+                FittedBox(
+                  child: Text(
+                    _formatDuration(Duration(seconds: timeRemaining)),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
               ],
             ),
           );

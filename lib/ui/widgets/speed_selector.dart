@@ -70,6 +70,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                           title: Text(
                             L.of(context).playback_speed_label,
                           ),
+                          scrollable: true,
                           content: StatefulBuilder(
                             builder: (BuildContext context, StateSetter setState) {
                               return Column(

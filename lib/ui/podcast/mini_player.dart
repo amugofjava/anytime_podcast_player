@@ -74,6 +74,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     return Dismissible(
       key: Key('miniplayerdismissable'),
       confirmDismiss: (direction) async {
+        await _audioStateSubscription.cancel();
         audioBloc.transitionState(TransitionState.stop);
         return true;
       },
@@ -89,7 +90,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
           return Navigator.push(
             context,
-            MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: false),
+            MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: true),
           ).then((value) {
             audioStateListener();
           });

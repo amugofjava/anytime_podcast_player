@@ -41,13 +41,16 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                                title: Text(L.of(context).search_provider_label),
+                                title: Text(L.of(context).search_provider_label,
+                                    style: Theme.of(context).textTheme.subtitle1, textAlign: TextAlign.center),
                                 content: StatefulBuilder(
                                   builder: (BuildContext context, StateSetter setState) {
                                     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                                       RadioListTile<String>(
                                         title: Text('iTunes'),
                                         value: 'itunes',
+                                        dense: true,
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                         groupValue: snapshot.data.searchProvider,
                                         onChanged: (String value) {
                                           setState(() {
@@ -64,6 +67,8 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                       RadioListTile<String>(
                                         title: Text('PodcastIndex'),
                                         value: 'podcastindex',
+                                        dense: true,
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
                                         groupValue: snapshot.data.searchProvider,
                                         onChanged: (String value) {
                                           setState(() {

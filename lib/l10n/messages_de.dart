@@ -20,6 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
+
   static _notInlinedMessages(_) => <String, Function>{
         "about_label": MessageLookupByLibrary.simpleMessage("Über"),
         "add_rss_feed_option": MessageLookupByLibrary.simpleMessage("RSS-Feed hinzufügen"),
@@ -58,6 +59,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "mark_played_label": MessageLookupByLibrary.simpleMessage("Markieren gespielt"),
         "mark_unplayed_label": MessageLookupByLibrary.simpleMessage("Markieren nicht abgespielt"),
         "minimise_player_window_button_label": MessageLookupByLibrary.simpleMessage("Wiedergabebildschirm minimieren"),
+        "new_episodes_label": MessageLookupByLibrary.simpleMessage("JETZT ANZEIGEN"),
+        "new_episodes_view_now_label": MessageLookupByLibrary.simpleMessage("VIEW NOW"),
         "no_downloads_message": MessageLookupByLibrary.simpleMessage("Sie haben keine Episoden heruntergeladen"),
         "no_podcast_details_message": MessageLookupByLibrary.simpleMessage(
             "Podcast-Episoden konnten nicht geladen werden. Bitte überprüfen Sie Ihre Verbindung."),
@@ -73,6 +76,26 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_button_label": MessageLookupByLibrary.simpleMessage("Suche"),
         "search_for_podcasts_hint": MessageLookupByLibrary.simpleMessage("Suche nach Podcasts"),
         "search_provider_label": MessageLookupByLibrary.simpleMessage("Suchmaschine"),
+        "settings_personalisation_divider_label": MessageLookupByLibrary.simpleMessage("PERSONALISIERUNG"),
+        "settings_episodes_divider_label": MessageLookupByLibrary.simpleMessage("EPISODEN"),
+        "settings_playback_divider_label": MessageLookupByLibrary.simpleMessage("WIEDERGABE"),
+        "settings_data_divider_label": MessageLookupByLibrary.simpleMessage("DATEN"),
+        "settings_auto_update_episodes_heading":
+            MessageLookupByLibrary.simpleMessage("Folgen in der Detailansicht aktualisieren, nachdem"),
+        "settings_auto_update_episodes": MessageLookupByLibrary.simpleMessage("Folgen automatisch aktualisieren"),
+        "settings_auto_update_episodes_never": MessageLookupByLibrary.simpleMessage("Noch nie"),
+        "settings_auto_update_episodes_always": MessageLookupByLibrary.simpleMessage("Immer"),
+        "settings_auto_update_episodes_10min":
+            MessageLookupByLibrary.simpleMessage("10 Minuten seit dem letzten Update"),
+        "settings_auto_update_episodes_30min":
+            MessageLookupByLibrary.simpleMessage("30 Minuten seit dem letzten Update"),
+        "settings_auto_update_episodes_1hour": MessageLookupByLibrary.simpleMessage("1 Stunde seit dem letzten Update"),
+        "settings_auto_update_episodes_3hour":
+            MessageLookupByLibrary.simpleMessage("3 Stunden seit dem letzten Update"),
+        "settings_auto_update_episodes_6hour":
+            MessageLookupByLibrary.simpleMessage("6 Stunden seit dem letzten Update"),
+        "settings_auto_update_episodes_12hour":
+            MessageLookupByLibrary.simpleMessage("12 Stunden seit dem letzten Update"),
         "settings_auto_open_now_playing":
             MessageLookupByLibrary.simpleMessage("Vollbild-Player-Modus beim Episodenstart"),
         "settings_download_sd_card_label": MessageLookupByLibrary.simpleMessage("Episoden auf SD-Karte herunterladen"),

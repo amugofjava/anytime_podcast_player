@@ -22,10 +22,18 @@ class Feed {
   /// If true the podcast is loaded regardless of if it's currently cached.
   bool refresh;
 
+  /// If true, will also perform an additional background refresh.
+  bool backgroundFresh;
+
+  /// If true any error can be ignored.
+  bool silently;
+
   Feed({
     @required this.podcast,
     this.imageUrl,
     this.thumbImageUrl,
     this.refresh = false,
+    this.backgroundFresh = false,
+    this.silently = false,
   });
 }
