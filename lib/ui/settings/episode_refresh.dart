@@ -7,6 +7,7 @@ import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 class EpisodeRefreshWidget extends StatefulWidget {
@@ -35,8 +36,9 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                       title: Text(L.of(context).settings_auto_update_episodes),
                       subtitle: updateSubtitle(snapshot.data),
                       onTap: () {
-                        showDialog<void>(
+                        showPlatformDialog<void>(
                           context: context,
+                          useRootNavigator: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
                                 title: Text(
