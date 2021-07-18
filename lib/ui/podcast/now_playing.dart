@@ -443,7 +443,7 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                                   ),
                                 ),
                                 chapterUrl.isEmpty
-                                    ? SizedBox(
+                                    ? const SizedBox(
                                         height: 0,
                                         width: 0,
                                       )

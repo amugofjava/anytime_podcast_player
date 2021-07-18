@@ -56,7 +56,7 @@ class _MaterialFundingMenu extends StatelessWidget {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return funding == null || funding.isEmpty
-        ? SizedBox(
+        ? const SizedBox(
             width: 0.0,
             height: 0.0,
           )
@@ -105,7 +105,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return funding == null || funding.isEmpty
-        ? SizedBox(
+        ? const SizedBox(
             width: 0.0,
             height: 0.0,
           )

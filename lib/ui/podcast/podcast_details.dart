@@ -289,7 +289,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                       }
 
                       return SliverToBoxAdapter(
-                        child: SizedBox(
+                        child: const SizedBox(
                           width: 0.0,
                           height: 0.0,
                         ),
@@ -389,8 +389,17 @@ class PodcastTitle extends StatelessWidget {
               children: <Widget>[
                 SubscriptionButton(podcast),
                 PodcastContextMenu(podcast),
-                settings.showFunding ? FundingMenu(podcast.funding) : Container(),
-                SyncSpinner(),
+                settings.showFunding
+                    ? FundingMenu(podcast.funding)
+                    : const SizedBox(
+                        width: 0.0,
+                        height: 0.0,
+                      ),
+                Expanded(
+                    child: Align(
+                  alignment: Alignment.centerRight,
+                  child: const SyncSpinner(),
+                )),
               ],
             ),
           )
