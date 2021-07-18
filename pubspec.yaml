@@ -49,7 +49,9 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  image_path: "assets/images/anytime-logo.png"
+  image_path_android: "assets/images/anytime-logo.png"
+  image_path_ios: "assets/images/anytime-logo-ios.png"
+  remove_alpha_ios: true
   android: true
   ios: true
 
