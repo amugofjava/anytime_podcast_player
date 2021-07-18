@@ -45,9 +45,6 @@ class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStat
         builder: (context, snapshot) {
           final state = snapshot.data;
 
-          print('SyncSpinner state is');
-          print(state);
-
           return state is BlocLoadingState<void>
               ? RotationTransition(
                   turns: _controller,

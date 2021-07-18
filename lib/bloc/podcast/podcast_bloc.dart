@@ -110,13 +110,15 @@ class PodcastBloc extends Bloc {
         await _loadEpisodes(feed, feed.refresh);
 
         /// Do we also need to perform a background refresh?
-        if (feed.backgroundFresh && _shouldAutoRefresh()) {
+        if (feed.podcast.id != null && feed.backgroundFresh && _shouldAutoRefresh()) {
           log.fine('Performing background refresh of ${feed.podcast.url}');
           _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
           await _loadNewEpisodes(feed);
         }
       } catch (e) {
+        _backgroundLoadStream.sink.add(BlocDefaultState<void>());
+
         // For now we'll assume a network error as this is the most likely.
         if (lastFeed.podcast.url == _podcast.url && !feed.silently) {
           _podcastStream.sink.add(BlocErrorState<Podcast>());
