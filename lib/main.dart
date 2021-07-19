@@ -5,10 +5,12 @@
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/ui/anytime_podcast_app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
   Logger.root.level = Level.FINE;
 

@@ -46,7 +46,8 @@ ThemeData _buildLightTheme() {
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     iconTheme: IconThemeData(color: Colors.orange),
     appBarTheme: base.appBarTheme.copyWith(
-      color: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(primary: Colors.grey[800]),
@@ -97,7 +98,8 @@ ThemeData _buildDarktheme() {
     ),
     sliderTheme: SliderThemeData().copyWith(valueIndicatorColor: Color(0xff222222)),
     appBarTheme: base.appBarTheme.copyWith(
-      color: Color(0xff222222),
+      backgroundColor: Color(0xff222222),
+      foregroundColor: Colors.white,
       shadowColor: Color(0xff222222),
       elevation: 1.0,
     ),
