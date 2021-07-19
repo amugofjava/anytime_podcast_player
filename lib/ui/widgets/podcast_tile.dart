@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
-import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
@@ -21,8 +20,6 @@ class PodcastTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _podcastBloc = Provider.of<PodcastBloc>(context);
-    final _theme = Theme.of(context);
-    final darkMode = _theme.brightness == Brightness.dark;
 
     return Center(
       child: Column(
@@ -31,15 +28,9 @@ class PodcastTile extends StatelessWidget {
         children: <Widget>[
           ListTile(
             onTap: () {
-              if (darkMode) {
-                Chrome.translucentDark();
-              } else {
-                Chrome.translucentLight();
-              }
-
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc, darkMode)),
+                MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc)),
               );
             },
             leading: Hero(
