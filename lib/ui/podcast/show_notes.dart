@@ -29,7 +29,6 @@ class ShowNotes extends StatelessWidget {
           SliverAppBar(
             brightness: Theme.of(context).brightness,
             title: Text(episode.podcast),
-            backgroundColor: Theme.of(context).appBarTheme.color,
             floating: false,
             pinned: true,
             snap: false,

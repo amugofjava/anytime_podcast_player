@@ -11,7 +11,6 @@ import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
-import 'package:anytime/core/chrome.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
@@ -103,23 +102,13 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
         /// Only update the theme if it has changed.
         if (newTheme != theme) {
           theme = newTheme;
-
-          if (event.theme == 'dark') {
-            Chrome.transparentDark();
-          } else {
-            Chrome.transparentLight();
-          }
         }
       });
     });
 
     if (widget.mobileSettingsService.themeDarkMode) {
       theme = Themes.darkTheme().themeData;
-
-      Chrome.transparentDark();
     } else {
-      Chrome.transparentLight();
-
       theme = Themes.lightTheme().themeData;
     }
   }
@@ -256,103 +245,108 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
-    final brightness = Theme.of(context).brightness;
 
-    return Scaffold(
-      backgroundColor: backgroundColour,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverVisibility(
-                  visible: widget.topBarVisible,
-                  sliver: SliverAppBar(
-                    title: TitleWidget(),
-                    brightness: brightness,
-                    backgroundColor: backgroundColour,
-                    floating: false,
-                    pinned: true,
-                    snap: false,
-                    actions: <Widget>[
-                      IconButton(
-                        tooltip: L.of(context).search_button_label,
-                        icon: Icon(Icons.search),
-                        onPressed: () async {
-                          await Navigator.push(
-                            context,
-                            SlideRightRoute(widget: Search()),
-                          );
-                        },
-                      ),
-                      PopupMenuButton<String>(
-                        color: Theme.of(context).dialogBackgroundColor,
-                        onSelected: _menuSelect,
-                        icon: Icon(
-                          Icons.more_vert,
-                        ),
-                        itemBuilder: (BuildContext context) {
-                          return <PopupMenuEntry<String>>[
-                            PopupMenuItem<String>(
-                              textStyle: Theme.of(context).textTheme.subtitle1,
-                              value: 'rss',
-                              child: Text(L.of(context).add_rss_feed_option),
-                            ),
-                            PopupMenuItem<String>(
-                              textStyle: Theme.of(context).textTheme.subtitle1,
-                              value: 'settings',
-                              child: Text(L.of(context).settings_label),
-                            ),
-                            PopupMenuItem<String>(
-                              textStyle: Theme.of(context).textTheme.subtitle1,
-                              value: 'about',
-                              child: Text(L.of(context).about_label),
-                            ),
-                          ];
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                StreamBuilder<int>(
-                    stream: pager.currentPage,
-                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      return _fragment(snapshot.data, searchBloc);
-                    }),
-              ],
-            ),
-          ),
-          MiniPlayer(),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Theme.of(context).bottomAppBarColor,
+        statusBarColor: Colors.transparent,
       ),
-      bottomNavigationBar: StreamBuilder<int>(
-          stream: pager.currentPage,
-          initialData: 0,
-          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-            return BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Theme.of(context).bottomAppBarColor,
-              selectedIconTheme: Theme.of(context).iconTheme,
-              selectedItemColor: Theme.of(context).iconTheme.color,
-              unselectedItemColor: HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
-              currentIndex: snapshot.data,
-              onTap: pager.changePage,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.library_music),
-                  label: L.of(context).library,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.explore),
-                  label: L.of(context).discover,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.file_download),
-                  label: L.of(context).downloads,
-                ),
-              ],
-            );
-          }),
+      child: Scaffold(
+        backgroundColor: backgroundColour,
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverVisibility(
+                    visible: widget.topBarVisible,
+                    sliver: SliverAppBar(
+                      title: TitleWidget(),
+                      backgroundColor: backgroundColour,
+                      floating: false,
+                      pinned: true,
+                      snap: false,
+                      actions: <Widget>[
+                        IconButton(
+                          tooltip: L.of(context).search_button_label,
+                          icon: Icon(Icons.search),
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              SlideRightRoute(widget: Search()),
+                            );
+                          },
+                        ),
+                        PopupMenuButton<String>(
+                          color: Theme.of(context).dialogBackgroundColor,
+                          onSelected: _menuSelect,
+                          icon: Icon(
+                            Icons.more_vert,
+                          ),
+                          itemBuilder: (BuildContext context) {
+                            return <PopupMenuEntry<String>>[
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'rss',
+                                child: Text(L.of(context).add_rss_feed_option),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'settings',
+                                child: Text(L.of(context).settings_label),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'about',
+                                child: Text(L.of(context).about_label),
+                              ),
+                            ];
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  StreamBuilder<int>(
+                      stream: pager.currentPage,
+                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        return _fragment(snapshot.data, searchBloc);
+                      }),
+                ],
+              ),
+            ),
+            MiniPlayer(),
+          ],
+        ),
+        bottomNavigationBar: StreamBuilder<int>(
+            stream: pager.currentPage,
+            initialData: 0,
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Theme.of(context).bottomAppBarColor,
+                selectedIconTheme: Theme.of(context).iconTheme,
+                selectedItemColor: Theme.of(context).iconTheme.color,
+                unselectedItemColor: HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
+                currentIndex: snapshot.data,
+                onTap: pager.changePage,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.library_music),
+                    label: L.of(context).library,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.explore),
+                    label: L.of(context).discover,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.file_download),
+                    label: L.of(context).downloads,
+                  ),
+                ],
+              );
+            }),
+      ),
     );
   }
 
@@ -370,8 +364,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     var _textFieldController = TextEditingController();
     var _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     var url = '';
-    final _theme = Theme.of(context);
-    final darkMode = _theme.brightness == Brightness.dark;
 
     switch (choice) {
       case 'about':
@@ -436,8 +428,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute<void>(
-                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc, darkMode)),
+                    MaterialPageRoute<void>(builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
                   ).then((value) => Navigator.pop(context));
                 },
               ),

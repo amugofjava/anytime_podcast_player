@@ -4,7 +4,6 @@
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
-import 'package:anytime/core/chrome.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -23,6 +22,7 @@ import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -37,9 +37,8 @@ import 'package:url_launcher/url_launcher.dart';
 class PodcastDetails extends StatefulWidget {
   final Podcast podcast;
   final PodcastBloc _podcastBloc;
-  final bool _darkMode;
 
-  PodcastDetails(this.podcast, this._podcastBloc, this._darkMode);
+  PodcastDetails(this.podcast, this._podcastBloc);
 
   @override
   _PodcastDetailsState createState() => _PodcastDetailsState();
@@ -50,7 +49,8 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   final ScrollController _sliverScrollController = ScrollController();
   var brightness = Brightness.dark;
-  var toolbarCollpased = false;
+  bool toolbarCollapsed = false;
+  SystemUiOverlayStyle _systemOverlayStyle;
 
   @override
   void initState() {
@@ -65,39 +65,23 @@ class _PodcastDetailsState extends State<PodcastDetails> {
       silently: true,
     ));
 
-    brightness = widget._darkMode ? Brightness.dark : Brightness.light;
-
     // We only want to display the podcast title when the toolbar is in a
     // collapsed state. Add a listener and set toollbarCollapsed variable
     // as required. The text display property is then based on this boolean.
     _sliverScrollController.addListener(() {
-      if (!toolbarCollpased &&
+      if (!toolbarCollapsed &&
           _sliverScrollController.hasClients &&
           _sliverScrollController.offset > (300 - kToolbarHeight)) {
         setState(() {
-          if (widget._darkMode) {
-            Chrome.transparentDark();
-            brightness = Brightness.light;
-          } else {
-            Chrome.transparentLight();
-            brightness = Brightness.light;
-          }
-
-          toolbarCollpased = true;
+          toolbarCollapsed = true;
+          _updateSystemOverlayStyle();
         });
-      } else if (toolbarCollpased &&
+      } else if (toolbarCollapsed &&
           _sliverScrollController.hasClients &&
           _sliverScrollController.offset < (300 - kToolbarHeight)) {
         setState(() {
-          if (widget._darkMode) {
-            Chrome.translucentDark();
-            brightness = Brightness.light;
-          } else {
-            Chrome.translucentLight();
-            brightness = Brightness.dark;
-          }
-
-          toolbarCollpased = false;
+          toolbarCollapsed = false;
+          _updateSystemOverlayStyle();
         });
       }
     });
@@ -127,6 +111,15 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   }
 
   @override
+  void didChangeDependencies() {
+    _systemOverlayStyle = SystemUiOverlayStyle(
+      statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+      statusBarColor: Theme.of(context).appBarTheme.backgroundColor.withOpacity(toolbarCollapsed ? 1.0 : 0.5),
+    );
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     super.dispose();
   }
@@ -140,26 +133,32 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     ));
   }
 
-  void _setChrome({bool darkMode}) {
-    if (darkMode) {
-      Chrome.transparentDark();
-    } else {
-      Chrome.transparentLight();
-    }
+  void _resetSystemOverlayStyle() {
+    setState(() {
+      _systemOverlayStyle = SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarColor: Colors.transparent,
+      );
+    });
+  }
+
+  void _updateSystemOverlayStyle() {
+    setState(() {
+      _systemOverlayStyle = SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarColor: Theme.of(context).appBarTheme.backgroundColor.withOpacity(toolbarCollapsed ? 1.0 : 0.5),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final defaultBrightness = Theme.of(context).brightness;
     final _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
-    brightness = toolbarCollpased ? defaultBrightness : Brightness.dark;
-
     return WillPopScope(
       onWillPop: () {
-        _setChrome(darkMode: widget._darkMode);
-
+        _resetSystemOverlayStyle();
         return Future.value(true);
       },
       child: ScaffoldMessenger(
@@ -174,63 +173,54 @@ class _PodcastDetailsState extends State<PodcastDetails> {
               controller: _sliverScrollController,
               slivers: <Widget>[
                 SliverAppBar(
-                  brightness: brightness,
-                  title: AnimatedOpacity(
-                    opacity: toolbarCollpased ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 500),
-                    child: Text(widget.podcast.title),
-                  ),
-                  leading: DecoratedIconButton(
-                    icon: Icons.close,
-                    iconColour: toolbarCollpased && defaultBrightness == Brightness.light ? Colors.black : Colors.white,
-                    decorationColour: toolbarCollpased ? Color(0x00000000) : Color(0x22000000),
-                    onPressed: () {
-                      setState(() {
-                        // We need to switch brightness to light here. If we do not,
-                        // it will stay dark until the previous screen is rebuilt and
-                        // that results in the status bar being blank for a few
-                        // milliseconds which looks very odd.
-                        brightness = widget._darkMode ? Brightness.dark : Brightness.light;
-                      });
-
-                      _setChrome(darkMode: widget._darkMode);
-
-                      Navigator.pop(context);
-                    },
-                  ),
-                  backgroundColor: Theme.of(context).appBarTheme.color,
-                  expandedHeight: 300.0,
-                  floating: false,
-                  pinned: true,
-                  snap: false,
-                  flexibleSpace: FlexibleSpaceBar(
-                      background: Hero(
-                    key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
-                    tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
-                    child: ExcludeSemantics(
-                      child: StreamBuilder<BlocState<Podcast>>(
-                          initialData: BlocEmptyState<Podcast>(),
-                          stream: _podcastBloc.details,
-                          builder: (context, snapshot) {
-                            final state = snapshot.data;
-                            var podcast = widget.podcast;
-
-                            if (state is BlocLoadingState<Podcast>) {
-                              podcast = state.data;
-                            }
-
-                            if (state is BlocPopulatedState<Podcast>) {
-                              podcast = state.results;
-                            }
-
-                            return PodcastHeaderImage(
-                              podcast: podcast,
-                              placeholderBuilder: placeholderBuilder,
-                            );
-                          }),
+                    backwardsCompatibility: false,
+                    systemOverlayStyle: _systemOverlayStyle,
+                    title: AnimatedOpacity(
+                        opacity: toolbarCollapsed ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 500),
+                        child: Text(widget.podcast.title)),
+                    leading: DecoratedIconButton(
+                      icon: Icons.close,
+                      iconColour:
+                          toolbarCollapsed && Theme.of(context).brightness == Brightness.light ? Theme.of(context).appBarTheme.foregroundColor : Colors.white,
+                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22000000),
+                      onPressed: () {
+                        _resetSystemOverlayStyle();
+                        Navigator.pop(context);
+                      },
                     ),
-                  )),
-                ),
+                    expandedHeight: 300.0,
+                    floating: false,
+                    pinned: true,
+                    snap: false,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Hero(
+                        key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
+                        tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
+                        child: ExcludeSemantics(
+                          child: StreamBuilder<BlocState<Podcast>>(
+                              initialData: BlocEmptyState<Podcast>(),
+                              stream: _podcastBloc.details,
+                              builder: (context, snapshot) {
+                                final state = snapshot.data;
+                                var podcast = widget.podcast;
+
+                                if (state is BlocLoadingState<Podcast>) {
+                                  podcast = state.data;
+                                }
+
+                                if (state is BlocPopulatedState<Podcast>) {
+                                  podcast = state.results;
+                                }
+
+                                return PodcastHeaderImage(
+                                  podcast: podcast,
+                                  placeholderBuilder: placeholderBuilder,
+                                );
+                              }),
+                        ),
+                      ),
+                    )),
                 StreamBuilder<BlocState<Podcast>>(
                     initialData: BlocEmptyState<Podcast>(),
                     stream: _podcastBloc.details,
