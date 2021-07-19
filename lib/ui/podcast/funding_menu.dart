@@ -174,13 +174,19 @@ class FundingLink {
           content: Text(L.of(context).consent_message),
           actions: <Widget>[
             BasicDialogAction(
-              title: Text(L.of(context).go_back_button_label),
+              title: Text(
+                L.of(context).go_back_button_label,
+                style: TextStyle(color: Theme.of(context).buttonColor),
+              ),
               onPressed: () {
                 Navigator.pop(context, false);
               },
             ),
             BasicDialogAction(
-              title: Text(L.of(context).continue_button_label),
+              title: Text(
+                L.of(context).continue_button_label,
+                style: TextStyle(color: Theme.of(context).buttonColor),
+              ),
               onPressed: () {
                 Navigator.pop(context, true);
               },

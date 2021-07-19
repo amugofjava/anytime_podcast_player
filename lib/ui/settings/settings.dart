@@ -185,7 +185,10 @@ class _SettingsState extends State<Settings> {
         ),
         actions: <Widget>[
           BasicDialogAction(
-            title: Text(L.of(context).ok_button_label),
+            title: Text(
+              L.of(context).ok_button_label,
+              style: TextStyle(color: Theme.of(context).buttonColor),
+            ),
             onPressed: () {
               Navigator.pop(context);
             },

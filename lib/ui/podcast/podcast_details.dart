@@ -448,13 +448,17 @@ class SubscriptionButton extends StatelessWidget {
                               BasicDialogAction(
                                 title: Text(
                                   L.of(context).cancel_button_label,
+                                  style: TextStyle(color: Theme.of(context).buttonColor),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               BasicDialogAction(
-                                title: Text(L.of(context).unsubscribe_button_label),
+                                title: Text(
+                                  L.of(context).unsubscribe_button_label,
+                                  style: TextStyle(color: Theme.of(context).buttonColor),
+                                ),
                                 onPressed: () {
                                   bloc.podcastEvent(PodcastEvent.unsubscribe);
 
