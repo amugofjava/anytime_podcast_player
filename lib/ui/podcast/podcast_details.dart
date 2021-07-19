@@ -181,8 +181,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         child: Text(widget.podcast.title)),
                     leading: DecoratedIconButton(
                       icon: Icons.close,
-                      iconColour:
-                          toolbarCollapsed && Theme.of(context).brightness == Brightness.light ? Theme.of(context).appBarTheme.foregroundColor : Colors.white,
+                      iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
+                          ? Theme.of(context).appBarTheme.foregroundColor
+                          : Colors.white,
                       decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22000000),
                       onPressed: () {
                         _resetSystemOverlayStyle();
