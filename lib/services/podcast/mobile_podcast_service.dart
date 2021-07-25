@@ -20,7 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
-import 'package:podcast_search/podcast_search.dart' as psapi;
+import 'package:podcast_search/podcast_search.dart' as psearch;
 
 class MobilePodcastService extends PodcastService {
   final log = Logger('MobilePodcastService');
@@ -33,7 +33,7 @@ class MobilePodcastService extends PodcastService {
   }) : super(api: api, repository: repository, settingsService: settingsService);
 
   @override
-  Future<psapi.SearchResult> search({
+  Future<psearch.SearchResult> search({
     String term,
     String country,
     String attribute,
@@ -54,7 +54,7 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
-  Future<psapi.SearchResult> charts({
+  Future<psearch.SearchResult> charts({
     int size,
   }) {
     return api.charts(size);
@@ -69,10 +69,7 @@ class MobilePodcastService extends PodcastService {
     log.fine('loadPodcast. ID ${podcast.id} - refresh $refresh');
 
     if (podcast.id == null || refresh) {
-      psapi.Podcast loadedPodcast;
-      var title = '';
-      var description = '';
-      var copyright = '';
+      psearch.Podcast loadedPodcast;
       var imageUrl = podcast.imageUrl;
       var thumbImageUrl = podcast.thumbImageUrl;
 
@@ -93,27 +90,17 @@ class MobilePodcastService extends PodcastService {
         _cache.store(loadedPodcast);
       }
 
-      // Sometimes, key values such as title, description etc contain new lines and empty
-      // spaces. We need to ensure these are all trimmed before we make the data available
-      // to the user.
-      if (loadedPodcast.title != null) {
-        title = loadedPodcast.title.replaceAll('\n', '').trim();
-      }
-      if (loadedPodcast.description != null) {
-        description = loadedPodcast.description.replaceAll('\n', '').trim();
-      }
-      if (loadedPodcast.copyright != null) {
-        copyright = loadedPodcast.copyright.replaceAll('\n', '').trim();
-      }
+      final title = loadedPodcast.title.replaceAll('\n', '').trim() ?? '';
+      final description = loadedPodcast.description.replaceAll('\n', '').trim() ?? '';
+      final copyright = loadedPodcast.copyright.replaceAll('\n', '').trim() ?? '';
+      final funding = <Funding>[];
+      final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
 
       // If imageUrl is null we have not loaded the podcast as a result of a search.
       if (imageUrl == null || imageUrl.isEmpty || refresh) {
         imageUrl = loadedPodcast.image;
         thumbImageUrl = loadedPodcast.image;
       }
-
-      final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
-      var funding = <Funding>[];
 
       if (loadedPodcast.funding != null) {
         for (var f in loadedPodcast?.funding) {
@@ -154,16 +141,16 @@ class MobilePodcastService extends PodcastService {
           }
         }
 
+        // Loop through all episodes in the feed and check to see if we already have that episode
+        // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
         for (final episode in loadedPodcast.episodes) {
-          var existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
-          var author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
-          var title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
-          var description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
+          final existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
+          final author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
+          final title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
+          final description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
 
           if (existingEpisode == null) {
-            if (pc.id != null) {
-              pc.newEpisodes = true;
-            }
+            pc.newEpisodes = pc.id != null;
 
             pc.episodes.add(Episode(
               highlight: pc.newEpisodes,
@@ -199,24 +186,32 @@ class MobilePodcastService extends PodcastService {
             existingEpisode.chaptersUrl = episode.chapters?.url;
 
             pc.episodes.add(existingEpisode);
+
+            // Clear this episode from our existing list
+            existingEpisodes.remove(existingEpisode);
           }
         }
       }
 
       // Add any downloaded episodes that are no longer in the feed - they
       // may have expired but we still want them.
+      var expired = <Episode>[];
+
       for (final episode in existingEpisodes) {
         var feedEpisode = loadedPodcast.episodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
 
-        if (feedEpisode == null) {
+        if (feedEpisode == null && episode.downloaded) {
           pc.episodes.add(episode);
+        } else {
+          expired.add(episode);
         }
       }
 
-      // If we are subscribed to this podcast and are simply refreshing we
-      // need to save the updated subscription. A non-null ID indicates this
-      // podcast is subscribed too.
+      // If we are subscribed to this podcast and are simply refreshing we need to save the updated subscription.
+      // A non-null ID indicates this podcast is subscribed too. We also need to delete any expired episodes.
       if (podcast.id != null && refresh) {
+        await repository.deleteEpisodes(expired);
+
         pc = await repository.savePodcast(pc);
       }
 
@@ -343,11 +338,11 @@ class MobilePodcastService extends PodcastService {
     return repository.saveEpisode(episode);
   }
 
-  Future<psapi.Chapters> _loadChaptersByUrl(String url) {
-    return compute<_FeedComputer, psapi.Chapters>(_loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
+  Future<psearch.Chapters> _loadChaptersByUrl(String url) {
+    return compute<_FeedComputer, psearch.Chapters>(_loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
   }
 
-  static Future<psapi.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) {
+  static Future<psearch.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) {
     return c.api.loadChapters(c.url);
   }
 
@@ -355,14 +350,14 @@ class MobilePodcastService extends PodcastService {
   /// can end up blocking the UI thread. We perform our feed load in a
   /// separate isolate so that the UI can continue to present a loading
   /// indicator whilst the data is fetched without locking the UI.
-  Future<psapi.Podcast> _loadPodcastFeed({@required String url}) {
-    return compute<_FeedComputer, psapi.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
+  Future<psearch.Podcast> _loadPodcastFeed({@required String url}) {
+    return compute<_FeedComputer, psearch.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
   }
 
   /// We have to separate the process of calling compute as you cannot use
   /// named parameters with compute. The podcast feed load API uses named
   /// parameters so we need to change it to a single, positional parameter.
-  static Future<psapi.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
+  static Future<psearch.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
     return c.api.loadFeed(c.url);
   }
 
@@ -386,9 +381,9 @@ class _PodcastCache {
 
   _PodcastCache({@required this.maxItems, @required this.expiration}) : _queue = Queue<_CacheItem>();
 
-  psapi.Podcast item(String key) {
+  psearch.Podcast item(String key) {
     var hit = _queue.firstWhere((_CacheItem i) => i.podcast.url == key, orElse: () => null);
-    psapi.Podcast p;
+    psearch.Podcast p;
 
     if (hit != null) {
       var now = DateTime.now();
@@ -403,7 +398,7 @@ class _PodcastCache {
     return p;
   }
 
-  void store(psapi.Podcast podcast) {
+  void store(psearch.Podcast podcast) {
     if (_queue.length == maxItems) {
       _queue.removeFirst();
     }
@@ -412,11 +407,11 @@ class _PodcastCache {
   }
 }
 
-/// A simple class that stores an instance of a Postcast and the
+/// A simple class that stores an instance of a Podcast and the
 /// date and time it was added. This can be used by the cache to
 /// keep a small and up-to-date list of searched for Podcasts.
 class _CacheItem {
-  final psapi.Podcast podcast;
+  final psearch.Podcast podcast;
   final DateTime dateAdded;
 
   _CacheItem(this.podcast) : dateAdded = DateTime.now();

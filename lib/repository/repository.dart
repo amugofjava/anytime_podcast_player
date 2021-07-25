@@ -26,6 +26,7 @@ abstract class Repository {
   Future<Episode> findEpisodeByTaskId(String taskId);
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame]);
   Future<void> deleteEpisode(Episode episode);
+  Future<void> deleteEpisodes(List<Episode> episodes);
   Future<List<Episode>> findDownloadsByPodcastGuid(String pguid);
   Future<List<Episode>> findDownloads();
 

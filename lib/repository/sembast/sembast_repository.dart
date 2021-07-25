@@ -214,6 +214,29 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<void> deleteEpisodes(List<Episode> episodes) async {
+    var d = await _db;
+
+    if (episodes != null && episodes.isNotEmpty) {
+      for (var chunk in episodes.chunk(100)) {
+        await d.transaction((txn) async {
+          var futures = <Future<int>>[];
+
+          for (var episode in chunk) {
+            final finder = Finder(filter: Filter.byKey(episode.id));
+
+            futures.add(_episodeStore.delete(txn, finder: finder));
+          }
+
+          if (futures.isNotEmpty) {
+            await Future.wait(futures);
+          }
+        });
+      }
+    }
+  }
+
+  @override
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
     log.fine('saveEpisode. Chapter count is ${episode?.chapters?.length}');
     var e = await _saveEpisode(episode, updateIfSame);
