@@ -25,6 +25,12 @@ class SembastRepository extends Repository {
 
   Future<Database> get _db async => _databaseService.database;
 
+  SembastRepository() {
+    _deleteOrphandedEpisodes().then((value) {
+      log.fine('Sembast boot complete');
+    });
+  }
+
   /// Saves the [Podcast] instance and associated [Epsiode]s. Podcasts are
   /// only stored when we subscribe to them, so at the point we store a
   /// new podcast we store the current [DateTime] to mark the
@@ -244,6 +250,36 @@ class SembastRepository extends Repository {
     _episodeSubject.add(EpisodeUpdateState(e));
 
     return e;
+  }
+
+  @override
+  Future<void> _deleteOrphandedEpisodes() async {
+    final threshold = DateTime.now().subtract(Duration(days: 60)).millisecondsSinceEpoch;
+
+    final filter = Filter.and([
+      Filter.equals('downloadState', 0),
+      Filter.lessThan('lastUpdated', threshold),
+    ]);
+
+    final orphaned = <Episode>[];
+    final pguids = <String>[];
+    final episodes = await _episodeStore.find(await _db, finder: Finder(filter: filter));
+
+    // First, find all podcasts
+    for (var podcast in await _podcastStore.find(await _db)) {
+      pguids.add(podcast.value['guid'] as String);
+    }
+
+    for (var episode in episodes) {
+      final pguid = episode.value['pguid'] as String;
+      final podcast = pguids.contains(pguid);
+
+      if (!podcast) {
+        orphaned.add(Episode.fromMap(episode.key, episode.value));
+      }
+    }
+
+    await deleteEpisodes(orphaned);
   }
 
   /// Saves a list of episodes to the repository. To improve performance we

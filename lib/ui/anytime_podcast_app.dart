@@ -327,7 +327,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 backgroundColor: Theme.of(context).bottomAppBarColor,
                 selectedIconTheme: Theme.of(context).iconTheme,
                 selectedItemColor: Theme.of(context).iconTheme.color,
-                unselectedItemColor: HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
+                unselectedItemColor:
+                    HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
                 currentIndex: snapshot.data,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
@@ -428,7 +429,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute<void>(builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
+                    MaterialPageRoute<void>(
+                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
                   ).then((value) => Navigator.pop(context));
                 },
               ),
