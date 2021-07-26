@@ -25,10 +25,14 @@ class SembastRepository extends Repository {
 
   Future<Database> get _db async => _databaseService.database;
 
-  SembastRepository() {
-    _deleteOrphandedEpisodes().then((value) {
-      log.fine('Sembast boot complete');
-    });
+  SembastRepository({
+    bool cleanup = true,
+  }) {
+    if (cleanup) {
+      _deleteOrphandedEpisodes().then((value) {
+        log.fine('Cleanup complete');
+      });
+    }
   }
 
   /// Saves the [Podcast] instance and associated [Epsiode]s. Podcasts are
