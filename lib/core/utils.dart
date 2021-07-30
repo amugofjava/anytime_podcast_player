@@ -4,11 +4,37 @@
 
 import 'dart:io';
 
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+/// On iOS, the directory that the app has available to it for storing episodes may
+/// change between updated, whereas on Android we are able to save the full path. To
+/// ensure we can handle the directory name change on iOS without breaking existing
+/// Android installations we have created the following three functions to help with
+/// resolving the various paths correctly depending upon platform.
+Future<String> resolvePath(Episode episode) async {
+  if (Platform.isIOS) {
+    return Future.value(join(await getStorageDirectory(), episode.filepath, episode.filename));
+  }
+
+  return Future.value(join(episode.filepath, episode.filename));
+}
+
+Future<String> resolveDirectory(Episode episode) async {
+  return Future.value(join(await getStorageDirectory(), safePath(episode.podcast)));
+}
+
+Future<void> createDownloadDirectory(String path) async {
+  if (Platform.isIOS) {
+    path = join(await getStorageDirectory(), path);
+  }
+
+  Directory(path).createSync(recursive: true);
+}
 
 Future<bool> hasStoragePermission() async {
   SettingsService settings = await MobileSettingsService.instance();

@@ -271,11 +271,9 @@ class MobilePodcastService extends PodcastService {
     await repository.saveEpisode(episode);
 
     if (await hasStoragePermission()) {
-      final filepath =
-          episode.filepath == null || episode.filepath.isEmpty ? await getStorageDirectory() : episode.filepath;
-      final filename = join(filepath, episode.filename);
+      final f = File.fromUri(Uri.file(await resolvePath(episode)));
 
-      var f = File.fromUri(Uri.file(filename));
+      log.fine('Deleting file ${f.path}');
 
       if (await f.exists()) {
         return f.delete();

@@ -54,11 +54,11 @@ class MobileDownloadService extends DownloadService {
         episode = savedEpisode;
       }
 
-      final downloadPath = join(await getStorageDirectory(), safePath(episode.podcast));
+      final downloadPath = await resolveDirectory(episode);
       var uri = Uri.parse(episode.contentUrl);
 
       // Ensure the download directory exists
-      Directory(downloadPath).createSync(recursive: true);
+      createDownloadDirectory(downloadPath);
 
       // Filename should be last segment of URI.
       var filename = safeFile(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
@@ -89,7 +89,7 @@ class MobileDownloadService extends DownloadService {
 
         filename = '$season$epno$pubDate$filename';
 
-        log.fine('Download episode (${episode?.title}) $filename to $downloadPath');
+        log.fine('Download episode (${episode?.title}) $filename to $downloadPath/$filename');
 
         final taskId = await downloadManager.enqueTask(episode.contentUrl, downloadPath, filename);
 

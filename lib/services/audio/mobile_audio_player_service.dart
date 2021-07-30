@@ -21,7 +21,6 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// An implementation of the [AudioPlayerService] for mobile devices.
@@ -82,14 +81,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
         startPosition = episode?.position ?? 0;
       }
 
-      log.info('Playing episode ${episode?.id} - ${episode?.title} from position $startPosition');
-
       if (episode.downloadState == DownloadState.downloaded) {
         if (await hasStoragePermission()) {
-          final filepath = episode.filepath == null || episode.filepath.isEmpty
-              ? join(await getStorageDirectory(), safePath(episode.podcast))
-              : episode.filepath;
-          final downloadFile = join(filepath, episode.filename);
+          final downloadFile = await resolvePath(episode);
 
           uri = downloadFile;
 
@@ -98,6 +92,9 @@ class MobileAudioPlayerService extends AudioPlayerService {
           throw Exception('Insufficient storage permissions');
         }
       }
+
+      log.info('Playing episode ${episode?.id} - ${episode?.title} from position $startPosition');
+      log.fine(' - $uri');
 
       // If we are streaming try and let the user know as soon as possible and
       // clear any chapters as we'll fetch them again.
