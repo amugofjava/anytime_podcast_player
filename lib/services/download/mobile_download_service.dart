@@ -54,11 +54,12 @@ class MobileDownloadService extends DownloadService {
         episode = savedEpisode;
       }
 
-      final downloadPath = await resolveDirectory(episode);
+      final episodePath = await resolveDirectory(episode: episode);
+      final downloadPath = await resolveDirectory(episode: episode, full: true);
       var uri = Uri.parse(episode.contentUrl);
 
       // Ensure the download directory exists
-      createDownloadDirectory(downloadPath);
+      await createDownloadDirectory(episode);
 
       // Filename should be last segment of URI.
       var filename = safeFile(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
@@ -94,7 +95,7 @@ class MobileDownloadService extends DownloadService {
         final taskId = await downloadManager.enqueTask(episode.contentUrl, downloadPath, filename);
 
         // Update the episode with download data
-        episode.filepath = downloadPath;
+        episode.filepath = episodePath;
         episode.filename = filename;
         episode.downloadTaskId = taskId;
         episode.downloadState = DownloadState.downloading;

@@ -91,7 +91,7 @@ class L {
   String get subscribe_button_label {
     return message('subscribe_button_label') ??
         Intl.message(
-          'SUBSCRIBE',
+          'Follow',
           name: 'subscribe_button_label',
           desc: 'Subscribe button label',
           locale: localeName,
@@ -101,7 +101,7 @@ class L {
   String get unsubscribe_button_label {
     return message('unsubscribe_button_label') ??
         Intl.message(
-          'UNSUBSCRIBE',
+          'Unfollow',
           name: 'unsubscribe_button_label',
           desc: 'Unsubscribe button label',
           locale: localeName,
@@ -111,7 +111,7 @@ class L {
   String get cancel_button_label {
     return message('cancel_button_label') ??
         Intl.message(
-          'CANCEL',
+          'Cancel',
           name: 'cancel_button_label',
           desc: 'Cancel button label',
           locale: localeName,
@@ -191,7 +191,7 @@ class L {
   String get delete_button_label {
     return message('delete_button_label') ??
         Intl.message(
-          'DELETE',
+          'Delete',
           name: 'delete_button_label',
           desc: 'Delete label',
           locale: localeName,
@@ -421,7 +421,7 @@ class L {
   String get stop_download_button_label {
     return message('stop_download_button_label') ??
         Intl.message(
-          'STOP',
+          'Stop',
           name: 'stop_download_button_label',
           desc: 'Stop label',
           locale: localeName,
@@ -551,7 +551,7 @@ class L {
   String get go_back_button_label {
     return message('go_back_button_label') ??
         Intl.message(
-          'GO BACK',
+          'Go Back',
           name: 'go_back_button_label',
           desc: 'Go-back button label',
           locale: localeName,
@@ -561,7 +561,7 @@ class L {
   String get continue_button_label {
     return message('continue_button_label') ??
         Intl.message(
-          'CONTINUE',
+          'Continue',
           name: 'continue_button_label',
           desc: 'Continue button label',
           locale: localeName,

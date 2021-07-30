@@ -12,6 +12,7 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/podcast/funding_menu.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
@@ -437,19 +438,19 @@ class SubscriptionButton extends StatelessWidget {
                             content: Text(L.of(context).unsubscribe_message),
                             actions: <Widget>[
                               BasicDialogAction(
-                                title: Text(
+                                title: ActionText(
                                   L.of(context).cancel_button_label,
-                                  style: TextStyle(color: Theme.of(context).buttonColor),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                               ),
                               BasicDialogAction(
-                                title: Text(
+                                title: ActionText(
                                   L.of(context).unsubscribe_button_label,
-                                  style: TextStyle(color: Theme.of(context).buttonColor),
                                 ),
+                                iosIsDefaultAction: true,
+                                iosIsDestructiveAction: true,
                                 onPressed: () {
                                   bloc.podcastEvent(PodcastEvent.unsubscribe);
 

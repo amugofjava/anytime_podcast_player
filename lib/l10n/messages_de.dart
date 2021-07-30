@@ -26,15 +26,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_rss_feed_option": MessageLookupByLibrary.simpleMessage("RSS-Feed hinzufügen"),
         "app_title": MessageLookupByLibrary.simpleMessage("Anytime Podcast Player"),
         "app_title_short": MessageLookupByLibrary.simpleMessage("Anytime Player"),
-        "cancel_button_label": MessageLookupByLibrary.simpleMessage("STORNIEREN"),
+        "cancel_button_label": MessageLookupByLibrary.simpleMessage("Stornieren"),
         "cancel_option_label": MessageLookupByLibrary.simpleMessage("Stirbuereb"),
         "chapters_label": MessageLookupByLibrary.simpleMessage("Kapitel"),
         "clear_search_button_label": MessageLookupByLibrary.simpleMessage("Suchtext löschen"),
         "close_button_label": MessageLookupByLibrary.simpleMessage("Schließen"),
         "consent_message": MessageLookupByLibrary.simpleMessage(
             "Über diesen Finanzierungslink gelangen Sie zu einer externen Website, auf der Sie die Show direkt unterstützen können. Links werden von den Podcast-Autoren bereitgestellt und nicht von Anytime kontrolliert."),
-        "continue_button_label": MessageLookupByLibrary.simpleMessage("FORTSETZEN"),
-        "delete_button_label": MessageLookupByLibrary.simpleMessage("LÖSCHEN"),
+        "continue_button_label": MessageLookupByLibrary.simpleMessage("Fortsetzen"),
+        "delete_button_label": MessageLookupByLibrary.simpleMessage("Löschen"),
         "delete_episode_button_label": MessageLookupByLibrary.simpleMessage("Folge löschen"),
         "delete_episode_confirmation":
             MessageLookupByLibrary.simpleMessage("Sind Sie sicher, dass Sie diese Episode löschen möchten?"),
@@ -49,7 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_playback_fail": MessageLookupByLibrary.simpleMessage(
             "Während der Wiedergabe ist ein unerwarteter Fehler aufgetreten. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut."),
         "fast_forward_button_label": MessageLookupByLibrary.simpleMessage("30 Sekunden schneller Vorlauf"),
-        "go_back_button_label": MessageLookupByLibrary.simpleMessage("GEH ZURÜCK"),
+        "go_back_button_label": MessageLookupByLibrary.simpleMessage("Geh Zurück"),
         "label_opml_importing": MessageLookupByLibrary.simpleMessage("Importieren"),
         "library": MessageLookupByLibrary.simpleMessage("Bibliothek"),
         "mark_episodes_not_played_label":
@@ -111,13 +111,13 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Markieren Sie gelöschte Episoden als abgespielt"),
         "settings_theme_switch_label": MessageLookupByLibrary.simpleMessage("Dark theme"),
         "show_notes_label": MessageLookupByLibrary.simpleMessage("Notizen anzeigen"),
-        "stop_download_button_label": MessageLookupByLibrary.simpleMessage("HALT"),
+        "stop_download_button_label": MessageLookupByLibrary.simpleMessage("Halt"),
         "stop_download_confirmation": MessageLookupByLibrary.simpleMessage(
             "Möchten Sie diesen Download wirklich beenden und die Episode löschen?"),
         "stop_download_title": MessageLookupByLibrary.simpleMessage("Stop Download"),
-        "subscribe_button_label": MessageLookupByLibrary.simpleMessage("FOLGEN"),
+        "subscribe_button_label": MessageLookupByLibrary.simpleMessage("Folgen"),
         "subscribe_label": MessageLookupByLibrary.simpleMessage("Folgen"),
-        "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("NICHT MEHR FOLGEN"),
+        "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("Entfolgen"),
         "unsubscribe_label": MessageLookupByLibrary.simpleMessage("Nicht mehr folgen"),
         "unsubscribe_message": MessageLookupByLibrary.simpleMessage(
             "Wenn Sie nicht mehr folgen, werden alle heruntergeladenen Folgen dieses Podcasts gelöscht.")

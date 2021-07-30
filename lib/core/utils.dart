@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,14 +25,16 @@ Future<String> resolvePath(Episode episode) async {
   return Future.value(join(episode.filepath, episode.filename));
 }
 
-Future<String> resolveDirectory(Episode episode) async {
-  return Future.value(join(await getStorageDirectory(), safePath(episode.podcast)));
+Future<String> resolveDirectory({@required Episode episode, bool full = false}) async {
+  if (full || Platform.isAndroid) {
+    return Future.value(join(await getStorageDirectory(), episode.podcast));
+  }
+
+  return Future.value(episode.podcast);
 }
 
-Future<void> createDownloadDirectory(String path) async {
-  if (Platform.isIOS) {
-    path = join(await getStorageDirectory(), path);
-  }
+Future<void> createDownloadDirectory(Episode episode) async {
+  var path = join(await getStorageDirectory(), episode.podcast);
 
   Directory(path).createSync(recursive: true);
 }

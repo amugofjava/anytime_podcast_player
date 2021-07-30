@@ -30,19 +30,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_button_label": "FOLGEN",
+  "subscribe_button_label": "Folgen",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_button_label": "NICHT MEHR FOLGEN",
+  "unsubscribe_button_label": "Entfolgen",
   "@unsubscribe_button_label": {
     "description": "Unsubscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "cancel_button_label": "STORNIEREN",
+  "cancel_button_label": "Stornieren",
   "@cancel_button_label": {
     "description": "Cancel button label",
     "type": "text",
@@ -84,7 +84,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "delete_button_label": "LÖSCHEN",
+  "delete_button_label": "Löschen",
   "@delete_button_label": {
     "description": "Delete label",
     "type": "text",
@@ -222,7 +222,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_button_label": "HALT",
+  "stop_download_button_label": "Halt",
   "@stop_download_button_label": {
     "description": "Stop label",
     "type": "text",
@@ -300,13 +300,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "go_back_button_label": "GEH ZURÜCK",
+  "go_back_button_label": "Geh Zurück",
   "@go_back_button_label": {
     "description": "Go-back button label",
     "type": "text",
     "placeholders": {}
   },
-  "continue_button_label": "FORTSETZEN",
+  "continue_button_label": "Fortsetzen",
   "@continue_button_label": {
     "description": "Continue button label",
     "type": "text",

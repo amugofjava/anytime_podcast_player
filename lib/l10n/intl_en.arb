@@ -36,13 +36,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_button_label": "UNFOLLOW",
+  "unsubscribe_button_label": "Unfollow",
   "@unsubscribe_button_label": {
     "description": "Unsubscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "cancel_button_label": "CANCEL",
+  "cancel_button_label": "Cancel",
   "@cancel_button_label": {
     "description": "Cancel button label",
     "type": "text",
@@ -222,7 +222,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_button_label": "STOP",
+  "stop_download_button_label": "Stop",
   "@stop_download_button_label": {
     "description": "Stop label",
     "type": "text",
@@ -300,13 +300,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "go_back_button_label": "GO BACK",
+  "go_back_button_label": "Go Back",
   "@go_back_button_label": {
     "description": "Go-back button label",
     "type": "text",
     "placeholders": {}
   },
-  "continue_button_label": "CONTINUE",
+  "continue_button_label": "Continue",
   "@continue_button_label": {
     "description": "Continue button label",
     "type": "text",

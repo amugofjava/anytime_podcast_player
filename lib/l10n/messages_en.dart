@@ -25,15 +25,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "add_rss_feed_option": MessageLookupByLibrary.simpleMessage("Add RSS Feed"),
         "app_title": MessageLookupByLibrary.simpleMessage("Anytime Podcast Player"),
         "app_title_short": MessageLookupByLibrary.simpleMessage("Anytime Player"),
-        "cancel_button_label": MessageLookupByLibrary.simpleMessage("CANCEL"),
+        "cancel_button_label": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancel_option_label": MessageLookupByLibrary.simpleMessage("Cancel"),
         "chapters_label": MessageLookupByLibrary.simpleMessage("Chapters"),
         "clear_search_button_label": MessageLookupByLibrary.simpleMessage("Clear search text"),
         "close_button_label": MessageLookupByLibrary.simpleMessage("Close"),
         "consent_message": MessageLookupByLibrary.simpleMessage(
             "This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime."),
-        "continue_button_label": MessageLookupByLibrary.simpleMessage("CONTINUE"),
-        "delete_button_label": MessageLookupByLibrary.simpleMessage("DELETE"),
+        "continue_button_label": MessageLookupByLibrary.simpleMessage("Continue"),
+        "delete_button_label": MessageLookupByLibrary.simpleMessage("Delete"),
         "delete_episode_button_label": MessageLookupByLibrary.simpleMessage("Delete episode"),
         "delete_episode_confirmation":
             MessageLookupByLibrary.simpleMessage("Are you sure you wish to delete this episode?"),
@@ -48,7 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "error_playback_fail": MessageLookupByLibrary.simpleMessage(
             "An unexpected error occurred during playback. Please check your connection and try again."),
         "fast_forward_button_label": MessageLookupByLibrary.simpleMessage("Fast-forward episode 30 seconds"),
-        "go_back_button_label": MessageLookupByLibrary.simpleMessage("GO BACK"),
+        "go_back_button_label": MessageLookupByLibrary.simpleMessage("Go Back"),
         "label_opml_importing": MessageLookupByLibrary.simpleMessage("Importing"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
         "mark_episodes_not_played_label": MessageLookupByLibrary.simpleMessage("Mark all episodes as not played"),
@@ -102,13 +102,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings_mark_deleted_played_label": MessageLookupByLibrary.simpleMessage("Mark deleted episodes as played"),
         "settings_theme_switch_label": MessageLookupByLibrary.simpleMessage("Dark theme"),
         "show_notes_label": MessageLookupByLibrary.simpleMessage("Show notes"),
-        "stop_download_button_label": MessageLookupByLibrary.simpleMessage("STOP"),
+        "stop_download_button_label": MessageLookupByLibrary.simpleMessage("Stop"),
         "stop_download_confirmation":
             MessageLookupByLibrary.simpleMessage("Are you sure you wish to stop this download and delete the episode?"),
         "stop_download_title": MessageLookupByLibrary.simpleMessage("Stop Download"),
         "subscribe_button_label": MessageLookupByLibrary.simpleMessage("FOLLOW"),
         "subscribe_label": MessageLookupByLibrary.simpleMessage("Follow"),
-        "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("UNFOLLOW"),
+        "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("Unfollow"),
         "unsubscribe_label": MessageLookupByLibrary.simpleMessage("Unfollow"),
         "unsubscribe_message":
             MessageLookupByLibrary.simpleMessage("Unfollowing will delete all downloaded episodes of this podcast.")

@@ -12,6 +12,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/download_button.dart';
 import 'package:anytime/ui/widgets/play_pause_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -242,19 +243,18 @@ class DownloadControl extends StatelessWidget {
         content: Text(L.of(context).stop_download_confirmation),
         actions: <Widget>[
           BasicDialogAction(
-            title: Text(
+            title: ActionText(
               L.of(context).cancel_button_label,
-              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           BasicDialogAction(
-            title: Text(
+            title: ActionText(
               L.of(context).stop_download_button_label,
-              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
+            iosIsDefaultAction: true,
             onPressed: () {
               _episodeBloc.deleteDownload(episode);
               Navigator.pop(context);

@@ -14,6 +14,7 @@ import 'package:anytime/ui/library/opml_import.dart';
 import 'package:anytime/ui/settings/episode_refresh.dart';
 import 'package:anytime/ui/settings/search_provider.dart';
 import 'package:anytime/ui/settings/settings_section_label.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -116,7 +117,7 @@ class _SettingsState extends State<Settings> {
                           content: OPMLImport(file: file.path),
                           actions: <Widget>[
                             BasicDialogAction(
-                              title: Text(L.of(context).cancel_button_label),
+                              title: ActionText(L.of(context).cancel_button_label),
                               onPressed: () {
                                 return Navigator.pop(context, true);
                               },

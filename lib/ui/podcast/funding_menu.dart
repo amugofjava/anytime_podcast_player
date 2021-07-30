@@ -6,6 +6,7 @@ import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -174,19 +175,18 @@ class FundingLink {
           content: Text(L.of(context).consent_message),
           actions: <Widget>[
             BasicDialogAction(
-              title: Text(
+              title: ActionText(
                 L.of(context).go_back_button_label,
-                style: TextStyle(color: Theme.of(context).buttonColor),
               ),
               onPressed: () {
                 Navigator.pop(context, false);
               },
             ),
             BasicDialogAction(
-              title: Text(
+              title: ActionText(
                 L.of(context).continue_button_label,
-                style: TextStyle(color: Theme.of(context).buttonColor),
               ),
+              iosIsDefaultAction: true,
               onPressed: () {
                 Navigator.pop(context, true);
               },

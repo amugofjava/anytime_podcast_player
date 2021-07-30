@@ -34,6 +34,7 @@ import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -413,19 +414,18 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             ),
             actions: <Widget>[
               BasicDialogAction(
-                title: Text(
+                title: ActionText(
                   L.of(context).cancel_button_label,
-                  style: TextStyle(color: Theme.of(context).buttonColor),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               BasicDialogAction(
-                title: Text(
+                title: ActionText(
                   L.of(context).ok_button_label,
-                  style: TextStyle(color: Theme.of(context).buttonColor),
                 ),
+                iosIsDefaultAction: true,
                 onPressed: () {
                   Navigator.push(
                     context,
