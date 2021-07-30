@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/search/search_state_event.dart';
 import 'package:anytime/l10n/L.dart';
@@ -58,7 +60,7 @@ class _SearchState extends State<Search> {
             brightness: Theme.of(context).brightness,
             leading: IconButton(
               tooltip: L.of(context).search_back_button_label,
-              icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor),
+              icon: Platform.isAndroid ? Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor) : Icon(Icons.arrow_back_ios),
               onPressed: () => Navigator.pop(context),
             ),
             title: TextField(

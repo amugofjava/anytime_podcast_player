@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -181,7 +183,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         duration: Duration(milliseconds: 500),
                         child: Text(widget.podcast.title)),
                     leading: DecoratedIconButton(
-                      icon: Icons.close,
+                      icon: Platform.isAndroid ? Icons.close : Icons.arrow_back_ios,
                       iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
                           ? Theme.of(context).appBarTheme.foregroundColor
                           : Colors.white,
