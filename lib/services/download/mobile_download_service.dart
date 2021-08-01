@@ -15,7 +15,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
-import 'package:path/path.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// An implementation of a [DownloadService] that handles downloading
@@ -30,10 +29,7 @@ class MobileDownloadService extends DownloadService {
   MobileDownloadService({@required this.repository, @required this.downloadManager}) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
-      if (progress.status == DownloadState.downloaded) {
-        _saveDownload(progress);
-        FlutterDownloader.remove(taskId: progress.id, shouldDeleteContent: false);
-      }
+      _updateDownloadProgress(progress);
     });
   }
 
@@ -115,7 +111,7 @@ class MobileDownloadService extends DownloadService {
     return repository.findEpisodeByTaskId(taskId);
   }
 
-  Future<void> _saveDownload(DownloadProgress progress) async {
+  Future<void> _updateDownloadProgress(DownloadProgress progress) async {
     var episode = await repository.findEpisodeByTaskId(progress.id);
 
     if (episode != null) {
@@ -124,7 +120,7 @@ class MobileDownloadService extends DownloadService {
 
       if (progress.percentage == 100) {
         if (await hasStoragePermission()) {
-          final filename = join(await getStorageDirectory(), safePath(episode.podcast), episode.filename);
+          final filename = await resolvePath(episode);
 
           // If we do not have a duration for this file - let's calculate it
           if (episode.duration == 0) {
@@ -132,10 +128,12 @@ class MobileDownloadService extends DownloadService {
 
             episode.duration = mp3Info.duration.inSeconds;
           }
-
-          await repository.saveEpisode(episode);
         }
+
+        FlutterDownloader.remove(taskId: progress.id, shouldDeleteContent: false);
       }
+
+      await repository.saveEpisode(episode);
     }
   }
 }

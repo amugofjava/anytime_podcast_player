@@ -340,8 +340,19 @@ class MobilePodcastService extends PodcastService {
     return compute<_FeedComputer, psearch.Chapters>(_loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
   }
 
-  static Future<psearch.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) {
-    return c.api.loadChapters(c.url);
+  static Future<psearch.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) async {
+    psearch.Chapters result;
+
+    try {
+      result = await c.api.loadChapters(c.url);
+    } catch (e) {
+      final log = Logger('MobilePodcastService');
+
+      log.fine('Failed to download chapters');
+      log.fine(e);
+    }
+
+    return result;
   }
 
   /// Loading and parsing a podcast feed can take several seconds. Larger feeds

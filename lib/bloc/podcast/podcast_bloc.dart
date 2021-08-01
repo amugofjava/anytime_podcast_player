@@ -229,30 +229,21 @@ class PodcastBloc extends Bloc {
   /// downloading episode. If the ID of a current download matches that
   /// of an episode currently in use, we update the status of the episode
   /// and push it back into the episode stream.
-  void _listenDownloads() {
+  void _listenDownloads() async {
     // Listen to download progress
-    MobileDownloadService.downloadProgress.listen((s) async {
-      final downloadable = await downloadService.findEpisodeByTaskId(s.id);
+    MobileDownloadService.downloadProgress.listen((downloadProgress) async {
+      final downloadable = await downloadService.findEpisodeByTaskId(downloadProgress.id);
 
       if (downloadable != null) {
-        // Now update our records
-        downloadable.downloadPercentage = s.percentage;
-        downloadable.downloadState = s.status;
-
         // If the download matches a current episode push the update back into the stream.
-        var episode = _episodes.firstWhere((e) => e.downloadTaskId == s.id, orElse: () => null);
+        var episode = _episodes.firstWhere((e) => e.downloadTaskId == downloadProgress.id, orElse: () => null);
 
         if (episode != null) {
-          episode.downloadPercentage = s.percentage;
-          episode.downloadState = s.status;
-
           // Update the stream.
           _episodesStream.add(_episodes);
-
-          await podcastService.saveEpisode(episode);
         }
       } else {
-        log.severe('Downloadable not found with id ${s.id}');
+        log.severe('Downloadable not found with id ${downloadProgress.id}');
       }
     });
   }

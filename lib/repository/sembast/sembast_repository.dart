@@ -248,7 +248,6 @@ class SembastRepository extends Repository {
 
   @override
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
-    log.fine('saveEpisode. Chapter count is ${episode?.chapters?.length}');
     var e = await _saveEpisode(episode, updateIfSame);
 
     _episodeSubject.add(EpisodeUpdateState(e));
