@@ -17,6 +17,7 @@ class MobileDownloaderManager implements DownloadManager {
   final log = Logger('MobileDownloaderManager');
   final ReceivePort _port = ReceivePort();
   final downloadController = StreamController<DownloadProgress>();
+  var _lastUpdateTime = 0;
 
   @override
   Stream<DownloadProgress> get downloadProgress => downloadController.stream;
@@ -74,6 +75,7 @@ class MobileDownloaderManager implements DownloadManager {
 
   void _updateDownloadState({String id, int progress, DownloadTaskStatus status}) {
     var state = DownloadState.none;
+    var updateTime = DateTime.now().millisecondsSinceEpoch;
 
     if (status == DownloadTaskStatus.enqueued) {
       state = DownloadState.queued;
@@ -89,7 +91,16 @@ class MobileDownloaderManager implements DownloadManager {
       state = DownloadState.paused;
     }
 
-    downloadController.add(DownloadProgress(id, progress, state));
+    /// If we are running, we want to limit notifications to 1 per second. Otherwise,
+    /// small downloads can cause a flood of events. Any other status we always want
+    /// to push through.
+    if (status != DownloadTaskStatus.running ||
+        progress == 0 ||
+        progress == 100 ||
+        updateTime > _lastUpdateTime + 1000) {
+      downloadController.add(DownloadProgress(id, progress, state));
+      _lastUpdateTime = updateTime;
+    }
   }
 
   static void downloadCallback(String id, DownloadTaskStatus status, int progress) {

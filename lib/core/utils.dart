@@ -27,14 +27,14 @@ Future<String> resolvePath(Episode episode) async {
 
 Future<String> resolveDirectory({@required Episode episode, bool full = false}) async {
   if (full || Platform.isAndroid) {
-    return Future.value(join(await getStorageDirectory(), episode.podcast));
+    return Future.value(join(await getStorageDirectory(), safePath(episode.podcast)));
   }
 
-  return Future.value(episode.podcast);
+  return Future.value(safePath(episode.podcast));
 }
 
 Future<void> createDownloadDirectory(Episode episode) async {
-  var path = join(await getStorageDirectory(), episode.podcast);
+  var path = join(await getStorageDirectory(), safePath(episode.podcast));
 
   Directory(path).createSync(recursive: true);
 }

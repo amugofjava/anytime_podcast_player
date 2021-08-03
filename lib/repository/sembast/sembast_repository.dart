@@ -29,13 +29,13 @@ class SembastRepository extends Repository {
     bool cleanup = true,
   }) {
     if (cleanup) {
-      _deleteOrphandedEpisodes().then((value) {
+      _deleteOrphanedEpisodes().then((value) {
         log.fine('Cleanup complete');
       });
     }
   }
 
-  /// Saves the [Podcast] instance and associated [Epsiode]s. Podcasts are
+  /// Saves the [Podcast] instance and associated [Episode]s. Podcasts are
   /// only stored when we subscribe to them, so at the point we store a
   /// new podcast we store the current [DateTime] to mark the
   /// subscription date.
@@ -255,8 +255,7 @@ class SembastRepository extends Repository {
     return e;
   }
 
-  @override
-  Future<void> _deleteOrphandedEpisodes() async {
+  Future<void> _deleteOrphanedEpisodes() async {
     final threshold = DateTime.now().subtract(Duration(days: 60)).millisecondsSinceEpoch;
 
     final filter = Filter.and([
