@@ -111,7 +111,8 @@ class MobileSettingsService extends SettingsService {
 
   @override
   int get autoUpdateEpisodePeriod {
-    return _sharedPreferences.getInt('autoUpdateEpisodePeriod') ?? -1;
+    /// Default to 3 hours.
+    return _sharedPreferences.getInt('autoUpdateEpisodePeriod') ?? 180;
   }
 
   @override
