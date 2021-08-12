@@ -10,17 +10,18 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is now at v1.0! Only Android is officially supported at the  
-moment, but an iOS version is not far off. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
+Anytime is now at v1.0, with v1.1 in Beta. The first Beta release for iOS is very close. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
 
 #### Testers
 
-If you would like to help test Anytime please click the image below to head over to the Play Store.
+If you would like to help test Anytime please click the image below to head over to the Play Store, or Amazon App Store.
 You can download the current stable release or sign up to the Beta channel and help test
 current developments.
 
-<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' width="40%" src='https://play.google.com/intl/en_gb/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="61" src="docs/google-play-badge.png"/></a>&nbsp;
+<a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="61" alt="Anytime Play Store Link" target="_blank"></a>
+
 
 I would really appreciate all feedback - positive and negative - as it both helps improve Anytime and prioritise new features. You can reach me at [anytime@amugofjava.me.uk](mailto:anytime@amugofjava.me.uk).
 
