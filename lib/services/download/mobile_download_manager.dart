@@ -41,6 +41,12 @@ class MobileDownloaderManager implements DownloadManager {
     if (tasks != null && tasks.isNotEmpty) {
       for (var t in tasks) {
         _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status);
+
+        /// If we are not queued or running we can safely clean up this event
+        if (t.status != DownloadTaskStatus.enqueued && t.status != DownloadTaskStatus.running) {
+          print('Clearing up ${t.taskId}');
+          FlutterDownloader.remove(taskId: t.taskId, shouldDeleteContent: false);
+        }
       }
     }
 

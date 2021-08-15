@@ -12,7 +12,6 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:rxdart/rxdart.dart';
@@ -115,25 +114,28 @@ class MobileDownloadService extends DownloadService {
     var episode = await repository.findEpisodeByTaskId(progress.id);
 
     if (episode != null) {
-      episode.downloadPercentage = progress.percentage;
-      episode.downloadState = progress.status;
+      // We might be called during the cleanup routine during startup.
+      // Do not bother updating if nothing has changed.
+      if (episode.downloadPercentage != progress.percentage ||
+          episode.downloadState != progress.status) {
+        episode.downloadPercentage = progress.percentage;
+        episode.downloadState = progress.status;
 
-      if (progress.percentage == 100) {
-        if (await hasStoragePermission()) {
-          final filename = await resolvePath(episode);
+        if (progress.percentage == 100) {
+          if (await hasStoragePermission()) {
+            final filename = await resolvePath(episode);
 
-          // If we do not have a duration for this file - let's calculate it
-          if (episode.duration == 0) {
-            var mp3Info = MP3Processor.fromFile(File(filename));
+            // If we do not have a duration for this file - let's calculate it
+            if (episode.duration == 0) {
+              var mp3Info = MP3Processor.fromFile(File(filename));
 
-            episode.duration = mp3Info.duration.inSeconds;
+              episode.duration = mp3Info.duration.inSeconds;
+            }
           }
         }
 
-        FlutterDownloader.remove(taskId: progress.id, shouldDeleteContent: false);
+        await repository.saveEpisode(episode);
       }
-
-      await repository.saveEpisode(episode);
     }
   }
 }
