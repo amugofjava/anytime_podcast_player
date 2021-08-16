@@ -45,6 +45,9 @@ ThemeData _buildLightTheme() {
     accentTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     iconTheme: IconThemeData(color: Colors.orange),
+    sliderTheme: SliderThemeData().copyWith(
+      valueIndicatorColor: Colors.orange,
+    ),
     appBarTheme: base.appBarTheme.copyWith(
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
@@ -96,7 +99,9 @@ ThemeData _buildDarktheme() {
     dividerTheme: base.dividerTheme.copyWith(
       color: Color(0xff444444),
     ),
-    sliderTheme: SliderThemeData().copyWith(valueIndicatorColor: Color(0xff222222)),
+    sliderTheme: SliderThemeData().copyWith(
+      valueIndicatorColor: Colors.white,
+    ),
     appBarTheme: base.appBarTheme.copyWith(
       backgroundColor: Color(0xff222222),
       foregroundColor: Colors.white,
