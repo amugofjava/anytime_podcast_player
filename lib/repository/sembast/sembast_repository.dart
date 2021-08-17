@@ -21,16 +21,19 @@ class SembastRepository extends Repository {
 
   final _podcastStore = intMapStoreFactory.store('podcast');
   final _episodeStore = intMapStoreFactory.store('episode');
-  final DatabaseService _databaseService = DatabaseService();
+  DatabaseService _databaseService;
 
   Future<Database> get _db async => _databaseService.database;
 
   SembastRepository({
     bool cleanup = true,
+    String databaseName = 'anytime.db',
   }) {
+    _databaseService = DatabaseService(databaseName);
+
     if (cleanup) {
       _deleteOrphanedEpisodes().then((value) {
-        log.fine('Cleanup complete');
+        log.fine('Orphan episodes cleanup complete');
       });
     }
   }
@@ -352,7 +355,7 @@ class SembastRepository extends Repository {
   Future<void> close() async {
     final d = await _db;
 
-    return d.close();
+    await d.close();
   }
 
   @override

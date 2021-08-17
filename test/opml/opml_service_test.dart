@@ -10,7 +10,6 @@ import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
-import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/state/opml_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
@@ -21,32 +20,26 @@ import '../mocks/mock_podcast_api.dart';
 void main() {
   final api = MockPodcastApi();
   final mockPath = MockPathProvder();
+  final dbName = 'anytime-opml.db';
   OPMLService opmlService;
   PodcastService podcastService;
   Repository repository;
 
   setUp(() async {
-    var f = File('${Directory.systemTemp.path}/anytime.db');
-
-    if (f.existsSync()) {
-      f.deleteSync();
-    }
-
-    final settingService = await MobileSettingsService.instance();
     PathProviderPlatform.instance = mockPath;
-    repository = SembastRepository();
+    repository = SembastRepository(databaseName: dbName);
 
     podcastService = MobilePodcastService(
       api: api,
       repository: repository,
-      settingsService: settingService,
+      settingsService: null,
     );
 
     opmlService = MobileOPMLService(podcastService: podcastService, repository: repository);
   });
 
   tearDown(() async {
-    var f = File('${Directory.systemTemp.path}/anytime.db');
+    var f = File('${Directory.systemTemp.path}/$dbName');
 
     if (f.existsSync()) {
       f.deleteSync();
