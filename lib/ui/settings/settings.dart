@@ -70,24 +70,28 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
               ),
-              ListTile(
-                title: Text(L.of(context).settings_download_sd_card_label),
-                enabled: sdcard,
-                trailing: Switch.adaptive(
-                  value: snapshot.data.storeDownloadsSDCard,
-                  onChanged: (value) => sdcard
-                      ? setState(() {
-                          if (value) {
-                            _showStorageDialog(enableExternalStorage: true);
-                          } else {
-                            _showStorageDialog(enableExternalStorage: false);
-                          }
+              sdcard
+                  ? ListTile(
+                      title: Text(L.of(context).settings_download_sd_card_label),
+                      trailing: Switch.adaptive(
+                        value: snapshot.data.storeDownloadsSDCard,
+                        onChanged: (value) => sdcard
+                            ? setState(() {
+                                if (value) {
+                                  _showStorageDialog(enableExternalStorage: true);
+                                } else {
+                                  _showStorageDialog(enableExternalStorage: false);
+                                }
 
-                          settingsBloc.storeDownloadonSDCard(value);
-                        })
-                      : null,
-                ),
-              ),
+                                settingsBloc.storeDownloadonSDCard(value);
+                              })
+                            : null,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 0,
+                      width: 0,
+                    ),
               SettingsDividerLabel(label: L.of(context).settings_playback_divider_label),
               ListTile(
                 title: Text(L.of(context).settings_auto_open_now_playing),
