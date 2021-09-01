@@ -1,5 +1,4 @@
 {
-  "@@last_modified": "2020-02-20T12:15:52.645497",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -12,13 +11,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "library": "Library",
+  "library": "Biblioteca",
   "@library": {
     "description": "Library tab label",
     "type": "text",
     "placeholders": {}
   },
-  "discover": "Discover",
+  "discover": "Explorar",
   "@discover": {
     "description": "Discover tab label",
     "type": "text",
@@ -30,19 +29,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_button_label": "SUBSCRIBE",
+  "subscribe_button_label": "SEGUIR",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_button_label": "UNSUBSCRIBE",
+  "unsubscribe_button_label": "NÃO SEGUIR",
   "@unsubscribe_button_label": {
     "description": "Unsubscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "cancel_button_label": "CANCEL",
+  "cancel_button_label": "CANCELAR",
   "@cancel_button_label": {
     "description": "Cancel button label",
     "type": "text",
@@ -54,226 +53,316 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_label": "Subscribe",
+  "subscribe_label": "Seguir",
   "@subscribe_label": {
     "description": "Subscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_label": "Unsubscribe",
+  "unsubscribe_label": "Não Seguir",
   "@unsubscribe_label": {
     "description": "Unsubscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_message": "Unsubscribing will delete all downloaded episodes of this podcast.",
+  "unsubscribe_message": "Ao não seguir mais este podcast todos os episódios baixados serão deletados.",
   "@unsubscribe_message": {
     "description": "Displayed when the user unsubscribes from a podcast.",
     "type": "text",
     "placeholders": {}
   },
-  "search_for_podcasts_hint": "Search for podcasts",
+  "search_for_podcasts_hint": "Buscar por podcasts",
   "@search_for_podcasts_hint": {
     "description": "Hint displayed on search bar when the user clicks the search icon.",
     "type": "text",
     "placeholders": {}
   },
-  "delete_label": "Delete",
+  "delete_label": "Deletar",
   "@delete_label": {
     "description": "Delete label",
     "type": "text",
     "placeholders": {}
   },
-  "delete_button_label": "DELETE",
+  "delete_button_label": "DELETAR",
   "@delete_button_label": {
     "description": "Delete label",
     "type": "text",
     "placeholders": {}
   },
-  "mark_played_label": "Mark As Played",
+  "mark_played_label": "Não Reproduzido",
   "@mark_played_label": {
     "description": "Mark as played",
     "type": "text",
     "placeholders": {}
   },
-  "mark_unplayed_label": "Mark As Unplayed",
+  "mark_unplayed_label": "Já Reproduzido",
   "@mark_unplayed_label": {
     "description": "Mark as unplayed",
     "type": "text",
     "placeholders": {}
   },
-  "delete_episode_confirmation": "Are you sure you wish to delete this episode?",
+  "delete_episode_confirmation": "Deseja deletar este episódio já baixado?",
   "@delete_episode_confirmation": {
     "description": "User is asked to confirm when they attempt to delete an episode",
     "type": "text",
     "placeholders": {}
   },
-  "delete_episode_title": "Delete Episode",
+  "delete_episode_title": "Deletar Episódio",
   "@delete_episode_title": {
     "description": "Delete label",
     "type": "text",
     "placeholders": {}
   },
-  "no_downloads_message": "You do not have any downloaded episodes",
+  "no_downloads_message": "Você não possui nenhum episódio baixado.",
   "@no_downloads_message": {
     "description": "Displayed on the library tab when the user has no subscriptions",
     "type": "text",
     "placeholders": {}
   },
-  "no_search_results_message": "No podcasts found",
+  "no_search_results_message": "Nenhum resultado para sua busca",
   "@no_search_results_message": {
     "description": "Displayed on the library tab when the user has no subscriptions",
     "type": "text",
     "placeholders": {}
   },
-  "no_subscriptions_message" : "Tap the Discovery button below or use the search bar above to find your first podcast",
-  "no_podcast_details_message": "Could not load podcast episodes. Please check your connection.",
+  "no_subscriptions_message": "Toque na aba abaixo Explorar ou utilize a barra de busca que fica na barra acima para encontrar seu primeiro podcast",
+  "no_podcast_details_message": "Não foi possível carregar os episódios do podcast. Por favor verifique sua conexão e tente novamente.",
   "@no_podcast_details_message": {
     "description": "Displayed on the podcast details page when the details could not be loaded",
     "type": "text",
     "placeholders": {}
   },
-  "play_button_label": "Play episode",
+  "play_button_label": "Reproduzir episódio",
   "@play_button_label": {
     "description": "Semantic label for the play button",
     "type": "text",
     "placeholders": {}
   },
-  "pause_button_label": "Pause episode",
+  "pause_button_label": "Pausar episódio",
   "@pause_button_label": {
     "description": "Semantic label for the pause button",
     "type": "text",
     "placeholders": {}
   },
-  "download_episode_button_label": "Download episode",
+  "download_episode_button_label": "Baixar episódio",
   "@download_episode_button_label": {
     "description": "Semantic label for the download episode button",
     "type": "text",
     "placeholders": {}
   },
-  "delete_episode_button_label": "Delete episode",
+  "delete_episode_button_label": "Deletar episódio",
   "@delete_episode_button_label": {
     "description": "Semantic label for the delete episode",
     "type": "text",
     "placeholders": {}
   },
-  "close_button_label": "Close",
+  "close_button_label": "Fechar",
   "@close_button_label": {
     "description": "Close button label",
     "type": "text",
     "placeholders": {}
   },
-  "search_button_label": "Search",
+  "search_button_label": "Buscar",
   "@search_button_label": {
     "description": "Search button label",
     "type": "text",
     "placeholders": {}
   },
-  "clear_search_button_label": "Clear search text",
+  "clear_search_button_label": "Limpar busca",
   "@clear_search_button_label": {
     "description": "Search button label",
     "type": "text",
     "placeholders": {}
   },
-  "search_back_button_label": "Back",
+  "search_back_button_label": "Voltar",
   "@search_back_button_label": {
     "description": "Search button label",
     "type": "text",
     "placeholders": {}
   },
-  "minimise_player_window_button_label": "Minimise player window",
+  "minimise_player_window_button_label": "Minimizar a janela do reprodutor",
   "@minimise_player_window_button_label": {
     "description": "Search button label",
     "type": "text",
     "placeholders": {}
   },
-  "rewind_button_label": "Rewind episode 30 seconds",
+  "rewind_button_label": "Retroceder 30 segundos",
   "@rewind_button_label": {
     "description": "Rewind button tooltip",
     "type": "text",
     "placeholders": {}
   },
-  "fast_forward_button_label": "Fast-forward episode 30 seconds",
+  "fast_forward_button_label": "Pular 30 segundos",
   "@fast_forward_button_label": {
     "description": "Fast forward tooltip",
     "type": "text",
     "placeholders": {}
   },
-  "about_label": "About",
+  "about_label": "Sobre",
   "@about_label": {
     "description": "About menu item",
     "type": "text",
     "placeholders": {}
   },
-  "mark_episodes_played_label": "Mark all episodes as played",
+  "mark_episodes_played_label": "Marcar todos os episódios como já reproduzidos",
   "@mark_episodes_played_label": {
     "description": "Mark all episodes played menu item",
     "type": "text",
     "placeholders": {}
   },
-  "mark_episodes_not_played_label": "Mark all episodes as not played",
+  "mark_episodes_not_played_label": "Marcar todos os episódios como não reproduzidos",
   "@mark_episodes_not_played_label": {
     "description": "Mark all episodes not-played menu item",
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_confirmation": "Are you sure you wish to stop this download and delete the episode?",
+  "stop_download_confirmation": "Você deseja parar o download e deletar o episódio?",
   "@stop_download_confirmation": {
     "description": "User is asked to confirm when they wish to stop the active download.",
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_button_label": "STOP",
+  "stop_download_button_label": "PARAR",
   "@stop_download_button_label": {
     "description": "Stop label",
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_title": "Stop Download",
+  "stop_download_title": "Para o Download",
   "@stop_download_title": {
     "description": "Stop download label",
     "type": "text",
     "placeholders": {}
   },
-  "settings_mark_deleted_played_label": "Mark deleted episodes as played",
+  "settings_mark_deleted_played_label": "Marcar os episódios deletados como já reproduzidos",
   "@settings_mark_deleted_played_label": {
     "description": "Mark deleted episodes as played setting",
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_sd_card_label": "Download episodes to SD card",
+  "settings_download_sd_card_label": "Baixar episódios para o cartão de memória",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_switch_card": "New downloads will be saved to the SD card. Existing downloads will remain on internal storage.",
+  "settings_download_switch_card": "Novos downloads serão salvos no cartão de memória. Os downloads existentes permanecerão no armazenamento interno.",
   "@settings_download_switch_card": {
     "description": "Displayed when user switches from internal storage to SD card",
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_switch_internal": "New downloads will be saved to internal storage. Existing downloads will remain on the SD card.",
+  "settings_download_switch_internal": "Novos downloads serão salvos no armazenamento interno. Os downloads existentes permanecerão no cartão de memória.",
   "@settings_download_switch_internal": {
     "description": "Displayed when user switches from internal SD card to internal storage",
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_switch_label": "Change storage location",
+  "settings_download_switch_label": "Alterar local de armazenamento",
   "@settings_download_switch_label": {
     "description": "Dialog label for storage switch",
     "type": "text",
     "placeholders": {}
   },
-  "cancel_option_label": "Cancel",
+  "cancel_option_label": "Cancelar",
   "@cancel_option_label": {
     "description": "Cancel option label",
     "type": "text",
     "placeholders": {}
   },
-  "settings_theme_switch_label": "Dark theme",
+  "settings_theme_switch_label": "Tema escuro",
   "@settings_theme_switch_label": {
     "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Velocidade de Reprodução",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Mostrar notas",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_provider_label": "Provedor de Buscas",
+  "@search_provider_label": {
+    "description": "Set search provider label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_label": "Preferências",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "VOLTAR",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "CONTINUAR",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "consent_message": "Este link de financiamento te levará à um site externo onde você poderá patrocinar o podcast. Os links são providos pelos autores do podcast e não é controlado de modo algum pelo Anytime.",
+  "@consent_message": {
+    "description": "Display when first accessing external funding link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_label": "Episódio",
+  "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "Capítulos",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "Notas",
+  "@notes_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_funding_dialog_header": "Financiamento do Podcast",
+  "@podcast_funding_dialog_header": {
+    "description": "Header on podcast funding consent dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Modo de tela cheia ao iniciar o episódio",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_no_connection": "Não foi possível reproduzir o episódio. Por favor verifique sua conexão e tente novamente.",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "Ocorreu um erro inesperado na reprodução. Por favor verifique sua conexão e tente novamente.",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "Adicionar o Feed RSS",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
     "type": "text",
     "placeholders": {}
   }

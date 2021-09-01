@@ -168,6 +168,7 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
         supportedLocales: [
           const Locale('en', ''),
           const Locale('de', ''),
+          const Locale('pt', ''),
         ],
         theme: theme,
         home: AnytimeHomePage(title: 'Anytime Podcast Player'),
