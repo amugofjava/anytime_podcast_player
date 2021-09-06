@@ -105,7 +105,7 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 title: Text(L.of(context).settings_import_opml),
                 onTap: () async {
-                  var result = await FilePicker.platform.pickFiles();
+                  var result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['opml', 'xml'],);
 
                   if (result.count > 0) {
                     var file = result.files.first;

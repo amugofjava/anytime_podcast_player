@@ -33,8 +33,6 @@
 		<key>NSAllowsArbitraryLoadsForMedia</key>
 		<true/>
 	</dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Anytime does not require mic access</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -60,5 +58,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>File access is required to facilitate locating and importing OPML files</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Podcast listening requires audio which indirectly touches mic lib</string>
 </dict>
 </plist>
