@@ -120,6 +120,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                             padding: const EdgeInsets.all(8.0),
                             child: snapshot.hasData
                                 ? PodcastImage(
+                                    key: Key('mini${snapshot.data.imageUrl}'),
                                     url: snapshot.data.imageUrl,
                                     placeholder: placeholderBuilder != null
                                         ? placeholderBuilder?.builder()(context)

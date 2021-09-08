@@ -148,6 +148,9 @@ class MobilePodcastService extends PodcastService {
           final author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
           final title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
           final description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
+          final episodeImage = episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.imageUrl : episode.imageUrl;
+          final episodeThumbImage =
+              episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
 
           if (existingEpisode == null) {
             pc.newEpisodes = pc.id != null;
@@ -164,8 +167,8 @@ class MobilePodcastService extends PodcastService {
               episode: episode.episode ?? 0,
               contentUrl: episode.contentUrl,
               link: episode.link,
-              imageUrl: pc.imageUrl,
-              thumbImageUrl: pc.thumbImageUrl,
+              imageUrl: episodeImage,
+              thumbImageUrl: episodeThumbImage,
               duration: episode.duration?.inSeconds ?? 0,
               publicationDate: episode.publicationDate,
               chaptersUrl: episode.chapters?.url,
@@ -179,8 +182,8 @@ class MobilePodcastService extends PodcastService {
             existingEpisode.episode = episode.episode ?? 0;
             existingEpisode.contentUrl = episode.contentUrl;
             existingEpisode.link = episode.link;
-            existingEpisode.imageUrl = pc.imageUrl;
-            existingEpisode.thumbImageUrl = pc.thumbImageUrl;
+            existingEpisode.imageUrl = episodeImage;
+            existingEpisode.thumbImageUrl = episodeThumbImage;
             existingEpisode.duration = episode.duration?.inSeconds ?? 0;
             existingEpisode.publicationDate = episode.publicationDate;
             existingEpisode.chaptersUrl = episode.chapters?.url;
