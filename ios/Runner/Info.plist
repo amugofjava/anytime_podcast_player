@@ -60,7 +60,5 @@
 	<false/>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>File access is required to facilitate locating and importing OPML files</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>Podcast listening requires audio which indirectly touches mic lib</string>
 </dict>
 </plist>

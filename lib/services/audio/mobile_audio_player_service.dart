@@ -51,7 +51,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   /// Stream for the current position of the playing track.
   final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
 
-  final BehaviorSubject<Episode> _episodeEvent = BehaviorSubject<Episode>();
+  final BehaviorSubject<Episode> _episodeEvent = BehaviorSubject<Episode>(sync: true);
 
   /// Stream for the last audio error as an integer code.
   final PublishSubject<int> _playbackError = PublishSubject<int>();
@@ -75,7 +75,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
       var startPosition = 0;
       var uri = episode.contentUrl;
 
-      _playingState.add(AudioState.playing);
+      _episodeEvent.sink.add(episode);
+      _playingState.add(AudioState.buffering);
 
       if (resume) {
         startPosition = episode?.position ?? 0;
@@ -268,7 +269,6 @@ class MobileAudioPlayerService extends AudioPlayerService {
           ' - Loaded state ${persistedState.state} - for episode ${persistedState.episodeId} - ${persistedState.position}');
       _episode = await repository.findEpisodeById(persistedState.episodeId);
 
-      // if (_episode != null && persistedState.lastUpdated.isAfter(_episode?.lastUpdated)) {
       if (_episode != null) {
         if (persistedState.state == LastState.completed) {
           _episode.position = 0;
