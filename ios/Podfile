@@ -43,7 +43,7 @@ post_install do |installer|
         '$(inherited)',
 
         ## Audio session - disable microphone
-        'AUDIO_SESSION_MICROPHONE=0'
+        'AUDIO_SESSION_MICROPHONE=0',
 
         ## dart: PermissionGroup.calendar
         'PERMISSION_EVENTS=0',
