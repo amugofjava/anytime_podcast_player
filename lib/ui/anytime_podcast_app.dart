@@ -246,11 +246,14 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
+    final isLight = Theme.of(context).brightness == Brightness.light;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).bottomAppBarColor,
+        statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: isLight
+            ? Theme.of(context).primaryColorDark
+            : Theme.of(context).bottomAppBarColor,
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
