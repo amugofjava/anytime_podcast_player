@@ -11,6 +11,10 @@ ThemeData _buildLightTheme() {
   final base = ThemeData.light();
 
   return base.copyWith(
+    colorScheme: ColorScheme.light(
+      primary: Color(0xffff9800),
+      background: Color(0xffffe0b2),
+    ),
     brightness: Brightness.light,
     primaryColor: Color(0xffff9800),
     primaryColorBrightness: Brightness.light,
@@ -25,26 +29,31 @@ ThemeData _buildLightTheme() {
     dividerColor: Color(0x1f000000),
     highlightColor: Color(0x66bcbcbc),
     splashColor: Color(0x66c8c8c8),
-    selectedRowColor: Color(0xfff5f5f5),
+    selectedRowColor: Color(0xffff9800),
     unselectedWidgetColor: Color(0x8a000000),
     disabledColor: Color(0x61000000),
     buttonColor: Colors.orange,
     toggleableActiveColor: Color(0xfffb8c00),
     secondaryHeaderColor: Color(0xfffff3e0),
-    textSelectionColor: Color(0xffffcc80),
-    cursorColor: Colors.blue,
-    textSelectionHandleColor: Color(0xffffb74d),
-    backgroundColor: Colors.white,
+    backgroundColor: Color(0xffffffff),
     dialogBackgroundColor: Color(0xffffffff),
-    indicatorColor: Colors.grey[800],
+    indicatorColor: Colors.blue,
     hintColor: Color(0x8a000000),
     errorColor: Color(0xffd32f2f),
     primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     textTheme: Typography.material2018(platform: TargetPlatform.android).black,
+    accentTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     iconTheme: IconThemeData(color: Colors.orange),
+    sliderTheme: SliderThemeData().copyWith(
+      valueIndicatorColor: Colors.orange,
+    ),
     appBarTheme: base.appBarTheme.copyWith(
-      color: Colors.white,
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(primary: Colors.grey[800]),
     ),
   );
 }
@@ -53,6 +62,10 @@ ThemeData _buildDarktheme() {
   final base = ThemeData.dark();
 
   return base.copyWith(
+    colorScheme: ColorScheme.dark(
+      primary: Color(0xffffffff),
+      background: Color(0x80ffffff),
+    ),
     brightness: Brightness.dark,
     primaryColor: Color(0xffffffff),
     primaryColorBrightness: Brightness.dark,
@@ -67,31 +80,42 @@ ThemeData _buildDarktheme() {
     dividerColor: Color(0xff444444),
     highlightColor: Color(0xff222222),
     splashColor: Color(0x66c8c8c8),
-    selectedRowColor: Color(0xfff5f5f5),
-    unselectedWidgetColor: Color(0x8a000000),
+    selectedRowColor: Color(0x77ffffff),
+    unselectedWidgetColor: Colors.white,
     disabledColor: Color(0x77ffffff),
-    buttonColor: Color(0xffe0e0e0),
+    buttonColor: Color(0xffffffff),
     toggleableActiveColor: Color(0xfffb8c00),
     secondaryHeaderColor: Color(0xfffff3e0),
-    textSelectionColor: Color(0xffffcc80),
-    cursorColor: Colors.orange,
-    textSelectionHandleColor: Color(0xffffb74d),
-    backgroundColor: Colors.black,
+    backgroundColor: Color(0xff222222),
     dialogBackgroundColor: Color(0xff222222),
-    indicatorColor: Color(0xfff5f5f5),
+    indicatorColor: Colors.orange,
     hintColor: Color(0x80ffffff),
     errorColor: Color(0xffd32f2f),
     primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
     textTheme: Typography.material2018(platform: TargetPlatform.android).white,
+    accentTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
     primaryIconTheme: IconThemeData(color: Colors.white),
     iconTheme: IconThemeData(color: Colors.white),
     dividerTheme: base.dividerTheme.copyWith(
       color: Color(0xff444444),
     ),
+    sliderTheme: SliderThemeData().copyWith(
+      valueIndicatorColor: Colors.white,
+    ),
     appBarTheme: base.appBarTheme.copyWith(
-      color: Color(0xff222222),
+      backgroundColor: Color(0xff222222),
+      foregroundColor: Colors.white,
       shadowColor: Color(0xff222222),
       elevation: 1.0,
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        primary: Color(0xffffffff),
+        side: BorderSide(
+          color: Color(0xffffffff),
+          style: BorderStyle.solid,
+        ),
+      ),
     ),
   );
 }

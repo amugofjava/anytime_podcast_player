@@ -30,19 +30,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_button_label": "SUBSCRIBE",
+  "subscribe_button_label": "FOLLOW",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_button_label": "UNSUBSCRIBE",
+  "unsubscribe_button_label": "Unfollow",
   "@unsubscribe_button_label": {
     "description": "Unsubscribe button label",
     "type": "text",
     "placeholders": {}
   },
-  "cancel_button_label": "CANCEL",
+  "cancel_button_label": "Cancel",
   "@cancel_button_label": {
     "description": "Cancel button label",
     "type": "text",
@@ -54,19 +54,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_label": "Subscribe",
+  "subscribe_label": "Follow",
   "@subscribe_label": {
     "description": "Subscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_label": "Unsubscribe",
+  "unsubscribe_label": "Unfollow",
   "@unsubscribe_label": {
     "description": "Unsubscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_message": "Unsubscribing will delete all downloaded episodes of this podcast.",
+  "unsubscribe_message": "Unfollowing will delete all downloaded episodes of this podcast.",
   "@unsubscribe_message": {
     "description": "Displayed when the user unsubscribes from a podcast.",
     "type": "text",
@@ -90,13 +90,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_played_label": "Mark As Played",
+  "mark_played_label": "Mark Played",
   "@mark_played_label": {
     "description": "Mark as played",
     "type": "text",
     "placeholders": {}
   },
-  "mark_unplayed_label": "Mark As Unplayed",
+  "mark_unplayed_label": "Mark Unplayed",
   "@mark_unplayed_label": {
     "description": "Mark as unplayed",
     "type": "text",
@@ -223,7 +223,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_button_label": "STOP",
+  "stop_download_button_label": "Stop",
   "@stop_download_button_label": {
     "description": "Stop label",
     "type": "text",
@@ -274,6 +274,210 @@
   "settings_theme_switch_label": "Dark theme",
   "@settings_theme_switch_label": {
     "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Playback speed",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Show notes",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_provider_label": "Search provider",
+  "@search_provider_label": {
+    "description": "Set search provider label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_label": "Settings",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "Go Back",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "Continue",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "consent_message": "This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime.",
+  "@consent_message": {
+    "description": "Display when first accessing external funding link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_label": "Episode",
+  "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "Chapters",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "Notes",
+  "@notes_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_funding_dialog_header": "Podcast Funding",
+  "@podcast_funding_dialog_header": {
+    "description": "Header on podcast funding consent dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Full screen player mode on episode start",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_no_connection": "Unable to play episode. Please check your connection and try again.",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "An unexpected error occurred during playback. Please check your connection and try again.",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "Add RSS Feed",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_import_opml": "Import OPML",
+  "@settings_import_opml": {
+    "description": "Option label importing OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_opml": "Import OPML",
+  "@settings_export_opml": {
+    "description": "Option label exporting OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_opml_importing": "Importing",
+  "@label_opml_importing": {
+    "description": "Label for importing OPML dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_heading": "Refresh episodes on details screen after",
+  "@settings_auto_update_episodes_heading": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes": "Auto update episodes",
+  "@settings_auto_update_episodes": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_never": "Never",
+  "@settings_auto_update_episodes_never": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_always": "Always",
+  "@settings_auto_update_episodes_always": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_10min": "10 minutes since last update",
+  "@settings_auto_update_episodes_10min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_30min": "30 minutes since last update",
+  "@settings_auto_update_episodes_30min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_1hour": "1 hour since last update",
+  "@settings_auto_update_episodes_1hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_3hour": "3 hours since last update",
+  "@settings_auto_update_episodes_3hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_6hour": "6 hours since last update",
+  "@settings_auto_update_episodes_6hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_12hour": "12 hours since last update",
+  "@settings_auto_update_episodes_12hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_label": "New episodes are available",
+  "@new_episodes_label": {
+    "description": "Option label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_view_now_label": "VIEW NOW",
+  "@new_episodes_view_now_label": {
+    "description": "Option action label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_personalisation_divider_label": "PERSONALISATION",
+  "@settings_personalisation_divider_label": {
+    "description": "Settings divider label for personalisation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_episodes_divider_label": "EPISODES",
+  "@settings_episodes_divider_label": {
+    "description": "Settings divider label for episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_playback_divider_label": "PLAYBACK",
+  "@settings_playback_divider_label": {
+    "description": "Settings divider label for playback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_data_divider_label": "DATA",
+  "@settings_data_divider_label": {
+    "description": "Settings divider label for data",
     "type": "text",
     "placeholders": {}
   }

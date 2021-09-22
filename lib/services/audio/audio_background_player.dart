@@ -9,13 +9,18 @@ import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:logging/logging.dart';
 
-/// This is the implementation of the Anytime Audio Service for Android. This
-/// version uses AudioService and AudioPlayer packages to provide the audio
-/// playback and Android services for continuing playback in the background.
+/// This class provides an implementation of [BackgroundAudioTask] from the
+/// [audio_service](https://pub.dev/packages/audio_service) package to handle
+/// events from [AudioService] in a background Isolate.
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
 
+  /// A stream that listens for 'noisy' events. This allows Anytime to listen
+  /// for events such as the headphones being pulled from the audio jack.
   StreamSubscription<void> noisyStream;
+
+  /// Our [MobileAudioPlayer] instance that sits between the [AudioServce] and
+  /// the player that handles the actual playback.
   MobileAudioPlayer _anytimeAudioPlayer;
 
   /// As we are running in a separate Isolate, we need a separate Logger -
@@ -96,10 +101,23 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
   }
 
   @override
+  Future<void> onSetSpeed(double speed) {
+    return _anytimeAudioPlayer.setSpeed(speed);
+  }
+
+  @override
   Future<dynamic> onCustomAction(String name, dynamic arguments) async {
     log.fine('onCustomAction()');
     switch (name) {
       case 'track':
+
+        /// Temp fix. In current just_audio version switching tracks whilst
+        /// playing causes the position to be reset to 0. By pausing first
+        /// this problem does not seem to occur.
+        if (_anytimeAudioPlayer.playing) {
+          await _anytimeAudioPlayer.pause();
+        }
+
         await _anytimeAudioPlayer.setMediaItem(arguments);
         break;
       case 'position':

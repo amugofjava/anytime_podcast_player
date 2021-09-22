@@ -2,13 +2,24 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/opml_bloc.dart';
+import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/opml_state.dart';
+import 'package:anytime/ui/library/opml_export.dart';
+import 'package:anytime/ui/library/opml_import.dart';
+import 'package:anytime/ui/settings/episode_refresh.dart';
+import 'package:anytime/ui/settings/search_provider.dart';
+import 'package:anytime/ui/settings/settings_section_label.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
@@ -32,87 +43,164 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildList(BuildContext context) {
     var settingsBloc = Provider.of<SettingsBloc>(context);
+    var podcastBloc = Provider.of<PodcastBloc>(context);
+    var opmlBloc = Provider.of<OPMLBloc>(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
+        initialData: settingsBloc.currentSettings,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-                children: ListTile.divideTiles(
-              context: context,
-              tiles: [
-                ListTile(
-                  title: Text(L.of(context).settings_theme_switch_label),
-                  trailing: Switch.adaptive(
-                      value: snapshot.data.theme == 'dark',
-                      onChanged: (value) {
-                        settingsBloc.darkMode(value);
-                      }),
+          return ListView(
+            children: [
+              SettingsDividerLabel(label: L.of(context).settings_personalisation_divider_label),
+              ListTile(
+                shape: RoundedRectangleBorder(side: BorderSide.none),
+                title: Text(L.of(context).settings_theme_switch_label),
+                trailing: Switch.adaptive(
+                    value: snapshot.data.theme == 'dark',
+                    onChanged: (value) {
+                      settingsBloc.darkMode(value);
+                    }),
+              ),
+              SettingsDividerLabel(label: L.of(context).settings_episodes_divider_label),
+              ListTile(
+                title: Text(L.of(context).settings_mark_deleted_played_label),
+                trailing: Switch.adaptive(
+                  value: snapshot.data.markDeletedEpisodesAsPlayed,
+                  onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
-                ListTile(
-                  title: Text(L.of(context).settings_mark_deleted_played_label),
-                  trailing: Switch.adaptive(
-                    value: snapshot.data.markDeletedEpisodesAsPlayed,
-                    onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
-                  ),
-                ),
-                ListTile(
-                  title: Text(L.of(context).settings_download_sd_card_label),
-                  enabled: sdcard,
-                  trailing: Switch.adaptive(
-                    value: snapshot.data.storeDownloadsSDCard,
-                    onChanged: (value) => sdcard
-                        ? setState(() {
-                            if (value) {
-                              _showStorageDialog(enableExternalStorage: true);
-                            } else {
-                              _showStorageDialog(enableExternalStorage: false);
-                            }
+              ),
+              sdcard
+                  ? ListTile(
+                      title: Text(L.of(context).settings_download_sd_card_label),
+                      trailing: Switch.adaptive(
+                        value: snapshot.data.storeDownloadsSDCard,
+                        onChanged: (value) => sdcard
+                            ? setState(() {
+                                if (value) {
+                                  _showStorageDialog(enableExternalStorage: true);
+                                } else {
+                                  _showStorageDialog(enableExternalStorage: false);
+                                }
 
-                            settingsBloc.storeDownloadonSDCard(value);
-                          })
-                        : null,
-                  ),
+                                settingsBloc.storeDownloadonSDCard(value);
+                              })
+                            : null,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 0,
+                      width: 0,
+                    ),
+              SettingsDividerLabel(label: L.of(context).settings_playback_divider_label),
+              ListTile(
+                title: Text(L.of(context).settings_auto_open_now_playing),
+                trailing: Switch.adaptive(
+                  value: snapshot.data.autoOpenNowPlaying,
+                  onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
-              ],
-            ).toList());
-          } else {
-            return Container();
-          }
+              ),
+              EpisodeRefreshWidget(),
+              SettingsDividerLabel(label: L.of(context).settings_data_divider_label),
+              ListTile(
+                title: Text(L.of(context).settings_import_opml),
+                onTap: () async {
+                  var result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['opml', 'xml'],);
+
+                  if (result.count > 0) {
+                    var file = result.files.first;
+
+                    var e = await showPlatformDialog<bool>(
+                      androidBarrierDismissible: false,
+                      useRootNavigator: false,
+                      context: context,
+                      builder: (_) => WillPopScope(
+                        onWillPop: () async => false,
+                        child: BasicDialogAlert(
+                          title: Text(L.of(context).settings_import_opml),
+                          content: OPMLImport(file: file.path),
+                          actions: <Widget>[
+                            BasicDialogAction(
+                              title: ActionText(L.of(context).cancel_button_label),
+                              onPressed: () {
+                                return Navigator.pop(context, true);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+
+                    if (e != null && e) {
+                      opmlBloc.opmlEvent(OPMLCancelEvent());
+                    }
+                    podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
+                  }
+                },
+              ),
+              ListTile(
+                title: Text(L.of(context).settings_export_opml),
+                onTap: () async {
+                  await showPlatformDialog<void>(
+                    context: context,
+                    useRootNavigator: false,
+                    builder: (_) => BasicDialogAlert(
+                      content: OPMLExport(),
+                    ),
+                  );
+                },
+              ),
+              SearchProviderWidget(),
+            ],
+          );
         });
   }
 
   Widget _buildAndroid(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        brightness: Theme.of(context).brightness,
-        elevation: 0.0,
-        title: Text(
-          'Settings',
-        ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
+        statusBarColor: Colors.transparent,
       ),
-      body: _buildList(context),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: Text(
+            'Settings',
+          ),
+        ),
+        body: _buildList(context),
+      ),
     );
   }
 
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(),
-      child: _buildList(context),
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+      ),
+      child: Material(child: _buildList(context)),
     );
   }
 
   void _showStorageDialog({@required bool enableExternalStorage}) {
     showPlatformDialog<void>(
       context: context,
+      useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(L.of(context).settings_download_switch_label),
         content: Text(
-          enableExternalStorage ? L.of(context).settings_download_switch_card : L.of(context).settings_download_switch_internal,
+          enableExternalStorage
+              ? L.of(context).settings_download_switch_card
+              : L.of(context).settings_download_switch_internal,
         ),
         actions: <Widget>[
           BasicDialogAction(
-            title: Text(L.of(context).ok_button_label),
+            title: Text(
+              L.of(context).ok_button_label,
+              style: TextStyle(color: Theme.of(context).buttonColor),
+            ),
             onPressed: () {
               Navigator.pop(context);
             },

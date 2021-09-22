@@ -15,7 +15,8 @@
     <application
         android:networkSecurityConfig="@xml/network_security_config"
         android:label="Anytime Player"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:largeHeap="true">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"
             android:launchMode="singleTop"

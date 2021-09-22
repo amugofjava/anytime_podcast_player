@@ -13,6 +13,9 @@ import 'package:sembast/sembast_io.dart';
 /// of the Sembast DB.
 class DatabaseService {
   Completer<Database> _databaseCompleter;
+  String databaseName;
+
+  DatabaseService(this.databaseName);
 
   Future<Database> get database async {
     if (_databaseCompleter == null) {
@@ -25,7 +28,7 @@ class DatabaseService {
 
   Future _openDatabase() async {
     final appDocumentDir = await getApplicationDocumentsDirectory();
-    final dbPath = join(appDocumentDir.path, 'anytime.db');
+    final dbPath = join(appDocumentDir.path, databaseName);
     final database = await databaseFactoryIo.openDatabase(dbPath);
 
     _databaseCompleter.complete(database);

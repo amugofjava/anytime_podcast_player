@@ -25,12 +25,15 @@ class DecoratedIconButton extends StatelessWidget {
       color: Colors.transparent,
       child: Center(
         child: Ink(
+          width: 42.0,
+          height: 42.0,
           decoration: ShapeDecoration(
             color: decorationColour,
             shape: CircleBorder(),
           ),
           child: IconButton(
             icon: Icon(icon),
+            padding: const EdgeInsets.all(0.0),
             color: iconColour,
             onPressed: onPressed,
           ),

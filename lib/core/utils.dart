@@ -4,11 +4,40 @@
 
 import 'dart:io';
 
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+/// On iOS, the directory that the app has available to it for storing episodes may
+/// change between updated, whereas on Android we are able to save the full path. To
+/// ensure we can handle the directory name change on iOS without breaking existing
+/// Android installations we have created the following three functions to help with
+/// resolving the various paths correctly depending upon platform.
+Future<String> resolvePath(Episode episode) async {
+  if (Platform.isIOS) {
+    return Future.value(join(await getStorageDirectory(), episode.filepath, episode.filename));
+  }
+
+  return Future.value(join(episode.filepath, episode.filename));
+}
+
+Future<String> resolveDirectory({@required Episode episode, bool full = false}) async {
+  if (full || Platform.isAndroid) {
+    return Future.value(join(await getStorageDirectory(), safePath(episode.podcast)));
+  }
+
+  return Future.value(safePath(episode.podcast));
+}
+
+Future<void> createDownloadDirectory(Episode episode) async {
+  var path = join(await getStorageDirectory(), safePath(episode.podcast));
+
+  Directory(path).createSync(recursive: true);
+}
 
 Future<bool> hasStoragePermission() async {
   SettingsService settings = await MobileSettingsService.instance();
@@ -59,7 +88,6 @@ Future<Directory> _getSDCard() async {
   if (appDocumentDir.isNotEmpty) {
     // See if we can find the last card without emulated
     for (var d in appDocumentDir) {
-      print('Found path ${d.absolute.path}');
       if (!d.path.contains('emulated')) {
         path = d.absolute;
       }
@@ -75,5 +103,9 @@ Future<Directory> _getSDCard() async {
 
 /// Strips characters that are invalid for file and directory names.
 String safePath(String s) {
-  return s == null ? null : s.replaceAll(RegExp(r'[^\w\s\.]+'), '');
+  return s?.replaceAll(RegExp(r'[^\w\s]+'), '')?.trim();
+}
+
+String safeFile(String s) {
+  return s?.replaceAll(RegExp(r'[^\w\s\.]+'), '')?.trim();
 }

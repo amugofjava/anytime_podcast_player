@@ -6,37 +6,43 @@ import 'package:anytime/api/podcast/mobile_podcast_api.dart';
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
+import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
-import 'package:anytime/core/chrome.dart';
+import 'package:anytime/core/environment.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/services/audio/mobile_audio_service.dart';
-import 'package:anytime/services/download/download_manager.dart';
+import 'package:anytime/services/audio/mobile_audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
+import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
+import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
+import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
+import 'package:anytime/ui/podcast/mini_player.dart';
+import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
-import 'package:anytime/ui/widgets/mini_player_widget.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
-import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,9 +52,6 @@ var theme = Themes.lightTheme().themeData;
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
-  static String applicationVersion = '0.1.3';
-  static String applicationBuildNumber = '22';
-
   final Repository repository;
   final MobilePodcastApi podcastApi;
   DownloadService downloadService;
@@ -56,14 +59,30 @@ class AnytimePodcastApp extends StatefulWidget {
   AudioPlayerService audioPlayerService;
   SettingsBloc settingsBloc;
   MobileSettingsService mobileSettingsService;
+  OPMLService opmlService;
 
   AnytimePodcastApp(this.mobileSettingsService)
       : repository = SembastRepository(),
         podcastApi = MobilePodcastApi() {
-    downloadService = MobileDownloadService(repository: repository, downloadManager: FlutterDownloaderManager());
-    podcastService = MobilePodcastService(api: podcastApi, repository: repository, settingsService: mobileSettingsService);
-    audioPlayerService = MobileAudioPlayerService(repository: repository);
+    downloadService = MobileDownloadService(
+      repository: repository,
+      downloadManager: MobileDownloaderManager(),
+    );
+    podcastService = MobilePodcastService(
+      api: podcastApi,
+      repository: repository,
+      settingsService: mobileSettingsService,
+    );
+    audioPlayerService = MobileAudioPlayerService(
+      repository: repository,
+      settingsService: mobileSettingsService,
+      podcastService: podcastService,
+    );
     settingsBloc = SettingsBloc(mobileSettingsService);
+    opmlService = MobileOPMLService(
+      podcastService: podcastService,
+      repository: repository,
+    );
   }
 
   @override
@@ -84,23 +103,13 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
         /// Only update the theme if it has changed.
         if (newTheme != theme) {
           theme = newTheme;
-
-          if (event.theme == 'dark') {
-            Chrome.transparentDark();
-          } else {
-            Chrome.transparentLight();
-          }
         }
       });
     });
 
     if (widget.mobileSettingsService.themeDarkMode) {
       theme = Themes.darkTheme().themeData;
-
-      Chrome.transparentDark();
     } else {
-      Chrome.transparentLight();
-
       theme = Themes.lightTheme().themeData;
     }
   }
@@ -141,7 +150,8 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           create: (_) => PodcastBloc(
               podcastService: widget.podcastService,
               audioPlayerService: widget.audioPlayerService,
-              downloadService: widget.downloadService),
+              downloadService: widget.downloadService,
+              settingsService: widget.mobileSettingsService),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PagerBloc>(
@@ -156,6 +166,10 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           create: (_) => widget.settingsBloc,
           dispose: (_, value) => value.dispose(),
         ),
+        Provider<OPMLBloc>(
+          create: (_) => OPMLBloc(opmlService: widget.opmlService),
+          dispose: (_, value) => value.dispose(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -164,6 +178,7 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           const LocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
         supportedLocales: [
           const Locale('en', ''),
@@ -179,8 +194,10 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
 
 class AnytimeHomePage extends StatefulWidget {
   final String title;
+  final bool topBarVisible;
+  final bool inlineSearch;
 
-  AnytimeHomePage({this.title});
+  AnytimeHomePage({this.title, this.topBarVisible = true, this.inlineSearch = false});
 
   @override
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
@@ -212,6 +229,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecyleState.resume);
@@ -229,94 +247,109 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
-    final brightness = Theme.of(context).brightness;
 
-    return Scaffold(
-      backgroundColor: backgroundColour,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverAppBar(
-                  title: TitleWidget(),
-                  brightness: brightness,
-                  backgroundColor: backgroundColour,
-                  floating: false,
-                  pinned: true,
-                  snap: false,
-                  actions: <Widget>[
-                    IconButton(
-                      tooltip: L.of(context).search_button_label,
-                      icon: Icon(Icons.search),
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          SlideRightRoute(widget: Search()),
-                        );
-                      },
-                    ),
-                    PopupMenuButton<String>(
-                      color: Theme.of(context).dialogBackgroundColor,
-                      onSelected: _menuSelect,
-                      icon: Icon(
-                        Icons.more_vert,
-                        // color: Theme.of(context).buttonColor,
-                      ),
-                      itemBuilder: (BuildContext context) {
-                        return <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'settings',
-                            child: Text('Settings'), //TODO: FIX
-                          ),
-                          PopupMenuItem<String>(
-                            textStyle: Theme.of(context).textTheme.subtitle1,
-                            value: 'about',
-                            child: Text(L.of(context).about_label),
-                          ),
-                        ];
-                      },
-                    ),
-                  ],
-                ),
-                StreamBuilder<int>(
-                    stream: pager.currentPage,
-                    builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                      return _fragment(snapshot.data, searchBloc);
-                    }),
-              ],
-            ),
-          ),
-          MiniPlayer(),
-        ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: Theme.of(context).bottomAppBarColor,
+        statusBarColor: Colors.transparent,
       ),
-      bottomNavigationBar: StreamBuilder<int>(
-          stream: pager.currentPage,
-          initialData: 0,
-          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-            return BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Theme.of(context).bottomAppBarColor,
-              selectedIconTheme: Theme.of(context).iconTheme,
-              currentIndex: snapshot.data,
-              onTap: pager.changePage,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.library_music),
-                  label: L.of(context).library,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.explore),
-                  label: L.of(context).discover,
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.file_download),
-                  label: L.of(context).downloads,
-                ),
-              ],
-            );
-          }),
+      child: Scaffold(
+        backgroundColor: backgroundColour,
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverVisibility(
+                    visible: widget.topBarVisible,
+                    sliver: SliverAppBar(
+                      title: TitleWidget(),
+                      backgroundColor: backgroundColour,
+                      floating: false,
+                      pinned: true,
+                      snap: false,
+                      actions: <Widget>[
+                        IconButton(
+                          tooltip: L.of(context).search_button_label,
+                          icon: Icon(Icons.search),
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              SlideRightRoute(widget: Search()),
+                            );
+                          },
+                        ),
+                        PopupMenuButton<String>(
+                          color: Theme.of(context).dialogBackgroundColor,
+                          onSelected: _menuSelect,
+                          icon: Icon(
+                            Icons.more_vert,
+                          ),
+                          itemBuilder: (BuildContext context) {
+                            return <PopupMenuEntry<String>>[
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'rss',
+                                child: Text(L.of(context).add_rss_feed_option),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'settings',
+                                child: Text(L.of(context).settings_label),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'about',
+                                child: Text(L.of(context).about_label),
+                              ),
+                            ];
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  StreamBuilder<int>(
+                      stream: pager.currentPage,
+                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                        return _fragment(snapshot.data, searchBloc);
+                      }),
+                ],
+              ),
+            ),
+            MiniPlayer(),
+          ],
+        ),
+        bottomNavigationBar: StreamBuilder<int>(
+            stream: pager.currentPage,
+            initialData: 0,
+            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              return BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Theme.of(context).bottomAppBarColor,
+                selectedIconTheme: Theme.of(context).iconTheme,
+                selectedItemColor: Theme.of(context).iconTheme.color,
+                unselectedItemColor:
+                    HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
+                currentIndex: snapshot.data,
+                onTap: pager.changePage,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.library_music),
+                    label: L.of(context).library,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.explore),
+                    label: L.of(context).discover,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.file_download),
+                    label: L.of(context).downloads,
+                  ),
+                ],
+              );
+            }),
+      ),
     );
   }
 
@@ -324,21 +357,23 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     if (index == 0) {
       return Library();
     } else if (index == 1) {
-      return Discovery();
+      return Discovery(inlineSearch: widget.inlineSearch);
     } else {
       return Downloads();
     }
   }
 
   void _menuSelect(String choice) async {
-    final packageInfo = await PackageInfo.fromPlatform();
+    var _textFieldController = TextEditingController();
+    var _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    var url = '';
 
     switch (choice) {
       case 'about':
         showAboutDialog(
             context: context,
             applicationName: 'Anytime Podcast Player',
-            applicationVersion: 'v${packageInfo.version} Alpha build ${packageInfo.buildNumber}',
+            applicationVersion: 'v${Environment.projectVersion}',
             applicationIcon: Image.asset(
               'assets/images/anytime-logo-s.png',
               width: 52.0,
@@ -347,19 +382,61 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             children: <Widget>[
               Text('\u00a9 2020-2021 Ben Hills'),
               GestureDetector(
-                  child: Text(
-                    'anytime@amugofjava.me.uk',
-                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.orange),
-                  ),
-                  onTap: () {
-                    _launchEmail();
-                  }),
+                onTap: () {
+                  _launchEmail();
+                },
+                child: Text(
+                  'anytime@amugofjava.me.uk',
+                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor),
+                ),
+              ),
             ]);
         break;
       case 'settings':
         await Navigator.push(
           context,
           MaterialPageRoute<void>(builder: (context) => Settings()),
+        );
+        break;
+      case 'rss':
+        await showPlatformDialog<void>(
+          context: context,
+          useRootNavigator: false,
+          builder: (_) => BasicDialogAlert(
+            title: Text(L.of(context).add_rss_feed_option),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  url = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: 'https://'),
+            ),
+            actions: <Widget>[
+              BasicDialogAction(
+                title: ActionText(
+                  L.of(context).cancel_button_label,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              BasicDialogAction(
+                title: ActionText(
+                  L.of(context).ok_button_label,
+                ),
+                iosIsDefaultAction: true,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
+                  ).then((value) => Navigator.pop(context));
+                },
+              ),
+            ],
+          ),
         );
         break;
     }
@@ -376,14 +453,26 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 }
 
 class TitleWidget extends StatelessWidget {
-  final TextStyle _titleTheme1 = theme.textTheme.bodyText2
-      .copyWith(color: Colors.red, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme1 = theme.textTheme.bodyText2.copyWith(
+    color: Colors.red,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2
-      .copyWith(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2.copyWith(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
-  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2
-      .copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'MontserratRegular', fontSize: 18);
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2.copyWith(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'MontserratRegular',
+    fontSize: 18,
+  );
 
   @override
   Widget build(BuildContext context) {

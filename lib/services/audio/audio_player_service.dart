@@ -12,16 +12,27 @@ enum AudioState {
   playing,
   pausing,
   stopped,
+  error,
 }
 
 class PositionState {
   Duration position;
   Duration length;
   int percentage;
+  Episode episode;
+  bool buffering;
 
-  PositionState(this.position, this.length, this.percentage);
+  PositionState(this.position, this.length, this.percentage, this.episode, [this.buffering = false]);
+
+  PositionState.emptyState() {
+    PositionState(Duration(seconds: 0), Duration(seconds: 0), 0, null, false);
+  }
 }
 
+/// This class defines the audio playback options supported by Anytime.
+/// The implementing classes will then handle the specifics for the
+/// platform we are running on. Currently this is just mobile, but may
+/// expand to web and desktop in the future.
 abstract class AudioPlayerService {
   /// Play a new episode, optionally resume at last save point.
   Future<void> playEpisode({@required Episode episode, bool resume});
@@ -46,14 +57,19 @@ abstract class AudioPlayerService {
   Future<void> seek({@required int position});
 
   /// Call when the app is resumed to re-establish the audio service.
-  Future<void> resume();
+  Future<Episode> resume();
 
   /// Call when the app is about to be suspended.
   Future<void> suspend();
+
+  /// Call to set the playback speed.
+  Future<void> setPlaybackSpeed(double speed);
 
   Episode nowPlaying;
 
   /// Event listeners
   Stream<AudioState> playingState;
   Stream<PositionState> playPosition;
+  Stream<Episode> episodeEvent;
+  Stream<int> playbackError;
 }

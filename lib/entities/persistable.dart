@@ -10,18 +10,35 @@ enum LastState { none, completed, stopped, paused }
 /// position details to be restored when the UI becomes visible again -
 /// either when bringing it to the foreground or upon next start.
 class Persistable {
+  /// The Podcast GUID.
   String pguid;
+
+  /// The episode ID (provided by the DB layer).
   int episodeId;
+
+  /// The current position in seconds;
   int position;
+
+  /// The current playback state.
   LastState state;
 
-  Persistable({this.pguid, this.episodeId, this.position, this.state});
+  /// Date & time episode was last updated.
+  DateTime lastUpdated;
+
+  Persistable({
+    this.pguid,
+    this.episodeId,
+    this.position,
+    this.state,
+    this.lastUpdated,
+  });
 
   Persistable.empty() {
     pguid = '';
     episodeId = 0;
     position = 0;
     state = LastState.none;
+    lastUpdated = DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -29,7 +46,8 @@ class Persistable {
       'pguid': pguid ?? '',
       'episodeId': episodeId ?? episodeId.toString(),
       'position': position ?? position.toString(),
-      'state': state == null ? LastState.none.toString() : state.toString()
+      'state': state == null ? LastState.none.toString() : state.toString(),
+      'lastUpdated': lastUpdated == null ? DateTime.now().millisecondsSinceEpoch : lastUpdated.millisecondsSinceEpoch,
     };
   }
 
@@ -51,11 +69,14 @@ class Persistable {
       }
     }
 
+    var lastUpdated = persistable['lastUpdated'] as int;
+
     return Persistable(
-      pguid: persistable['pgui'] as String,
+      pguid: persistable['pguig'] as String,
       episodeId: persistable['episodeId'] as int,
       position: persistable['position'] as int,
       state: state,
+      lastUpdated: lastUpdated == null ? DateTime.now() : DateTime.fromMillisecondsSinceEpoch(lastUpdated),
     );
   }
 }

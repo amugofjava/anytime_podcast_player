@@ -5,8 +5,10 @@
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
-import 'package:anytime/ui/widgets/transport_controls.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:anytime/ui/podcast/show_notes.dart';
+import 'package:anytime/ui/podcast/transport_controls.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
+import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -36,108 +38,6 @@ class EpisodeTile extends StatelessWidget {
 
     return ExpansionTile(
       key: Key('PT${episode.guid}'),
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 4.0,
-            ),
-            child: Text(
-              episode.descriptionText,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              maxLines: 10,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 16),
-            ),
-          ),
-        ),
-        ButtonBar(
-          alignment: MainAxisAlignment.spaceAround,
-          buttonHeight: 52.0,
-          buttonMinWidth: 90.0,
-          children: <Widget>[
-            FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              onPressed: episode.downloaded
-                  ? () {
-                      showPlatformDialog<void>(
-                        context: context,
-                        builder: (_) => BasicDialogAlert(
-                          title: Text(
-                            L.of(context).delete_episode_title,
-                          ),
-                          content: Text(L.of(context).delete_episode_confirmation),
-                          actions: <Widget>[
-                            BasicDialogAction(
-                              title: Text(
-                                L.of(context).cancel_button_label,
-                                style: TextStyle(color: Theme.of(context).primaryColor),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            BasicDialogAction(
-                              title: Text(
-                                L.of(context).delete_button_label,
-                                style: TextStyle(color: Theme.of(context).primaryColor),
-                              ),
-                              onPressed: () {
-                                bloc.deleteDownload(episode);
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  : null,
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.delete_outline,
-                    color: Theme.of(context).buttonColor,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  ),
-                  Text(
-                    L.of(context).delete_label,
-                    style: TextStyle(
-                      color: Theme.of(context).buttonColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            FlatButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-              onPressed: () {
-                bloc.togglePlayed(episode);
-              },
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.bookmark_border,
-                    color: Theme.of(context).buttonColor,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  ),
-                  Text(
-                    episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
-                    style: TextStyle(
-                      color: Theme.of(context).buttonColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
       trailing: Opacity(
         opacity: episode.played ? 0.5 : 1.0,
         child: EpisodeTransportControls(
@@ -152,31 +52,10 @@ class EpisodeTile extends StatelessWidget {
         children: <Widget>[
           Opacity(
             opacity: episode.played ? 0.5 : 1.0,
-            child: CachedNetworkImage(
-              imageUrl: episode.thumbImageUrl ?? episode.imageUrl,
-              width: 56,
-              placeholder: (context, url) {
-                return Container(
-                  constraints: BoxConstraints.expand(height: 56, width: 56),
-                  child: Placeholder(
-                    color: Colors.grey,
-                    strokeWidth: 1,
-                    fallbackWidth: 56,
-                    fallbackHeight: 56,
-                  ),
-                );
-              },
-              errorWidget: (_, __, dynamic ___) {
-                return Container(
-                  constraints: BoxConstraints.expand(height: 56, width: 56),
-                  child: Placeholder(
-                    color: Colors.grey,
-                    strokeWidth: 1,
-                    fallbackWidth: 56,
-                    fallbackHeight: 56,
-                  ),
-                );
-              },
+            child: TileImage(
+              url: episode.thumbImageUrl ?? episode.imageUrl,
+              size: 56.0,
+              highlight: episode.highlight,
             ),
           ),
           Container(
@@ -197,9 +76,174 @@ class EpisodeTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
           softWrap: false,
-          style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.bold),
+          style: textTheme.bodyText2,
         ),
       ),
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 4.0,
+            ),
+            child: Text(
+              episode.descriptionText,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              maxLines: 5,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                  ),
+                  onPressed: episode.downloaded
+                      ? () {
+                          showPlatformDialog<void>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: Text(
+                                L.of(context).delete_episode_title,
+                              ),
+                              content: Text(L.of(context).delete_episode_confirmation),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: ActionText(
+                                    L.of(context).cancel_button_label,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                BasicDialogAction(
+                                  title: ActionText(
+                                    L.of(context).delete_button_label,
+                                  ),
+                                  iosIsDefaultAction: true,
+                                  iosIsDestructiveAction: true,
+                                  onPressed: () {
+                                    bloc.deleteDownload(episode);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      : null,
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).buttonColor,
+                        size: 22,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        L.of(context).delete_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  ),
+                  onPressed: () {
+                    return Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => ShowNotes(
+                          episode: episode,
+                        ),
+                        fullscreenDialog: true,
+                      ),
+                    ).then((value) {});
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Icon(
+                        Icons.wysiwyg_outlined,
+                        color: Theme.of(context).buttonColor,
+                        size: 22,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        L.of(context).show_notes_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                  ),
+                  onPressed: () {
+                    bloc.togglePlayed(episode);
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.bookmark_border_outlined,
+                        color: Theme.of(context).buttonColor,
+                        size: 22,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Text(
+                        episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).buttonColor,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -252,7 +296,10 @@ class EpisodeSubtitle extends StatelessWidget {
   final Duration length;
 
   EpisodeSubtitle(this.episode)
-      : date = episode.publicationDate == null ? '' : DateFormat('d MMM').format(episode.publicationDate),
+      : date = episode.publicationDate == null
+            ? ''
+            : DateFormat(episode.publicationDate.year == DateTime.now().year ? 'd MMM' : 'd MMM yy')
+                .format(episode.publicationDate),
         length = Duration(seconds: episode.duration);
 
   @override
@@ -262,10 +309,14 @@ class EpisodeSubtitle extends StatelessWidget {
 
     String title;
 
-    if (length.inSeconds < 60) {
-      title = '$date - ${length.inSeconds} sec';
+    if (length.inSeconds > 0) {
+      if (length.inSeconds < 60) {
+        title = '$date - ${length.inSeconds} sec';
+      } else {
+        title = '$date - ${length.inMinutes} min';
+      }
     } else {
-      title = '$date - ${length.inMinutes} min';
+      title = date;
     }
 
     if (timeRemaining.inSeconds > 0) {

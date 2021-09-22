@@ -46,18 +46,18 @@ class EpisodeBloc extends Bloc {
     _downloadsOutput = _downloadsInput.switchMap<BlocState<List<Episode>>>((bool silent) => _downloads(silent));
 
     _handleDeleteDownloads();
-
     _handleMarkAsPlayed();
-
     _listenEpisodeEvents();
   }
 
   void _handleDeleteDownloads() async {
     _deleteDownload.stream.listen((episode) async {
+      var nowPlaying = audioPlayerService.nowPlaying == episode;
+
       await podcastService.deleteDownload(episode);
 
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
-      if (audioPlayerService.nowPlaying == episode) {
+      if (nowPlaying) {
         await audioPlayerService.stop();
       }
 
@@ -76,10 +76,12 @@ class EpisodeBloc extends Bloc {
   void _listenEpisodeEvents() {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
-      var episode = _episodes.indexOf(state.episode);
+      if (_episodes != null) {
+        var episode = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
 
-      if (episode != -1) {
-        fetchDownloads(true);
+        if (episode != -1) {
+          fetchDownloads(true);
+        }
       }
     });
   }
@@ -91,7 +93,7 @@ class EpisodeBloc extends Bloc {
 
     _episodes = await podcastService.loadDownloads();
 
-    yield BlocPopulatedState<List<Episode>>(_episodes);
+    yield BlocPopulatedState<List<Episode>>(results: _episodes);
   }
 
   @override

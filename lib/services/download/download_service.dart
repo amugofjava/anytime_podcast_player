@@ -3,16 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
-import 'package:anytime/repository/repository.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class DownloadService {
-  final Repository repository;
-
-  DownloadService({
-    @required this.repository,
-  });
-
   Future<bool> downloadEpisode(Episode episode);
   Future<Episode> findEpisodeByTaskId(String taskId);
 

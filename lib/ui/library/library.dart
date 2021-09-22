@@ -49,18 +49,13 @@ class _LibraryState extends State<Library> {
               );
             } else {
               return SliverList(
-                delegate: SliverChildListDelegate([
-                  ListView.builder(
-                    padding: EdgeInsets.all(0.0),
-                    physics: ClampingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return PodcastTile(podcast: snapshot.data.elementAt(index));
-                    },
-                  ),
-                ]),
-              );
+                  delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return PodcastTile(podcast: snapshot.data.elementAt(index));
+                },
+                childCount: snapshot.data.length,
+                addAutomaticKeepAlives: false,
+              ));
             }
           } else {
             return SliverFillRemaining(

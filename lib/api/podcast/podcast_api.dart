@@ -4,10 +4,10 @@
 
 import 'package:podcast_search/podcast_search.dart';
 
-/// A simple wrapper class that interacts with the iTunes search API via
+/// A simple wrapper class that interacts with the search API via
 /// the podcast_search package.
 abstract class PodcastApi {
-  /// Search iTunes for podcasts matching the search criteria. Returns a
+  /// Search for podcasts matching the search criteria. Returns a
   /// [SearchResult] instance.
   Future<SearchResult> search(
     String term, {
@@ -17,6 +17,7 @@ abstract class PodcastApi {
     String language,
     int version = 0,
     bool explicit = false,
+    String searchProvider,
   });
 
   /// Request the top podcast charts from iTunes, and at most [size] records.
@@ -24,4 +25,7 @@ abstract class PodcastApi {
 
   /// URL representing the RSS feed for a podcast.
   Future<Podcast> loadFeed(String url);
+
+  /// Load episode chapters via JSON file.
+  Future<Chapters> loadChapters(String url);
 }

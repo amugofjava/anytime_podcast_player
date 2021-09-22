@@ -3,21 +3,33 @@
 // found in the LICENSE file.
 
 import 'package:anytime/api/podcast/podcast_api.dart';
-import 'package:anytime/ui/anytime_podcast_app.dart';
+import 'package:anytime/core/environment.dart';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
 /// An implementation of the PodcastApi. A simple wrapper class that
-/// interacts with the iTunes search API via the podcast_search package.
+/// interacts with the iTunes/Podcastindex search API via the
+/// podcast_search package.
 class MobilePodcastApi extends PodcastApi {
   final Search api = Search();
-  static String userAgent =
-      'Anytime/${AnytimePodcastApp.applicationVersion} (https://github.com/amugofjava/anytime_podcast_player)';
 
   @override
-  Future<SearchResult> search(String term,
-      {String country, String attribute, int limit, String language, int version = 0, bool explicit = false}) async {
-    return compute(_search, term);
+  Future<SearchResult> search(
+    String term, {
+    String country,
+    String attribute,
+    int limit,
+    String language,
+    int version = 0,
+    bool explicit = false,
+    String searchProvider,
+  }) async {
+    var searchParams = {
+      'term': term,
+      'searchProvider': searchProvider,
+    };
+
+    return compute(_search, searchParams);
   }
 
   @override
@@ -32,15 +44,30 @@ class MobilePodcastApi extends PodcastApi {
     return _loadFeed(url);
   }
 
-  static Future<SearchResult> _search(String term) {
-    return Search(userAgent: userAgent).search(term).timeout(Duration(seconds: 10));
+  @override
+  Future<Chapters> loadChapters(String url) async {
+    return Podcast.loadChaptersByUrl(url: url);
   }
 
-  static Future<SearchResult> _charts(int size) {
-    return Search(userAgent: userAgent).charts().timeout(Duration(seconds: 10));
+  static Future<SearchResult> _search(Map<String, String> searchParams) {
+    var term = searchParams['term'];
+    var provider = searchParams['searchProvider'] == 'itunes'
+        ? ITunesProvider()
+        : PodcastIndexProvider(
+            key: podcastIndexKey,
+            secret: podcastIndexSecret,
+          );
+
+    return Search(userAgent: Environment.userAgent())
+        .search(
+          term,
+          searchProvider: provider,
+        )
+        .timeout(Duration(seconds: 30));
   }
 
-  static Future<Podcast> _loadFeed(String url) {
-    return Podcast.loadFeed(url: url, userAgent: userAgent);
-  }
+  static Future<SearchResult> _charts(int size) =>
+      Search(userAgent: Environment.userAgent()).charts().timeout(Duration(seconds: 30));
+
+  Future<Podcast> _loadFeed(String url) => Podcast.loadFeed(url: url, userAgent: Environment.userAgent());
 }

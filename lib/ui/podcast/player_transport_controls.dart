@@ -7,7 +7,9 @@ import 'dart:async';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/widgets/speed_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 /// Builds a transport control bar for rewind, play and fast-forward.
@@ -36,7 +38,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
     /// frames we want to animate. Doing it this way prevents the play/pause
     /// button from animating when the form is first loaded.
     _audioStateSubscription = audioBloc.playingState.listen((event) {
-      if (event == AudioState.playing) {
+      if (event == AudioState.playing || event == AudioState.buffering) {
         if (init) {
           _playPauseController.value = 1;
           init = false;
@@ -64,62 +66,66 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final theme = Theme.of(context);
+    final effectiveVisualDensity = theme.visualDensity;
+
+    var unadjustedConstraints = const BoxConstraints(
+      minWidth: 24.0,
+      minHeight: 24.0,
+    );
+
+    final adjustedConstraints = effectiveVisualDensity.effectiveConstraints(unadjustedConstraints);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 42.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: StreamBuilder<AudioState>(
           stream: audioBloc.playingState,
           builder: (context, snapshot) {
-            var playing = snapshot.data == AudioState.playing;
+            final audioState = snapshot.data;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
+                ConstrainedBox(
+                  constraints: adjustedConstraints,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                  ),
+                ),
                 IconButton(
                   onPressed: () {
-                    _rewind(audioBloc);
+                    return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
                   },
                   tooltip: L.of(context).rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
                   icon: Icon(
                     Icons.replay_30,
                     size: 48.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
                 ),
-                Tooltip(
-                  message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
-                  child: FlatButton(
-                    onPressed: () {
-                      if (playing) {
-                        _pause(audioBloc);
-                      } else {
-                        _play(audioBloc);
-                      }
-                    },
-                    shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
-                    color: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-                    padding: const EdgeInsets.all(8.0),
-                    child: AnimatedIcon(
-                      size: 60.0,
-                      icon: AnimatedIcons.play_pause,
-                      color: Colors.white,
-                      progress: _playPauseController,
-                    ),
-                  ),
-                ),
+                _PlayButton(
+                    audioState: audioState,
+                    onPlay: () => _play(audioBloc),
+                    onPause: () => _pause(audioBloc),
+                    playPauseController: _playPauseController),
                 IconButton(
                   onPressed: () {
-                    _fastforward(audioBloc);
+                    return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
                   padding: const EdgeInsets.all(0.0),
                   icon: Icon(
                     Icons.forward_30,
                     size: 48.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).buttonColor,
                   ),
+                ),
+                SpeedSelectorWidget(
+                  onChanged: (double value) {
+                    audioBloc.playbackSpeed(value);
+                  },
                 ),
               ],
             );
@@ -141,5 +147,63 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
 
   void _fastforward(AudioBloc audioBloc) {
     audioBloc.transitionState(TransitionState.fastforward);
+  }
+}
+
+class _PlayButton extends StatelessWidget {
+  final AudioState audioState;
+  final Function() onPlay;
+  final Function() onPause;
+  final AnimationController playPauseController;
+
+  const _PlayButton({Key key, this.audioState, this.onPlay, this.onPause, this.playPauseController}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final playing = audioState == AudioState.playing;
+    final bufferring = audioState == null || audioState == AudioState.buffering;
+
+    // in case we are buffering show progress indicator.
+    if (bufferring) {
+      return Tooltip(
+          message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              shape: CircleBorder(side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
+              padding: const EdgeInsets.all(8.0),
+            ),
+            onPressed: null,
+            child: SpinKitRing(
+              lineWidth: 2.0,
+              color: Theme.of(context).primaryColor,
+              size: 60,
+            ),
+          ));
+    }
+
+    return Tooltip(
+      message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
+          backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
+          primary: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
+          padding: const EdgeInsets.all(8.0),
+        ),
+        onPressed: () {
+          if (playing) {
+            onPause();
+          } else {
+            onPlay();
+          }
+        },
+        child: AnimatedIcon(
+          size: 60.0,
+          icon: AnimatedIcons.play_pause,
+          color: Colors.white,
+          progress: playPauseController,
+        ),
+      ),
+    );
   }
 }

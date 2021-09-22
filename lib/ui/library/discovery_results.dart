@@ -7,14 +7,16 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_list.dart';
+import 'package:anytime/ui/widgets/podcast_list_with_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 
 class DiscoveryResults extends StatelessWidget {
   final Stream<DiscoveryState> data;
+  final bool inlineSearch;
 
-  DiscoveryResults({@required this.data});
+  DiscoveryResults({@required this.data, this.inlineSearch});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class DiscoveryResults extends StatelessWidget {
         final state = snapshot.data;
 
         if (state is DiscoveryPopulatedState) {
+          if (inlineSearch) return PodcastListWithSearchBar(results: state.results as search.SearchResult);
           return PodcastList(results: state.results as search.SearchResult);
         } else {
           if (state is DiscoveryLoadingState) {

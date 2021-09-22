@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-12-14T11:05:52.194574",
+  "@@last_modified": "2021-03-12T06:44:31.913024",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -42,7 +42,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "cancel_button_label": "CANCEL",
+  "cancel_button_label": "Cancel",
   "@cancel_button_label": {
     "description": "Cancel button label",
     "type": "text",
@@ -228,7 +228,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "stop_download_button_label": "STOP",
+  "stop_download_button_label": "Stop",
   "@stop_download_button_label": {
     "description": "Stop label",
     "type": "text",
@@ -279,6 +279,108 @@
   "settings_theme_switch_label": "Dark theme",
   "@settings_theme_switch_label": {
     "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Playback speed",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Show notes",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_provider_label": "Search provider",
+  "@search_provider_label": {
+    "description": "Set search provider label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_label": "Settings",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "Go Back",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "Continue",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "consent_message": "The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime",
+  "@consent_message": {
+    "description": "Display when first accessing external funding link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_label": "Episode",
+  "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "Chapters",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "Notes",
+  "@notes_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_funding_dialog_header": "Podcast Funding",
+  "@podcast_funding_dialog_header": {
+    "description": "Header on podcast funding consent dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Full screen player mode on episode start",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_no_connection": "Unable to play episode. Please check your connection and try again",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "An unexpected error occurred during playback. Please check your connection and try again",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "Add RSS Feed",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_import_opml": "Import OPML",
+  "@settings_import_opml": {
+    "description": "Option label importing OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_opml": "Import OPML",
+  "@settings_export_opml": {
+    "description": "Option label exporting OPML file",
     "type": "text",
     "placeholders": {}
   }

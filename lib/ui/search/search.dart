@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/search/search_state_event.dart';
 import 'package:anytime/l10n/L.dart';
@@ -10,6 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Search extends StatefulWidget {
+  final String searchTerm;
+
+  Search({this.searchTerm});
+
   @override
   _SearchState createState() => _SearchState();
 }
@@ -28,6 +34,11 @@ class _SearchState extends State<Search> {
 
     _searchFocusNode = FocusNode();
     _searchController = TextEditingController();
+
+    if (widget.searchTerm != null) {
+      bloc.search(SearchTermEvent(widget.searchTerm));
+      _searchController.text = widget.searchTerm;
+    }
   }
 
   @override
@@ -49,21 +60,23 @@ class _SearchState extends State<Search> {
             brightness: Theme.of(context).brightness,
             leading: IconButton(
               tooltip: L.of(context).search_back_button_label,
-              icon: Icon(Icons.arrow_back),
+              icon: Platform.isAndroid ? Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor) : Icon(Icons.arrow_back_ios),
               onPressed: () => Navigator.pop(context),
             ),
             title: TextField(
                 controller: _searchController,
                 focusNode: _searchFocusNode,
-                autofocus: true,
+                autofocus: widget.searchTerm != null ? false : true,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: L.of(context).search_for_podcasts_hint,
-                  // hintStyle: ,
                   border: InputBorder.none,
                 ),
-                style: const TextStyle(color: Colors.grey, fontSize: 18.0),
+                style: TextStyle(
+                    color: Theme.of(context).primaryIconTheme.color,
+                    fontSize: 18.0,
+                    decorationColor: Theme.of(context).scaffoldBackgroundColor),
                 onSubmitted: ((value) {
                   bloc.search(SearchTermEvent(value));
                 })),

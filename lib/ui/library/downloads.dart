@@ -15,6 +15,7 @@ class Downloads extends StatefulWidget {
   _DownloadsState createState() => _DownloadsState();
 }
 
+/// Displays a list of podcast episodes that the user has downloaded.
 class _DownloadsState extends State<Downloads> {
   @override
   void initState() {
@@ -67,21 +68,17 @@ class _DownloadsState extends State<Downloads> {
   Widget buildResults(BuildContext context, List<Episode> episodes) {
     if (episodes.isNotEmpty) {
       return SliverList(
-          delegate: SliverChildListDelegate([
-        ListView.builder(
-          padding: EdgeInsets.all(0.0),
-          physics: ClampingScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: episodes.length,
-          itemBuilder: (BuildContext context, int index) {
-            return EpisodeTile(
-              episode: episodes[index],
-              download: false,
-              play: true,
-            );
-          },
-        )
-      ]));
+          delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return EpisodeTile(
+            episode: episodes[index],
+            download: false,
+            play: true,
+          );
+        },
+        childCount: episodes.length,
+        addAutomaticKeepAlives: false,
+      ));
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,

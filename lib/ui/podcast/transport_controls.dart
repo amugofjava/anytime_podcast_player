@@ -5,12 +5,16 @@
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/ui/widgets/download_button_widget.dart';
-import 'package:anytime/ui/widgets/play_pause_button_widget.dart';
+import 'package:anytime/ui/podcast/now_playing.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
+import 'package:anytime/ui/widgets/download_button.dart';
+import 'package:anytime/ui/widgets/play_pause_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -29,7 +33,8 @@ class PlayControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _audioBloc = Provider.of<AudioBloc>(context);
+    final _audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     return StreamBuilder<PlayerControlState>(
         stream: Rx.combineLatest2(_audioBloc.playingState, _audioBloc.nowPlaying,
@@ -42,7 +47,7 @@ class PlayControl extends StatelessWidget {
             if (episode.downloadState != DownloadState.downloading) {
               // If this episode is the one we are playing, allow the user
               // to toggle between play and pause.
-              if (snapshot.hasData && nowPlaying.guid == episode.guid) {
+              if (snapshot.hasData && nowPlaying?.guid == episode.guid) {
                 if (audioState == AudioState.playing) {
                   return InkWell(
                     onTap: () {
@@ -64,6 +69,7 @@ class PlayControl extends StatelessWidget {
                   return InkWell(
                     onTap: () {
                       _audioBloc.transitionState(TransitionState.play);
+                      optionalShowNowPlaying(context, settings);
                     },
                     child: PlayPauseButton(
                       title: episode.title,
@@ -79,6 +85,7 @@ class PlayControl extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   _audioBloc.play(episode);
+                  optionalShowNowPlaying(context, settings);
                 },
                 child: PlayPauseButton(
                   title: episode.title,
@@ -105,6 +112,7 @@ class PlayControl extends StatelessWidget {
               return InkWell(
                 onTap: () {
                   _audioBloc.play(episode);
+                  optionalShowNowPlaying(context, settings);
                 },
                 child: PlayPauseButton(
                   title: episode.title,
@@ -124,6 +132,17 @@ class PlayControl extends StatelessWidget {
             }
           }
         });
+  }
+
+  /// If we have the 'show now playing upon play' option set to true, launch
+  /// the [NowPlaying] widget automatically.
+  void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
+    if (settings.autoOpenNowPlaying) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: false),
+      );
+    }
   }
 }
 
@@ -147,7 +166,8 @@ class DownloadControl extends StatelessWidget {
             final audioState = snapshot.data.audioState;
             final nowPlaying = snapshot.data.episode;
 
-            if (nowPlaying.guid == episode.guid && (audioState == AudioState.playing || audioState == AudioState.buffering)) {
+            if (nowPlaying?.guid == episode.guid &&
+                (audioState == AudioState.playing || audioState == AudioState.buffering)) {
               if (episode.downloadState != DownloadState.downloaded) {
                 return Opacity(
                   opacity: 0.2,
@@ -215,6 +235,7 @@ class DownloadControl extends StatelessWidget {
 
     return showPlatformDialog<void>(
       context: context,
+      useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(
           L.of(context).stop_download_title,
@@ -222,19 +243,18 @@ class DownloadControl extends StatelessWidget {
         content: Text(L.of(context).stop_download_confirmation),
         actions: <Widget>[
           BasicDialogAction(
-            title: Text(
+            title: ActionText(
               L.of(context).cancel_button_label,
-              style: TextStyle(color: Colors.orange),
             ),
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           BasicDialogAction(
-            title: Text(
+            title: ActionText(
               L.of(context).stop_download_button_label,
-              style: TextStyle(color: Colors.orange),
             ),
+            iosIsDefaultAction: true,
             onPressed: () {
               _episodeBloc.deleteDownload(episode);
               Navigator.pop(context);
