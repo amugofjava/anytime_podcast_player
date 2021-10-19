@@ -88,11 +88,9 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                ConstrainedBox(
-                  constraints: adjustedConstraints,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                  ),
+                SizedBox(
+                  width: 36.0,
+                  height: 36.0,
                 ),
                 IconButton(
                   onPressed: () {
@@ -101,7 +99,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                   tooltip: L.of(context).rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
                   icon: Icon(
-                    Icons.replay_30,
+                    Icons.replay_10,
                     size: 48.0,
                     color: Theme.of(context).buttonColor,
                   ),
@@ -122,10 +120,10 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                     color: Theme.of(context).buttonColor,
                   ),
                 ),
-                SpeedSelectorWidget(
-                  onChanged: (double value) {
-                    audioBloc.playbackSpeed(value);
-                  },
+                SizedBox(
+                  height: 36.0,
+                  width: 36.0,
+                  child: SpeedSelectorWidget(),
                 ),
               ],
             );

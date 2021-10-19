@@ -36,6 +36,9 @@ class AppSettings {
   /// If -1 never; 0 always; otherwise time in minutes.
   final int autoUpdateEpisodePeriod;
 
+  /// If true, silence in audio playback is trimmed. Currently Android only.
+  final bool trimSilence;
+
   AppSettings({
     @required this.theme,
     @required this.markDeletedEpisodesAsPlayed,
@@ -47,6 +50,7 @@ class AppSettings {
     @required this.autoOpenNowPlaying,
     @required this.showFunding,
     @required this.autoUpdateEpisodePeriod,
+    @required this.trimSilence,
   });
 
   AppSettings.sensibleDefaults()
@@ -59,5 +63,6 @@ class AppSettings {
         externalLinkConsent = false,
         autoOpenNowPlaying = false,
         showFunding = true,
-        autoUpdateEpisodePeriod = -1;
+        autoUpdateEpisodePeriod = -1,
+        trimSilence = false;
 }

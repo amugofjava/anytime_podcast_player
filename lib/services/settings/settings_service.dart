@@ -40,4 +40,8 @@ abstract class SettingsService {
   set autoUpdateEpisodePeriod(int period);
 
   int get autoUpdateEpisodePeriod;
+
+  set trimSilence(bool trim);
+
+  bool get trimSilence;
 }

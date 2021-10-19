@@ -71,7 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "play_button_label": MessageLookupByLibrary.simpleMessage("Folge abspielen"),
         "playback_speed_label": MessageLookupByLibrary.simpleMessage("Stellen Sie die Wiedergabegeschwindigkeit ein"),
         "podcast_funding_dialog_header": MessageLookupByLibrary.simpleMessage("Podcast-Finanzierung"),
-        "rewind_button_label": MessageLookupByLibrary.simpleMessage("30 Sekunden zurückspulen"),
+        "rewind_button_label": MessageLookupByLibrary.simpleMessage("10 Sekunden zurückspulen"),
         "search_back_button_label": MessageLookupByLibrary.simpleMessage("Zurück"),
         "search_button_label": MessageLookupByLibrary.simpleMessage("Suche"),
         "search_for_podcasts_hint": MessageLookupByLibrary.simpleMessage("Suche nach Podcasts"),

@@ -361,7 +361,7 @@ class L {
   String get rewind_button_label {
     return message('rewind_button_label') ??
         Intl.message(
-          'Rewind episode 30 seconds',
+          'Rewind episode 10 seconds',
           name: 'rewind_button_label',
           desc: 'Rewind button tooltip',
           locale: localeName,

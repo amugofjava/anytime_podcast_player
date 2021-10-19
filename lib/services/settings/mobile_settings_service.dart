@@ -116,5 +116,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set trimSilence(bool trim) {
+    _sharedPreferences.setBool('trimSilence', trim);
+  }
+
+  @override
+  bool get trimSilence {
+    return _sharedPreferences.getBool('trimSilence') ?? false;
+  }
+
+  @override
   AppSettings settings;
 }

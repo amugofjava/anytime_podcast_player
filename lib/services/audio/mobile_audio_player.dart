@@ -23,6 +23,9 @@ import 'package:pedantic/pedantic.dart';
 ///
 /// This version is backed by just_audio
 class MobileAudioPlayer {
+  static const rewindMillis = 10001;
+  static const fastForwardMillis = 30000;
+
   final log = Logger('MobileAudioPlayer');
   final AudioPlayer _audioPlayer = AudioPlayer();
   final Completer _completer = Completer<dynamic>();
@@ -40,6 +43,7 @@ class MobileAudioPlayer {
   bool _local;
   int _episodeId = 0;
   double _playbackSpeed = 1.0;
+  bool _trimSilence = false;
   MediaItem _mediaItem;
 
   MediaControl playControl = MediaControl(
@@ -61,13 +65,13 @@ class MobileAudioPlayer {
   );
 
   MediaControl rewindControl = MediaControl(
-    androidIcon: 'drawable/ic_action_rewind',
+    androidIcon: 'drawable/ic_action_rewind_10',
     label: 'Rewind',
     action: MediaAction.rewind,
   );
 
   MediaControl fastforwardControl = MediaControl(
-    androidIcon: 'drawable/ic_action_fastforward',
+    androidIcon: 'drawable/ic_action_fastforward_30',
     label: 'Fastforward',
     action: MediaAction.fastForward,
   );
@@ -90,11 +94,14 @@ class MobileAudioPlayer {
     var episodeIdStr = args[6] as String;
     var playbackSpeedStr = args[7] as String;
     var durationStr = args[8] as String;
+    var trimSilenceStr = args[9] as String;
+
     _episodeId = int.parse(episodeIdStr);
     _playbackSpeed = double.parse(playbackSpeedStr);
     _uri = args[3] as String;
     _local = (args[4] as String) == '1';
     _startPosition = 0;
+    _trimSilence = trimSilenceStr == '1' ? true : false;
     Duration duration;
 
     if (int.tryParse(sp) != null) {
@@ -199,6 +206,10 @@ class MobileAudioPlayer {
           await _audioPlayer.setSpeed(_playbackSpeed);
         }
 
+        if (_audioPlayer.skipSilenceEnabled != _trimSilence) {
+          await _audioPlayer.setSkipSilenceEnabled(_trimSilence);
+        }
+
         unawaited(_audioPlayer.play());
       } catch (e) {
         log.fine('State error ${e.toString()}');
@@ -235,7 +246,7 @@ class MobileAudioPlayer {
 
     var forwardPosition = _latestPosition();
 
-    await seekTo(Duration(milliseconds: forwardPosition + 30000));
+    await seekTo(Duration(milliseconds: forwardPosition + fastForwardMillis));
   }
 
   Future<void> rewind() async {
@@ -247,7 +258,7 @@ class MobileAudioPlayer {
     log.fine(' - Player position is ${_audioPlayer.position.inMilliseconds}');
 
     if (rewindPosition > 0) {
-      rewindPosition -= 30000;
+      rewindPosition -= rewindMillis;
 
       if (rewindPosition < 0) {
         rewindPosition = 0;
@@ -262,6 +273,15 @@ class MobileAudioPlayer {
       _playbackSpeed = speed;
 
       await _audioPlayer.setSpeed(speed);
+    }
+  }
+
+  Future<void> setTrimSilence(bool trim) async {
+    if (_audioPlayer.playing) {
+      log.fine('Setting trim silence to $trim');
+      _trimSilence = trim;
+
+      await _audioPlayer.setSkipSilenceEnabled(trim);
     }
   }
 

@@ -107,7 +107,9 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
 
   @override
   Future<dynamic> onCustomAction(String name, dynamic arguments) async {
-    log.fine('onCustomAction()');
+    log.fine('onCustomAction() - $name}');
+    log.fine(arguments);
+
     switch (name) {
       case 'track':
 
@@ -125,6 +127,11 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
         break;
       case 'kill':
         await onStop();
+        break;
+      case 'trim':
+        if (arguments is bool) {
+          await _anytimeAudioPlayer.setTrimSilence(arguments);
+        }
         break;
     }
   }

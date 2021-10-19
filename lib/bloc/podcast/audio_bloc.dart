@@ -45,6 +45,9 @@ class AudioBloc extends Bloc {
   /// Listens for playback speed change requests.
   final PublishSubject<double> _playbackSpeedSubject = PublishSubject<double>();
 
+  /// Listen for toggling of trim silence requests.
+  final PublishSubject<bool> _trimSilence = PublishSubject<bool>();
+
   AudioBloc({
     @required this.audioPlayerService,
   }) {
@@ -59,6 +62,9 @@ class AudioBloc extends Bloc {
 
     /// Listen for playback speed changes
     _handlePlaybackSpeedTransitions();
+
+    /// Listen to trim silence requests
+    _handleTrimSilenceTransitions();
   }
 
   /// Listens to events from the UI (or any client) to transition from one
@@ -110,6 +116,12 @@ class AudioBloc extends Bloc {
     });
   }
 
+  void _handleTrimSilenceTransitions() {
+    _trimSilence.listen((bool trim) async {
+      await audioPlayerService.setTrimSilence(trim);
+    });
+  }
+
   @override
   void pause() async {
     log.fine('Audio lifecycle pause');
@@ -152,12 +164,16 @@ class AudioBloc extends Bloc {
   /// Change playback speed
   void Function(double) get playbackSpeed => _playbackSpeedSubject.sink.add;
 
+  /// Toggle trim silence
+  void Function(bool) get trimSilence => _trimSilence.sink.add;
+
   @override
   void dispose() {
     _play.close();
     _transitionPlayingState.close();
     _transitionPosition.close();
     _playbackSpeedSubject.close();
+    _trimSilence.close();
     super.dispose();
   }
 }

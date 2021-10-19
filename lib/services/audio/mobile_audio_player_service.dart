@@ -37,6 +37,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final PodcastService podcastService;
   final Color androidNotificationColor;
   double _playbackSpeed;
+  bool _trimSilence = false;
   Episode _episode;
 
   /// Subscription to the position ticker.
@@ -121,12 +122,13 @@ class MobileAudioPlayerService extends AudioPlayerService {
       _episodeEvent.sink.add(episode);
       updateCurrentPosition(episode);
       _playbackSpeed = settingsService.playbackSpeed;
+      _trimSilence = settingsService.trimSilence;
 
       // If we are currently playing a track - save the position of the current
       // track before switching to the next.
       var currentState = AudioService.playbackState?.processingState ?? AudioProcessingState.none;
 
-      log.fine('Current playback state is $currentState');
+      log.fine('Current playback state is $currentState. Speed = $_playbackSpeed. Trim = $_trimSilence');
 
       if (currentState == AudioProcessingState.ready) {
         await _savePosition();
@@ -256,6 +258,8 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> setPlaybackSpeed(double speed) => AudioService.setSpeed(speed);
 
+  Future<void> setTrimSilence(bool trim) => AudioService.customAction('trim', trim);
+
   /// This method opens a saved state file. If it exists we fetch the episode ID from
   /// the saved state and fetch it from the database. If the last updated value of the
   /// saved state is later than the episode last updated date, we update the episode
@@ -376,7 +380,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       androidNotificationIcon: 'drawable/ic_stat_name',
       androidStopForegroundOnPause: true,
       fastForwardInterval: Duration(seconds: 30),
-      rewindInterval: Duration(seconds: 30),
+      rewindInterval: Duration(seconds: 10),
     );
   }
 
@@ -514,6 +518,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       _episode.id == null ? '0' : _episode.id.toString(),
       _playbackSpeed.toString(),
       _episode.duration?.toString() ?? '0',
+      _trimSilence ? '1' : '0',
     ];
 
     return track;
