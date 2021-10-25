@@ -1,6 +1,6 @@
 ## Anytime Podcast Player
 
-This is the official repository for the Anytime Podcast Player - the simple Podcast playing app built with Dart & Flutter.
+This is the official repository for the Anytime Podcast Player - the simple Podcast playing app for Android & iOS, built with Dart & Flutter.
 ***
 
 ![screenshot1.png](docs/screenshot1b.png)&nbsp;
@@ -10,7 +10,7 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is now at v1.0, with v1.1 in Beta. The first Beta release for iOS is very close. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
+Anytime is now at v1.0, with v1.1 in Beta. v1.1 Beta is the first release for iOS. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
 
 #### Testers

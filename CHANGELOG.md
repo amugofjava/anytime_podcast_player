@@ -1,3 +1,9 @@
+## 1.1.0+62
+
+- Re-work the speed selector control to make it easier to use and add additional audio effects (Android only).
+- Fix Let's Encrypt CA certificate issue on Android versions 7 and below.
+- Upgrade Gradle to 7.0.3.
+
 ## 0.5.0
 
 - Upgrade dependencies for Flutter 2.
