@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/api/podcast/mobile_podcast_api.dart';
+import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
@@ -53,17 +54,20 @@ var theme = Themes.lightTheme().themeData;
 // ignore: must_be_immutable
 class AnytimePodcastApp extends StatefulWidget {
   final Repository repository;
-  final MobilePodcastApi podcastApi;
+  PodcastApi podcastApi;
   DownloadService downloadService;
   PodcastService podcastService;
   AudioPlayerService audioPlayerService;
   SettingsBloc settingsBloc;
   MobileSettingsService mobileSettingsService;
   OPMLService opmlService;
+  List<int> certificateAuthorityBytes;
 
-  AnytimePodcastApp(this.mobileSettingsService)
-      : repository = SembastRepository(),
-        podcastApi = MobilePodcastApi() {
+  AnytimePodcastApp(
+    this.mobileSettingsService, {
+    this.certificateAuthorityBytes,
+  }) : repository = SembastRepository() {
+    podcastApi = MobilePodcastApi();
     downloadService = MobileDownloadService(
       repository: repository,
       downloadManager: MobileDownloaderManager(),
@@ -83,6 +87,8 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService,
       repository: repository,
     );
+
+    podcastApi.addClientAuthorityBytes(certificateAuthorityBytes);
   }
 
   @override

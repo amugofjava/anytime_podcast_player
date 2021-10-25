@@ -847,6 +847,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get audio_effect_trim_silence_label {
+    return message('audio_effect_trim_silence_label') ??
+        Intl.message(
+          'Trim Silence',
+          name: 'audio_effect_trim_silence_label',
+          desc: 'Label for trim silence toggle',
+          locale: localeName,
+        );
+  }
+
+  String get audio_effect_volume_boost_label {
+    return message('audio_effect_volume_boost_label') ??
+        Intl.message(
+          'Volume Boost',
+          name: 'audio_effect_volume_boost_label',
+          desc: 'Label for volume boost toggle',
+          locale: localeName,
+        );
+  }
+
+  String get audio_settings_playback_speed_label {
+    return message('audio_settings_playback_speed_label') ??
+        Intl.message(
+          'Playback Speed',
+          name: 'audio_settings_playback_speed_label',
+          desc: 'Label for playback settings widget',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

@@ -66,7 +66,10 @@ abstract class AudioPlayerService {
   Future<void> setPlaybackSpeed(double speed);
 
   /// Call to toggle trim silence.
-  Future<void> setTrimSilence(bool trim);
+  Future<void> trimSilence(bool trim);
+
+  /// Call to toggle trim silence.
+  Future<void> volumeBoost(bool boost);
 
   Episode nowPlaying;
 

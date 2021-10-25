@@ -39,6 +39,9 @@ class AppSettings {
   /// If true, silence in audio playback is trimmed. Currently Android only.
   final bool trimSilence;
 
+  /// If true, volume is boosted. Currently Android only.
+  final bool volumeBoost;
+
   AppSettings({
     @required this.theme,
     @required this.markDeletedEpisodesAsPlayed,
@@ -51,6 +54,7 @@ class AppSettings {
     @required this.showFunding,
     @required this.autoUpdateEpisodePeriod,
     @required this.trimSilence,
+    @required this.volumeBoost,
   });
 
   AppSettings.sensibleDefaults()
@@ -64,5 +68,6 @@ class AppSettings {
         autoOpenNowPlaying = false,
         showFunding = true,
         autoUpdateEpisodePeriod = -1,
-        trimSilence = false;
+        trimSilence = false,
+        volumeBoost = false;
 }

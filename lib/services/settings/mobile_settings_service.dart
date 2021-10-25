@@ -126,5 +126,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set volumeBoost(bool boost) {
+    _sharedPreferences.setBool('volumeBoost', boost);
+  }
+
+  @override
+  bool get volumeBoost {
+    return _sharedPreferences.getBool('volumeBoost') ?? false;
+  }
+
+  @override
   AppSettings settings;
 }

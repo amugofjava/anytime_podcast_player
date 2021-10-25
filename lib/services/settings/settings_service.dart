@@ -44,4 +44,8 @@ abstract class SettingsService {
   set trimSilence(bool trim);
 
   bool get trimSilence;
+
+  set volumeBoost(bool boost);
+
+  bool get volumeBoost;
 }

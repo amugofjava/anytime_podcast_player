@@ -5,12 +5,14 @@
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
+import 'package:anytime/l10n/L.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// This widget allows the user to change the playback speed. Selecting the playback
-/// speed icon will open a dialog box showing the speed options available.
+/// This widget allows the user to change the playback speed and toggle audio
+/// effects. The two audio effects, trim silence and volume boost, are
+/// currently Android only.
 class SpeedSelectorWidget extends StatefulWidget {
   @override
   _SpeedSelectorWidgetState createState() => _SpeedSelectorWidgetState();
@@ -31,6 +33,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
   @override
   Widget build(BuildContext context) {
     var settingsBloc = Provider.of<SettingsBloc>(context);
+    var theme = Theme.of(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
@@ -45,6 +48,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 onTap: () {
                   showModalBottomSheet<void>(
                       context: context,
+                      backgroundColor: theme.bottomAppBarColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10.0),
@@ -55,11 +59,17 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                         return SpeedSlider();
                       });
                 },
-                child: Text(
-                  'x${snapshot.data.playbackSpeed}',
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Theme.of(context).buttonColor,
+                child: SizedBox(
+                  height: 36.0,
+                  width: 36.0,
+                  child: Center(
+                    child: Text(
+                      snapshot.data.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data.playbackSpeed}',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Theme.of(context).buttonColor,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -79,6 +89,7 @@ class SpeedSlider extends StatefulWidget {
 class _SpeedSliderState extends State<SpeedSlider> {
   var speed = 1.0;
   var trimSilence = false;
+  var volumeBoost = false;
 
   @override
   void initState() {
@@ -86,6 +97,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
 
     speed = settingsBloc.currentSettings.playbackSpeed;
     trimSilence = settingsBloc.currentSettings.trimSilence;
+    volumeBoost = settingsBloc.currentSettings.volumeBoost;
 
     super.initState();
   }
@@ -96,94 +108,130 @@ class _SpeedSliderState extends State<SpeedSlider> {
     final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
     final theme = Theme.of(context);
 
-    return Container(
-      height: 260,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 24,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.all(Radius.circular(4.0)),
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            width: 24,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            child: Text(
-              'Playback Speed',
-              style: Theme.of(context).textTheme.headline6,
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Text(
+            L.of(context).audio_settings_playback_speed_label,
+            style: Theme.of(context).textTheme.headline6,
           ),
-          Divider(
-            color: Colors.blue,
-            // color: Theme.of(context).colorScheme.background,
+        ),
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.only(top: 16.0),
+          child: Text(
+            '${speed.toString()}x',
+            style: Theme.of(context).textTheme.headline5,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: Text(
-              '${speed.toString()}x',
-              style: Theme.of(context).textTheme.headline5,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Slider(
-              value: speed,
-              min: 0.5,
-              max: 2.0,
-              divisions: 6,
-              // label: '${speed.toString()}x',
-              onChanged: (value) {
-                setState(() {
-                  speed = value;
-                  audioBloc.playbackSpeed(speed);
-                });
-              },
-              onChangeEnd: (value) {
-                settingsBloc.setPlaybackSpeed(value);
-              },
-            ),
-          ),
-          Divider(
-            color: Colors.blue,
-            // color: Theme.of(context).colorScheme.background,
-          ),
-          theme.platform == TargetPlatform.android
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Trim silence',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ),
-                    Switch.adaptive(
-                      value: trimSilence,
-                      onChanged: (value) {
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: IconButton(
+                iconSize: 28.0,
+                icon: Icon(Icons.remove_circle_outline),
+                onPressed: (speed <= 0.5)
+                    ? null
+                    : () {
                         setState(() {
-                          trimSilence = value;
-                          audioBloc.trimSilence(value);
-                          settingsBloc.setTrimSilence(value);
+                          speed -= 0.25;
+                          audioBloc.playbackSpeed(speed);
+                          settingsBloc.setPlaybackSpeed(speed);
                         });
                       },
-                    ),
-                  ],
-                )
-              : SizedBox(
-                  width: 0.0,
-                  height: 0.0,
-                ),
-        ],
-      ),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Slider(
+                value: speed,
+                min: 0.5,
+                max: 2.0,
+                divisions: 6,
+                onChanged: (value) {
+                  setState(() {
+                    speed = value;
+                  });
+                },
+                onChangeEnd: (value) {
+                  audioBloc.playbackSpeed(speed);
+                  settingsBloc.setPlaybackSpeed(value);
+                },
+              ),
+            ),
+            Expanded(
+              child: IconButton(
+                iconSize: 28.0,
+                icon: Icon(Icons.add_circle_outline),
+                onPressed: (speed >= 2.0)
+                    ? null
+                    : () {
+                        setState(() {
+                          speed += 0.25;
+                          audioBloc.playbackSpeed(speed);
+                          settingsBloc.setPlaybackSpeed(speed);
+                        });
+                      },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        Divider(),
+        if (theme.platform == TargetPlatform.android) ...[
+          /// Disable the trim silence option for now until the positioning bug
+          /// in just_audio is resolved.
+          // ListTile(
+          //   title: Text(L.of(context).audio_effect_trim_silence_label),
+          //   trailing: Switch.adaptive(
+          //     value: trimSilence,
+          //     onChanged: (value) {
+          //       setState(() {
+          //         trimSilence = value;
+          //         audioBloc.trimSilence(value);
+          //         settingsBloc.trimSilence(value);
+          //       });
+          //     },
+          //   ),
+          // ),
+          ListTile(
+            title: Text(L.of(context).audio_effect_volume_boost_label),
+            trailing: Switch.adaptive(
+              value: volumeBoost,
+              onChanged: (boost) {
+                setState(() {
+                  volumeBoost = boost;
+                  audioBloc.volumeBoost(boost);
+                  settingsBloc.volumeBoost(boost);
+                });
+              },
+            ),
+          ),
+        ] else
+          SizedBox(
+            width: 0.0,
+            height: 0.0,
+          ),
+      ],
     );
   }
 }

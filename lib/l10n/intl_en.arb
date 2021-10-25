@@ -479,5 +479,23 @@
     "description": "Settings divider label for data",
     "type": "text",
     "placeholders": {}
+  },
+  "audio_effect_trim_silence_label": "Trim Silence",
+  "@audio_effect_trim_silence_label": {
+    "description": "Label for trim silence toggle",
+    "type": "text",
+    "placeholders": {}
+  }
+  "audio_effect_volume_boost_label": "Volume Boost",
+  "@audio_effect_volume_boost_label": {
+    "description": "Label for volume boost toggle",
+    "type": "text",
+    "placeholders": {}
+  }
+  "audio_settings_playback_speed_label": "Playback Speed",
+  "@audio_settings_playback_speed_label": {
+    "description": "Label for playback settings widget",
+    "type": "text",
+    "placeholders": {}
   }
 }

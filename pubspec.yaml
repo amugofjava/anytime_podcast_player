@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.1.0+61
+version: 1.1.0+62
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -12,6 +12,7 @@ dependencies:
   audio_session: ^0.1.6
   connectivity: ^3.0.6
   cupertino_icons: ^1.0.2
+  device_info_plus: ^3.1.0
   extended_image: ^4.1.0
   file_picker: ^3.0.3
   flutter_dialogs: ^2.1.0
@@ -62,6 +63,9 @@ flutter:
     - assets/images/anytime-logo.png
     - assets/images/anytime-logo-s.png
     - assets/images/anytime-placeholder-logo.png
+
+    # Certificate authorities
+    - assets/ca/lets-encrypt-r3.pem
 
   fonts:
     - family: SpaceMonoRegular

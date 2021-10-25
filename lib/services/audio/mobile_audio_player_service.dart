@@ -38,6 +38,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   final Color androidNotificationColor;
   double _playbackSpeed;
   bool _trimSilence = false;
+  bool _volumeBoost = false;
   Episode _episode;
 
   /// Subscription to the position ticker.
@@ -123,12 +124,14 @@ class MobileAudioPlayerService extends AudioPlayerService {
       updateCurrentPosition(episode);
       _playbackSpeed = settingsService.playbackSpeed;
       _trimSilence = settingsService.trimSilence;
+      _volumeBoost = settingsService.volumeBoost;
 
       // If we are currently playing a track - save the position of the current
       // track before switching to the next.
       var currentState = AudioService.playbackState?.processingState ?? AudioProcessingState.none;
 
-      log.fine('Current playback state is $currentState. Speed = $_playbackSpeed. Trim = $_trimSilence');
+      log.fine(
+          'Current playback state is $currentState. Speed = $_playbackSpeed. Trim = $_trimSilence. Volume Boost = $_volumeBoost}');
 
       if (currentState == AudioProcessingState.ready) {
         await _savePosition();
@@ -258,7 +261,11 @@ class MobileAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> setPlaybackSpeed(double speed) => AudioService.setSpeed(speed);
 
-  Future<void> setTrimSilence(bool trim) => AudioService.customAction('trim', trim);
+  @override
+  Future<void> trimSilence(bool trim) => AudioService.customAction('trim', trim);
+
+  @override
+  Future<void> volumeBoost(bool boost) => AudioService.customAction('boost', boost);
 
   /// This method opens a saved state file. If it exists we fetch the episode ID from
   /// the saved state and fetch it from the database. If the last updated value of the
@@ -519,6 +526,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
       _playbackSpeed.toString(),
       _episode.duration?.toString() ?? '0',
       _trimSilence ? '1' : '0',
+      _volumeBoost ? '1' : '0',
     ];
 
     return track;

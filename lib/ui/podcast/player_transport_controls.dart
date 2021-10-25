@@ -66,15 +66,6 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    final theme = Theme.of(context);
-    final effectiveVisualDensity = theme.visualDensity;
-
-    var unadjustedConstraints = const BoxConstraints(
-      minWidth: 24.0,
-      minHeight: 24.0,
-    );
-
-    final adjustedConstraints = effectiveVisualDensity.effectiveConstraints(unadjustedConstraints);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -120,11 +111,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
                     color: Theme.of(context).buttonColor,
                   ),
                 ),
-                SizedBox(
-                  height: 36.0,
-                  width: 36.0,
-                  child: SpeedSelectorWidget(),
-                ),
+                SpeedSelectorWidget(),
               ],
             );
           }),

@@ -3,7 +3,9 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:anytime/main.dart';
 import 'package:anytime/services/audio/mobile_audio_player.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
@@ -14,6 +16,7 @@ import 'package:logging/logging.dart';
 /// events from [AudioService] in a background Isolate.
 class BackgroundPlayerTask extends BackgroundAudioTask {
   final log = Logger('BackgroundPlayerTask');
+  bool certificateAuthoritiesConfigured = false;
 
   /// A stream that listens for 'noisy' events. This allows Anytime to listen
   /// for events such as the headphones being pulled from the audio jack.
@@ -31,6 +34,13 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
     Logger.root.onRecord.listen((record) {
       print('${record.level.name}: - ${record.time}: ${record.loggerName}: ${record.message}');
     });
+
+    if (!certificateAuthoritiesConfigured) {
+      setupCertificateAuthority().then((ca) {
+        SecurityContext.defaultContext.setTrustedCertificatesBytes(ca);
+        certificateAuthoritiesConfigured = true;
+      });
+    }
   }
 
   @override
@@ -40,10 +50,6 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
     final session = await AudioSession.instance;
     await session.configure(AudioSessionConfiguration.speech());
 
-    noisyStream = session.becomingNoisyEventStream.listen((_) {
-      _anytimeAudioPlayer.onNoise();
-    });
-
     // As audio_service now requires a call to super.onStop() we need to
     // be notified if playback comes to an end. Without this callback,
     // episodes that finished would result in audio_service not tidying up.
@@ -51,6 +57,10 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
     // of doing this.
     _anytimeAudioPlayer = MobileAudioPlayer(completionHandler: () async {
       await super.onStop();
+    });
+
+    noisyStream = session.becomingNoisyEventStream.listen((_) {
+      _anytimeAudioPlayer.onNoise();
     });
 
     await _anytimeAudioPlayer.start();
@@ -130,7 +140,12 @@ class BackgroundPlayerTask extends BackgroundAudioTask {
         break;
       case 'trim':
         if (arguments is bool) {
-          await _anytimeAudioPlayer.setTrimSilence(arguments);
+          await _anytimeAudioPlayer.trimSilence(arguments);
+        }
+        break;
+      case 'boost':
+        if (arguments is bool) {
+          await _anytimeAudioPlayer.volumeBoost(arguments);
         }
         break;
     }

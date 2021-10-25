@@ -48,6 +48,9 @@ class AudioBloc extends Bloc {
   /// Listen for toggling of trim silence requests.
   final PublishSubject<bool> _trimSilence = PublishSubject<bool>();
 
+  /// Listen for toggling of volume boost silence requests.
+  final PublishSubject<bool> _volumeBoost = PublishSubject<bool>();
+
   AudioBloc({
     @required this.audioPlayerService,
   }) {
@@ -65,6 +68,9 @@ class AudioBloc extends Bloc {
 
     /// Listen to trim silence requests
     _handleTrimSilenceTransitions();
+
+    /// Listen to volume boost silence requests
+    _handleVolumeBoostTransitions();
   }
 
   /// Listens to events from the UI (or any client) to transition from one
@@ -118,7 +124,13 @@ class AudioBloc extends Bloc {
 
   void _handleTrimSilenceTransitions() {
     _trimSilence.listen((bool trim) async {
-      await audioPlayerService.setTrimSilence(trim);
+      await audioPlayerService.trimSilence(trim);
+    });
+  }
+
+  void _handleVolumeBoostTransitions() {
+    _volumeBoost.listen((bool boost) async {
+      await audioPlayerService.volumeBoost(boost);
     });
   }
 
@@ -167,6 +179,9 @@ class AudioBloc extends Bloc {
   /// Toggle trim silence
   void Function(bool) get trimSilence => _trimSilence.sink.add;
 
+  /// Toggle volume boost silence
+  void Function(bool) get volumeBoost => _volumeBoost.sink.add;
+
   @override
   void dispose() {
     _play.close();
@@ -174,6 +189,8 @@ class AudioBloc extends Bloc {
     _transitionPosition.close();
     _playbackSpeedSubject.close();
     _trimSilence.close();
+    _volumeBoost.close();
+
     super.dispose();
   }
 }

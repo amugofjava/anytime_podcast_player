@@ -99,6 +99,7 @@ class PodcastBloc extends Bloc {
   /// the episode stream before pushing a [BlocPopulatedState] containing the Podcast.
   void _listenPodcastLoad() async {
     _podcastFeed.listen((feed) async {
+      var silent = false;
       lastFeed = feed;
 
       _episodes = [];
@@ -111,16 +112,18 @@ class PodcastBloc extends Bloc {
 
         /// Do we also need to perform a background refresh?
         if (feed.podcast.id != null && feed.backgroundFresh && _shouldAutoRefresh()) {
+          silent = feed.silently;
           log.fine('Performing background refresh of ${feed.podcast.url}');
           _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
           await _loadNewEpisodes(feed);
         }
       } catch (e) {
+        print('Caught rethrown exception');
         _backgroundLoadStream.sink.add(BlocDefaultState<void>());
 
         // For now we'll assume a network error as this is the most likely.
-        if (lastFeed.podcast.url == _podcast.url && !feed.silently) {
+        if ((_podcast == null || lastFeed.podcast.url == _podcast.url) && !silent) {
           _podcastStream.sink.add(BlocErrorState<Podcast>());
           log.fine('Error loading podcast', e);
         }

@@ -26,6 +26,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _showFunding = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _trimSilence = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _volumeBoost = BehaviorSubject<bool>();
   final BehaviorSubject<int> _autoUpdatePeriod = BehaviorSubject<int>();
 
   SettingsBloc(this._settingsService) {
@@ -45,6 +46,7 @@ class SettingsBloc extends Bloc {
     var showFunding = _settingsService.showFunding;
     var autoUpdateEpisodePeriod = _settingsService.autoUpdateEpisodePeriod;
     var trimSilence = _settingsService.trimSilence;
+    var volumeBoost = _settingsService.volumeBoost;
 
     // Add our available search providers.
     var providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
@@ -65,6 +67,7 @@ class SettingsBloc extends Bloc {
       showFunding: showFunding,
       autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
       trimSilence: trimSilence,
+      volumeBoost: volumeBoost,
     );
 
     _settings.add(s);
@@ -84,6 +87,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -106,6 +110,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -128,6 +133,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -148,6 +154,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -170,6 +177,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -190,6 +198,7 @@ class SettingsBloc extends Bloc {
         showFunding: show,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -215,6 +224,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -235,6 +245,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -260,6 +271,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: period,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -280,6 +292,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trimSilence,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -303,6 +316,7 @@ class SettingsBloc extends Bloc {
         showFunding: showFunding,
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
         trimSilence: trim,
+        volumeBoost: volumeBoost,
       );
 
       _settings.add(s);
@@ -310,6 +324,30 @@ class SettingsBloc extends Bloc {
       // If the setting has not changed, don't bother updating it
       if (trim != trimSilence) {
         _settingsService.trimSilence = trim;
+      }
+    });
+
+    _volumeBoost.listen((boost) {
+      s = AppSettings(
+        theme: themeName,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed,
+        searchProvider: searchProvider,
+        searchProviders: providers,
+        externalLinkConsent: externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying,
+        showFunding: showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod,
+        trimSilence: trimSilence,
+        volumeBoost: boost,
+      );
+
+      _settings.add(s);
+
+      // If the setting has not changed, don't bother updating it
+      if (boost != volumeBoost) {
+        _settingsService.volumeBoost = boost;
       }
     });
   }
@@ -334,7 +372,9 @@ class SettingsBloc extends Bloc {
 
   void Function(int) get autoUpdatePeriod => _autoUpdatePeriod.add;
 
-  void Function(bool) get setTrimSilence => _trimSilence.add;
+  void Function(bool) get trimSilence => _trimSilence.add;
+
+  void Function(bool) get volumeBoost => _volumeBoost.add;
 
   AppSettings get currentSettings => _settings.value;
 
@@ -349,6 +389,7 @@ class SettingsBloc extends Bloc {
     _autoOpenNowPlaying.close();
     _showFunding.close();
     _trimSilence.close();
+    _volumeBoost.close();
     _autoUpdatePeriod.close();
     _settings.close();
   }

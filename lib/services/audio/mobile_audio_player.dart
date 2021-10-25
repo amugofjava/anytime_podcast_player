@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/persistable.dart';
@@ -25,14 +26,16 @@ import 'package:pedantic/pedantic.dart';
 class MobileAudioPlayer {
   static const rewindMillis = 10001;
   static const fastForwardMillis = 30000;
+  static const AUDIO_GAIN = 0.8;
 
   final log = Logger('MobileAudioPlayer');
-  final AudioPlayer _audioPlayer = AudioPlayer();
   final Completer _completer = Completer<dynamic>();
+
+  AndroidLoudnessEnhancer _androidLoudnessEnhancer;
+  AudioPipeline _audioPipeline;
+  AudioPlayer _audioPlayer;
   VoidCallback completionHandler;
   PlaybackEvent lastState;
-
-  MobileAudioPlayer({this.completionHandler});
 
   StreamSubscription<PlaybackEvent> _eventSubscription;
 
@@ -44,6 +47,7 @@ class MobileAudioPlayer {
   int _episodeId = 0;
   double _playbackSpeed = 1.0;
   bool _trimSilence = false;
+  bool _volumeBoost = false;
   MediaItem _mediaItem;
 
   MediaControl playControl = MediaControl(
@@ -76,6 +80,17 @@ class MobileAudioPlayer {
     action: MediaAction.fastForward,
   );
 
+  MobileAudioPlayer({this.completionHandler}) {
+    if (Platform.isAndroid) {
+      _androidLoudnessEnhancer = AndroidLoudnessEnhancer();
+      _androidLoudnessEnhancer.setEnabled(true);
+      _audioPipeline = AudioPipeline(androidAudioEffects: [_androidLoudnessEnhancer]);
+      _audioPlayer = AudioPlayer(audioPipeline: _audioPipeline);
+    } else {
+      _audioPlayer = AudioPlayer();
+    }
+  }
+
   Future<void> updatePosition() async {
     await AudioServiceBackground.setState(
       controls: [
@@ -95,13 +110,15 @@ class MobileAudioPlayer {
     var playbackSpeedStr = args[7] as String;
     var durationStr = args[8] as String;
     var trimSilenceStr = args[9] as String;
+    var volumeBoostStr = args[10] as String;
 
     _episodeId = int.parse(episodeIdStr);
     _playbackSpeed = double.parse(playbackSpeedStr);
     _uri = args[3] as String;
     _local = (args[4] as String) == '1';
     _startPosition = 0;
-    _trimSilence = trimSilenceStr == '1' ? true : false;
+    _trimSilence = trimSilenceStr == '1';
+    _volumeBoost = volumeBoostStr == '1';
     Duration duration;
 
     if (int.tryParse(sp) != null) {
@@ -206,8 +223,13 @@ class MobileAudioPlayer {
           await _audioPlayer.setSpeed(_playbackSpeed);
         }
 
-        if (_audioPlayer.skipSilenceEnabled != _trimSilence) {
-          await _audioPlayer.setSkipSilenceEnabled(_trimSilence);
+        if (Platform.isAndroid) {
+          if (_audioPlayer.skipSilenceEnabled != _trimSilence) {
+            await _audioPlayer.setSkipSilenceEnabled(_trimSilence);
+          }
+
+          print('SETTING VOLUME BOOST TO $_volumeBoost');
+          volumeBoost(_volumeBoost);
         }
 
         unawaited(_audioPlayer.play());
@@ -269,19 +291,26 @@ class MobileAudioPlayer {
   }
 
   Future<void> setSpeed(double speed) async {
-    if (_audioPlayer.playing) {
-      _playbackSpeed = speed;
+    _playbackSpeed = speed;
 
-      await _audioPlayer.setSpeed(speed);
-    }
+    await _audioPlayer.setSpeed(speed);
   }
 
-  Future<void> setTrimSilence(bool trim) async {
-    if (_audioPlayer.playing) {
-      log.fine('Setting trim silence to $trim');
-      _trimSilence = trim;
+  Future<void> trimSilence(bool trim) async {
+    log.fine('Setting trim silence to $trim');
+    _trimSilence = trim;
 
-      await _audioPlayer.setSkipSilenceEnabled(trim);
+    await _audioPlayer.setSkipSilenceEnabled(trim);
+  }
+
+  void volumeBoost(bool boost) {
+    log.fine('Setting volume boost to $boost');
+
+    /// For now, we know we only have one effect so we can cheat
+    var e = _audioPipeline.androidAudioEffects[0];
+
+    if (e is AndroidLoudnessEnhancer) {
+      e.setTargetGain(boost ? AUDIO_GAIN : 0.0);
     }
   }
 
