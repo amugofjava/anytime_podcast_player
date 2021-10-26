@@ -391,8 +391,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   _launchEmail();
                 },
                 child: Text(
-                  'anytime@amugofjava.me.uk',
-                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor),
+                  'hello@anytimeplayer.app',
+                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor,),
                 ),
               ),
             ]);
@@ -448,7 +448,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _launchEmail() async {
-    const url = 'mailto:anytime@amugofjava.me.uk';
+    const url = 'mailto:hello@anytimeplayer.app';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
