@@ -16,13 +16,12 @@ import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
+import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,8 +46,9 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     var popped = false;
 
     // If the episode finishes we can close.
-    playingStateSubscription =
-        audioBloc.playingState.where((state) => state == AudioState.stopped).listen((playingState) async {
+    playingStateSubscription = audioBloc.playingState
+        .where((state) => state == AudioState.stopped)
+        .listen((playingState) async {
       // Prevent responding to multiple stop events after we've popped and lost context.
       if (!popped) {
         Navigator.pop(context);
@@ -215,7 +215,8 @@ class EpisodeTabBarView extends StatelessWidget {
           description: episode.description,
           textGroup: textGroup,
         ),
-        NowPlayingDetails(title: episode.title, description: episode.description),
+        NowPlayingDetails(
+            title: episode.title, description: episode.description),
       ],
     );
   }
@@ -260,7 +261,8 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
                       textGroup: textGroup,
                     );
             }),
-        NowPlayingDetails(title: episode.title, description: episode.description),
+        NowPlayingDetails(
+            title: episode.title, description: episode.description),
       ],
     );
   }
@@ -305,7 +307,9 @@ class NowPlayingHeader extends StatelessWidget {
                         : DelayedCircularProgressIndicator(),
                     errorPlaceholder: placeholderBuilder != null
                         ? placeholderBuilder?.errorBuilder()(context)
-                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                        : Image(
+                            image: AssetImage(
+                                'assets/images/anytime-placeholder-logo.png')),
                   ),
                 ),
                 Expanded(
@@ -389,7 +393,9 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                         : DelayedCircularProgressIndicator(),
                     errorPlaceholder: placeholderBuilder != null
                         ? placeholderBuilder?.errorBuilder()(context)
-                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                        : Image(
+                            image: AssetImage(
+                                'assets/images/anytime-placeholder-logo.png')),
                   ),
                 ),
                 Expanded(
@@ -423,7 +429,8 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                         Expanded(
                           flex: 3,
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
+                            padding:
+                                const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -449,7 +456,9 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
                                       )
                                     : IconButton(
                                         icon: Icon(Icons.link),
-                                        color: Theme.of(context).primaryIconTheme.color,
+                                        color: Theme.of(context)
+                                            .primaryIconTheme
+                                            .color,
                                         onPressed: () {
                                           _chapterLink(chapterUrl);
                                         }),
@@ -496,17 +505,7 @@ class NowPlayingDetails extends StatelessWidget {
             left: 16.0,
             right: 16.0,
           ),
-          child: Html(
-            data: description,
-            style: {
-              'html': Style(
-                fontSize: FontSize.large,
-              ),
-            },
-            onLinkTap: (url, _, __, ___) {
-              canLaunch(url).then((value) => launch(url));
-            },
-          ),
+          child: PodcastHtml(content: description),
         ),
       ),
     );

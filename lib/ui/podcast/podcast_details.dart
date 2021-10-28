@@ -20,6 +20,7 @@ import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
+import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,11 +29,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/style.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// This Widget takes a search result and builds a list of currently available
 /// podcasts. From here a user can option to subscribe/unsubscribe or play a
@@ -89,7 +87,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
       }
     });
 
-    widget._podcastBloc.backgroundLoading.where((event) => event is BlocPopulatedState<void>).listen((event) {
+    widget._podcastBloc.backgroundLoading
+        .where((event) => event is BlocPopulatedState<void>)
+        .listen((event) {
       if (mounted) {
         /// If we have not scrolled (save a few pixels) just refresh the episode list;
         /// otherwise prompt the user to prevent unexpected list jumping
@@ -102,7 +102,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
             action: SnackBarAction(
               label: L.of(context).new_episodes_view_now_label,
               onPressed: () {
-                _sliverScrollController.animateTo(100, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                _sliverScrollController.animateTo(100,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInOut);
                 widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
               },
             ),
@@ -116,8 +118,13 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   @override
   void didChangeDependencies() {
     _systemOverlayStyle = SystemUiOverlayStyle(
-      statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-      statusBarColor: Theme.of(context).appBarTheme.backgroundColor.withOpacity(toolbarCollapsed ? 1.0 : 0.5),
+      statusBarIconBrightness: Theme.of(context).brightness == Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+      statusBarColor: Theme.of(context)
+          .appBarTheme
+          .backgroundColor
+          .withOpacity(toolbarCollapsed ? 1.0 : 0.5),
     );
     super.didChangeDependencies();
   }
@@ -139,7 +146,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   void _resetSystemOverlayStyle() {
     setState(() {
       _systemOverlayStyle = SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarIconBrightness:
+            Theme.of(context).brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
         statusBarColor: Colors.transparent,
       );
     });
@@ -148,8 +158,14 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   void _updateSystemOverlayStyle() {
     setState(() {
       _systemOverlayStyle = SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        statusBarColor: Theme.of(context).appBarTheme.backgroundColor.withOpacity(toolbarCollapsed ? 1.0 : 0.5),
+        statusBarIconBrightness:
+            Theme.of(context).brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light,
+        statusBarColor: Theme.of(context)
+            .appBarTheme
+            .backgroundColor
+            .withOpacity(toolbarCollapsed ? 1.0 : 0.5),
       );
     });
   }
@@ -183,11 +199,16 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         duration: Duration(milliseconds: 500),
                         child: Text(widget.podcast.title)),
                     leading: DecoratedIconButton(
-                      icon: Platform.isAndroid ? Icons.close : Icons.arrow_back_ios,
-                      iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
+                      icon: Platform.isAndroid
+                          ? Icons.close
+                          : Icons.arrow_back_ios,
+                      iconColour: toolbarCollapsed &&
+                              Theme.of(context).brightness == Brightness.light
                           ? Theme.of(context).appBarTheme.foregroundColor
                           : Colors.white,
-                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22000000),
+                      decorationColour: toolbarCollapsed
+                          ? Color(0x00000000)
+                          : Color(0x22000000),
                       onPressed: () {
                         _resetSystemOverlayStyle();
                         Navigator.pop(context);
@@ -199,8 +220,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     snap: false,
                     flexibleSpace: FlexibleSpaceBar(
                       background: Hero(
-                        key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
-                        tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
+                        key: Key(
+                            'detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
+                        tag:
+                            '${widget.podcast.imageUrl}:${widget.podcast.link}',
                         child: ExcludeSemantics(
                           child: StreamBuilder<BlocState<Podcast>>(
                               initialData: BlocEmptyState<Podcast>(),
@@ -328,7 +351,9 @@ class PodcastHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (podcast == null || podcast.imageUrl == null || podcast.imageUrl.isEmpty) {
+    if (podcast == null ||
+        podcast.imageUrl == null ||
+        podcast.imageUrl.isEmpty) {
       return Container(
         height: 560,
         width: 560,
@@ -338,11 +363,13 @@ class PodcastHeaderImage extends StatelessWidget {
     return PodcastImage(
       key: Key('details${podcast.imageUrl}'),
       url: podcast.imageUrl,
-      placeholder:
-          placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator(),
+      placeholder: placeholderBuilder != null
+          ? placeholderBuilder?.builder()(context)
+          : DelayedCircularProgressIndicator(),
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
-          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+          : Image(
+              image: AssetImage('assets/images/anytime-placeholder-logo.png')),
     );
   }
 }
@@ -371,11 +398,7 @@ class PodcastTitle extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
             child: Text(podcast.copyright ?? '', style: textTheme.caption),
           ),
-          Html(
-            data: podcast.description ?? '',
-            style: {'html': Style(fontWeight: textTheme.bodyText1.fontWeight)},
-            onLinkTap: (url, _, __, ___) => canLaunch(url).then((value) => launch(url)),
-          ),
+          PodcastHtml(content: podcast.description),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Row(
@@ -424,7 +447,8 @@ class SubscriptionButton extends StatelessWidget {
               return p.subscribed
                   ? OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
                       ),
                       icon: Icon(
                         Icons.delete_outline,
@@ -467,7 +491,8 @@ class SubscriptionButton extends StatelessWidget {
                     )
                   : OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0)),
                       ),
                       icon: Icon(
                         Icons.add,
