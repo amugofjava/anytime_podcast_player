@@ -58,10 +58,17 @@ class EpisodeTile extends StatelessWidget {
               highlight: episode.highlight,
             ),
           ),
-          Container(
-            height: 4.0,
-            width: 56.0 * (episode.percentagePlayed / 100),
-            color: Theme.of(context).primaryColor,
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 1.0,
+              right: 1.0,
+              bottom: 1.0,
+            ),
+            child: Container(
+              height: 4.0,
+              width: 56.0 * (episode.percentagePlayed / 100),
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         ],
       ),

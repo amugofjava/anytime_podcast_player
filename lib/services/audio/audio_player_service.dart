@@ -51,7 +51,7 @@ abstract class AudioPlayerService {
   Future<void> rewind();
 
   /// Fast forward the current episode by pre-set number of seconds.
-  Future<void> fastforward();
+  Future<void> fastForward();
 
   /// Seek to the specified position within the current episode.
   Future<void> seek({@required int position});

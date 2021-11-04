@@ -89,7 +89,7 @@ class AudioBloc extends Bloc {
           await audioPlayerService.pause();
           break;
         case TransitionState.fastforward:
-          await audioPlayerService.fastforward();
+          await audioPlayerService.fastForward();
           break;
         case TransitionState.rewind:
           await audioPlayerService.rewind();

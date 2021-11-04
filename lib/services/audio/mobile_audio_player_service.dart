@@ -179,7 +179,7 @@ class MobileAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> fastforward() => AudioService.fastForward();
+  Future<void> fastForward() => AudioService.fastForward();
 
   @override
   Future<void> rewind() => AudioService.rewind();
@@ -490,22 +490,21 @@ class MobileAudioPlayerService extends AudioPlayerService {
     }
   }
 
+  /// Calculate our current chapter based on playback position, and if it's different to
+  /// the currently stored chapter - update.
   void _updateChapter(int seconds, int duration) {
     if (_episode == null) {
       log.fine('Warning. Attempting to update chapter information on a null _episode');
     } else if (_episode.hasChapters && _episode.chaptersAreLoaded) {
       final chapters = _episode.chapters;
 
-      // What is our current chapter?
-      _episode.currentChapter = null;
-
-      for (var x = 0; x < _episode.chapters.length; x++) {
-        final startTime = chapters[x].startTime;
-        final endTime = x == (_episode.chapters.length - 1) ? duration : chapters[x + 1].startTime;
+      for (var chapterPtr = 0; chapterPtr < _episode.chapters.length; chapterPtr++) {
+        final startTime = chapters[chapterPtr].startTime;
+        final endTime = chapterPtr == (_episode.chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
 
         if (seconds >= startTime && seconds < endTime) {
-          if (chapters[x] != _episode.currentChapter) {
-            _episode.currentChapter = chapters[x];
+          if (chapters[chapterPtr] != _episode.currentChapter) {
+            _episode.currentChapter = chapters[chapterPtr];
             _episodeEvent.sink.add(_episode);
             break;
           }
