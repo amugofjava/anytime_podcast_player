@@ -13,10 +13,7 @@ class PodcastHtml extends StatelessWidget {
 
   PodcastHtml({
     @required this.content,
-  }) {
-    /// The <br> tag often results in unwanted, additional white space.
-    tagList.remove('br');
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +27,7 @@ class PodcastHtml extends StatelessWidget {
         )
       },
       tagsList: tagList,
-      onLinkTap: (url, _, __, ___) =>
-          canLaunch(url).then((value) => launch(url)),
+      onLinkTap: (url, _, __, ___) => canLaunch(url).then((value) => launch(url)),
     );
   }
 }

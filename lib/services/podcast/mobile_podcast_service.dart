@@ -23,6 +23,8 @@ import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as psearch;
 
 class MobilePodcastService extends PodcastService {
+  final descriptionRegExp1 = RegExp(r'(<\/p><br>|<\/p><\/br>|<p><br><\/p>|<p><\/br><\/p>)');
+  final descriptionRegExp2 = RegExp(r'(<p><br><\/p>|<p><\/br><\/p>)');
   final log = Logger('MobilePodcastService');
   final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
 
@@ -90,9 +92,9 @@ class MobilePodcastService extends PodcastService {
         _cache.store(loadedPodcast);
       }
 
-      final title = loadedPodcast.title.replaceAll('\n', '').trim() ?? '';
-      final description = loadedPodcast.description.replaceAll('\n', '').trim() ?? '';
-      final copyright = loadedPodcast.copyright.replaceAll('\n', '').trim() ?? '';
+      final title = _format(loadedPodcast.title);
+      final description = _format(loadedPodcast.description);
+      final copyright = _format(loadedPodcast.copyright);
       final funding = <Funding>[];
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
 
@@ -146,8 +148,8 @@ class MobilePodcastService extends PodcastService {
         for (final episode in loadedPodcast.episodes) {
           final existingEpisode = existingEpisodes.firstWhere((ep) => ep.guid == episode.guid, orElse: () => null);
           final author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
-          final title = episode.title?.replaceAll('\n', '')?.trim() ?? '';
-          final description = episode.description?.replaceAll('\n', '')?.trim() ?? '';
+          final title = _format(episode.title);
+          final description = _format(episode.description);
           final episodeImage = episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.imageUrl : episode.imageUrl;
           final episodeThumbImage =
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
@@ -337,6 +339,14 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<Episode> saveEpisode(Episode episode) async {
     return repository.saveEpisode(episode);
+  }
+
+  /// Remove HTML padding from the content. The padding may look fine within
+  /// the context of a browser, but can look out of place on a mobile screen.
+  String _format(String input) {
+    input = input.replaceAll('\n', '').trim() ?? '';
+
+    return input.replaceAll(descriptionRegExp2, '')..replaceAll(descriptionRegExp1, '</p>');
   }
 
   Future<psearch.Chapters> _loadChaptersByUrl(String url) {
