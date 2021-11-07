@@ -102,7 +102,7 @@ class MobileOPMLService extends OPMLService {
 
     final export = builder.buildDocument();
 
-    var output = await getExternalStorageDirectory();
+    var output = Platform.isAndroid ? await getExternalStorageDirectory() : await getApplicationDocumentsDirectory();
     var outputFile = '${output.path}/anytime_export.opml';
     var file = File(outputFile);
 
