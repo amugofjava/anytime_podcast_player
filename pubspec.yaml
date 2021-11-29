@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   auto_size_text: ^2.1.0
-  audio_service: ^0.17.1
+  audio_service: ^0.18.1
   audio_session: ^0.1.6
   connectivity: ^3.0.6
   cupertino_icons: ^1.0.2
@@ -21,7 +21,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.0
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
-  just_audio: ^0.9.2
+  just_audio: ^0.9.18
   logging: ^1.0.1
   mp3_info: ^0.2.0
   path_provider: ^2.0.2

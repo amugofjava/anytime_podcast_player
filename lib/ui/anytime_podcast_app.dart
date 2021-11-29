@@ -18,7 +18,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/services/audio/mobile_audio_player_service.dart';
+import 'package:anytime/services/audio/default_audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
@@ -77,7 +77,7 @@ class AnytimePodcastApp extends StatefulWidget {
       repository: repository,
       settingsService: mobileSettingsService,
     );
-    audioPlayerService = MobileAudioPlayerService(
+    audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
       podcastService: podcastService,
@@ -392,7 +392,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 },
                 child: Text(
                   'hello@anytimeplayer.app',
-                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor,),
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Theme.of(context).buttonColor,
+                  ),
                 ),
               ),
             ]);
