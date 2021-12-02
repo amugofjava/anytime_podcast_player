@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
-import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -25,9 +24,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This is the full-screen player Widget which is invoked
-/// by touching the mini player. This displays the podcast
-/// image, episode notes and standard playback controls.
+/// This is the full-screen player Widget which is invoked by touching the mini player.
+/// This displays the podcast image, episode notes and standard playback controls.
 class NowPlaying extends StatefulWidget {
   @override
   _NowPlayingState createState() => _NowPlayingState();
@@ -97,28 +95,20 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     },
                   ),
                   flexibleSpace: PlaybackErrorListener(
-                    child: snapshot.data.hasChapters
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              EpisodeTabBarWithChapters(),
-                            ],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              EpisodeTabBar(),
-                            ],
-                          ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        EpisodeTabBar(
+                          chapters: snapshot.data.hasChapters,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                body: snapshot.data.hasChapters
-                    ? EpisodeTabBarViewWithChapters(
-                        episode: snapshot.data,
-                      )
-                    : EpisodeTabBarView(
-                        episode: snapshot.data,
-                      ),
+                body: EpisodeTabBarView(
+                  episode: snapshot.data,
+                  chapters: snapshot.data.hasChapters,
+                ),
                 bottomNavigationBar: transportBuilder != null
                     ? transportBuilder(context)
                     : SizedBox(
@@ -130,9 +120,14 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   }
 }
 
+/// This class is responsible for rendering the tab selection at the top of the screen. It displays
+/// two or three tabs depending upon whether the current episode supports (and contains) chapters.
 class EpisodeTabBar extends StatelessWidget {
+  final bool chapters;
+
   const EpisodeTabBar({
     Key key,
+    this.chapters = false,
   }) : super(key: key);
 
   @override
@@ -142,6 +137,13 @@ class EpisodeTabBar extends StatelessWidget {
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: DotDecoration(colour: Theme.of(context).primaryColor),
       tabs: [
+        if (chapters)
+          Tab(
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(L.of(context).chapters_label),
+            ),
+          ),
         Tab(
           child: Align(
             alignment: Alignment.center,
@@ -159,75 +161,19 @@ class EpisodeTabBar extends StatelessWidget {
   }
 }
 
-class EpisodeTabBarWithChapters extends StatelessWidget {
-  const EpisodeTabBarWithChapters({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TabBar(
-      isScrollable: true,
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
-      tabs: [
-        Tab(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(L.of(context).chapters_label),
-          ),
-        ),
-        Tab(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(L.of(context).episode_label),
-          ),
-        ),
-        Tab(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(L.of(context).notes_label),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
+/// This class is responsible for rendering the tab body containing the chapter selection view (if
+/// the episode supports chapters), the episode details (image and description) and the show
+/// notes view.
 class EpisodeTabBarView extends StatelessWidget {
   final Episode episode;
   final AutoSizeGroup textGroup;
+  final bool chapters;
 
   EpisodeTabBarView({
     Key key,
     this.episode,
     this.textGroup,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TabBarView(
-      children: [
-        NowPlayingHeader(
-          imageUrl: episode.imageUrl,
-          title: episode.title,
-          description: episode.description,
-          textGroup: textGroup,
-        ),
-        NowPlayingDetails(title: episode.title, description: episode.description),
-      ],
-    );
-  }
-}
-
-class EpisodeTabBarViewWithChapters extends StatelessWidget {
-  final Episode episode;
-  final AutoSizeGroup textGroup;
-
-  EpisodeTabBarViewWithChapters({
-    Key key,
-    this.episode,
-    this.textGroup,
+    this.chapters = false,
   }) : super(key: key);
 
   @override
@@ -236,45 +182,35 @@ class EpisodeTabBarViewWithChapters extends StatelessWidget {
 
     return TabBarView(
       children: [
-        ChapterSelector(
-          episode: episode,
-        ),
+        if (chapters)
+          ChapterSelector(
+            episode: episode,
+          ),
         StreamBuilder<Episode>(
             stream: audioBloc.nowPlaying,
             builder: (context, snapshot) {
               final e = snapshot.hasData ? snapshot.data : episode;
 
-              return e.hasChapters
-                  ? NowPlayingHeaderWithChapters(
-                      imageUrl: e.positionalImageUrl,
-                      title: e.title,
-                      description: e.description,
-                      textGroup: textGroup,
-                      chapter: e.currentChapter,
-                    )
-                  : NowPlayingHeader(
-                      imageUrl: e.positionalImageUrl,
-                      title: e.title,
-                      description: e.description,
-                      textGroup: textGroup,
-                    );
+              return NowPlayingEpisode(
+                episode: e,
+                imageUrl: e.positionalImageUrl,
+                textGroup: textGroup,
+              );
             }),
-        NowPlayingDetails(title: episode.title, description: episode.description),
+        NowPlayingShowNotes(title: episode.title, description: episode.description),
       ],
     );
   }
 }
 
-class NowPlayingHeader extends StatelessWidget {
+class NowPlayingEpisode extends StatelessWidget {
   final String imageUrl;
-  final String title;
-  final String description;
+  final Episode episode;
   final AutoSizeGroup textGroup;
 
-  const NowPlayingHeader({
+  const NowPlayingEpisode({
     @required this.imageUrl,
-    @required this.title,
-    @required this.description,
+    @required this.episode,
     @required this.textGroup,
   });
 
@@ -282,177 +218,149 @@ class NowPlayingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 7,
-            child: PodcastImage(
-              key: Key('nowplaying$imageUrl'),
-              url: imageUrl,
-              height: 360,
-              width: 360,
-              fit: BoxFit.contain,
-              placeholder: placeholderBuilder != null
-                  ? placeholderBuilder?.builder()(context)
-                  : DelayedCircularProgressIndicator(),
-              errorPlaceholder: placeholderBuilder != null
-                  ? placeholderBuilder?.errorBuilder()(context)
-                  : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                bottom: 0.0,
-                left: 16.0,
-                right: 16.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: AutoSizeText(
-                      title ?? '',
-                      group: textGroup,
-                      textAlign: TextAlign.center,
-                      minFontSize: 12.0,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        print('Orientation is ');
+        print(MediaQuery.of(context).orientation);
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: MediaQuery.of(context).orientation == Orientation.portrait
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: PodcastImage(
+                        key: Key('nowplaying$imageUrl'),
+                        url: imageUrl,
+                        height: 360,
+                        width: 360,
+                        fit: BoxFit.contain,
+                        placeholder: placeholderBuilder != null
+                            ? placeholderBuilder?.builder()(context)
+                            : DelayedCircularProgressIndicator(),
+                        errorPlaceholder: placeholderBuilder != null
+                            ? placeholderBuilder?.errorBuilder()(context)
+                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
-                      maxLines: 4,
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                    Expanded(
+                      flex: 3,
+                      child: NowPlayingEpisodeDetails(
+                        episode: episode,
+                        textGroup: textGroup,
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: PodcastImage(
+                        key: Key('nowplaying$imageUrl'),
+                        url: imageUrl,
+                        height: 360,
+                        width: 360,
+                        fit: BoxFit.contain,
+                        placeholder: placeholderBuilder != null
+                            ? placeholderBuilder?.builder()(context)
+                            : DelayedCircularProgressIndicator(),
+                        errorPlaceholder: placeholderBuilder != null
+                            ? placeholderBuilder?.errorBuilder()(context)
+                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: NowPlayingEpisodeDetails(
+                        episode: episode,
+                        textGroup: textGroup,
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }
 
-class NowPlayingHeaderWithChapters extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String description;
-  final Chapter chapter;
+class NowPlayingEpisodeDetails extends StatelessWidget {
+  final Episode episode;
   final AutoSizeGroup textGroup;
 
-  const NowPlayingHeaderWithChapters({
-    @required this.imageUrl,
-    @required this.title,
-    @required this.description,
-    @required this.textGroup,
-    @required this.chapter,
-  });
+  const NowPlayingEpisodeDetails({
+    Key key,
+    this.episode,
+    this.textGroup,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final placeholderBuilder = PlaceholderBuilder.of(context);
-    final chapterTitle = chapter?.title ?? '';
-    final chapterUrl = chapter?.url ?? '';
+    final chapterTitle = episode?.currentChapter?.title ?? '';
+    final chapterUrl = episode?.currentChapter?.url ?? '';
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 7,
-            child: PodcastImage(
-              key: Key('nowplaying$imageUrl'),
-              url: imageUrl,
-              height: 360,
-              width: 360,
-              fit: BoxFit.contain,
-              placeholder: placeholderBuilder != null
-                  ? placeholderBuilder?.builder()(context)
-                  : DelayedCircularProgressIndicator(),
-              errorPlaceholder: placeholderBuilder != null
-                  ? placeholderBuilder?.errorBuilder()(context)
-                  : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+    return Column(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              episode?.title ?? '',
+              group: textGroup,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              minFontSize: 12.0,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+              maxLines: episode.hasChapters ? 4 : 5,
             ),
           ),
+        ),
+        if (episode.hasChapters)
           Expanded(
-            flex: 3,
+            flex: 1,
             child: Padding(
-              padding: const EdgeInsets.only(
-                top: 16.0,
-                bottom: 0.0,
-                left: 16.0,
-                right: 16.0,
-              ),
-              child: Column(
+              padding: const EdgeInsets.fromLTRB(8.0, 4.0, 0.0, 8.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 2,
+                  Flexible(
                     child: AutoSizeText(
-                      title ?? '',
+                      chapterTitle ?? '',
                       group: textGroup,
+                      minFontSize: 12.0,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      minFontSize: 12.0,
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14.0,
                       ),
                       maxLines: 3,
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Flexible(
-                            child: AutoSizeText(
-                              chapterTitle ?? '',
-                              group: textGroup,
-                              minFontSize: 12.0,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 14.0,
-                              ),
-                              maxLines: 3,
-                            ),
-                          ),
-                          chapterUrl.isEmpty
-                              ? const SizedBox(
-                                  height: 0,
-                                  width: 0,
-                                )
-                              : IconButton(
-                                  icon: Icon(Icons.link),
-                                  color: Theme.of(context).primaryIconTheme.color,
-                                  onPressed: () {
-                                    _chapterLink(chapterUrl);
-                                  }),
-                        ],
-                      ),
-                    ),
-                  ),
+                  chapterUrl.isEmpty
+                      ? const SizedBox(
+                          height: 0,
+                          width: 0,
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.link),
+                          color: Theme.of(context).primaryIconTheme.color,
+                          onPressed: () {
+                            _chapterLink(chapterUrl);
+                          }),
                 ],
               ),
             ),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -465,11 +373,11 @@ class NowPlayingHeaderWithChapters extends StatelessWidget {
   }
 }
 
-class NowPlayingDetails extends StatelessWidget {
+class NowPlayingShowNotes extends StatelessWidget {
   final String title;
   final String description;
 
-  const NowPlayingDetails({
+  const NowPlayingShowNotes({
     @required this.title,
     @required this.description,
   });
