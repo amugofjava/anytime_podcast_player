@@ -37,6 +37,8 @@ abstract class PodcastService {
     @required int size,
   });
 
+  List<String> genres();
+
   Future<Podcast> loadPodcast({
     @required Podcast podcast,
     bool refresh,

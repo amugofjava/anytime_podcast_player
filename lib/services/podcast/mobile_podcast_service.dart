@@ -57,9 +57,21 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<psearch.SearchResult> charts({
-    int size,
+    int size = 20,
   }) {
-    return api.charts(size);
+    return api.charts(
+      size: size,
+      searchProvider: settingsService.searchProvider,
+    );
+  }
+
+  @override
+  List<String> genres() {
+    var results = <String>['All'];
+    results.addAll(api.genres(settingsService.searchProvider));
+
+    //.addAll(api.genres(settingsService.searchProvider));
+    return results;
   }
 
   /// Loads the specified [Podcast]. If the Podcast instance has an ID we'll fetch
