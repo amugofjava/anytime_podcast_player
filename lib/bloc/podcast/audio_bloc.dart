@@ -81,26 +81,20 @@ class AudioBloc extends Bloc {
   /// to the Audio Service plugin.
   void _handlePlayingStateTransitions() {
     _transitionPlayingState.asyncMap((event) => Future.value(event)).listen((state) async {
-      print('TRANSITION STATE TO:');
       switch (state) {
         case TransitionState.play:
-          print(' - PLAY');
           await audioPlayerService.play();
           break;
         case TransitionState.pause:
-          print(' - PAUSE');
           await audioPlayerService.pause();
           break;
         case TransitionState.fastforward:
-          print(' - FF');
           await audioPlayerService.fastForward();
           break;
         case TransitionState.rewind:
-          print(' - REWIND');
           await audioPlayerService.rewind();
           break;
         case TransitionState.stop:
-          print(' - STOP');
           await audioPlayerService.stop();
           break;
       }

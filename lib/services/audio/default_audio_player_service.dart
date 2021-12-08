@@ -69,9 +69,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         settings: settingsService,
       ),
       config: const AudioServiceConfig(
+        androidResumeOnClick: true,
         androidNotificationChannelName: 'Anytime Podcast Player',
-        androidNotificationOngoing: true,
         androidNotificationIcon: 'drawable/ic_stat_name',
+        androidNotificationOngoing: false,
         androidStopForegroundOnPause: true,
         rewindInterval: Duration(seconds: 10),
         fastForwardInterval: Duration(seconds: 30),
@@ -473,7 +474,14 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       _audioPipeline = AudioPipeline(androidAudioEffects: [_androidLoudnessEnhancer]);
       _player = AudioPlayer(audioPipeline: _audioPipeline);
     } else {
-      _player = AudioPlayer();
+      _player = AudioPlayer(
+          userAgent: Environment.userAgent(),
+          audioLoadConfiguration: AudioLoadConfiguration(
+            androidLoadControl: AndroidLoadControl(
+              backBufferDuration: Duration(seconds: 45),
+            ),
+            darwinLoadControl: DarwinLoadControl(),
+          ));
     }
 
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
@@ -483,7 +491,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   void _handleProcessingState() {
     _player.processingStateStream.listen((state) async {
       if (state == ProcessingState.completed) {
-        print('ALL DONE!');
         await complete();
       }
     });

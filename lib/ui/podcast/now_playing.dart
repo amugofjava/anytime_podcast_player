@@ -220,8 +220,6 @@ class NowPlayingEpisode extends StatelessWidget {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-        print('Orientation is ');
-        print(MediaQuery.of(context).orientation);
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: MediaQuery.of(context).orientation == Orientation.portrait
