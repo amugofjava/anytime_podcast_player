@@ -53,7 +53,7 @@ class _SearchBarState extends State<SearchBar> {
       trailing: IconButton(
           padding: EdgeInsets.zero,
           tooltip: _searchFocusNode.hasFocus ? L.of(context).clear_search_button_label : null,
-          color: _searchFocusNode.hasFocus ? Theme.of(context).buttonColor : null,
+          color: _searchFocusNode.hasFocus ? Theme.of(context).iconTheme.color : null,
           splashColor: _searchFocusNode.hasFocus ? Theme.of(context).splashColor : Colors.transparent,
           highlightColor: _searchFocusNode.hasFocus ? Theme.of(context).highlightColor : Colors.transparent,
           icon: Icon(_searchController.text.isEmpty && !_searchFocusNode.hasFocus ? Icons.search : Icons.clear),

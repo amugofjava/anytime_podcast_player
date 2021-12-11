@@ -15,7 +15,6 @@ import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/download_button.dart';
 import 'package:anytime/ui/widgets/play_pause_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';

@@ -105,7 +105,10 @@ class _SettingsState extends State<Settings> {
               ListTile(
                 title: Text(L.of(context).settings_import_opml),
                 onTap: () async {
-                  var result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['opml', 'xml'],);
+                  var result = await FilePicker.platform.pickFiles(
+                    type: FileType.custom,
+                    allowedExtensions: ['opml', 'xml'],
+                  );
 
                   if (result.count > 0) {
                     var file = result.files.first;
@@ -158,16 +161,12 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildAndroid(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).dialogBackgroundColor,
-        statusBarColor: Colors.transparent,
-      ),
+      value: Theme.of(context).appBarTheme.systemOverlayStyle,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           title: Text(
-            'Settings',
+            L.of(context).settings_label,
           ),
         ),
         body: _buildList(context),
@@ -199,7 +198,6 @@ class _SettingsState extends State<Settings> {
           BasicDialogAction(
             title: Text(
               L.of(context).ok_button_label,
-              style: TextStyle(color: Theme.of(context).buttonColor),
             ),
             onPressed: () {
               Navigator.pop(context);

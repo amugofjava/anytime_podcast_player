@@ -37,9 +37,7 @@ import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -254,11 +252,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).bottomAppBarColor,
-        statusBarColor: Colors.transparent,
-      ),
+      value: Theme.of(context).appBarTheme.systemOverlayStyle,
       child: Scaffold(
         backgroundColor: backgroundColour,
         body: Column(
@@ -394,7 +388,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   'hello@anytimeplayer.app',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Theme.of(context).buttonColor,
+                    color: Theme.of(context).indicatorColor,
                   ),
                 ),
               ),

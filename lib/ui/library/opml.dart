@@ -32,7 +32,6 @@ class _OPMLSelectState extends State<OPMLSelect> {
   Widget _buildAndroid(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Theme.of(context).brightness,
         elevation: 0.0,
         title: Text(
           'OPML Import/Export',

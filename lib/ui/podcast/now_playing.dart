@@ -18,9 +18,8 @@ import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -79,42 +78,47 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
           return DefaultTabController(
               length: snapshot.data.hasChapters ? 3 : 2,
               initialIndex: snapshot.data.hasChapters ? 1 : 0,
-              child: Scaffold(
-                appBar: AppBar(
-                  brightness: Theme.of(context).brightness,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  elevation: 0.0,
-                  leading: IconButton(
-                    tooltip: L.of(context).minimise_player_window_button_label,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Theme.of(context).primaryIconTheme.color,
-                    ),
-                    onPressed: () => {
-                      Navigator.pop(context),
-                    },
-                  ),
-                  flexibleSpace: PlaybackErrorListener(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        EpisodeTabBar(
-                          chapters: snapshot.data.hasChapters,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                body: EpisodeTabBarView(
-                  episode: snapshot.data,
-                  chapters: snapshot.data.hasChapters,
-                ),
-                bottomNavigationBar: transportBuilder != null
-                    ? transportBuilder(context)
-                    : SizedBox(
-                        height: 148.0,
-                        child: NowPlayingTransport(),
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: Theme.of(context)
+                    .appBarTheme
+                    .systemOverlayStyle
+                    .copyWith(systemNavigationBarColor: Theme.of(context).cardColor),
+                child: Scaffold(
+                  appBar: AppBar(
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    elevation: 0.0,
+                    leading: IconButton(
+                      tooltip: L.of(context).minimise_player_window_button_label,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Theme.of(context).primaryIconTheme.color,
                       ),
+                      onPressed: () => {
+                        Navigator.pop(context),
+                      },
+                    ),
+                    flexibleSpace: PlaybackErrorListener(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          EpisodeTabBar(
+                            chapters: snapshot.data.hasChapters,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  body: EpisodeTabBarView(
+                    episode: snapshot.data,
+                    chapters: snapshot.data.hasChapters,
+                  ),
+                  bottomNavigationBar: transportBuilder != null
+                      ? transportBuilder(context)
+                      : SizedBox(
+                          height: 148.0,
+                          child: NowPlayingTransport(),
+                        ),
+                ),
               ));
         });
   }

@@ -17,6 +17,7 @@ class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
   static const _projectVersion = '1.1';
+  static const _build = '64';
 
   static var _agentString = userAgentAppString;
 
@@ -26,11 +27,11 @@ class Environment {
     if (_agentString.isEmpty) {
       var platform = '${Platform.operatingSystem} ${Platform.operatingSystemVersion}'.trim();
 
-      _agentString = '$_applicationName/$_projectVersion (phone;$platform) $_applicationUrl';
+      _agentString = '$_applicationName/$_projectVersion b$_build (phone;$platform) $_applicationUrl';
     }
 
     return _agentString;
   }
 
-  static String get projectVersion => _projectVersion;
+  static String get projectVersion => '$_projectVersion b$_build';
 }

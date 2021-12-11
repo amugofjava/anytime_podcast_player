@@ -88,7 +88,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     final chapter = snapshot.data.chapters[index];
                     final chapterSelected = chapter == snapshot.data.currentChapter;
                     final textStyle = chapterSelected
-                        ? Theme.of(context).accentTextTheme.bodyText1.copyWith(
+                        ? Theme.of(context).textTheme.bodyText1.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
                             )
