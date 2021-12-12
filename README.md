@@ -10,7 +10,7 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is now at v1.0, with v1.1 in Beta. v1.1 Beta is the first release for iOS. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
+Anytime is currently at v1.1 and is built against Flutter 2.8+. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
 
 #### Testers
@@ -21,9 +21,10 @@ current developments.
 
 <a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="61" src="docs/google-play-badge.png"/></a>&nbsp;
 <a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="61" alt="Anytime Play Store Link" target="_blank"></a>
+<a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="61" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
 
 
-I would really appreciate all feedback - positive and negative - as it both helps improve Anytime and prioritise new features. You can reach me at [anytime@amugofjava.me.uk](mailto:anytime@amugofjava.me.uk).
+I would really appreciate all feedback - positive and negative - as it both helps improve Anytime and prioritise new features. You can reach me at [hello@anytimeplayer.app](mailto:hello@anytimeplayer.app).
 
 #### Building from source
 
@@ -102,7 +103,7 @@ If you have an issue or discover a bug, please raise a GitHub issue. Pull reques
 
 ## Have a question?
 
-If you wish to reach out to me directly you can find me at [anytime@amugofjava.me.uk](mailto:anytime@amugofjava.me.uk).
+If you wish to reach out to me directly you can find me at [hello@anytimeplayer.app](mailto:hello@anytimeplayer.app).
 
 ## License
 
