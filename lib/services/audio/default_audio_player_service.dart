@@ -10,11 +10,13 @@ import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/persistable.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:anytime/state/persistent_state.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -35,6 +37,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   AudioHandler _audioHandler;
   var _initialised = false;
+  var _cold = false;
 
   double _playbackSpeed;
   bool _trimSilence = false;
@@ -88,7 +91,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> pause() async => _audioHandler.pause();
 
   @override
-  Future<void> play() => _audioHandler.play();
+  Future<void> play() {
+    if (_cold) {
+      _cold = false;
+      return playEpisode(episode: _episode, resume: true);
+    } else {
+      return _audioHandler.play();
+    }
+  }
 
   /// Called by the client (UI) when a new episode should be played. If we have
   /// a downloaded copy of the requested episode we will use that; otherwise
@@ -227,9 +237,19 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> stop() => _audioHandler.stop();
 
+  void updateCurrentPosition(Episode e) {
+    if (e != null) {
+      var duration = Duration(seconds: e.duration);
+      var complete = e.position > 0 ? (duration.inSeconds / e.position) * 100 : 0;
+
+      _playPosition.add(PositionState(Duration(milliseconds: e.position), duration, complete.toInt(), e, false));
+    }
+  }
+
   @override
   Future<void> suspend() async {
     _stopTicker();
+    _persistState();
   }
 
   @override
@@ -238,6 +258,17 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       if (_episode == null) {
         if (_audioHandler?.mediaItem?.value != null) {
           _episode = await repository.findEpisodeById(int.parse(_audioHandler.mediaItem.value.id));
+        } else {
+          // Let's see if we have a persisted state
+          var ps = await PersistentState.fetchState();
+
+          if (ps != null && ps.state == LastState.paused) {
+            _episode = await repository.findEpisodeById(ps.episodeId);
+            _episode.position = ps.position;
+            _playingState.add(AudioState.pausing);
+            updateCurrentPosition(_episode);
+            _cold = true;
+          }
         }
       } else {
         var playbackState = _audioHandler.playbackState.value;
@@ -245,12 +276,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         final basicState = playbackState?.processingState ?? AudioProcessingState.idle;
 
         // If we have no state we'll have to assume we stopped whilst suspended.
-        if (basicState == AudioProcessingState.idle) {
-          _playingState.add(AudioState.stopped);
-        } else {
+        if (basicState != AudioProcessingState.idle) {
           _startTicker();
         }
       }
+
+      await PersistentState.clearState();
 
       _episodeEvent.sink.add(_episode);
 
@@ -258,6 +289,19 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
 
     return Future.value(null);
+  }
+
+  Future<void> _persistState() async {
+    var currentPosition = _audioHandler?.playbackState?.value?.position?.inMilliseconds ?? 0;
+
+    /// We only need to persist if we are paused.
+    if (_playingState.value == AudioState.pausing) {
+      await PersistentState.persistState(Persistable(
+        episodeId: _episode.id,
+        position: currentPosition,
+        state: LastState.paused,
+      ));
+    }
   }
 
   @override
@@ -488,42 +532,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     _handleProcessingState();
   }
 
-  void _handleProcessingState() {
-    _player.processingStateStream.listen((state) async {
-      if (state == ProcessingState.completed) {
-        await complete();
-      }
-    });
-  }
-
-  PlaybackState _transformEvent(PlaybackEvent event) {
-    return PlaybackState(
-      controls: [
-        rewindControl,
-        if (_player.playing) MediaControl.pause else MediaControl.play,
-        fastforwardControl,
-      ],
-      systemActions: const {
-        MediaAction.seek,
-        MediaAction.seekForward,
-        MediaAction.seekBackward,
-      },
-      androidCompactActionIndices: const [0, 1, 2],
-      processingState: const {
-        ProcessingState.idle: AudioProcessingState.idle,
-        ProcessingState.loading: AudioProcessingState.loading,
-        ProcessingState.buffering: AudioProcessingState.buffering,
-        ProcessingState.ready: AudioProcessingState.ready,
-        ProcessingState.completed: AudioProcessingState.completed,
-      }[_player.processingState],
-      playing: _player.playing,
-      updatePosition: _player.position,
-      bufferedPosition: _player.bufferedPosition,
-      speed: _player.speed,
-      queueIndex: event.currentIndex,
-    );
-  }
-
   @override
   Future<void> playMediaItem(MediaItem mediaItem) async {
     super.mediaItem.add(mediaItem);
@@ -660,6 +668,42 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     if (e is AndroidLoudnessEnhancer) {
       e.setTargetGain(boost ? audioGain : 0.0);
     }
+  }
+
+  void _handleProcessingState() {
+    _player.processingStateStream.listen((state) async {
+      if (state == ProcessingState.completed) {
+        await complete();
+      }
+    });
+  }
+
+  PlaybackState _transformEvent(PlaybackEvent event) {
+    return PlaybackState(
+      controls: [
+        rewindControl,
+        if (_player.playing) MediaControl.pause else MediaControl.play,
+        fastforwardControl,
+      ],
+      systemActions: const {
+        MediaAction.seek,
+        MediaAction.seekForward,
+        MediaAction.seekBackward,
+      },
+      androidCompactActionIndices: const [0, 1, 2],
+      processingState: const {
+        ProcessingState.idle: AudioProcessingState.idle,
+        ProcessingState.loading: AudioProcessingState.loading,
+        ProcessingState.buffering: AudioProcessingState.buffering,
+        ProcessingState.ready: AudioProcessingState.ready,
+        ProcessingState.completed: AudioProcessingState.completed,
+      }[_player.processingState],
+      playing: _player.playing,
+      updatePosition: _player.position,
+      bufferedPosition: _player.bufferedPosition,
+      speed: _player.speed,
+      queueIndex: event.currentIndex,
+    );
   }
 
   Future<void> _savePosition({bool complete = false}) async {
