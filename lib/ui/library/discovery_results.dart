@@ -8,7 +8,6 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_list.dart';
 import 'package:anytime/ui/widgets/podcast_list_with_search_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 

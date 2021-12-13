@@ -32,6 +32,7 @@ class TileImage extends StatelessWidget {
       url: url,
       height: size,
       width: size,
+      rounded: true,
       placeholder: placeholderBuilder != null
           ? placeholderBuilder?.builder()(context)
           : Image(

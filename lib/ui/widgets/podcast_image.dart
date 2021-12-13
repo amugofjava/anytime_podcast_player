@@ -23,6 +23,7 @@ class PodcastImage extends StatefulWidget {
   final double width;
   final BoxFit fit;
   final bool highlight;
+  final bool rounded;
   Widget placeholder;
   Widget errorPlaceholder;
 
@@ -35,6 +36,7 @@ class PodcastImage extends StatefulWidget {
     this.placeholder,
     this.errorPlaceholder,
     this.highlight = false,
+    this.rounded = false,
   }) : super(key: key);
 
   @override
@@ -57,6 +59,8 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
       height: widget.width,
       cacheWidth: cacheWidth,
       fit: widget.fit,
+      shape: BoxShape.rectangle,
+      borderRadius: widget.rounded ? BorderRadius.all(Radius.circular(6.0)) : BorderRadius.zero,
       cache: true,
       color: Colors.pink,
       loadStateChanged: (ExtendedImageState state) {

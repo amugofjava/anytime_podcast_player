@@ -7,7 +7,6 @@ import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PodcastTile extends StatelessWidget {

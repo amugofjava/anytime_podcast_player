@@ -18,7 +18,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/services/audio/mobile_audio_player_service.dart';
+import 'package:anytime/services/audio/default_audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
@@ -37,9 +37,7 @@ import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -77,7 +75,7 @@ class AnytimePodcastApp extends StatefulWidget {
       repository: repository,
       settingsService: mobileSettingsService,
     );
-    audioPlayerService = MobileAudioPlayerService(
+    audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
       podcastService: podcastService,
@@ -254,11 +252,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarIconBrightness: Theme.of(context).brightness == Brightness.light ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: Theme.of(context).bottomAppBarColor,
-        statusBarColor: Colors.transparent,
-      ),
+      value: Theme.of(context).appBarTheme.systemOverlayStyle,
       child: Scaffold(
         backgroundColor: backgroundColour,
         body: Column(
@@ -392,7 +386,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 },
                 child: Text(
                   'hello@anytimeplayer.app',
-                  style: TextStyle(decoration: TextDecoration.underline, color: Theme.of(context).buttonColor,),
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Theme.of(context).indicatorColor,
+                  ),
                 ),
               ),
             ]);

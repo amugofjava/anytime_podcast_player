@@ -4,7 +4,6 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 /// This class is responsible for rendering the context menu on the podcast details
@@ -58,7 +57,6 @@ class _MaterialPodcastMenu extends StatelessWidget {
             },
             icon: Icon(
               Icons.more_vert,
-              color: Theme.of(context).buttonColor,
             ),
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry<String>>[
@@ -105,7 +103,7 @@ class _CupertinoContextMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return IconButton(
-            icon: Icon(CupertinoIcons.ellipsis, color: Theme.of(context).buttonColor),
+            icon: Icon(CupertinoIcons.ellipsis),
             onPressed: () => showCupertinoModalPopup<void>(
               context: context,
               builder: (BuildContext context) {

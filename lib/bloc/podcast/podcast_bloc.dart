@@ -119,7 +119,6 @@ class PodcastBloc extends Bloc {
           await _loadNewEpisodes(feed);
         }
       } catch (e) {
-        print('Caught rethrown exception');
         _backgroundLoadStream.sink.add(BlocDefaultState<void>());
 
         // For now we'll assume a network error as this is the most likely.

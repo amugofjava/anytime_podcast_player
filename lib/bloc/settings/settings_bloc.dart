@@ -142,6 +142,8 @@ class SettingsBloc extends Bloc {
     });
 
     _playbackSpeed.listen((double speed) {
+      playbackSpeed = speed;
+
       s = AppSettings(
         theme: themeName,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed,
@@ -207,6 +209,8 @@ class SettingsBloc extends Bloc {
       if (show != showFunding) {
         _settingsService.showFunding = show;
       }
+
+      showFunding = show;
     });
 
     _searchProvider.listen((search) {
@@ -254,6 +258,8 @@ class SettingsBloc extends Bloc {
       if (consent != externalLinkConsent) {
         _settingsService.externalLinkConsent = consent;
       }
+
+      externalLinkConsent = consent;
     });
 
     _autoUpdatePeriod.listen((period) {
@@ -301,6 +307,8 @@ class SettingsBloc extends Bloc {
       if (consent != externalLinkConsent) {
         _settingsService.externalLinkConsent = consent;
       }
+
+      externalLinkConsent = consent;
     });
 
     _trimSilence.listen((trim) {
@@ -325,6 +333,8 @@ class SettingsBloc extends Bloc {
       if (trim != trimSilence) {
         _settingsService.trimSilence = trim;
       }
+
+      trimSilence = trim;
     });
 
     _volumeBoost.listen((boost) {
@@ -349,6 +359,8 @@ class SettingsBloc extends Bloc {
       if (boost != volumeBoost) {
         _settingsService.volumeBoost = boost;
       }
+
+      volumeBoost = boost;
     });
   }
 

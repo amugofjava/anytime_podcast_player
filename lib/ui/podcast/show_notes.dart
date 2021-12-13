@@ -4,7 +4,6 @@
 
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
@@ -24,33 +23,29 @@ class ShowNotes extends StatelessWidget {
 
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: CustomScrollView(
-            controller: _sliverScrollController,
-            slivers: <Widget>[
-              SliverAppBar(
-                brightness: Theme.of(context).brightness,
-                title: Text(episode.podcast),
-                floating: false,
-                pinned: true,
-                snap: false,
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-                      child:
-                          Text(episode.title ?? '', style: textTheme.headline6),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                      child: PodcastHtml(content: episode.description),
-                    ),
-                  ],
+        body: CustomScrollView(controller: _sliverScrollController, slivers: <Widget>[
+          SliverAppBar(
+            title: Text(episode.podcast),
+            floating: false,
+            pinned: true,
+            snap: false,
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  child: Text(episode.title ?? '', style: textTheme.headline6),
                 ),
-              ),
-            ]));
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  child: PodcastHtml(content: episode.description),
+                ),
+              ],
+            ),
+          ),
+        ]));
   }
 }
