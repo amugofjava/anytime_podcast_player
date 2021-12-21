@@ -19,6 +19,7 @@ class DiscoveryBloc extends Bloc {
   final PodcastService podcastService;
 
   final BehaviorSubject<DiscoveryEvent> _discoveryInput = BehaviorSubject<DiscoveryEvent>();
+  final PublishSubject<List<String>> _genres = PublishSubject<List<String>>();
 
   Stream<DiscoveryState> _discoveryResults;
   pcast.SearchResult _resultsCache;
@@ -29,6 +30,13 @@ class DiscoveryBloc extends Bloc {
 
   void _init() {
     _discoveryResults = _discoveryInput.switchMap<DiscoveryState>((DiscoveryEvent event) => _charts(event));
+    _genres.onListen = loadGenres;
+  }
+
+  void loadGenres() {
+    print('We are being listened to');
+    print(podcastService.genres());
+    _genres.sink.add(podcastService.genres());
   }
 
   Stream<DiscoveryState> _charts(DiscoveryEvent event) async* {
@@ -49,5 +57,7 @@ class DiscoveryBloc extends Bloc {
   }
 
   void Function(DiscoveryEvent) get discover => _discoveryInput.add;
+
   Stream<DiscoveryState> get results => _discoveryResults;
+  Stream<List<String>> get genres => _genres.stream;
 }

@@ -27,10 +27,12 @@ dependencies:
   path_provider: ^2.0.7
   percent_indicator: ^3.4.0
   permission_handler: ^8.1.4+2
-  podcast_search: ^0.5.0
+#  podcast_search: ^0.5.0
+  podcast_search:
+    path: /home/ben/Development/projects/podcast_search
   provider: ^6.0.1
   rxdart: ^0.27.3
-  scrollable_positioned_list: ^0.1.10
+  scrollable_positioned_list: ^0.2.3
   sembast: ^3.1.0+2
   share_plus: ^2.1.4
   shared_preferences: ^2.0.9

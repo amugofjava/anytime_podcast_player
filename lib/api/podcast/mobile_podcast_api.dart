@@ -36,10 +36,31 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   @override
-  Future<SearchResult> charts(
-    int size,
-  ) async {
-    return compute(_charts, 0);
+  Future<SearchResult> charts({
+    int size = 20,
+    String searchProvider,
+  }) async {
+    var searchParams = {
+      'size': size.toString(),
+      'searchProvider': searchProvider,
+    };
+
+    return compute(_charts, searchParams);
+  }
+
+  @override
+  List<String> genres(String searchProvider) {
+    var provider = searchProvider == 'itunes'
+        ? ITunesProvider()
+        : PodcastIndexProvider(
+            key: podcastIndexKey,
+            secret: podcastIndexSecret,
+          );
+
+    return Search(
+      userAgent: Environment.userAgent(),
+      searchProvider: provider,
+    ).genres();
   }
 
   @override
@@ -53,6 +74,7 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   static Future<SearchResult> _search(Map<String, String> searchParams) {
+    print('Searching with ${searchParams['searchProvider']}');
     var term = searchParams['term'];
     var provider = searchParams['searchProvider'] == 'itunes'
         ? ITunesProvider()
@@ -61,15 +83,13 @@ class MobilePodcastApi extends PodcastApi {
             secret: podcastIndexSecret,
           );
 
-    return Search(userAgent: Environment.userAgent())
-        .search(
-          term,
-          searchProvider: provider,
-        )
-        .timeout(Duration(seconds: 30));
+    return Search(
+      userAgent: Environment.userAgent(),
+      searchProvider: provider,
+    ).search(term).timeout(Duration(seconds: 30));
   }
 
-  static Future<SearchResult> _charts(int size) =>
+  static Future<SearchResult> _charts(Map<String, String> searchParams) =>
       Search(userAgent: Environment.userAgent()).charts().timeout(Duration(seconds: 30));
 
   Future<Podcast> _loadFeed(String url) {
