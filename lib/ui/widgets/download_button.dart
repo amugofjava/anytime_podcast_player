@@ -32,6 +32,7 @@ class DownloadButton extends StatelessWidget {
         child: CircularPercentIndicator(
           radius: 38.0,
           lineWidth: 1.5,
+          backgroundColor: Theme.of(context).primaryColor,
           progressColor: Theme.of(context).indicatorColor,
           animation: true,
           animateFromLastPercent: true,
@@ -46,6 +47,9 @@ class DownloadButton extends StatelessWidget {
               : Icon(
                   icon,
                   size: 22.0,
+
+                  /// Why is this not picking up the theme like other widgets?!?!?!
+                  color: Theme.of(context).primaryColor,
                 ),
         ),
       ),

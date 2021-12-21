@@ -23,20 +23,20 @@ class PodcastImage extends StatefulWidget {
   final double width;
   final BoxFit fit;
   final bool highlight;
-  final bool rounded;
+  final double borderRadius;
   Widget placeholder;
   Widget errorPlaceholder;
 
   PodcastImage({
     Key key,
     @required this.url,
-    this.height = 480.0,
-    this.width = 480.0,
+    this.height = double.infinity,
+    this.width = double.infinity,
     this.fit = BoxFit.cover,
     this.placeholder,
     this.errorPlaceholder,
     this.highlight = false,
-    this.rounded = false,
+    this.borderRadius = 0.0,
   }) : super(key: key);
 
   @override
@@ -59,37 +59,54 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
       height: widget.width,
       cacheWidth: cacheWidth,
       fit: widget.fit,
-      shape: BoxShape.rectangle,
-      borderRadius: widget.rounded ? BorderRadius.all(Radius.circular(6.0)) : BorderRadius.zero,
       cache: true,
-      color: Colors.pink,
       loadStateChanged: (ExtendedImageState state) {
         Widget renderWidget;
 
         if (state.extendedImageLoadState == LoadState.failed) {
-          renderWidget = widget.errorPlaceholder ??
-              Container(
-                color: Colors.red,
-                width: widget.width - 2.0,
-                height: widget.height - 2.0,
-              );
+          renderWidget = Container(
+            alignment: Alignment.topCenter,
+            width: widget.width - 2.0,
+            height: widget.height - 2.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              child: widget.errorPlaceholder ??
+                  SizedBox(
+                    width: widget.width - 2.0,
+                    height: widget.height - 2.0,
+                  ),
+            ),
+          );
         } else {
           renderWidget = AnimatedCrossFade(
             crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
             duration: Duration(seconds: 1),
-            firstChild: widget.placeholder ??
-                SizedBox(
-                  width: widget.width - 2.0,
-                  height: widget.height - 2.0,
-                ),
-            secondChild: ExtendedRawImage(
-              // color: Colors.blue,
-              image: state.extendedImageInfo?.image,
+            firstChild: Container(
+              alignment: Alignment.topCenter,
               width: widget.width - 2.0,
               height: widget.height - 2.0,
-              fit: widget.fit,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+                child: widget.placeholder ??
+                    SizedBox(
+                      width: widget.width - 2.0,
+                      height: widget.height - 2.0,
+                    ),
+              ),
+            ),
+            secondChild: Container(
+              alignment: Alignment.topCenter,
+              width: widget.width - 2.0,
+              height: widget.height - 2.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+                child: ExtendedRawImage(
+                  image: state.extendedImageInfo?.image,
+                  fit: widget.fit,
+                ),
+              ),
             ),
             layoutBuilder: (
               Widget topChild,
@@ -118,7 +135,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Theme.of(context).canvasColor,
+                              color: Theme.of(context).indicatorColor,
                             ),
                           ),
                         ),

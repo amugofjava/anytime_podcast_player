@@ -32,11 +32,11 @@ class TileImage extends StatelessWidget {
       url: url,
       height: size,
       width: size,
-      rounded: true,
+      borderRadius: 6.0,
       placeholder: placeholderBuilder != null
           ? placeholderBuilder?.builder()(context)
           : Image(
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               width: size,
               height: size,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),
@@ -44,7 +44,7 @@ class TileImage extends StatelessWidget {
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
           : Image(
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               width: size,
               height: size,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),

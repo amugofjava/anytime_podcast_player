@@ -235,9 +235,10 @@ class NowPlayingEpisode extends StatelessWidget {
                       child: PodcastImage(
                         key: Key('nowplaying$imageUrl'),
                         url: imageUrl,
-                        height: 360,
-                        width: 360,
+                        width: MediaQuery.of(context).size.width * .75,
+                        height: MediaQuery.of(context).size.height * .75,
                         fit: BoxFit.contain,
+                        borderRadius: 8.0,
                         placeholder: placeholderBuilder != null
                             ? placeholderBuilder?.builder()(context)
                             : DelayedCircularProgressIndicator(),
@@ -263,9 +264,10 @@ class NowPlayingEpisode extends StatelessWidget {
                       child: PodcastImage(
                         key: Key('nowplaying$imageUrl'),
                         url: imageUrl,
-                        height: 360,
-                        width: 360,
+                        height: 280,
+                        width: 280,
                         fit: BoxFit.contain,
+                        borderRadius: 8.0,
                         placeholder: placeholderBuilder != null
                             ? placeholderBuilder?.builder()(context)
                             : DelayedCircularProgressIndicator(),

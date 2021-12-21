@@ -120,7 +120,9 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                 ? PodcastImage(
                                     key: Key('mini${snapshot.data.imageUrl}'),
                                     url: snapshot.data.imageUrl,
-                                    rounded: true,
+                                    width: 58.0,
+                                    height: 58.0,
+                                    borderRadius: 6.0,
                                     placeholder: placeholderBuilder != null
                                         ? placeholderBuilder?.builder()(context)
                                         : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
