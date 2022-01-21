@@ -5,6 +5,7 @@ version: 1.1.0+61
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
+  flutter: 2.2.3
 
 dependencies:
   auto_size_text: ^2.1.0
