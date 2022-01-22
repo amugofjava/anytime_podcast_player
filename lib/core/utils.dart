@@ -109,3 +109,16 @@ String safePath(String s) {
 String safeFile(String s) {
   return s?.replaceAll(RegExp(r'[^\w\s\.]+'), '')?.trim();
 }
+
+extension ExtString on String {
+  String get forceHttps {
+    final incomingUrl = Uri.parse(this);
+    if (!incomingUrl.isScheme('http')) return this;
+
+    return Uri.https(
+      incomingUrl.authority,
+      incomingUrl.path,
+      incomingUrl.queryParameters,
+    ).toString();
+  }
+}
