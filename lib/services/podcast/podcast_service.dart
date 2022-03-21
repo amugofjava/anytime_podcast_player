@@ -35,12 +35,14 @@ abstract class PodcastService {
 
   Future<pcast.SearchResult> charts({
     @required int size,
+    String genre,
   });
 
   List<String> genres();
 
   Future<Podcast> loadPodcast({
     @required Podcast podcast,
+    bool highlightNewEpisodes,
     bool refresh,
   });
 

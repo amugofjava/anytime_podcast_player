@@ -24,8 +24,8 @@ class PodcastImage extends StatefulWidget {
   final BoxFit fit;
   final bool highlight;
   final double borderRadius;
-  Widget placeholder;
-  Widget errorPlaceholder;
+  final Widget placeholder;
+  final Widget errorPlaceholder;
 
   PodcastImage({
     Key key,
@@ -44,6 +44,145 @@ class PodcastImage extends StatefulWidget {
 }
 
 class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMixin {
+  static const cacheWidth = 480;
+
+  /// There appears to be a bug in extended image that causes images to
+  /// be re-fetched if headers have been set. We'll leave headers for now.
+  final headers = <String, String>{'User-Agent': Environment.userAgent()};
+
+  @override
+  Widget build(BuildContext context) {
+    return ExtendedImage.network(
+      widget.url,
+      key: widget.key,
+      width: widget.height,
+      height: widget.width,
+      cacheWidth: cacheWidth,
+      fit: widget.fit,
+      cache: true,
+      loadStateChanged: (ExtendedImageState state) {
+        Widget renderWidget;
+
+        if (state.extendedImageLoadState == LoadState.failed) {
+          renderWidget = ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+            child: widget.errorPlaceholder ??
+                SizedBox(
+                  width: widget.width,
+                  height: widget.height,
+                ),
+          );
+        } else {
+          renderWidget = AnimatedCrossFade(
+            crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: Duration(milliseconds: 500),
+            firstChild: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              child: widget.placeholder ??
+                  Container(
+                    width: widget.width,
+                    height: widget.height,
+                  ),
+            ),
+            secondChild: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              child: ExtendedRawImage(
+                image: state.extendedImageInfo?.image,
+                fit: widget.fit,
+              ),
+            ),
+            layoutBuilder: (
+              Widget topChild,
+              Key topChildKey,
+              Widget bottomChild,
+              Key bottomChildKey,
+            ) {
+              return Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: widget.highlight
+                    ? [
+                        PositionedDirectional(
+                          key: bottomChildKey,
+                          child: bottomChild,
+                        ),
+                        PositionedDirectional(
+                          key: topChildKey,
+                          child: topChild,
+                        ),
+                        Positioned(
+                          top: -1.5,
+                          right: -1.5,
+                          child: Container(
+                            width: 13,
+                            height: 13,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).canvasColor,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            width: 10.0,
+                            height: 10.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).indicatorColor,
+                            ),
+                          ),
+                        ),
+                      ]
+                    : [
+                        PositionedDirectional(
+                          key: bottomChildKey,
+                          child: bottomChild,
+                        ),
+                        PositionedDirectional(
+                          key: topChildKey,
+                          child: topChild,
+                        ),
+                      ],
+              );
+            },
+          );
+        }
+
+        return renderWidget;
+      },
+    );
+  }
+}
+
+class PodcastBannerImage extends StatefulWidget {
+  final String url;
+  final double height;
+  final double width;
+  final BoxFit fit;
+  final double borderRadius;
+  final Widget placeholder;
+  final Widget errorPlaceholder;
+
+  PodcastBannerImage({
+    Key key,
+    @required this.url,
+    this.height = double.infinity,
+    this.width = double.infinity,
+    this.fit = BoxFit.cover,
+    this.placeholder,
+    this.errorPlaceholder,
+    this.borderRadius = 0.0,
+  }) : super(key: key);
+
+  @override
+  _PodcastBannerImageState createState() => _PodcastBannerImageState();
+}
+
+class _PodcastBannerImageState extends State<PodcastBannerImage> with TickerProviderStateMixin {
   static const cacheWidth = 480;
 
   /// There appears to be a bug in extended image that causes images to
@@ -83,30 +222,16 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
             duration: Duration(seconds: 1),
-            firstChild: Container(
-              alignment: Alignment.topCenter,
-              width: widget.width - 2.0,
-              height: widget.height - 2.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
-                child: widget.placeholder ??
-                    SizedBox(
-                      width: widget.width - 2.0,
-                      height: widget.height - 2.0,
-                    ),
-              ),
-            ),
-            secondChild: Container(
-              alignment: Alignment.topCenter,
-              width: widget.width - 2.0,
-              height: widget.height - 2.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
-                child: ExtendedRawImage(
-                  image: state.extendedImageInfo?.image,
-                  fit: widget.fit,
+            firstChild: widget.placeholder ??
+                SizedBox(
+                  width: widget.width,
+                  height: widget.height,
                 ),
-              ),
+            secondChild: ExtendedRawImage(
+              width: widget.width,
+              height: widget.height,
+              image: state.extendedImageInfo?.image,
+              fit: widget.fit,
             ),
             layoutBuilder: (
               Widget topChild,
@@ -117,51 +242,16 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
-                children: widget.highlight
-                    ? [
-                        PositionedDirectional(
-                          key: bottomChildKey,
-                          child: bottomChild,
-                        ),
-                        PositionedDirectional(
-                          key: topChildKey,
-                          child: topChild,
-                        ),
-                        Positioned(
-                          height: 14.0,
-                          top: -2.0,
-                          right: -2.0,
-                          width: 14.0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).indicatorColor,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          height: 10.0,
-                          top: 0.0,
-                          right: 0.0,
-                          width: 10.0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).indicatorColor,
-                            ),
-                          ),
-                        ),
-                      ]
-                    : [
-                        PositionedDirectional(
-                          key: bottomChildKey,
-                          child: bottomChild,
-                        ),
-                        PositionedDirectional(
-                          key: topChildKey,
-                          child: topChild,
-                        ),
-                      ],
+                children: [
+                  PositionedDirectional(
+                    key: bottomChildKey,
+                    child: bottomChild,
+                  ),
+                  PositionedDirectional(
+                    key: topChildKey,
+                    child: topChild,
+                  ),
+                ],
               );
             },
           );

@@ -9,8 +9,12 @@ class DiscoveryEvent {}
 
 class DiscoveryChartEvent extends DiscoveryEvent {
   final int count;
+  String genre;
 
-  DiscoveryChartEvent({@required this.count});
+  DiscoveryChartEvent({
+    @required this.count,
+    this.genre = '',
+  });
 }
 
 /// States

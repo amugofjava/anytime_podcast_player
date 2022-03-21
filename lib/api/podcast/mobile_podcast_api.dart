@@ -38,10 +38,12 @@ class MobilePodcastApi extends PodcastApi {
   @override
   Future<SearchResult> charts({
     int size = 20,
+    String genre,
     String searchProvider,
   }) async {
     var searchParams = {
       'size': size.toString(),
+      'genre': genre,
       'searchProvider': searchProvider,
     };
 
@@ -89,8 +91,18 @@ class MobilePodcastApi extends PodcastApi {
     ).search(term).timeout(Duration(seconds: 30));
   }
 
-  static Future<SearchResult> _charts(Map<String, String> searchParams) =>
-      Search(userAgent: Environment.userAgent()).charts().timeout(Duration(seconds: 30));
+  static Future<SearchResult> _charts(Map<String, String> searchParams) {
+    var provider = searchParams['searchProvider'] == 'itunes'
+        ? ITunesProvider()
+        : PodcastIndexProvider(
+            key: podcastIndexKey,
+            secret: podcastIndexSecret,
+          );
+
+    return Search(userAgent: Environment.userAgent(), searchProvider: provider)
+        .charts(genre: searchParams['genre'])
+        .timeout(Duration(seconds: 30));
+  }
 
   Future<Podcast> _loadFeed(String url) {
     _setupSecurityContext();

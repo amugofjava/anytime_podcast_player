@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/annotations.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:flutter/foundation.dart';
@@ -102,9 +103,17 @@ class Episode {
   Chapter currentChapter;
 
   /// Set to true if chapter data is currently being loaded.
+  @Transient()
   bool chaptersLoading = false;
 
+  @Transient()
   bool highlight = false;
+
+  @Transient()
+  bool queued = false;
+
+  @Transient()
+  bool streaming = true;
 
   Episode({
     @required this.guid,
@@ -295,6 +304,11 @@ class Episode {
       chaptersUrl.hashCode ^
       chapters.hashCode ^
       lastUpdated.hashCode;
+
+  @override
+  String toString() {
+    return 'Episode{id: $id, guid: $guid, pguid: $pguid, filepath: $filepath, title: $title, contentUrl: $contentUrl, episode: $episode, duration: $duration, position: $position, downloadPercentage: $downloadPercentage, played: $played, queued: $queued}';
+  }
 
   bool get downloaded => downloadPercentage == 100;
 

@@ -50,8 +50,8 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                       backgroundColor: theme.bottomAppBarColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.0),
-                          topRight: Radius.circular(10.0),
+                          topLeft: Radius.circular(16.0),
+                          topRight: Radius.circular(16.0),
                         ),
                       ),
                       builder: (context) {

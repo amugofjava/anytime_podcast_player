@@ -2,9 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
+import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +39,13 @@ class _DownloadsState extends State<Downloads> {
         final state = snapshot.data;
 
         if (state is BlocPopulatedState) {
-          return buildResults(context, state.results as List<Episode>);
+          return PodcastEpisodeList(
+            episodes: state.results as List<Episode>,
+            play: true,
+            download: false,
+            icon: Icons.cloud_download,
+            emptyMessage: L.of(context).no_downloads_message,
+          );
         } else {
           if (state is BlocLoadingState) {
             return SliverFillRemaining(
@@ -65,20 +74,35 @@ class _DownloadsState extends State<Downloads> {
     );
   }
 
+  ///TODO: Refactor out into a separate Widget class
   Widget buildResults(BuildContext context, List<Episode> episodes) {
     if (episodes.isNotEmpty) {
-      return SliverList(
-          delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return EpisodeTile(
-            episode: episodes[index],
-            download: false,
-            play: true,
-          );
-        },
-        childCount: episodes.length,
-        addAutomaticKeepAlives: false,
-      ));
+      var queueBloc = Provider.of<QueueBloc>(context);
+
+      return StreamBuilder<QueueState>(
+          stream: queueBloc.queue,
+          builder: (context, snapshot) {
+            return SliverList(
+                delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                var queued = false;
+                var episode = episodes[index];
+
+                if (snapshot.hasData) {
+                  queued = snapshot.data.queue.any((element) => element.guid == episode.guid);
+                }
+
+                return EpisodeTile(
+                  episode: episode,
+                  download: false,
+                  play: true,
+                  queued: queued,
+                );
+              },
+              childCount: episodes.length,
+              addAutomaticKeepAlives: false,
+            ));
+          });
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,

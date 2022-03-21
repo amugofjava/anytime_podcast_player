@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -57,6 +58,15 @@ abstract class AudioPlayerService {
   /// Call when the app is resumed to re-establish the audio service.
   Future<Episode> resume();
 
+  /// Add an episode to the playback queue
+  Future<void> addUpNextEpisode(Episode episode);
+
+  /// Remove an episode from the playback queue if it exists
+  Future<bool> removeUpNextEpisode(Episode episode);
+
+  /// Remove an episode from the playback queue if it exists
+  Future<bool> moveUpNextEpisode(Episode episode, int oldIndex, int newIndex);
+
   /// Call when the app is about to be suspended.
   Future<void> suspend();
 
@@ -76,4 +86,5 @@ abstract class AudioPlayerService {
   Stream<PositionState> playPosition;
   Stream<Episode> episodeEvent;
   Stream<int> playbackError;
+  Stream<QueueListState> queueState;
 }

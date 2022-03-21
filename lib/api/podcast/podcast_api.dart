@@ -24,6 +24,7 @@ abstract class PodcastApi {
   Future<SearchResult> charts({
     int size,
     String searchProvider,
+    String genre,
   });
 
   List<String> genres(

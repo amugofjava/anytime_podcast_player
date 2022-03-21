@@ -23,6 +23,7 @@ class DiscoveryBloc extends Bloc {
 
   Stream<DiscoveryState> _discoveryResults;
   pcast.SearchResult _resultsCache;
+  String _lastGenre = '';
 
   DiscoveryBloc({@required this.podcastService}) {
     _init();
@@ -43,8 +44,11 @@ class DiscoveryBloc extends Bloc {
     yield DiscoveryLoadingState();
 
     if (event is DiscoveryChartEvent) {
-      if (_resultsCache == null || DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
-        _resultsCache = await podcastService.charts(size: event.count);
+      if (_resultsCache == null ||
+          event.genre != _lastGenre ||
+          DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
+        _lastGenre = event.genre;
+        _resultsCache = await podcastService.charts(size: event.count, genre: event.genre);
       }
 
       yield DiscoveryPopulatedState<pcast.SearchResult>(_resultsCache);

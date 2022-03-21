@@ -122,7 +122,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                     url: snapshot.data.imageUrl,
                                     width: 58.0,
                                     height: 58.0,
-                                    borderRadius: 6.0,
+                                    borderRadius: 4.0,
                                     placeholder: placeholderBuilder != null
                                         ? placeholderBuilder?.builder()(context)
                                         : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
@@ -212,14 +212,12 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     );
   }
 
-  /// We call this method to setup a listener for changing [AudioState]. This
-  /// in turns calls upon the [_pauseController] to animate the play/pause icon.
-  /// The [AudioBloc] playingState method is backed by a [BehaviorSubject] so
-  /// we'll always get the current state when we subscribe. This, however, has
-  /// a side effect causing the play/pause icon to animate when returning from
-  /// the full-size player, which looks a little odd. Therefore, on the first
-  /// event we move the controller to the correct state without animating. This
-  /// feels a little hacky, but stops the UI from looking a little odd.
+  /// We call this method to setup a listener for changing [AudioState]. This in turns calls upon the [_pauseController]
+  /// to animate the play/pause icon. The [AudioBloc] playingState method is backed by a [BehaviorSubject] so we'll
+  /// always get the current state when we subscribe. This, however, has a side effect causing the play/pause icon to
+  /// animate when returning from the full-size player, which looks a little odd. Therefore, on the first event we move
+  /// the controller to the correct state without animating. This feels a little hacky, but stops the UI from looking a
+  /// little odd.
   void audioStateListener() {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     var firstEvent = true;

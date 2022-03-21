@@ -14,10 +14,10 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/podcast/funding_menu.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
+import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
-import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
@@ -285,19 +285,12 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                 StreamBuilder<List<Episode>>(
                     stream: _podcastBloc.episodes,
                     builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                return EpisodeTile(
-                                  episode: snapshot.data[index],
-                                  download: true,
-                                  play: true,
-                                );
-                              },
-                              childCount: snapshot.data.length,
-                              addAutomaticKeepAlives: false,
-                            ))
+                      return snapshot.hasData && snapshot.data.isNotEmpty
+                          ? PodcastEpisodeList(
+                              episodes: snapshot.data,
+                              play: true,
+                              download: true,
+                            )
                           : SliverToBoxAdapter(child: Container());
                     }),
               ],
@@ -328,7 +321,7 @@ class PodcastHeaderImage extends StatelessWidget {
       );
     }
 
-    return PodcastImage(
+    return PodcastBannerImage(
       key: Key('details${podcast.imageUrl}'),
       url: podcast.imageUrl,
       fit: BoxFit.cover,

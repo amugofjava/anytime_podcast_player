@@ -10,6 +10,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
+import 'package:anytime/ui/podcast/now_playing_options.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
@@ -75,51 +76,64 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
           var duration = snapshot.data == null ? 0 : snapshot.data.duration;
           final transportBuilder = playerBuilder?.builder(duration);
 
-          return DefaultTabController(
-              length: snapshot.data.hasChapters ? 3 : 2,
-              initialIndex: snapshot.data.hasChapters ? 1 : 0,
-              child: AnnotatedRegion<SystemUiOverlayStyle>(
-                value: Theme.of(context)
-                    .appBarTheme
-                    .systemOverlayStyle
-                    .copyWith(systemNavigationBarColor: Theme.of(context).cardColor),
-                child: Scaffold(
-                  appBar: AppBar(
-                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                    elevation: 0.0,
-                    leading: IconButton(
-                      tooltip: L.of(context).minimise_player_window_button_label,
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Theme.of(context).primaryIconTheme.color,
-                      ),
-                      onPressed: () => {
-                        Navigator.pop(context),
-                      },
-                    ),
-                    flexibleSpace: PlaybackErrorListener(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          EpisodeTabBar(
-                            chapters: snapshot.data.hasChapters,
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              DefaultTabController(
+                  length: snapshot.data.hasChapters ? 3 : 2,
+                  initialIndex: snapshot.data.hasChapters ? 1 : 0,
+                  child: AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: Theme.of(context)
+                        .appBarTheme
+                        .systemOverlayStyle
+                        .copyWith(systemNavigationBarColor: Theme.of(context).cardColor),
+                    child: Scaffold(
+                      appBar: AppBar(
+                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                        elevation: 0.0,
+                        leading: IconButton(
+                          tooltip: L.of(context).minimise_player_window_button_label,
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Theme.of(context).primaryIconTheme.color,
                           ),
+                          onPressed: () => {
+                            Navigator.pop(context),
+                          },
+                        ),
+                        flexibleSpace: PlaybackErrorListener(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              EpisodeTabBar(
+                                chapters: snapshot.data.hasChapters,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      body: Column(
+                        children: [
+                          Expanded(
+                            child: EpisodeTabBarView(
+                              episode: snapshot.data,
+                              chapters: snapshot.data.hasChapters,
+                            ),
+                          ),
+                          transportBuilder != null
+                              ? transportBuilder(context)
+                              : SizedBox(
+                                  height: 148.0,
+                                  child: NowPlayingTransport(),
+                                ),
+                          NowPlayingOptionsPadding(),
                         ],
                       ),
                     ),
-                  ),
-                  body: EpisodeTabBarView(
-                    episode: snapshot.data,
-                    chapters: snapshot.data.hasChapters,
-                  ),
-                  bottomNavigationBar: transportBuilder != null
-                      ? transportBuilder(context)
-                      : SizedBox(
-                          height: 148.0,
-                          child: NowPlayingTransport(),
-                        ),
-                ),
-              ));
+                  )),
+              NowPlayingOptionsSelector(),
+            ],
+          );
         });
   }
 }
@@ -238,7 +252,7 @@ class NowPlayingEpisode extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * .75,
                         height: MediaQuery.of(context).size.height * .75,
                         fit: BoxFit.contain,
-                        borderRadius: 8.0,
+                        borderRadius: 6.0,
                         placeholder: placeholderBuilder != null
                             ? placeholderBuilder?.builder()(context)
                             : DelayedCircularProgressIndicator(),

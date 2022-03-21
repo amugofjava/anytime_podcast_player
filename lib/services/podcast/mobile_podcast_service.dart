@@ -58,10 +58,12 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<psearch.SearchResult> charts({
     int size = 20,
+    String genre,
   }) {
     return api.charts(
       size: size,
       searchProvider: settingsService.searchProvider,
+      genre: genre,
     );
   }
 
@@ -79,7 +81,11 @@ class MobilePodcastService extends PodcastService {
   /// recently and return that if available. If not, we'll make a call to load
   /// it from the network.
   @override
-  Future<Podcast> loadPodcast({@required Podcast podcast, bool refresh}) async {
+  Future<Podcast> loadPodcast({
+    @required Podcast podcast,
+    bool highlightNewEpisodes = false,
+    bool refresh,
+  }) async {
     log.fine('loadPodcast. ID ${podcast.id} - refresh $refresh');
 
     if (podcast.id == null || refresh) {
@@ -167,7 +173,7 @@ class MobilePodcastService extends PodcastService {
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
 
           if (existingEpisode == null) {
-            pc.newEpisodes = pc.id != null;
+            pc.newEpisodes = highlightNewEpisodes && pc.id != null;
 
             pc.episodes.add(Episode(
               highlight: pc.newEpisodes,

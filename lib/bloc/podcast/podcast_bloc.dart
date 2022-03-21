@@ -174,6 +174,7 @@ class PodcastBloc extends Bloc {
   Future<void> _loadNewEpisodes(Feed feed) async {
     _podcast = await podcastService.loadPodcast(
       podcast: feed.podcast,
+      highlightNewEpisodes: true,
       refresh: true,
     );
 

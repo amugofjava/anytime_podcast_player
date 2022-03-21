@@ -9,6 +9,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
@@ -173,6 +174,10 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
         Provider<OPMLBloc>(
           create: (_) => OPMLBloc(opmlService: widget.opmlService),
           dispose: (_, value) => value.dispose(),
+        ),
+        Provider<QueueBloc>(
+          create: (_) => QueueBloc(audioPlayerService: widget.audioPlayerService),
+          dispose: (_, value) => value.dispose(),
         )
       ],
       child: MaterialApp(
@@ -323,26 +328,30 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             stream: pager.currentPage,
             initialData: 0,
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+              int index = snapshot.data ?? 0;
+
               return BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
                 backgroundColor: Theme.of(context).bottomAppBarColor,
                 selectedIconTheme: Theme.of(context).iconTheme,
                 selectedItemColor: Theme.of(context).iconTheme.color,
+                selectedFontSize: 11.0,
+                unselectedFontSize: 11.0,
                 unselectedItemColor:
                     HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
-                currentIndex: snapshot.data,
+                currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.library_music),
+                    icon: index == 0 ? Icon(Icons.library_music) : Icon(Icons.library_music_outlined),
                     label: L.of(context).library,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.explore),
+                    icon: index == 1 ? Icon(Icons.explore) : Icon(Icons.explore_outlined),
                     label: L.of(context).discover,
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.file_download),
+                    icon: index == 2 ? Icon(Icons.download) : Icon(Icons.download_outlined),
                     label: L.of(context).downloads,
                   ),
                 ],
