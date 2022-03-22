@@ -329,8 +329,6 @@ class Episode {
       var pc = (position / (duration * 1000)) * 100;
 
       if (pc > 100.0) {
-        log.info('ERROR: Calculated episode percentage played over 100%');
-        log.info('       - position $position; duration in seconds ${duration * 1000}');
         pc = 100.0;
       }
 

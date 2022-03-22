@@ -877,6 +877,106 @@ class L {
           locale: localeName,
         );
   }
+
+  String get empty_queue_message {
+    return message('empty_queue_message') ??
+        Intl.message(
+          'Your queue is empty',
+          name: 'empty_queue_message',
+          desc: 'Displayed when there are no items left in the queue',
+          locale: localeName,
+        );
+  }
+
+  String get clear_queue_button_label {
+    return message('clear_queue_button_label') ??
+        Intl.message(
+          'CLEAR QUEUE',
+          name: 'clear_queue_button_label',
+          desc: 'Clear queue button label',
+          locale: localeName,
+        );
+  }
+
+  String get now_playing_queue_label {
+    return message('now_playing_queue_label') ??
+        Intl.message(
+          'Now Playing',
+          name: 'now_playing_queue_label',
+          desc: 'Now playing label on queue',
+          locale: localeName,
+        );
+  }
+
+  String get up_next_queue_label {
+    return message('up_next_queue_label') ??
+        Intl.message(
+          'Up Next',
+          name: 'up_next_queue_label',
+          desc: 'Up next label on queue',
+          locale: localeName,
+        );
+  }
+
+  String get more_label {
+    return message('more_label') ??
+        Intl.message(
+          'More',
+          name: 'more_label',
+          desc: 'More label',
+          locale: localeName,
+        );
+  }
+
+  String get queue_add_label {
+    return message('queue_add_label') ??
+        Intl.message(
+          'Add',
+          name: 'queue_add_label',
+          desc: 'Queue add label',
+          locale: localeName,
+        );
+  }
+
+  String get queue_remove_label {
+    return message('queue_remove_label') ??
+        Intl.message(
+          'Remove',
+          name: 'queue_remove_label',
+          desc: 'Queue remove label',
+          locale: localeName,
+        );
+  }
+
+  String get opml_import_button_label {
+    return message('opml_import_button_label') ??
+        Intl.message(
+          'Import',
+          name: 'opml_import_button_label',
+          desc: 'OPML Import button label',
+          locale: localeName,
+        );
+  }
+
+  String get opml_export_button_label {
+    return message('opml_export_button_label') ??
+        Intl.message(
+          'Export',
+          name: 'opml_export_button_label',
+          desc: 'OPML Export button label',
+          locale: localeName,
+        );
+  }
+
+  String get opml_import_export_label {
+    return message('opml_import_export_label') ??
+        Intl.message(
+          'OPML Import/Export',
+          name: 'opml_import_export_label',
+          desc: 'OPML Import/Export label',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

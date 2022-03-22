@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/library/opml_import.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +35,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          'OPML Import/Export',
+          L.of(context).opml_import_export_label,
         ),
       ),
       body: _buildBody(context),
@@ -74,11 +75,11 @@ class _OPMLSelectState extends State<OPMLSelect> {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Import'),
+              child: Text(L.of(context).opml_import_button_label),
             ),
             ElevatedButton(
               onPressed: () {},
-              child: Text('Export'),
+              child: Text(L.of(context).opml_export_button_label),
             ),
           ],
         ),

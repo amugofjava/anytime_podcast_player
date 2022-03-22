@@ -410,7 +410,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     _stopTicker();
 
     /// Test: Do we have another episode in the queue to play?
-    _episode = null;
+    // _episode = null;
 
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
@@ -688,19 +688,22 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> pause() async {
+    log.fine('pause() triggered');
     await _savePosition();
     await _player.pause();
   }
 
   @override
   Future<void> stop() async {
-    await _savePosition();
+    log.fine('stop() triggered');
     await _player.stop();
+    await _savePosition();
   }
 
   Future<void> complete() async {
-    await _savePosition(complete: true);
+    log.fine('complete() triggered');
     await _player.stop();
+    await _savePosition(complete: true);
   }
 
   @override
@@ -769,6 +772,10 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   PlaybackState _transformEvent(PlaybackEvent event) {
     log.fine('_transformEvent Sending state ${_player.processingState}');
+
+    if (_player.processingState == ProcessingState.completed) {
+      complete();
+    }
 
     return PlaybackState(
       controls: [

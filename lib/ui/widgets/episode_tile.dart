@@ -272,7 +272,7 @@ class EpisodeTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
-                        'More',
+                        L.of(context).more_label,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,

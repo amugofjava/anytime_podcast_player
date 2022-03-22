@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_event_state.dart';
+import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/draggable_episode_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +64,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Text(
-                      "UP NEXT",
+                      L.of(context).up_next_queue_label.toUpperCase(),
                       style: Theme.of(context).textTheme.button,
                     ),
                   ),
@@ -73,7 +74,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
                         child: Text(
-                          'Now Playing',
+                          L.of(context).now_playing_queue_label,
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ),
@@ -94,12 +95,25 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     },
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
                         child: Text(
-                          'Up Next',
+                          L.of(context).up_next_queue_label,
                           style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                        child: Text(
+                          L.of(context).clear_queue_button_label,
+                          style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                fontSize: 12.0,
+                                color: Theme.of(context).primaryColor,
+                              ),
                         ),
                       ),
                     ],
@@ -110,7 +124,10 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                         stream: queueBloc.queue,
                         builder: (context, snapshot) {
                           return snapshot.hasData && snapshot.data.queue.isEmpty
-                              ? Text('EMPTY')
+                              ? Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(L.of(context).empty_queue_message),
+                                )
                               : ReorderableListView.builder(
                                   buildDefaultDragHandles: false,
                                   shrinkWrap: true,
