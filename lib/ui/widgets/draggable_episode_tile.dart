@@ -15,7 +15,7 @@ class DraggableEpisodeTile extends StatelessWidget {
   const DraggableEpisodeTile({
     Key key,
     @required this.episode,
-    @required this.index,
+    this.index,
     this.draggable = true,
   }) : super(key: key);
 

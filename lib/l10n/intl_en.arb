@@ -567,5 +567,26 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "queue_clear_label": "Are you sure you wish to clear the queue?",
+  "@queue_clear_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_button_label": "Clear",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "Clear Queue",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   }
 }

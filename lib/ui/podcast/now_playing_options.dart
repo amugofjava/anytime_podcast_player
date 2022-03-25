@@ -4,8 +4,10 @@
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/draggable_episode_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 class NowPlayingOptionsSelector extends StatefulWidget {
@@ -108,27 +110,76 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                       Spacer(),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
-                        child: Text(
-                          L.of(context).clear_queue_button_label,
-                          style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                fontSize: 12.0,
-                                color: Theme.of(context).primaryColor,
+                        child: TextButton(
+                          onPressed: () {
+                            showPlatformDialog<void>(
+                              context: context,
+                              useRootNavigator: false,
+                              builder: (_) => BasicDialogAlert(
+                                title: Text(
+                                  L.of(context).queue_clear_label_title,
+                                ),
+                                content: Text(L.of(context).queue_clear_label),
+                                actions: <Widget>[
+                                  BasicDialogAction(
+                                    title: ActionText(
+                                      L.of(context).cancel_button_label,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  BasicDialogAction(
+                                    title: ActionText(
+                                      L.of(context).queue_clear_button_label,
+                                    ),
+                                    iosIsDefaultAction: true,
+                                    iosIsDestructiveAction: true,
+                                    onPressed: () {
+                                      queueBloc.queueEvent(QueueClearEvent());
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
                               ),
+                            );
+                          },
+                          child: Text(
+                            L.of(context).clear_queue_button_label,
+                            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                                  fontSize: 12.0,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: StreamBuilder<QueueState>(
-                        initialData: QueueEmptyState(),
-                        stream: queueBloc.queue,
-                        builder: (context, snapshot) {
-                          return snapshot.hasData && snapshot.data.queue.isEmpty
-                              ? Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Text(L.of(context).empty_queue_message),
-                                )
-                              : ReorderableListView.builder(
+                  StreamBuilder<QueueState>(
+                      initialData: QueueEmptyState(),
+                      stream: queueBloc.queue,
+                      builder: (context, snapshot) {
+                        return snapshot.hasData && snapshot.data.queue.isEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(24.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context).dividerColor,
+                                      border: Border.all(
+                                        color: Theme.of(context).dividerColor,
+                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24.0),
+                                    child: Text(
+                                      L.of(context).empty_queue_message,
+                                      style: Theme.of(context).textTheme.subtitle1,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Expanded(
+                                child: ReorderableListView.builder(
                                   buildDefaultDragHandles: false,
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(8),
@@ -153,10 +204,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                       newIndex: newIndex,
                                     ));
                                   },
-                                );
-                        }),
-                  ),
-                  Divider(),
+                                ),
+                              );
+                      }),
                 ],
               ),
             ),

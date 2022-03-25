@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-03-22T11:26:16.187152",
+  "@@last_modified": "2022-03-25T16:35:02.083848",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -654,6 +654,27 @@
   "opml_import_export_label": "OPML Import/Export",
   "@opml_import_export_label": {
     "description": "OPML Import/Export label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label": "Are you sure you wish to clear the queue?",
+  "@queue_clear_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_button_label": "Clear",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "Clear Queue",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

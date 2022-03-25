@@ -977,6 +977,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get queue_clear_label {
+    return message('queue_clear_label') ??
+        Intl.message(
+          'Are you sure you wish to clear the queue?',
+          name: 'queue_clear_label',
+          desc: 'Shown on dialog box when clearing queue',
+          locale: localeName,
+        );
+  }
+
+  String get queue_clear_button_label {
+    return message('queue_clear_button_label') ??
+        Intl.message(
+          'Clear',
+          name: 'queue_clear_button_label',
+          desc: 'Shown on dialog box when clearing queue',
+          locale: localeName,
+        );
+  }
+
+  String get queue_clear_label_title {
+    return message('queue_clear_label_title') ??
+        Intl.message(
+          'Clear Queue',
+          name: 'queue_clear_label_title',
+          desc: 'Shown on dialog box when clearing queue',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

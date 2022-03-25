@@ -67,6 +67,9 @@ abstract class AudioPlayerService {
   /// Remove an episode from the playback queue if it exists
   Future<bool> moveUpNextEpisode(Episode episode, int oldIndex, int newIndex);
 
+  /// Empty the up next queue
+  Future<void> clearUpNext();
+
   /// Call when the app is about to be suspended.
   Future<void> suspend();
 

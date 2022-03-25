@@ -103,9 +103,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
-  /// Called by the client (UI) when a new episode should be played. If we have
-  /// a downloaded copy of the requested episode we will use that; otherwise
-  /// we will stream the episode directly.
+  /// Called by the client (UI), or when we move to a different episode within the queue, to play an episode.
+  /// If we have a downloaded copy of the requested episode we will use that; otherwise we will stream the
+  /// episode directly.
   @override
   Future<void> playEpisode({Episode episode, bool resume}) async {
     if (episode.guid != '' && _initialised) {
@@ -136,17 +136,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         await _saveCurrentEpisodePosition();
       }
 
-      // If we have a queue we need to push the current track to the top of the queue
-      if (_episode != null && _queue.isNotEmpty) {
-        log.fine("_episode is not null and queue is not empty. Looking for ${_episode.guid}");
+      // If we are attempting to play an episode that is also in the queue, remove it from the queue.
+      _queue.removeWhere((e) => episode.guid == e.guid);
 
-        // If this episode is already in the queue, remove it
-        var i = _queue.indexWhere((e) => episode.guid == e.guid);
-
-        if (i >= 0) {
-          _queue.removeAt(i);
-        }
-
+      // If we have a queue, we are currently playing and the user has elected to play something new,
+      // place the current episode at the top of the queue before moving on.
+      if (_episode != null && _episode.guid != episode.guid && _queue.isNotEmpty) {
         _queue.insert(0, _episode);
       }
 
@@ -246,7 +241,16 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> stop() => _audioHandler.stop();
+  Future<void> clearUpNext() async {
+    _queue.clear();
+    _updateQueueState();
+  }
+
+  @override
+  Future<void> stop() {
+    _episode = null;
+    return _audioHandler.stop();
+  }
 
   void updateCurrentPosition(Episode e) {
     if (e != null) {
@@ -415,9 +419,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
       _queue = <Episode>[];
+      _episode = null;
       _playingState.add(AudioState.stopped);
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
+      _episode = null;
       var ep = _queue.removeAt(0);
 
       await playEpisode(episode: ep);

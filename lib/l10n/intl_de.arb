@@ -567,5 +567,26 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "queue_clear_label": "Möchten Sie die Warteschlange wirklich löschen?",
+  "@queue_clear_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_button_label": "Klar",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "Warteschlange löschen",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   }
 }

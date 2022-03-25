@@ -171,6 +171,7 @@ class MobilePodcastService extends PodcastService {
           final episodeImage = episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.imageUrl : episode.imageUrl;
           final episodeThumbImage =
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
+          final duration = episode.duration?.inSeconds ?? 0;
 
           if (existingEpisode == null) {
             pc.newEpisodes = highlightNewEpisodes && pc.id != null;
@@ -189,7 +190,7 @@ class MobilePodcastService extends PodcastService {
               link: episode.link,
               imageUrl: episodeImage,
               thumbImageUrl: episodeThumbImage,
-              duration: episode.duration?.inSeconds ?? 0,
+              duration: duration,
               publicationDate: episode.publicationDate,
               chaptersUrl: episode.chapters?.url,
               chapters: <Chapter>[],
@@ -204,9 +205,13 @@ class MobilePodcastService extends PodcastService {
             existingEpisode.link = episode.link;
             existingEpisode.imageUrl = episodeImage;
             existingEpisode.thumbImageUrl = episodeThumbImage;
-            existingEpisode.duration = episode.duration?.inSeconds ?? 0;
             existingEpisode.publicationDate = episode.publicationDate;
             existingEpisode.chaptersUrl = episode.chapters?.url;
+
+            // If the source duration is 0 do not update any saved, calculated duration.
+            if (duration > 0) {
+              existingEpisode.duration = duration;
+            }
 
             pc.episodes.add(existingEpisode);
 

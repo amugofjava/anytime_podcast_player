@@ -125,6 +125,7 @@ class PodcastBloc extends Bloc {
         if ((_podcast == null || lastFeed.podcast.url == _podcast.url) && !silent) {
           _podcastStream.sink.add(BlocErrorState<Podcast>());
           log.fine('Error loading podcast', e);
+          log.fine(e);
         }
       }
     });
