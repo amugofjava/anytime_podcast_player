@@ -35,7 +35,6 @@ class EpisodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Episode Tile is rebuilding...');
     final theme = Theme.of(context);
     final textTheme = Theme.of(context).textTheme;
     final episodeBloc = Provider.of<EpisodeBloc>(context);

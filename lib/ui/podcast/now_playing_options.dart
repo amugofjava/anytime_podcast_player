@@ -38,7 +38,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
         return SingleChildScrollView(
           controller: scrollController,
           child: Material(
-            color: theme.bottomAppBarColor,
+            color: theme.secondaryHeaderColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(18.0),
@@ -46,7 +46,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               ),
             ),
             child: SizedBox(
-              height: windowHeight,
+              height: MediaQuery.of(context).size.height,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -55,7 +55,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      width: 24,
+                      width: 36,
                       height: 4,
                       decoration: BoxDecoration(
                         color: Colors.grey,
@@ -131,7 +131,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                   ),
                                   BasicDialogAction(
                                     title: ActionText(
-                                      L.of(context).queue_clear_button_label,
+                                      Theme.of(context).platform == TargetPlatform.iOS ?
+                                      L.of(context).queue_clear_button_label.toUpperCase() : L.of(context).queue_clear_button_label ,
                                     ),
                                     iosIsDefaultAction: true,
                                     iosIsDestructiveAction: true,

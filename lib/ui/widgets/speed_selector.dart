@@ -47,7 +47,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 onTap: () {
                   showModalBottomSheet<void>(
                       context: context,
-                      backgroundColor: theme.bottomAppBarColor,
+                      backgroundColor: theme.secondaryHeaderColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),
@@ -115,7 +115,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            width: 24,
+            width: 36,
             height: 4,
             decoration: BoxDecoration(
               color: Colors.grey,
