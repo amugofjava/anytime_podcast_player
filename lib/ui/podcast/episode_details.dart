@@ -20,9 +20,7 @@ class EpisodeDetails extends StatefulWidget {
   EpisodeDetails({
     Key key,
     this.episode,
-  }) : super(key: key) {
-    print('New EpisodeDetails! ${episode.title}');
-  }
+  }) : super(key: key);
 
   @override
   _EpisodeDetailsState createState() => _EpisodeDetailsState();
@@ -102,6 +100,30 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                           },
                           icon: Icon(
                             Icons.playlist_add_outlined,
+                            size: 28,
+                          ),
+                          itemBuilder: (BuildContext context) {
+                            return <PopupMenuEntry<String>>[
+                              PopupMenuItem<String>(
+                                value: 'ma',
+                                child: Text(L.of(context).mark_episodes_played_label),
+                              ),
+                              PopupMenuItem<String>(
+                                value: 'ua',
+                                child: Text(L.of(context).mark_episodes_not_played_label),
+                              ),
+                            ];
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        child: PopupMenuButton<String>(
+                          color: Theme.of(context).dialogBackgroundColor,
+                          onSelected: (event) {
+                            // togglePlayed(value: event, bloc: bloc);
+                          },
+                          icon: Icon(
+                            Icons.playlist_play_outlined,
                             size: 28,
                           ),
                           itemBuilder: (BuildContext context) {

@@ -10,30 +10,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
+class DN extends Notification {}
+
 class NowPlayingOptionsSelector extends StatefulWidget {
-  const NowPlayingOptionsSelector({Key key}) : super(key: key);
+  double scrollPos;
+
+  NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
 
   @override
   _NowPlayingOptionsSelectorState createState() => _NowPlayingOptionsSelectorState();
 }
 
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
+  bool showContainer = false;
+  double o = 0.0;
+
   @override
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     const baseSize = 48;
+    final topMargin = baseSize + MediaQuery.of(context).viewPadding.top;
     final theme = Theme.of(context);
-    const minHeight = baseSize;
-    final windowHeight = MediaQuery.of(context).size.height - minHeight;
-    final minSize = minHeight / windowHeight;
-    final maxSize = 0.95;
+    final windowHeight = MediaQuery.of(context).size.height;
+    final minSize = baseSize / (windowHeight - baseSize);
+    final maxSize = (windowHeight - topMargin - 16) / windowHeight;
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
       minChildSize: minSize,
       maxChildSize: maxSize,
-      snap: true,
-      snapSizes: [minSize, maxSize],
+      // snap: true,
+      // snapSizes: [minSize, maxSize],
       builder: (BuildContext context, ScrollController scrollController) {
         return SingleChildScrollView(
           controller: scrollController,
@@ -46,7 +53,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               ),
             ),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height - 72 - MediaQuery.of(context).viewPadding.top,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -131,8 +138,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                   ),
                                   BasicDialogAction(
                                     title: ActionText(
-                                      Theme.of(context).platform == TargetPlatform.iOS ?
-                                      L.of(context).queue_clear_button_label.toUpperCase() : L.of(context).queue_clear_button_label ,
+                                      Theme.of(context).platform == TargetPlatform.iOS
+                                          ? L.of(context).queue_clear_button_label.toUpperCase()
+                                          : L.of(context).queue_clear_button_label,
                                     ),
                                     iosIsDefaultAction: true,
                                     iosIsDestructiveAction: true,
@@ -223,10 +231,10 @@ class NowPlayingOptionsPadding extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const minHeight = kToolbarHeight;
-    final windowHeight = MediaQuery.of(context).size.height - minHeight;
-    final minSize = minHeight / windowHeight;
-    final maxSize = 0.95;
+    // const minHeight = kToolbarHeight;
+    // final windowHeight = MediaQuery.of(context).size.height - minHeight;
+    // final minSize = minHeight / windowHeight;
+    // final maxSize = 0.95;
 
     return SizedBox(
       height: 44.0,

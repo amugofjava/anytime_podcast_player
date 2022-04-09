@@ -51,7 +51,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _playPauseController.value = 1;
 
-    audioStateListener();
+    _audioStateListener();
   }
 
   @override
@@ -90,7 +90,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
             context,
             MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: true),
           ).then((value) {
-            audioStateListener();
+            _audioStateListener();
           });
         },
         child: Container(
@@ -218,7 +218,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
   /// animate when returning from the full-size player, which looks a little odd. Therefore, on the first event we move
   /// the controller to the correct state without animating. This feels a little hacky, but stops the UI from looking a
   /// little odd.
-  void audioStateListener() {
+  void _audioStateListener() {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     var firstEvent = true;
 

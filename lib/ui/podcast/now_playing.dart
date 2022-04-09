@@ -10,6 +10,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
+import 'package:anytime/ui/podcast/now_playing_floating_player.dart';
 import 'package:anytime/ui/podcast/now_playing_options.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
@@ -26,6 +27,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// This is the full-screen player Widget which is invoked by touching the mini player.
 /// This displays the podcast image, episode notes and standard playback controls.
+///
+/// TODO: The fade in/out transition applied when scrolling the queue is the first implementation.
+/// Using [Opacity] is a very inefficient way of achieving this effect, but will do as a place
+/// holder until a better animation can be achieved.
 class NowPlaying extends StatefulWidget {
   @override
   _NowPlayingState createState() => _NowPlayingState();
@@ -34,6 +39,8 @@ class NowPlaying extends StatefulWidget {
 class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   StreamSubscription<AudioState> playingStateSubscription;
   var textGroup = AutoSizeGroup();
+  double scrollPos = 0.0;
+  double opacity = 0.0;
 
   @override
   void initState() {
@@ -76,63 +83,92 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
           var duration = snapshot.data == null ? 0 : snapshot.data.duration;
           final transportBuilder = playerBuilder?.builder(duration);
 
-          return Stack(
-            fit: StackFit.expand,
-            children: [
-              DefaultTabController(
-                  length: snapshot.data.hasChapters ? 3 : 2,
-                  initialIndex: snapshot.data.hasChapters ? 1 : 0,
-                  child: AnnotatedRegion<SystemUiOverlayStyle>(
-                    value: Theme.of(context)
-                        .appBarTheme
-                        .systemOverlayStyle
-                        .copyWith(systemNavigationBarColor: Theme.of(context).cardColor),
-                    child: Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                        elevation: 0.0,
-                        leading: IconButton(
-                          tooltip: L.of(context).minimise_player_window_button_label,
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Theme.of(context).primaryIconTheme.color,
+          return NotificationListener<DraggableScrollableNotification>(
+            onNotification: (notification) {
+              setState(() {
+                if (notification.extent > (notification.minExtent)) {
+                  opacity = 1 - (notification.maxExtent - notification.extent);
+                  scrollPos = 1.0;
+                } else {
+                  opacity = 0.0;
+                  scrollPos = 0.0;
+                }
+              });
+
+              return true;
+            },
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                DefaultTabController(
+                    length: snapshot.data.hasChapters ? 3 : 2,
+                    initialIndex: snapshot.data.hasChapters ? 1 : 0,
+                    child: AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: Theme.of(context)
+                          .appBarTheme
+                          .systemOverlayStyle
+                          .copyWith(systemNavigationBarColor: Theme.of(context).cardColor),
+                      child: Scaffold(
+                        appBar: AppBar(
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                          elevation: 0.0,
+                          leading: IconButton(
+                            tooltip: L.of(context).minimise_player_window_button_label,
+                            icon: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: Theme.of(context).primaryIconTheme.color,
+                            ),
+                            onPressed: () => {
+                              Navigator.pop(context),
+                            },
                           ),
-                          onPressed: () => {
-                            Navigator.pop(context),
-                          },
-                        ),
-                        flexibleSpace: PlaybackErrorListener(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              EpisodeTabBar(
-                                chapters: snapshot.data.hasChapters,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      body: Column(
-                        children: [
-                          Expanded(
-                            child: EpisodeTabBarView(
-                              episode: snapshot.data,
-                              chapters: snapshot.data.hasChapters,
+                          flexibleSpace: PlaybackErrorListener(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                EpisodeTabBar(
+                                  chapters: snapshot.data.hasChapters,
+                                ),
+                              ],
                             ),
                           ),
-                          transportBuilder != null
-                              ? transportBuilder(context)
-                              : SizedBox(
-                                  height: 148.0,
-                                  child: NowPlayingTransport(),
-                                ),
-                          NowPlayingOptionsPadding(),
-                        ],
+                        ),
+                        body: Column(
+                          children: [
+                            Expanded(
+                              child: EpisodeTabBarView(
+                                episode: snapshot.data,
+                                chapters: snapshot.data.hasChapters,
+                              ),
+                            ),
+                            transportBuilder != null
+                                ? transportBuilder(context)
+                                : SizedBox(
+                                    height: 148.0,
+                                    child: NowPlayingTransport(),
+                                  ),
+                            NowPlayingOptionsPadding(),
+                          ],
+                        ),
                       ),
+                    )),
+                if (scrollPos > 0)
+                  Opacity(
+                    opacity: opacity,
+                    child: Column(
+                      children: [
+                        FloatingPlayer(),
+                        Expanded(
+                          child: Container(
+                            color: Theme.of(context).canvasColor,
+                          ),
+                        ),
+                      ],
                     ),
-                  )),
-              NowPlayingOptionsSelector(),
-            ],
+                  ),
+                NowPlayingOptionsSelector(),
+              ],
+            ),
           );
         });
   }
