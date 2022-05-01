@@ -38,7 +38,8 @@ ThemeData _buildLightTheme() {
     indicatorColor: Colors.orange,
     hintColor: Color(0x8a000000),
     errorColor: Color(0xffd32f2f),
-    primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
+    primaryTextTheme:
+        Typography.material2018(platform: TargetPlatform.android).black,
     textTheme: Typography.material2018(platform: TargetPlatform.android).black,
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     buttonTheme: base.buttonTheme.copyWith(
@@ -49,6 +50,11 @@ ThemeData _buildLightTheme() {
     ),
     sliderTheme: SliderThemeData().copyWith(
       valueIndicatorColor: Colors.orange,
+      trackHeight: 2.0,
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: 6.0,
+        disabledThumbRadius: 6.0,
+      ),
     ),
     appBarTheme: base.appBarTheme.copyWith(
         backgroundColor: Colors.white,
@@ -96,7 +102,8 @@ ThemeData _buildDarktheme() {
     indicatorColor: Colors.orange,
     hintColor: Color(0x80ffffff),
     errorColor: Color(0xffd32f2f),
-    primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
+    primaryTextTheme:
+        Typography.material2018(platform: TargetPlatform.android).white,
     textTheme: Typography.material2018(platform: TargetPlatform.android).white,
     primaryIconTheme: IconThemeData(color: Colors.white),
     iconTheme: base.iconTheme.copyWith(
@@ -107,6 +114,11 @@ ThemeData _buildDarktheme() {
     ),
     sliderTheme: SliderThemeData().copyWith(
       valueIndicatorColor: Colors.white,
+      trackHeight: 2.0,
+      thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: 6.0,
+        disabledThumbRadius: 6.0,
+      ),
     ),
     appBarTheme: base.appBarTheme.copyWith(
         backgroundColor: Color(0xff222222),

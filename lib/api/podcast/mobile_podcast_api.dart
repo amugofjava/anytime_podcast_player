@@ -76,7 +76,6 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   static Future<SearchResult> _search(Map<String, String> searchParams) {
-    print('Searching with ${searchParams['searchProvider']}');
     var term = searchParams['term'];
     var provider = searchParams['searchProvider'] == 'itunes'
         ? ITunesProvider()
@@ -110,8 +109,10 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   void _setupSecurityContext() {
-    if (_certificateAuthorityBytes.isNotEmpty && _defaultSecurityContext == null) {
-      SecurityContext.defaultContext.setTrustedCertificatesBytes(_certificateAuthorityBytes);
+    if (_certificateAuthorityBytes.isNotEmpty &&
+        _defaultSecurityContext == null) {
+      SecurityContext.defaultContext
+          .setTrustedCertificatesBytes(_certificateAuthorityBytes);
       _defaultSecurityContext = SecurityContext.defaultContext;
     }
   }

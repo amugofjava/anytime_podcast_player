@@ -20,6 +20,8 @@ import 'package:provider/provider.dart';
 /// episode's basic details, thumbnail and play button. It can then be
 /// expanded to present addition information about the episode and further
 /// controls.
+///
+/// TODO: Replace [Opacity] with [Container] with a transparent colour.
 class EpisodeTile extends StatelessWidget {
   final Episode episode;
   final bool download;

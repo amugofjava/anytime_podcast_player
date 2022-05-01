@@ -388,7 +388,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               height: 52.0,
             ),
             children: <Widget>[
-              Text('\u00a9 2020-2021 Ben Hills'),
+              Text('\u00a9 2020-2022 Ben Hills'),
               GestureDetector(
                 onTap: () {
                   _launchEmail();

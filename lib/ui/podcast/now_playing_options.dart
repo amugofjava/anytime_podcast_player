@@ -10,15 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
-class DN extends Notification {}
-
 class NowPlayingOptionsSelector extends StatefulWidget {
-  double scrollPos;
+  final double scrollPos;
 
   NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
 
   @override
-  _NowPlayingOptionsSelectorState createState() => _NowPlayingOptionsSelectorState();
+  _NowPlayingOptionsSelectorState createState() =>
+      _NowPlayingOptionsSelectorState();
 }
 
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
@@ -53,7 +52,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               ),
             ),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height - 72 - MediaQuery.of(context).viewPadding.top,
+              height: MediaQuery.of(context).size.height -
+                  64 -
+                  MediaQuery.of(context).viewPadding.top,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -81,7 +82,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
                         child: Text(
                           L.of(context).now_playing_queue_label,
                           style: Theme.of(context).textTheme.headline6,
@@ -94,7 +96,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     stream: queueBloc.queue,
                     builder: (context, snapshot) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                         child: DraggableEpisodeTile(
                           key: Key('detileplaying'),
                           episode: snapshot.data.playing,
@@ -108,7 +110,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                         child: Text(
                           L.of(context).up_next_queue_label,
                           style: Theme.of(context).textTheme.headline6,
@@ -116,7 +119,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                       ),
                       Spacer(),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                         child: TextButton(
                           onPressed: () {
                             showPlatformDialog<void>(
@@ -138,9 +142,15 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                   ),
                                   BasicDialogAction(
                                     title: ActionText(
-                                      Theme.of(context).platform == TargetPlatform.iOS
-                                          ? L.of(context).queue_clear_button_label.toUpperCase()
-                                          : L.of(context).queue_clear_button_label,
+                                      Theme.of(context).platform ==
+                                              TargetPlatform.iOS
+                                          ? L
+                                              .of(context)
+                                              .queue_clear_button_label
+                                              .toUpperCase()
+                                          : L
+                                              .of(context)
+                                              .queue_clear_button_label,
                                     ),
                                     iosIsDefaultAction: true,
                                     iosIsDestructiveAction: true,
@@ -155,10 +165,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                           },
                           child: Text(
                             L.of(context).clear_queue_button_label,
-                            style: Theme.of(context).textTheme.subtitle2.copyWith(
-                                  fontSize: 12.0,
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                            style:
+                                Theme.of(context).textTheme.subtitle2.copyWith(
+                                      fontSize: 12.0,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
                           ),
                         ),
                       ),
@@ -177,12 +188,14 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                       border: Border.all(
                                         color: Theme.of(context).dividerColor,
                                       ),
-                                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
                                   child: Padding(
                                     padding: const EdgeInsets.all(24.0),
                                     child: Text(
                                       L.of(context).empty_queue_message,
-                                      style: Theme.of(context).textTheme.subtitle1,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle1,
                                     ),
                                   ),
                                 ),
@@ -192,12 +205,26 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                   buildDefaultDragHandles: false,
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(8),
-                                  itemCount: snapshot.hasData ? snapshot.data.queue.length : 0,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return DraggableEpisodeTile(
-                                      key: Key('detile$index'),
-                                      index: index,
-                                      episode: snapshot.data.queue[index],
+                                  itemCount: snapshot.hasData
+                                      ? snapshot.data.queue.length
+                                      : 0,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Dismissible(
+                                      key: ValueKey(
+                                          'disqueue${snapshot.data.queue[index].guid}'),
+                                      direction: DismissDirection.endToStart,
+                                      onDismissed: (direction) {
+                                        queueBloc.queueEvent(QueueRemoveEvent(
+                                            episode:
+                                                snapshot.data.queue[index]));
+                                      },
+                                      child: DraggableEpisodeTile(
+                                        key: ValueKey(
+                                            'tilequeue${snapshot.data.queue[index].guid}'),
+                                        index: index,
+                                        episode: snapshot.data.queue[index],
+                                      ),
                                     );
                                   },
                                   onReorder: (int oldIndex, int newIndex) {

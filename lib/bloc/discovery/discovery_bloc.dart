@@ -18,7 +18,8 @@ class DiscoveryBloc extends Bloc {
   final log = Logger('DiscoveryBloc');
   final PodcastService podcastService;
 
-  final BehaviorSubject<DiscoveryEvent> _discoveryInput = BehaviorSubject<DiscoveryEvent>();
+  final BehaviorSubject<DiscoveryEvent> _discoveryInput =
+      BehaviorSubject<DiscoveryEvent>();
   final PublishSubject<List<String>> _genres = PublishSubject<List<String>>();
 
   Stream<DiscoveryState> _discoveryResults;
@@ -30,13 +31,12 @@ class DiscoveryBloc extends Bloc {
   }
 
   void _init() {
-    _discoveryResults = _discoveryInput.switchMap<DiscoveryState>((DiscoveryEvent event) => _charts(event));
+    _discoveryResults = _discoveryInput
+        .switchMap<DiscoveryState>((DiscoveryEvent event) => _charts(event));
     _genres.onListen = loadGenres;
   }
 
   void loadGenres() {
-    print('We are being listened to');
-    print(podcastService.genres());
     _genres.sink.add(podcastService.genres());
   }
 
@@ -46,9 +46,11 @@ class DiscoveryBloc extends Bloc {
     if (event is DiscoveryChartEvent) {
       if (_resultsCache == null ||
           event.genre != _lastGenre ||
-          DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
+          DateTime.now().difference(_resultsCache.processedTime).inMinutes >
+              cacheMinutes) {
         _lastGenre = event.genre;
-        _resultsCache = await podcastService.charts(size: event.count, genre: event.genre);
+        _resultsCache =
+            await podcastService.charts(size: event.count, genre: event.genre);
       }
 
       yield DiscoveryPopulatedState<pcast.SearchResult>(_resultsCache);

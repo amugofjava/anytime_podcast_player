@@ -68,7 +68,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                 ),
                 Expanded(
                   child: snapshot.hasData
-                      ? Slider(
+                      ? Slider.adaptive(
                           label: _formatDuration(Duration(seconds: p)),
                           onChanged: (value) {
                             setState(() {

@@ -16,10 +16,99 @@ import 'package:provider/provider.dart';
 /// See [NowPlaying].
 class PlayerTransportControls extends StatefulWidget {
   @override
-  _PlayerTransportControlsState createState() => _PlayerTransportControlsState();
+  _PlayerTransportControlsState createState() =>
+      _PlayerTransportControlsState();
 }
 
-class _PlayerTransportControlsState extends State<PlayerTransportControls> with SingleTickerProviderStateMixin {
+class _PlayerTransportControlsState extends State<PlayerTransportControls> {
+  @override
+  Widget build(BuildContext context) {
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: StreamBuilder<AudioState>(
+          stream: audioBloc.playingState,
+          builder: (context, snapshot) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                SizedBox(
+                  width: 36.0,
+                  height: 36.0,
+                ),
+                IconButton(
+                  onPressed: () {
+                    return snapshot.data == AudioState.buffering
+                        ? null
+                        : _rewind(audioBloc);
+                  },
+                  tooltip: L.of(context).rewind_button_label,
+                  padding: const EdgeInsets.all(0.0),
+                  icon: Icon(
+                    Icons.replay_10,
+                    size: 48.0,
+                  ),
+                ),
+                AnimatedPlayButton(audioState: snapshot.data),
+                IconButton(
+                  onPressed: () {
+                    return snapshot.data == AudioState.buffering
+                        ? null
+                        : _fastforward(audioBloc);
+                  },
+                  padding: const EdgeInsets.all(0.0),
+                  icon: Icon(
+                    Icons.forward_30,
+                    size: 48.0,
+                  ),
+                ),
+                SpeedSelectorWidget(),
+              ],
+            );
+          }),
+    );
+  }
+
+  void _rewind(AudioBloc audioBloc) {
+    audioBloc.transitionState(TransitionState.rewind);
+  }
+
+  void _fastforward(AudioBloc audioBloc) {
+    audioBloc.transitionState(TransitionState.fastforward);
+  }
+}
+
+typedef PlayHandler = Function(AudioBloc audioBloc);
+
+class AnimatedPlayButton extends StatefulWidget {
+  final AudioState audioState;
+  final PlayHandler onPlay;
+  final PlayHandler onPause;
+
+  AnimatedPlayButton({
+    Key key,
+    @required this.audioState,
+    this.onPlay = _onPlay,
+    this.onPause = _onPause,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedPlayButton> createState() => _AnimatedPlayButtonState();
+}
+
+void _onPlay(AudioBloc audioBloc) {
+  audioBloc.transitionState(TransitionState.play);
+}
+
+void _onPause(AudioBloc audioBloc) {
+  audioBloc.transitionState(TransitionState.pause);
+}
+
+class _AnimatedPlayButtonState extends State<AnimatedPlayButton>
+    with SingleTickerProviderStateMixin {
   AnimationController _playPauseController;
   StreamSubscription<AudioState> _audioStateSubscription;
   bool init = true;
@@ -30,7 +119,8 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _playPauseController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
 
     /// Seems a little hacky, but when we load the form we want the play/pause
     /// button to be in the correct state. If we are building the first frame,
@@ -67,126 +157,59 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> with 
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: StreamBuilder<AudioState>(
-          stream: audioBloc.playingState,
-          builder: (context, snapshot) {
-            final audioState = snapshot.data;
+    final playing = widget.audioState == AudioState.playing;
+    final buffering =
+        widget.audioState == null || widget.audioState == AudioState.buffering;
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                SizedBox(
-                  width: 36.0,
-                  height: 36.0,
-                ),
-                IconButton(
-                  onPressed: () {
-                    return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
-                  },
-                  tooltip: L.of(context).rewind_button_label,
-                  padding: const EdgeInsets.all(0.0),
-                  icon: Icon(
-                    Icons.replay_10,
-                    size: 48.0,
-                  ),
-                ),
-                _PlayButton(
-                    audioState: audioState,
-                    onPlay: () => _play(audioBloc),
-                    onPause: () => _pause(audioBloc),
-                    playPauseController: _playPauseController),
-                IconButton(
-                  onPressed: () {
-                    return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
-                  },
-                  padding: const EdgeInsets.all(0.0),
-                  icon: Icon(
-                    Icons.forward_30,
-                    size: 48.0,
-                  ),
-                ),
-                SpeedSelectorWidget(),
-              ],
-            );
-          }),
-    );
-  }
-
-  void _play(AudioBloc audioBloc) {
-    audioBloc.transitionState(TransitionState.play);
-  }
-
-  void _pause(AudioBloc audioBloc) {
-    audioBloc.transitionState(TransitionState.pause);
-  }
-
-  void _rewind(AudioBloc audioBloc) {
-    audioBloc.transitionState(TransitionState.rewind);
-  }
-
-  void _fastforward(AudioBloc audioBloc) {
-    audioBloc.transitionState(TransitionState.fastforward);
-  }
-}
-
-class _PlayButton extends StatelessWidget {
-  final AudioState audioState;
-  final Function() onPlay;
-  final Function() onPause;
-  final AnimationController playPauseController;
-
-  const _PlayButton({Key key, this.audioState, this.onPlay, this.onPause, this.playPauseController}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final playing = audioState == AudioState.playing;
-    final bufferring = audioState == null || audioState == AudioState.buffering;
-
-    // in case we are buffering show progress indicator.
-    if (bufferring) {
-      return Tooltip(
-          message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: [
+        if (buffering)
+          SpinKitRing(
+            lineWidth: 4.0,
+            color: Theme.of(context).primaryColor,
+            size: 84,
+          ),
+        if (!buffering)
+          SizedBox(
+            height: 84,
+            width: 84,
+          ),
+        Tooltip(
+          message: playing
+              ? L.of(context).pause_button_label
+              : L.of(context).play_button_label,
           child: TextButton(
             style: TextButton.styleFrom(
-              shape: CircleBorder(side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
-              padding: const EdgeInsets.all(8.0),
+              shape: CircleBorder(
+                  side: BorderSide(
+                      color: Theme.of(context).highlightColor, width: 0.0)),
+              backgroundColor: Theme.of(context).brightness == Brightness.light
+                  ? Colors.orange
+                  : Colors.grey[800],
+              primary: Theme.of(context).brightness == Brightness.light
+                  ? Colors.orange
+                  : Colors.grey[800],
+              padding: const EdgeInsets.all(6.0),
             ),
-            onPressed: null,
-            child: SpinKitRing(
-              lineWidth: 2.0,
-              color: Theme.of(context).primaryColor,
-              size: 60,
+            onPressed: () {
+              if (playing) {
+                widget.onPause(audioBloc);
+                // audioBloc.transitionState(TransitionState.pause);
+              } else {
+                widget.onPlay(audioBloc);
+                // audioBloc.transitionState(TransitionState.play);
+              }
+            },
+            child: AnimatedIcon(
+              size: 60.0,
+              icon: AnimatedIcons.play_pause,
+              color: Colors.white,
+              progress: _playPauseController,
             ),
-          ));
-    }
-
-    return Tooltip(
-      message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
-          backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-          primary: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-          padding: const EdgeInsets.all(8.0),
+          ),
         ),
-        onPressed: () {
-          if (playing) {
-            onPause();
-          } else {
-            onPlay();
-          }
-        },
-        child: AnimatedIcon(
-          size: 60.0,
-          icon: AnimatedIcons.play_pause,
-          color: Colors.white,
-          progress: playPauseController,
-        ),
-      ),
+      ],
     );
   }
 }

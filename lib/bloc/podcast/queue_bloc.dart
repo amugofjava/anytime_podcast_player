@@ -11,7 +11,6 @@ import 'package:rxdart/rxdart.dart';
 class QueueBloc extends Bloc {
   final AudioPlayerService audioPlayerService;
   final PublishSubject<QueueEvent> _queueEvent = PublishSubject<QueueEvent>();
-  final BehaviorSubject<QueueState> _queueState = BehaviorSubject<QueueState>();
 
   QueueBloc({@required this.audioPlayerService}) {
     _handleQueueEvents();
@@ -27,7 +26,8 @@ class QueueBloc extends Bloc {
         await audioPlayerService.removeUpNextEpisode(e);
       } else if (event is QueueMoveEvent) {
         var e = event.episode;
-        await audioPlayerService.moveUpNextEpisode(e, event.oldIndex, event.newIndex);
+        await audioPlayerService.moveUpNextEpisode(
+            e, event.oldIndex, event.newIndex);
       } else if (event is QueueClearEvent) {
         await audioPlayerService.clearUpNext();
       }
