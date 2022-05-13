@@ -30,6 +30,10 @@ abstract class Repository {
   Future<List<Episode>> findDownloadsByPodcastGuid(String pguid);
   Future<List<Episode>> findDownloads();
 
+  /// Queue
+  Future<void> saveQueue(List<Episode> episodes);
+  Future<List<Episode>> loadQueue();
+
   /// Event listeners
   Stream<Podcast> podcastListener;
   Stream<EpisodeState> episodeListener;

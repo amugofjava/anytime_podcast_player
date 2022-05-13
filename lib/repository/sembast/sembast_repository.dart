@@ -5,6 +5,7 @@
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/entities/queue.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_database_service.dart';
 import 'package:anytime/state/episode_state.dart';
@@ -21,6 +22,8 @@ class SembastRepository extends Repository {
 
   final _podcastStore = intMapStoreFactory.store('podcast');
   final _episodeStore = intMapStoreFactory.store('episode');
+  final _queueStore = intMapStoreFactory.store('queue');
+
   DatabaseService _databaseService;
 
   Future<Database> get _db async => _databaseService.database;
@@ -256,6 +259,42 @@ class SembastRepository extends Repository {
     _episodeSubject.add(EpisodeUpdateState(e));
 
     return e;
+  }
+
+  @override
+  Future<List<Episode>> loadQueue() async {
+    var episodes = <Episode>[];
+
+    final snapshot = await _queueStore.record(1).getSnapshot(await _db);
+
+    if (snapshot != null) {
+      var queue = Queue.fromMap(snapshot.key, snapshot.value);
+
+      if (queue != null) {
+        var episodeFinder = Finder(filter: Filter.inList('guid', queue.guids));
+
+        final recordSnapshots = await _episodeStore.find(await _db, finder: episodeFinder);
+
+        episodes = recordSnapshots.map((snapshot) {
+          final episode = Episode.fromMap(snapshot.key, snapshot.value);
+
+          return episode;
+        }).toList();
+      }
+    }
+
+    return episodes;
+  }
+
+  @override
+  Future<void> saveQueue(List<Episode> episodes) async {
+    if (episodes != null) {
+      var guids = episodes.map((e) => e.guid).toList();
+
+      final queue = Queue(guids: guids);
+
+      await _queueStore.record(1).put(await _db, queue.toMap());
+    }
   }
 
   Future<void> _deleteOrphanedEpisodes() async {

@@ -4,9 +4,9 @@
 
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
-import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/episode_details.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/action_text.dart';

@@ -176,7 +176,10 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
           dispose: (_, value) => value.dispose(),
         ),
         Provider<QueueBloc>(
-          create: (_) => QueueBloc(audioPlayerService: widget.audioPlayerService),
+          create: (_) => QueueBloc(
+            audioPlayerService: widget.audioPlayerService,
+            podcastService: widget.podcastService,
+          ),
           dispose: (_, value) => value.dispose(),
         )
       ],

@@ -3,16 +3,21 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/bloc.dart';
-import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 
 class QueueBloc extends Bloc {
   final AudioPlayerService audioPlayerService;
+  final PodcastService podcastService;
   final PublishSubject<QueueEvent> _queueEvent = PublishSubject<QueueEvent>();
 
-  QueueBloc({@required this.audioPlayerService}) {
+  QueueBloc({
+    @required this.audioPlayerService,
+    @required this.podcastService,
+  }) {
     _handleQueueEvents();
   }
 
@@ -26,11 +31,16 @@ class QueueBloc extends Bloc {
         await audioPlayerService.removeUpNextEpisode(e);
       } else if (event is QueueMoveEvent) {
         var e = event.episode;
-        await audioPlayerService.moveUpNextEpisode(
-            e, event.oldIndex, event.newIndex);
+        await audioPlayerService.moveUpNextEpisode(e, event.oldIndex, event.newIndex);
       } else if (event is QueueClearEvent) {
         await audioPlayerService.clearUpNext();
       }
+    });
+
+    audioPlayerService.queueState.debounceTime(Duration(seconds: 2)).listen((event) {
+      podcastService.saveQueue(event.queue).then((value) {
+        /// Queue saved.
+      });
     });
   }
 

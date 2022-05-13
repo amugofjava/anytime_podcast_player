@@ -61,6 +61,8 @@ abstract class PodcastService {
   Future<void> unsubscribe(Podcast podcast);
   Future<Podcast> save(Podcast podcast);
   Future<Episode> saveEpisode(Episode episode);
+  Future<void> saveQueue(List<Episode> episodes);
+  Future<List<Episode>> loadQueue();
 
   /// Event listeners
   Stream<Podcast> podcastListener;

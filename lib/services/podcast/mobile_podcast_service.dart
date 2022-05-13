@@ -364,6 +364,16 @@ class MobilePodcastService extends PodcastService {
     return repository.saveEpisode(episode);
   }
 
+  @override
+  Future<void> saveQueue(List<Episode> episodes) async {
+    await repository.saveQueue(episodes);
+  }
+
+  @override
+  Future<List<Episode>> loadQueue() async {
+    return await repository.loadQueue();
+  }
+
   /// Remove HTML padding from the content. The padding may look fine within
   /// the context of a browser, but can look out of place on a mobile screen.
   String _format(String input) {

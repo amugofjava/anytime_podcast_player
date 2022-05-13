@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/chapter.dart';
@@ -18,6 +17,7 @@ import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
@@ -87,6 +87,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _audioHandler = value;
       _initialised = true;
       _handleAudioServiceTransitions();
+      _loadQueue();
     });
   }
 
@@ -136,14 +137,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         await _saveCurrentEpisodePosition();
       }
 
-      // If we are attempting to play an episode that is also in the queue, remove it from the queue.
-      _queue.removeWhere((e) => episode.guid == e.guid);
-
       // If we have a queue, we are currently playing and the user has elected to play something new,
       // place the current episode at the top of the queue before moving on.
       if (_episode != null && _episode.guid != episode.guid && _queue.isNotEmpty) {
         _queue.insert(0, _episode);
       }
+
+      // If we are attempting to play an episode that is also in the queue, remove it from the queue.
+      _queue.removeWhere((e) => episode.guid == e.guid);
 
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
       _episode = episode;
@@ -404,6 +405,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           break;
       }
     });
+  }
+
+  Future<void> _loadQueue() async {
+    _queue = await podcastService.loadQueue();
   }
 
   Future<void> _completed() async {

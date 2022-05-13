@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:anytime/bloc/podcast/queue_event_state.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:flutter/cupertino.dart';
 
 enum AudioState {
