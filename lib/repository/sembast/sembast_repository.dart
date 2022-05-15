@@ -9,6 +9,7 @@ import 'package:anytime/entities/queue.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_database_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
@@ -23,6 +24,8 @@ class SembastRepository extends Repository {
   final _podcastStore = intMapStoreFactory.store('podcast');
   final _episodeStore = intMapStoreFactory.store('episode');
   final _queueStore = intMapStoreFactory.store('queue');
+
+  final _queueGuids = <String>[];
 
   DatabaseService _databaseService;
 
@@ -291,9 +294,15 @@ class SembastRepository extends Repository {
     if (episodes != null) {
       var guids = episodes.map((e) => e.guid).toList();
 
-      final queue = Queue(guids: guids);
+      /// Only bother saving if the queue has changed
+      if (!listEquals(guids, _queueGuids)) {
+        final queue = Queue(guids: guids);
 
-      await _queueStore.record(1).put(await _db, queue.toMap());
+        await _queueStore.record(1).put(await _db, queue.toMap());
+
+        _queueGuids.clear();
+        _queueGuids.addAll(guids);
+      }
     }
   }
 

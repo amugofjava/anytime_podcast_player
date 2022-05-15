@@ -31,15 +31,13 @@ ThemeData _buildLightTheme() {
     unselectedWidgetColor: Color(0x8a000000),
     disabledColor: Color(0x61000000),
     toggleableActiveColor: Color(0xfffb8c00),
-    //secondaryHeaderColor: Color(0xffff9800),
-    secondaryHeaderColor: Color(0xfff6f7f8),
+    secondaryHeaderColor: Color(0xffffcc80),
     backgroundColor: Color(0xffffffff),
     dialogBackgroundColor: Color(0xffffffff),
     indicatorColor: Colors.orange,
     hintColor: Color(0x8a000000),
     errorColor: Color(0xffd32f2f),
-    primaryTextTheme:
-        Typography.material2018(platform: TargetPlatform.android).black,
+    primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).black,
     textTheme: Typography.material2018(platform: TargetPlatform.android).black,
     primaryIconTheme: IconThemeData(color: Colors.grey[800]),
     buttonTheme: base.buttonTheme.copyWith(
@@ -102,8 +100,7 @@ ThemeData _buildDarktheme() {
     indicatorColor: Colors.orange,
     hintColor: Color(0x80ffffff),
     errorColor: Color(0xffd32f2f),
-    primaryTextTheme:
-        Typography.material2018(platform: TargetPlatform.android).white,
+    primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).white,
     textTheme: Typography.material2018(platform: TargetPlatform.android).white,
     primaryIconTheme: IconThemeData(color: Colors.white),
     iconTheme: base.iconTheme.copyWith(

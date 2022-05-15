@@ -51,9 +51,8 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     var popped = false;
 
     // If the episode finishes we can close.
-    playingStateSubscription = audioBloc.playingState
-        .where((state) => state == AudioState.stopped)
-        .listen((playingState) async {
+    playingStateSubscription =
+        audioBloc.playingState.where((state) => state == AudioState.stopped).listen((playingState) async {
       // Prevent responding to multiple stop events after we've popped and lost context.
       if (!popped) {
         Navigator.pop(context);
@@ -66,6 +65,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     playingStateSubscription.cancel();
+
     super.dispose();
   }
 
@@ -108,18 +108,13 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                       value: Theme.of(context)
                           .appBarTheme
                           .systemOverlayStyle
-                          .copyWith(
-                              systemNavigationBarColor:
-                                  Theme.of(context).secondaryHeaderColor),
+                          .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
                       child: Scaffold(
                         appBar: AppBar(
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                           elevation: 0.0,
                           leading: IconButton(
-                            tooltip: L
-                                .of(context)
-                                .minimise_player_window_button_label,
+                            tooltip: L.of(context).minimise_player_window_button_label,
                             icon: Icon(
                               Icons.keyboard_arrow_down,
                               color: Theme.of(context).primaryIconTheme.color,
@@ -257,8 +252,7 @@ class EpisodeTabBarView extends StatelessWidget {
                 textGroup: textGroup,
               );
             }),
-        NowPlayingShowNotes(
-            title: episode.title, description: episode.description),
+        NowPlayingShowNotes(title: episode.title, description: episode.description),
       ],
     );
   }
@@ -301,9 +295,7 @@ class NowPlayingEpisode extends StatelessWidget {
                             : DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
                             ? placeholderBuilder?.errorBuilder()(context)
-                            : Image(
-                                image: AssetImage(
-                                    'assets/images/anytime-placeholder-logo.png')),
+                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
                     Expanded(
@@ -332,9 +324,7 @@ class NowPlayingEpisode extends StatelessWidget {
                             : DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
                             ? placeholderBuilder?.errorBuilder()(context)
-                            : Image(
-                                image: AssetImage(
-                                    'assets/images/anytime-placeholder-logo.png')),
+                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
                     Expanded(

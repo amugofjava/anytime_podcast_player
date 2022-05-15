@@ -380,6 +380,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       switch (state.processingState) {
         case AudioProcessingState.idle:
           _playingState.add(AudioState.none);
+          _stopTicker();
           break;
         case AudioProcessingState.loading:
           _onLoadEpisode(state);

@@ -23,7 +23,7 @@ dependencies:
   flutter_slidable: ^1.2.0
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
-  just_audio: ^0.9.20
+  just_audio: ^0.9.21
   logging: ^1.0.2
   mp3_info: ^0.2.0
   path_provider: ^2.0.8
