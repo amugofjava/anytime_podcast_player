@@ -23,7 +23,7 @@ class PlayPauseButton extends StatelessWidget {
     return Semantics(
       label: '$label $title',
       child: CircularPercentIndicator(
-        radius: 38.0,
+        radius: 19.0,
         lineWidth: 1.5,
         backgroundColor: Theme.of(context).primaryColor,
         percent: 0.0,
@@ -62,7 +62,7 @@ class PlayPauseBusyButton extends StatelessWidget {
           child: Stack(
             children: <Widget>[
               CircularPercentIndicator(
-                radius: 38.0,
+                radius: 19.0,
                 lineWidth: 1.5,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 percent: 0.0,

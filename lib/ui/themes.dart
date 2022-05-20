@@ -34,7 +34,7 @@ ThemeData _buildLightTheme() {
     secondaryHeaderColor: Color(0xffffcc80),
     backgroundColor: Color(0xffffffff),
     dialogBackgroundColor: Color(0xffffffff),
-    indicatorColor: Colors.orange,
+    indicatorColor: Colors.blueAccent,
     hintColor: Color(0x8a000000),
     errorColor: Color(0xffd32f2f),
     primaryTextTheme: Typography.material2018(platform: TargetPlatform.android).black,

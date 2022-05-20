@@ -30,7 +30,7 @@ class DownloadButton extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         child: CircularPercentIndicator(
-          radius: 38.0,
+          radius: 19.0,
           lineWidth: 1.5,
           backgroundColor: Theme.of(context).primaryColor,
           progressColor: Theme.of(context).indicatorColor,

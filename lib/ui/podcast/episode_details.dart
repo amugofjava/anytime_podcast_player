@@ -48,13 +48,10 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       alignment: Alignment.bottomLeft,
                       fit: StackFit.passthrough,
                       children: <Widget>[
-                        Opacity(
-                          opacity: episode.played ? 0.5 : 1.0,
-                          child: TileImage(
-                            url: episode.thumbImageUrl ?? episode.imageUrl,
-                            size: 56.0,
-                            highlight: episode.highlight,
-                          ),
+                        TileImage(
+                          url: episode.thumbImageUrl ?? episode.imageUrl,
+                          size: 56.0,
+                          highlight: episode.highlight,
                         ),
                         SizedBox(
                           height: 5.0,
@@ -65,19 +62,13 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                         ),
                       ],
                     ),
-                    subtitle: Opacity(
-                      opacity: episode.played ? 0.5 : 1.0,
-                      child: EpisodeSubtitle(episode),
-                    ),
-                    title: Opacity(
-                      opacity: episode.played ? 0.5 : 1.0,
-                      child: Text(
-                        episode.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        softWrap: false,
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
+                    subtitle: EpisodeSubtitle(episode),
+                    title: Text(
+                      episode.title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      softWrap: false,
+                      style: Theme.of(context).textTheme.bodyText2,
                     )),
                 Divider(),
                 Padding(

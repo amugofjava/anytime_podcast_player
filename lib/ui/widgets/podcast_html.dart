@@ -26,7 +26,7 @@ class PodcastHtml extends StatelessWidget {
         )
       },
       tagsList: tagList,
-      onLinkTap: (url, _, __, ___) => canLaunch(url).then((value) => launch(url)),
+      onLinkTap: (url, _, __, ___) => canLaunchUrl(Uri.parse(url)).then((value) => launchUrl(Uri.parse(url))),
     );
   }
 }
