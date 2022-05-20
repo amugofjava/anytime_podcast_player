@@ -205,7 +205,7 @@ class DownloadControl extends StatelessWidget {
             return DownloadButton(
               onPressed: () => _showCancelDialog(context),
               title: episode.title,
-              icon: Icons.timer,
+              icon: Icons.timer_outlined,
               percent: 0,
               label: L.of(context).download_episode_button_label,
             );
@@ -213,7 +213,7 @@ class DownloadControl extends StatelessWidget {
             return DownloadButton(
               onPressed: () => _showCancelDialog(context),
               title: episode.title,
-              icon: Icons.timer,
+              icon: Icons.timer_outlined,
               percent: episode.downloadPercentage,
               label: L.of(context).download_episode_button_label,
             );

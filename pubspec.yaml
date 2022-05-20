@@ -27,12 +27,12 @@ dependencies:
   logging: ^1.0.2
   mp3_info: ^0.2.0
   path_provider: ^2.0.8
-  percent_indicator: ^4.2.2
+  percent_indicator: 4.0.1
   permission_handler: ^8.1.4+2
   podcast_search: ^0.5.1
   provider: ^6.0.2
   rxdart: ^0.27.3
-  scrollable_positioned_list: ^0.3.2
+  scrollable_positioned_list: ^0.2.3
   sembast: ^3.1.2
   share_plus: ^2.1.4
   shared_preferences: ^2.0.12
