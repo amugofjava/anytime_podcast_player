@@ -135,6 +135,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       if (currentState == AudioProcessingState.ready) {
         log.fine('We are currently playing a track. Save position');
         await _saveCurrentEpisodePosition();
+      } else if (currentState == AudioProcessingState.loading) {
+        log.fine('We are currently buffering. We should cancel first');
+        _audioHandler.stop();
       }
 
       // If we have a queue, we are currently playing and the user has elected to play something new,
@@ -155,9 +158,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _updateQueueState();
 
       try {
+        print('Calling play media item');
         await _audioHandler.playMediaItem(_episodeToMediaItem(_episode, uri));
+        print('And we are back');
 
         _episode.duration = _audioHandler.mediaItem.value.duration.inSeconds;
+        print('Set duration to ${_episode.duration}');
 
         await repository.saveEpisode(_episode);
       } catch (e) {
@@ -273,6 +279,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (_audioHandler != null) {
       if (_episode == null) {
         if (_audioHandler?.mediaItem?.value != null) {
+          var v = _audioHandler.mediaItem.value;
+          print('Resuming $v');
           _episode = await repository.findEpisodeById(int.parse(_audioHandler.mediaItem.value.id));
         } else {
           // Let's see if we have a persisted state
@@ -374,6 +382,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   void _handleAudioServiceTransitions() {
     _audioHandler.playbackState.distinct((previousState, currentState) {
+      print('New state transition ${previousState.processingState} -> ${currentState.processingState}');
+      print('New playing transition ${previousState.playing} -> ${currentState.playing}');
+
       return previousState.playing == currentState.playing &&
           previousState.processingState == currentState.processingState;
     }).listen((PlaybackState state) {
@@ -418,9 +429,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     log.fine('We have completed episode ${_episode?.title}');
 
     _stopTicker();
-
-    /// Test: Do we have another episode in the queue to play?
-    // _episode = null;
 
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
@@ -628,7 +636,11 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           ));
     }
 
-    _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
+    _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) {
+      print('ARGHHHHHHHHHH!');
+      print(o);
+      print(s);
+    });
 
     _handleQueueChangeState();
   }
@@ -648,19 +660,23 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     log.fine('loading new track ${mediaItem.id} - from position ${start.inSeconds} (${start.inMilliseconds})');
 
     if (downloaded) {
-      var source = AudioSource.uri(
-        Uri.parse("file://${mediaItem.id}"),
-        tag: mediaItem.id,
-      );
-
-      await _player.setAudioSource(source, initialPosition: start);
+      print('Playing from local storage');
     } else {
-      var source = AudioSource.uri(Uri.parse(mediaItem.id),
-          headers: <String, String>{
-            'User-Agent': Environment.userAgent(),
-          },
-          tag: mediaItem.id);
+      print('Streaming...');
+    }
 
+    var source = downloaded
+        ? AudioSource.uri(
+            Uri.parse("file://${mediaItem.id}"),
+            tag: mediaItem.id,
+          )
+        : AudioSource.uri(Uri.parse(mediaItem.id),
+            headers: <String, String>{
+              'User-Agent': Environment.userAgent(),
+            },
+            tag: mediaItem.id);
+
+    try {
       var duration = await _player.setAudioSource(source, initialPosition: start);
 
       /// If we don't already have a duration and we have been able to calculate it from
@@ -668,27 +684,38 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       if (duration != null && (_currentItem.duration == null || _currentItem.duration.inSeconds == 0)) {
         _currentItem = _currentItem.copyWith(duration: duration);
       }
-    }
 
-    if (_player.processingState != ProcessingState.idle) {
-      try {
-        if (_player.speed != playbackSpeed) {
-          await _player.setSpeed(playbackSpeed);
-        }
-
-        if (Platform.isAndroid) {
-          if (_player.skipSilenceEnabled != _trimSilence) {
-            await _player.setSkipSilenceEnabled(_trimSilence);
+      if (_player.processingState != ProcessingState.idle) {
+        try {
+          if (_player.speed != playbackSpeed) {
+            await _player.setSpeed(playbackSpeed);
           }
 
-          volumeBoost(boost);
-        }
+          if (Platform.isAndroid) {
+            if (_player.skipSilenceEnabled != _trimSilence) {
+              await _player.setSkipSilenceEnabled(_trimSilence);
+            }
 
-        _player.play();
-      } catch (e) {
-        log.fine('State error ${e.toString()}');
+            volumeBoost(boost);
+          }
+
+          _player.play();
+        } catch (e) {
+          log.fine('State error ${e.toString()}');
+        }
       }
+    } on PlayerException catch (e) {
+      await stop();
+      print(e);
+    } on PlayerInterruptedException catch (e) {
+      await stop();
+      print(e);
+    } catch (e) {
+      await stop();
+      print(e);
     }
+
+    print('Set audio source - OK');
 
     super.mediaItem.add(_currentItem);
   }

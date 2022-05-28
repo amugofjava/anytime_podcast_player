@@ -51,6 +51,7 @@ abstract class PodcastService {
   });
 
   Future<List<Episode>> loadDownloads();
+  Future<List<Episode>> loadEpisodes();
 
   Future<List<Chapter>> loadChaptersByUrl({@required String url});
 

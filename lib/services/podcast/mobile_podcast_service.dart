@@ -281,6 +281,11 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<List<Episode>> loadEpisodes() async {
+    return repository.findAllEpisodes();
+  }
+
+  @override
   Future<void> deleteDownload(Episode episode) async {
     // If this episode is currently downloading, cancel the download first.
     if (episode.downloadPercentage < 100) {
