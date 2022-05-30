@@ -160,9 +160,10 @@ class FundingLink {
 
     if (consent) {
       result = true;
+      final uri = Uri.parse(url);
 
       unawaited(
-        canLaunch(url).then((value) => launch(url)),
+        canLaunchUrl(uri).then((value) => launchUrl(uri)),
       );
     } else {
       result = await showPlatformDialog<bool>(
@@ -194,8 +195,10 @@ class FundingLink {
       );
 
       if (result) {
+        var uri = Uri.parse(url);
+
         unawaited(
-          canLaunch(url).then((value) => launch(url)),
+          canLaunchUrl(uri).then((value) => launchUrl(uri)),
         );
       }
     }

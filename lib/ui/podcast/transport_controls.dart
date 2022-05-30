@@ -139,7 +139,11 @@ class PlayControl extends StatelessWidget {
     if (settings.autoOpenNowPlaying) {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: false),
+        MaterialPageRoute<void>(
+          builder: (context) => NowPlaying(),
+          settings: RouteSettings(name: 'nowplaying'),
+          fullscreenDialog: false,
+        ),
       );
     }
   }

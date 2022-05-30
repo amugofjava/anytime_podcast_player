@@ -94,7 +94,6 @@ class EpisodeBloc extends Bloc {
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {
-    print('LOAD DOWNLOADS');
     if (!silent) {
       yield BlocLoadingState();
     }
@@ -105,7 +104,6 @@ class EpisodeBloc extends Bloc {
   }
 
   Stream<BlocState<List<Episode>>> _loadEpisodes(bool silent) async* {
-    print('LOAD EPISODES');
     if (!silent) {
       yield BlocLoadingState();
     }

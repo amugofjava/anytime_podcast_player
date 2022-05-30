@@ -67,6 +67,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute<void>(
+                      settings: RouteSettings(name: 'opmlimport'),
                       builder: (context) => OPMLImport(file: file.path),
                       fullscreenDialog: true,
                     ),

@@ -26,12 +26,14 @@ class EpisodeTile extends StatelessWidget {
   final Episode episode;
   final bool download;
   final bool play;
+  final bool playing;
   final bool queued;
 
   const EpisodeTile({
     @required this.episode,
     @required this.download,
     @required this.play,
+    this.playing = false,
     this.queued = false,
   });
 
@@ -180,13 +182,15 @@ class EpisodeTile extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
                   ),
-                  onPressed: () {
-                    if (queued) {
-                      queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
-                    } else {
-                      queueBloc.queueEvent(QueueAddEvent(episode: episode));
-                    }
-                  },
+                  onPressed: playing
+                      ? null
+                      : () {
+                          if (queued) {
+                            queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
+                          } else {
+                            queueBloc.queueEvent(QueueAddEvent(episode: episode));
+                          }
+                        },
                   child: Column(
                     children: <Widget>[
                       Icon(

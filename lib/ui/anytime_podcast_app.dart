@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/api/podcast/mobile_podcast_api.dart';
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
@@ -14,8 +16,10 @@ import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
 import 'package:anytime/core/environment.dart';
+import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/navigation/navigation_route_observer.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -44,6 +48,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 var theme = Themes.lightTheme().themeData;
@@ -186,6 +191,7 @@ class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Anytime Podcast Player',
+        navigatorObservers: [NavigationRouteObserver()],
         localizationsDelegates: [
           const LocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
@@ -208,14 +214,21 @@ class AnytimeHomePage extends StatefulWidget {
   final bool topBarVisible;
   final bool inlineSearch;
 
-  AnytimeHomePage({this.title, this.topBarVisible = true, this.inlineSearch = false});
+  AnytimeHomePage({
+    this.title,
+    this.topBarVisible = true,
+    this.inlineSearch = false,
+  });
 
   @override
   _AnytimeHomePageState createState() => _AnytimeHomePageState();
 }
 
 class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingObserver {
+  StreamSubscription deepLinkSubscription;
+
   final log = Logger('_AnytimeHomePageState');
+  bool handledInitialLink = false;
   Widget library;
 
   @override
@@ -227,12 +240,75 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     WidgetsBinding.instance.addObserver(this);
 
     audioBloc.transitionLifecycleState(LifecyleState.resume);
+
+    /// Handle deep links
+    _setupLinkListener();
+  }
+
+  /// We listen to external links from outside the app. For example, someone may navigate
+  /// to a web page that supports 'Open with Anytime'.
+  void _setupLinkListener() async {
+    /// First, setup a handler to listen for links whilst Anytime is running - a warm start
+    deepLinkSubscription = uriLinkStream.listen((uri) async {
+      _handleLinkEvent(uri);
+    });
+
+    /// Handle initial link
+    if (!handledInitialLink) {
+      handledInitialLink = true;
+
+      final uri = await getInitialUri();
+
+      if (uri != null) {
+        _handleLinkEvent(uri);
+      }
+    }
+  }
+
+  /// This method handles the actual link supplied from [uni_links], either
+  /// at app startup or during running.
+  void _handleLinkEvent(Uri uri) async {
+    if (uri.scheme == 'anytime-subscribe' && uri.query.startsWith('uri=')) {
+      var path = uri.query.substring(4);
+      var loadPodcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+      var routeName = NavigationRouteObserver().top.settings?.name;
+
+      /// If we are currently on the podcast details page, we can simply request (via
+      /// the BLoC) that we load this new URL. If not, we pop the stack until we are
+      /// back at root and then load the podcast details page.
+      if (routeName != null && routeName == 'podcastdetails') {
+        loadPodcastBloc.load(Feed(
+          podcast: Podcast.fromUrl(url: path),
+          backgroundFresh: false,
+          silently: false,
+        ));
+      } else {
+        /// Pop back to route.
+        Navigator.of(context).popUntil((route) {
+          var currentRouteName = NavigationRouteObserver().top.settings.name;
+
+          return currentRouteName == null || currentRouteName == '' || currentRouteName == '/';
+        });
+
+        /// Once we have reached the root route, push podcast details.
+        await Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+              fullscreenDialog: true,
+              settings: RouteSettings(name: 'podcastdetails'),
+              builder: (context) => PodcastDetails(Podcast.fromUrl(url: path), loadPodcastBloc)),
+        );
+      }
+    }
   }
 
   @override
   void dispose() {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     audioBloc.transitionLifecycleState(LifecyleState.pause);
+
+    deepLinkSubscription?.cancel();
+
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -283,7 +359,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           onPressed: () async {
                             await Navigator.push(
                               context,
-                              SlideRightRoute(widget: Search()),
+                              SlideRightRoute(
+                                widget: Search(),
+                                settings: RouteSettings(name: 'search'),
+                              ),
                             );
                           },
                         ),
@@ -414,7 +493,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       case 'settings':
         await Navigator.push(
           context,
-          MaterialPageRoute<void>(builder: (context) => Settings()),
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: 'settings'),
+            builder: (context) => Settings(),
+          ),
         );
         break;
       case 'rss':
@@ -450,6 +532,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
+                        settings: RouteSettings(name: 'podcastdetails'),
                         builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
                   ).then((value) => Navigator.pop(context));
                 },
@@ -462,11 +545,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _launchEmail() async {
-    const url = 'mailto:hello@anytimeplayer.app';
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse('mailto:hello@anytimeplayer.app');
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $uri';
     }
   }
 }

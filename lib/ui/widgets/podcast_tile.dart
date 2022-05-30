@@ -29,7 +29,9 @@ class PodcastTile extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute<void>(builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+                MaterialPageRoute<void>(
+                    settings: RouteSettings(name: 'podcastdetails'),
+                    builder: (context) => PodcastDetails(podcast, _podcastBloc)),
               );
             },
             leading: Hero(

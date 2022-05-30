@@ -420,10 +420,12 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
   }
 
   void _chapterLink(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
+    final uri = Uri.parse(url);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch chapter link: $url';
     }
   }
 }

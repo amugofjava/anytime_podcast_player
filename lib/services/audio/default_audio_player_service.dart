@@ -112,7 +112,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (episode.guid != '' && _initialised) {
       var uri = await _generateEpisodeUri(episode);
 
-      _episodeEvent.sink.add(episode);
       _playingState.add(AudioState.buffering);
 
       log.info('Playing episode ${episode?.id} - ${episode?.title} from position ${episode.position}');
@@ -158,12 +157,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _updateQueueState();
 
       try {
-        print('Calling play media item');
         await _audioHandler.playMediaItem(_episodeToMediaItem(_episode, uri));
-        print('And we are back');
 
         _episode.duration = _audioHandler.mediaItem.value.duration.inSeconds;
-        print('Set duration to ${_episode.duration}');
 
         await repository.saveEpisode(_episode);
       } catch (e) {
@@ -279,8 +275,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (_audioHandler != null) {
       if (_episode == null) {
         if (_audioHandler?.mediaItem?.value != null) {
-          var v = _audioHandler.mediaItem.value;
-          print('Resuming $v');
           _episode = await repository.findEpisodeById(int.parse(_audioHandler.mediaItem.value.id));
         } else {
           // Let's see if we have a persisted state
@@ -382,9 +376,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   void _handleAudioServiceTransitions() {
     _audioHandler.playbackState.distinct((previousState, currentState) {
-      print('New state transition ${previousState.processingState} -> ${currentState.processingState}');
-      print('New playing transition ${previousState.playing} -> ${currentState.playing}');
-
       return previousState.playing == currentState.playing &&
           previousState.processingState == currentState.processingState;
     }).listen((PlaybackState state) {
@@ -636,10 +627,8 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           ));
     }
 
-    _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) {
-      print('ARGHHHHHHHHHH!');
-      print(o);
-      print(s);
+    _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) async {
+      await _player.stop();
     });
 
     _handleQueueChangeState();
@@ -658,12 +647,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     // var trim = mediaItem.extras['trim'] as bool ?? true;
 
     log.fine('loading new track ${mediaItem.id} - from position ${start.inSeconds} (${start.inMilliseconds})');
-
-    if (downloaded) {
-      print('Playing from local storage');
-    } else {
-      print('Streaming...');
-    }
 
     var source = downloaded
         ? AudioSource.uri(
@@ -706,16 +689,14 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       }
     } on PlayerException catch (e) {
       await stop();
-      print(e);
+      log.fine(e);
     } on PlayerInterruptedException catch (e) {
       await stop();
-      print(e);
+      log.fine(e);
     } catch (e) {
       await stop();
-      print(e);
+      log.fine(e);
     }
-
-    print('Set audio source - OK');
 
     super.mediaItem.add(_currentItem);
   }

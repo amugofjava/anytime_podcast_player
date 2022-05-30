@@ -46,7 +46,12 @@ class _SearchBarState extends State<SearchBar> {
             fontSize: 18.0,
             decorationColor: Theme.of(context).scaffoldBackgroundColor),
         onSubmitted: (value) async {
-          await Navigator.push(context, SlideRightRoute(widget: Search(searchTerm: value)));
+          await Navigator.push(
+              context,
+              SlideRightRoute(
+                widget: Search(searchTerm: value),
+                settings: RouteSettings(name: 'search'),
+              ));
           _searchController.clear();
         },
       ),

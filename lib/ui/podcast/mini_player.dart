@@ -88,7 +88,11 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
           return Navigator.push(
             context,
-            MaterialPageRoute<void>(builder: (context) => NowPlaying(), fullscreenDialog: true),
+            MaterialPageRoute<void>(
+              builder: (context) => NowPlaying(),
+              settings: RouteSettings(name: 'nowplaying'),
+              fullscreenDialog: true,
+            ),
           ).then((value) {
             _audioStateListener();
           });
