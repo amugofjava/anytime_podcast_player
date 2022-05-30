@@ -69,8 +69,11 @@
           <string>uk.me.amugofjava.anytime</string>
           <key>CFBundleURLSchemes</key>
           <array>
-            <string>anytime-subscribe://subscribe</string>
+            <string>anytime-subscribe</string>
           </array>
         </dict>
+      </array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
