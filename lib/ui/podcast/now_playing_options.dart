@@ -187,7 +187,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                               )
                             : Expanded(
                                 child: ReorderableListView.builder(
-                                  buildDefaultDragHandles: false,
+                                  /// Temp set to true to get over Flutter 3 drag bug. Downside is that
+                                  /// drag start is via a long press. Hopefully this will be fixed soon.
+                                  buildDefaultDragHandles: true,
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(8),
                                   itemCount: snapshot.hasData ? snapshot.data.queue.length : 0,
