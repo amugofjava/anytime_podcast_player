@@ -309,6 +309,13 @@ class SembastRepository extends Repository {
   @override
   Future<void> saveQueue(List<Episode> episodes) async {
     if (episodes != null) {
+      /// Check to see if we have any ad-hoc episodes and save them first
+      for (var e in episodes) {
+        if (e.pguid == null || e.pguid.isEmpty) {
+          _saveEpisode(e, false);
+        }
+      }
+
       var guids = episodes.map((e) => e.guid).toList();
 
       /// Only bother saving if the queue has changed

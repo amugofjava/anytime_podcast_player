@@ -314,6 +314,172 @@ void main() {
 
       expect(podcast3.subscribed, true);
     });
+
+    test('Fetch all episodes for all podcasts', () async {
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'P01EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'P01EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'P01EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: DateTime.now()),
+      ];
+
+      podcast2.episodes = <Episode>[
+        Episode(
+            guid: 'P02EP001',
+            title: 'Episode 1',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'P02EP002',
+            title: 'Episode 2',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
+        Episode(
+            guid: 'P02EP003',
+            title: 'Episode 3',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now()),
+      ];
+
+      await persistenceService.savePodcast(podcast1);
+      await persistenceService.savePodcast(podcast2);
+
+      var episodes = await persistenceService.findAllEpisodes();
+
+      expect(episodes.length, 6);
+    });
+
+    test('Delete all episodes for a podcast', () async {
+      /// Save > 100 episodes (to test chunking)
+      var episodes = <Episode>[];
+
+      for (var x = 0; x < 150; x++) {
+        episodes.add(Episode(
+            guid: 'P01EP$x',
+            title: 'Episode $x',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: DateTime.now()));
+      }
+
+      podcast1.episodes = episodes;
+
+      await persistenceService.savePodcast(podcast1);
+
+      var e = await persistenceService.findAllEpisodes();
+
+      expect(e.length, 150);
+
+      await persistenceService.deleteEpisodes(episodes);
+    });
+
+    test('Queue handling - existing episodes', () async {
+      var p1e1 = Episode(
+          guid: 'P01EP01',
+          title: 'Episode 1',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p1e2 = Episode(
+          guid: 'P01EP02',
+          title: 'Episode 2',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p2e1 = Episode(
+          guid: 'P02EP01',
+          title: 'Episode 1',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p2e2 = Episode(
+          guid: 'P02EP02',
+          title: 'Episode 2',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      podcast1.episodes = [p1e1, p1e2];
+      podcast2.episodes = [p2e1, p2e2];
+
+      await persistenceService.savePodcast(podcast1);
+      await persistenceService.savePodcast(podcast2);
+
+      var queue = <Episode>[p1e1, p1e2, p2e1, p2e2];
+
+      await persistenceService.saveQueue(queue);
+
+      var fetchedQueue = await persistenceService.loadQueue();
+
+      expect(listEquals(queue, fetchedQueue), true);
+    });
+
+    test('Queue handling - ad-hoc episodes', () async {
+      var p1e1 = Episode(
+          guid: 'P01EP01',
+          title: 'Episode 1',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p1e2 = Episode(
+          guid: 'P01EP02',
+          title: 'Episode 2',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p2e1 = Episode(
+          guid: 'P02EP01',
+          title: 'Episode 1',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var p2e2 = Episode(
+          guid: 'P02EP02',
+          title: 'Episode 2',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now());
+
+      var adhoc =
+          Episode(guid: 'A01EP01', title: 'Episode 1', podcast: podcast1.title, publicationDate: DateTime.now());
+
+      podcast1.episodes = [p1e1, p1e2];
+      podcast2.episodes = [p2e1, p2e2];
+
+      await persistenceService.savePodcast(podcast1);
+      await persistenceService.savePodcast(podcast2);
+
+      var queue = <Episode>[p1e1, p1e2, p2e1, p2e2, adhoc];
+
+      await persistenceService.saveQueue(queue);
+
+      var fetchedQueue = await persistenceService.loadQueue();
+
+      expect(listEquals(queue, fetchedQueue), true);
+    });
   });
 
   group('Saving, updating and retrieving downloaded episodes', () {
@@ -462,13 +628,15 @@ void main() {
       episode2.downloadPercentage = 95;
       episode2.downloadState = DownloadState.downloading;
 
-      await persistenceService.saveEpisode(episode1);
-      await persistenceService.saveEpisode(episode2);
+      var episode1Comp = await persistenceService.saveEpisode(episode1);
+      var episode2Comp = await persistenceService.saveEpisode(episode2);
 
       var downloaded = <Episode>[episode1];
       var singleDownload = await persistenceService.findDownloads();
 
       expect(listEquals(singleDownload, downloaded), true);
+      expect(episode1Comp, episode1);
+      expect(episode2Comp, episode2);
     });
 
     test('Test download state', () async {
