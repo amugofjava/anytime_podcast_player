@@ -436,11 +436,12 @@ void main() {
 
     test('Queue handling - ad-hoc episodes', () async {
       var p1e1 = Episode(
-          guid: 'P01EP01',
-          title: 'Episode 1',
-          pguid: podcast1.guid,
-          podcast: podcast1.title,
-          publicationDate: DateTime.now());
+        guid: 'P01EP01',
+        title: 'Episode 1',
+        pguid: podcast1.guid,
+        podcast: podcast1.title,
+        publicationDate: DateTime.now(),
+      );
 
       var p1e2 = Episode(
           guid: 'P01EP02',
@@ -450,21 +451,28 @@ void main() {
           publicationDate: DateTime.now());
 
       var p2e1 = Episode(
-          guid: 'P02EP01',
-          title: 'Episode 1',
-          pguid: podcast1.guid,
-          podcast: podcast1.title,
-          publicationDate: DateTime.now());
+        guid: 'P02EP01',
+        title: 'Episode 1',
+        pguid: podcast1.guid,
+        podcast: podcast1.title,
+        publicationDate: DateTime.now(),
+      );
 
       var p2e2 = Episode(
-          guid: 'P02EP02',
-          title: 'Episode 2',
-          pguid: podcast1.guid,
-          podcast: podcast1.title,
-          publicationDate: DateTime.now());
+        guid: 'P02EP02',
+        title: 'Episode 2',
+        pguid: podcast1.guid,
+        podcast: podcast1.title,
+        publicationDate: DateTime.now(),
+      );
 
-      var adhoc =
-          Episode(guid: 'A01EP01', title: 'Episode 1', podcast: podcast1.title, publicationDate: DateTime.now());
+      var adhoc = Episode(
+        pguid: '',
+        guid: 'A01EP01',
+        title: 'Episode 1',
+        podcast: podcast1.title,
+        publicationDate: DateTime.now(),
+      );
 
       podcast1.episodes = [p1e1, p1e2];
       podcast2.episodes = [p2e1, p2e2];

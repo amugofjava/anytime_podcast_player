@@ -74,6 +74,14 @@ If running from Android Studio, add the following to the command line arguments 
 Ensure there are is only a single space between each argument. I have found that an additional space between any
 of the arguments will prevent them from being passed into Flutter correctly.
 
+## Open with Anytime links
+
+Anytime supports deep linking from websites, allowing you to open a podcast within Anytime from a web url. To open a feed
+within Anytime, you create a link to the Anytime website passing in the URL of the feed you
+wish to open. For example: to load a feed in Anytime from www.example.com you would use the following link:
+
+https://anytimeplayer.app/subscribe?url=www.example.com/myfeed.xml
+
 ## Built With
 
 Anytime makes use of several amazing packages available on [pub.dev](https://pub.dev). Below is a list of the packages that
