@@ -273,9 +273,16 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<Episode> resume() async {
     if (_audioHandler != null) {
+      /// If _episode is null, we must have stopped whilst still active or we were killed.
       if (_episode == null) {
         if (_audioHandler?.mediaItem?.value != null) {
-          _episode = await repository.findEpisodeById(int.parse(_audioHandler.mediaItem.value.id));
+          final extras = _audioHandler.mediaItem.value.extras;
+
+          if (extras['eid'] != null) {
+            print('Restoring episode ${extras['eid']}');
+
+            _episode = await repository.findEpisodeByGuid(extras['eid'] as String);
+          }
         } else {
           // Let's see if we have a persisted state
           var ps = await PersistentState.fetchState();
@@ -284,17 +291,21 @@ class DefaultAudioPlayerService extends AudioPlayerService {
             _episode = await repository.findEpisodeById(ps.episodeId);
             _episode.position = ps.position;
             _playingState.add(AudioState.pausing);
+
             updateCurrentPosition(_episode);
+
             _cold = true;
           }
         }
       } else {
-        var playbackState = _audioHandler.playbackState.value;
-
+        final playbackState = _audioHandler.playbackState.value;
         final basicState = playbackState?.processingState ?? AudioProcessingState.idle;
 
         // If we have no state we'll have to assume we stopped whilst suspended.
-        if (basicState != AudioProcessingState.idle) {
+        if (basicState == AudioProcessingState.idle) {
+          /// We will have to assume we have stopped.
+          _playingState.add(AudioState.stopped);
+        } else if (basicState == AudioProcessingState.ready) {
           _startTicker();
         }
       }
