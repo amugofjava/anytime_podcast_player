@@ -31,7 +31,7 @@ ThemeData _buildLightTheme() {
     unselectedWidgetColor: Color(0x8a000000),
     disabledColor: Color(0x61000000),
     toggleableActiveColor: Color(0xfffb8c00),
-    secondaryHeaderColor: Color(0xffffcc80),
+    secondaryHeaderColor: Color(0xffffffff),
     backgroundColor: Color(0xffffffff),
     dialogBackgroundColor: Color(0xffffffff),
     indicatorColor: Colors.blueAccent,

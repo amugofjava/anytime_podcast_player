@@ -6,6 +6,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/draggable_episode_tile.dart';
+import 'package:anytime/ui/widgets/slider_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,8 @@ class NowPlayingOptionsSelector extends StatefulWidget {
   _NowPlayingOptionsSelectorState createState() => _NowPlayingOptionsSelectorState();
 }
 
+/// This class places a draggable scrollable sheet at the bottom of the page. Dragging the
+/// sheep up will display additional options for playback which initially is the queue.
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   bool showContainer = false;
   double o = 0.0;
@@ -37,6 +40,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
       initialChildSize: minSize,
       minChildSize: minSize,
       maxChildSize: maxSize,
+      // Why does enabling snap stop the slider working altogether?
       // snap: true,
       // snapSizes: [minSize, maxSize],
       builder: (BuildContext context, ScrollController scrollController) {
@@ -45,6 +49,10 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
           child: Material(
             color: theme.secondaryHeaderColor,
             shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).highlightColor,
+                width: 1.0,
+              ),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(18.0),
                 topRight: Radius.circular(18.0),
@@ -57,17 +65,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      width: 36,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                      ),
-                    ),
-                  ),
+                  SliderHandle(),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Text(
@@ -227,22 +225,6 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
           ),
         );
       },
-    );
-  }
-}
-
-class NowPlayingOptionsPadding extends StatelessWidget {
-  const NowPlayingOptionsPadding({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    // const minHeight = kToolbarHeight;
-    // final windowHeight = MediaQuery.of(context).size.height - minHeight;
-    // final minSize = minHeight / windowHeight;
-    // final maxSize = 0.95;
-
-    return SizedBox(
-      height: 44.0,
     );
   }
 }

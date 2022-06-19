@@ -42,6 +42,9 @@ class AppSettings {
   /// If true, volume is boosted. Currently Android only.
   final bool volumeBoost;
 
+  /// If 0, list view; else grid view
+  final int layout;
+
   AppSettings({
     @required this.theme,
     @required this.markDeletedEpisodesAsPlayed,
@@ -55,6 +58,7 @@ class AppSettings {
     @required this.autoUpdateEpisodePeriod,
     @required this.trimSilence,
     @required this.volumeBoost,
+    @required this.layout,
   });
 
   AppSettings.sensibleDefaults()
@@ -69,5 +73,6 @@ class AppSettings {
         showFunding = true,
         autoUpdateEpisodePeriod = -1,
         trimSilence = false,
-        volumeBoost = false;
+        volumeBoost = false,
+        layout = 0;
 }

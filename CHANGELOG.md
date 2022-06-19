@@ -1,3 +1,9 @@
+## 1.2.0
+
+- Add queue support.
+- Add grid layout view to podcast, discovery and search pages.
+- Bug fixes.
+
 ## 1.1.0+62
 
 - Re-work the speed selector control to make it easier to use and add additional audio effects (Android only).

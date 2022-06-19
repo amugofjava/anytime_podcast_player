@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.2.0+71
+version: 1.2.0+72
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -11,7 +11,7 @@ dependencies:
   auto_size_text: ^3.0.0
   audio_service: ^0.18.4
   audio_session: ^0.1.7
-  connectivity_plus: ^2.3.3
+  connectivity_plus: ^2.3.4
   cupertino_icons: ^1.0.4
   device_info_plus: ^3.2.1
   extended_image: ^6.2.1
@@ -33,7 +33,7 @@ dependencies:
   rxdart: ^0.27.4
   scrollable_positioned_list: ^0.3.2
   sembast: ^3.1.2
-  share_plus: ^4.0.7
+  share_plus: ^4.0.8
   shared_preferences: ^2.0.12
   uni_links: ^0.5.1
   url_launcher: ^6.1.3

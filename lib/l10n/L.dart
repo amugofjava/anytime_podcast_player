@@ -1007,6 +1007,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get layout_label {
+    return message('layout_label') ??
+        Intl.message(
+          'Layout',
+          name: 'layout_label',
+          desc: 'Layout menu label',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

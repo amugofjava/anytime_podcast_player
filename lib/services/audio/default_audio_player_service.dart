@@ -279,8 +279,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           final extras = _audioHandler.mediaItem.value.extras;
 
           if (extras['eid'] != null) {
-            print('Restoring episode ${extras['eid']}');
-
             _episode = await repository.findEpisodeByGuid(extras['eid'] as String);
           }
         } else {

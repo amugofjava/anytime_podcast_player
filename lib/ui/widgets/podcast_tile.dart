@@ -20,40 +20,32 @@ class PodcastTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final _podcastBloc = Provider.of<PodcastBloc>(context);
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                    settings: RouteSettings(name: 'podcastdetails'),
-                    builder: (context) => PodcastDetails(podcast, _podcastBloc)),
-              );
-            },
-            leading: Hero(
-              key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
-              tag: '${podcast.imageUrl}:${podcast.link}',
-              child: TileImage(
-                url: podcast.imageUrl,
-                size: 60,
-              ),
-            ),
-            title: Text(
-              podcast.title,
-              maxLines: 1,
-            ),
-            subtitle: Text(
-              podcast.copyright ?? '',
-              maxLines: 2,
-            ),
-            isThreeLine: false,
-          ),
-        ],
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+              settings: RouteSettings(name: 'podcastdetails'),
+              builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+        );
+      },
+      leading: Hero(
+        key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
+        tag: '${podcast.imageUrl}:${podcast.link}',
+        child: TileImage(
+          url: podcast.imageUrl,
+          size: 60,
+        ),
       ),
+      title: Text(
+        podcast.title,
+        maxLines: 1,
+      ),
+      subtitle: Text(
+        podcast.copyright ?? '',
+        maxLines: 2,
+      ),
+      isThreeLine: false,
     );
   }
 }

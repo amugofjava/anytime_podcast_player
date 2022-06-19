@@ -30,7 +30,6 @@ class DiscoveryResults extends StatelessWidget {
         if (state is DiscoveryPopulatedState) {
           if (inlineSearch) return PodcastListWithSearchBar(results: state.results as search.SearchResult);
           return PodcastList(results: state.results as search.SearchResult);
-          // return DiscoveryHeader(results: state.results as search.SearchResult);
         } else {
           if (state is DiscoveryLoadingState) {
             return SliverFillRemaining(

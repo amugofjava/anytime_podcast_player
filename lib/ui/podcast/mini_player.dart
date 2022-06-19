@@ -223,26 +223,28 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
   /// the controller to the correct state without animating. This feels a little hacky, but stops the UI from looking a
   /// little odd.
   void _audioStateListener() {
-    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    var firstEvent = true;
+    if (mounted) {
+      final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+      var firstEvent = true;
 
-    _audioStateSubscription = audioBloc.playingState.listen((event) {
-      if (event == AudioState.playing || event == AudioState.buffering) {
-        if (firstEvent) {
-          _playPauseController.value = 1;
-          firstEvent = false;
+      _audioStateSubscription = audioBloc.playingState.listen((event) {
+        if (event == AudioState.playing || event == AudioState.buffering) {
+          if (firstEvent) {
+            _playPauseController.value = 1;
+            firstEvent = false;
+          } else {
+            _playPauseController.forward();
+          }
         } else {
-          _playPauseController.forward();
+          if (firstEvent) {
+            _playPauseController.value = 0;
+            firstEvent = false;
+          } else {
+            _playPauseController.reverse();
+          }
         }
-      } else {
-        if (firstEvent) {
-          _playPauseController.value = 0;
-          firstEvent = false;
-        } else {
-          _playPauseController.reverse();
-        }
-      }
-    });
+      });
+    }
   }
 
   void _play(AudioBloc audioBloc) {

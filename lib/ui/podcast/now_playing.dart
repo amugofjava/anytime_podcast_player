@@ -148,7 +148,9 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                     height: 148.0,
                                     child: NowPlayingTransport(),
                                   ),
-                            NowPlayingOptionsPadding(),
+                            SizedBox(
+                              height: 48.0,
+                            ),
                           ],
                         ),
                       ),

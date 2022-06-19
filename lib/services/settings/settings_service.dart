@@ -48,4 +48,8 @@ abstract class SettingsService {
   set volumeBoost(bool boost);
 
   bool get volumeBoost;
+
+  set layoutMode(int mode);
+
+  int get layoutMode;
 }

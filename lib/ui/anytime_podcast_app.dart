@@ -41,6 +41,7 @@ import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
+import 'package:anytime/ui/widgets/layout_selector.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -376,18 +377,57 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                             return <PopupMenuEntry<String>>[
                               PopupMenuItem<String>(
                                 textStyle: Theme.of(context).textTheme.subtitle1,
+                                value: 'layout',
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.dashboard, size: 18.0),
+                                    ),
+                                    Text(L.of(context).layout_label),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: Theme.of(context).textTheme.subtitle1,
                                 value: 'rss',
-                                child: Text(L.of(context).add_rss_feed_option),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.rss_feed, size: 18.0),
+                                    ),
+                                    Text(L.of(context).add_rss_feed_option),
+                                  ],
+                                ),
                               ),
                               PopupMenuItem<String>(
                                 textStyle: Theme.of(context).textTheme.subtitle1,
                                 value: 'settings',
-                                child: Text(L.of(context).settings_label),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.settings, size: 18.0),
+                                    ),
+                                    Text(L.of(context).settings_label),
+                                  ],
+                                ),
                               ),
                               PopupMenuItem<String>(
                                 textStyle: Theme.of(context).textTheme.subtitle1,
                                 value: 'about',
-                                child: Text(L.of(context).about_label),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.info_outline, size: 18.0),
+                                    ),
+                                    Text(L.of(context).about_label),
+                                  ],
+                                ),
                               ),
                             ];
                           },
@@ -461,6 +501,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   void _menuSelect(String choice) async {
     var _textFieldController = TextEditingController();
     var _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final _theme = Theme.of(context);
     var url = '';
 
     switch (choice) {
@@ -497,6 +538,19 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             settings: RouteSettings(name: 'settings'),
             builder: (context) => Settings(),
           ),
+        );
+        break;
+      case 'layout':
+        await showModalBottomSheet<void>(
+          context: context,
+          backgroundColor: _theme.secondaryHeaderColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
+          ),
+          builder: (context) => LayoutSelectorWidget(),
         );
         break;
       case 'rss':

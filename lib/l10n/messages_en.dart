@@ -55,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "fast_forward_button_label": MessageLookupByLibrary.simpleMessage("Fast-forward episode 30 seconds"),
         "go_back_button_label": MessageLookupByLibrary.simpleMessage("Go Back"),
         "label_opml_importing": MessageLookupByLibrary.simpleMessage("Importing"),
+        "layout_label": MessageLookupByLibrary.simpleMessage("Layout"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
         "mark_episodes_not_played_label": MessageLookupByLibrary.simpleMessage("Mark all episodes as not played"),
         "mark_episodes_played_label": MessageLookupByLibrary.simpleMessage("Mark all episodes as played"),

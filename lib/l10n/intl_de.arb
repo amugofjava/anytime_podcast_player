@@ -588,5 +588,12 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "layout_label": "Layout",
+  "@layout_label": {
+    "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   }
 }

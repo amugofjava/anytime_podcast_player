@@ -136,5 +136,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set layoutMode(int mode) {
+    _sharedPreferences.setInt('layout', mode);
+  }
+
+  @override
+  int get layoutMode {
+    return _sharedPreferences.getInt('layout') ?? 0;
+  }
+
+  @override
   AppSettings settings;
 }
