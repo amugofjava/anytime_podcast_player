@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 /// currently Android only.
 class SpeedSelectorWidget extends StatefulWidget {
   @override
-  _SpeedSelectorWidgetState createState() => _SpeedSelectorWidgetState();
+  State<SpeedSelectorWidget> createState() => _SpeedSelectorWidgetState();
 }
 
 class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
@@ -83,7 +83,7 @@ class SpeedSlider extends StatefulWidget {
   const SpeedSlider({Key key}) : super(key: key);
 
   @override
-  _SpeedSliderState createState() => _SpeedSliderState();
+  State<SpeedSlider> createState() => _SpeedSliderState();
 }
 
 class _SpeedSliderState extends State<SpeedSlider> {

@@ -35,7 +35,7 @@ import 'package:provider/provider.dart';
 /// is in preparation for the iOS version.
 class Settings extends StatefulWidget {
   @override
-  _SettingsState createState() => _SettingsState();
+  State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {

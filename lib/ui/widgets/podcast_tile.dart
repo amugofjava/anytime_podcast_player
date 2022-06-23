@@ -18,7 +18,7 @@ class PodcastTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
 
     return ListTile(
       onTap: () {
@@ -26,7 +26,7 @@ class PodcastTile extends StatelessWidget {
           context,
           MaterialPageRoute<void>(
               settings: RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+              builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },
       leading: Hero(

@@ -18,7 +18,7 @@ class PodcastGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
 
     return GestureDetector(
       onTap: () {
@@ -26,7 +26,7 @@ class PodcastGridTile extends StatelessWidget {
           context,
           MaterialPageRoute<void>(
               settings: RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+              builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },
       child: GridTile(
@@ -52,8 +52,8 @@ class PodcastTitledGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
-    final _theme = Theme.of(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
+    final theme = Theme.of(context);
 
     return GestureDetector(
       onTap: () {
@@ -61,7 +61,7 @@ class PodcastTitledGridTile extends StatelessWidget {
           context,
           MaterialPageRoute<void>(
               settings: RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, _podcastBloc)),
+              builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },
       child: GridTile(
@@ -83,7 +83,7 @@ class PodcastTitledGridTile extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: _theme.textTheme.titleSmall,
+                  style: theme.textTheme.titleSmall,
                 ),
               ),
             ],

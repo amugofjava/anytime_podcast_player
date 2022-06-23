@@ -11,7 +11,7 @@ class SyncSpinner extends StatefulWidget {
   const SyncSpinner({Key key}) : super(key: key);
 
   @override
-  _SyncSpinnerState createState() => _SyncSpinnerState();
+  State<SyncSpinner> createState() => _SyncSpinnerState();
 }
 
 class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStateMixin {
@@ -37,11 +37,11 @@ class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 
     return StreamBuilder<BlocState<void>>(
         initialData: BlocEmptyState<void>(),
-        stream: _podcastBloc.backgroundLoading,
+        stream: podcastBloc.backgroundLoading,
         builder: (context, snapshot) {
           final state = snapshot.data;
 

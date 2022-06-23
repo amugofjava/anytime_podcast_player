@@ -13,7 +13,7 @@ class EpisodeRefreshWidget extends StatefulWidget {
   const EpisodeRefreshWidget({Key key}) : super(key: key);
 
   @override
-  _EpisodeRefreshWidgetState createState() => _EpisodeRefreshWidgetState();
+  State<EpisodeRefreshWidget> createState() => _EpisodeRefreshWidgetState();
 }
 
 class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {

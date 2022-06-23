@@ -9,8 +9,8 @@ import 'package:anytime/core/environment.dart';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart';
 
-/// An implementation of the PodcastApi. A simple wrapper class that
-/// interacts with the iTunes/Podcastindex search API via the
+/// An implementation of the [PodcastApi]. A simple wrapper class that
+/// interacts with the iTunes/PodcastIndex search API via the
 /// podcast_search package.
 class MobilePodcastApi extends PodcastApi {
   SecurityContext _defaultSecurityContext;
@@ -109,10 +109,8 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   void _setupSecurityContext() {
-    if (_certificateAuthorityBytes.isNotEmpty &&
-        _defaultSecurityContext == null) {
-      SecurityContext.defaultContext
-          .setTrustedCertificatesBytes(_certificateAuthorityBytes);
+    if (_certificateAuthorityBytes.isNotEmpty && _defaultSecurityContext == null) {
+      SecurityContext.defaultContext.setTrustedCertificatesBytes(_certificateAuthorityBytes);
       _defaultSecurityContext = SecurityContext.defaultContext;
     }
   }

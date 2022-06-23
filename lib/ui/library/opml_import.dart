@@ -17,7 +17,7 @@ class OPMLImport extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _OPMLImportState createState() => _OPMLImportState();
+  State<OPMLImport> createState() => _OPMLImportState();
 }
 
 class _OPMLImportState extends State<OPMLImport> {

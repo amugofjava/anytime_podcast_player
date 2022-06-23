@@ -18,7 +18,7 @@ class EpisodeDetails extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _EpisodeDetailsState createState() => _EpisodeDetailsState();
+  State<EpisodeDetails> createState() => _EpisodeDetailsState();
 }
 
 class _EpisodeDetailsState extends State<EpisodeDetails> {

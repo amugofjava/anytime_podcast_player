@@ -86,7 +86,7 @@ class DiscoveryHeader extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DiscoveryHeaderState createState() => _DiscoveryHeaderState();
+  State<DiscoveryHeader> createState() => _DiscoveryHeaderState();
 }
 
 class _DiscoveryHeaderState extends State<DiscoveryHeader> {

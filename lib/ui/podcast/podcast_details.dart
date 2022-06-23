@@ -39,7 +39,7 @@ class PodcastDetails extends StatefulWidget {
   PodcastDetails(this.podcast, this._podcastBloc);
 
   @override
-  _PodcastDetailsState createState() => _PodcastDetailsState();
+  State<PodcastDetails> createState() => _PodcastDetailsState();
 }
 
 class _PodcastDetailsState extends State<PodcastDetails> {
@@ -151,7 +151,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return WillPopScope(
@@ -198,7 +198,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         child: ExcludeSemantics(
                           child: StreamBuilder<BlocState<Podcast>>(
                               initialData: BlocEmptyState<Podcast>(),
-                              stream: _podcastBloc.details,
+                              stream: podcastBloc.details,
                               builder: (context, snapshot) {
                                 final state = snapshot.data;
                                 var podcast = widget.podcast;
@@ -221,7 +221,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     )),
                 StreamBuilder<BlocState<Podcast>>(
                     initialData: BlocEmptyState<Podcast>(),
-                    stream: _podcastBloc.details,
+                    stream: podcastBloc.details,
                     builder: (context, snapshot) {
                       final state = snapshot.data;
 
@@ -283,7 +283,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                       );
                     }),
                 StreamBuilder<List<Episode>>(
-                    stream: _podcastBloc.episodes,
+                    stream: podcastBloc.episodes,
                     builder: (context, snapshot) {
                       return snapshot.hasData && snapshot.data.isNotEmpty
                           ? PodcastEpisodeList(

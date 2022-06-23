@@ -15,7 +15,7 @@ class SearchProviderWidget extends StatefulWidget {
   SearchProviderWidget({this.onChanged});
 
   @override
-  _SearchProviderWidgetState createState() => _SearchProviderWidgetState();
+  State<SearchProviderWidget> createState() => _SearchProviderWidgetState();
 }
 
 class _SearchProviderWidgetState extends State<SearchProviderWidget> {

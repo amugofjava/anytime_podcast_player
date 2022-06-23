@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 /// time, time remaining and the time [Slider].
 class PlayerPositionControls extends StatefulWidget {
   @override
-  _PlayerPositionControlsState createState() => _PlayerPositionControlsState();
+  State<PlayerPositionControls> createState() => _PlayerPositionControlsState();
 }
 
 class _PlayerPositionControlsState extends State<PlayerPositionControls> {

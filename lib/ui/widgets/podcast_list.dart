@@ -22,11 +22,11 @@ class PodcastList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _settingsBloc = Provider.of<SettingsBloc>(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
 
     if (results.items.isNotEmpty) {
       return StreamBuilder<AppSettings>(
-          stream: _settingsBloc.settings,
+          stream: settingsBloc.settings,
           builder: (context, settingsSnapshot) {
             if (settingsSnapshot.hasData) {
               var mode = settingsSnapshot.data.layout;

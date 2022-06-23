@@ -19,7 +19,7 @@ class PlaybackErrorListener extends StatefulWidget {
   });
 
   @override
-  _PlaybackErrorListenerState createState() => _PlaybackErrorListenerState();
+  State<PlaybackErrorListener> createState() => _PlaybackErrorListenerState();
 }
 
 class _PlaybackErrorListenerState extends State<PlaybackErrorListener> {

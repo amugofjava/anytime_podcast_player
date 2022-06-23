@@ -33,7 +33,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// holder until a better animation can be achieved.
 class NowPlaying extends StatefulWidget {
   @override
-  _NowPlayingState createState() => _NowPlayingState();
+  State<NowPlaying> createState() => _NowPlayingState();
 }
 
 class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {

@@ -31,7 +31,7 @@ class ChapterSelector extends StatefulWidget {
   }
 
   @override
-  _ChapterSelectorState createState() => _ChapterSelectorState();
+  State<ChapterSelector> createState() => _ChapterSelectorState();
 }
 
 class _ChapterSelectorState extends State<ChapterSelector> {

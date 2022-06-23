@@ -17,7 +17,7 @@ class Search extends StatefulWidget {
   Search({this.searchTerm});
 
   @override
-  _SearchState createState() => _SearchState();
+  State<Search> createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {

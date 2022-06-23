@@ -15,17 +15,17 @@ import 'package:provider/provider.dart';
 
 class Library extends StatefulWidget {
   @override
-  _LibraryState createState() => _LibraryState();
+  State<Library> createState() => _LibraryState();
 }
 
 class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
-    final _podcastBloc = Provider.of<PodcastBloc>(context);
-    final _settingsBloc = Provider.of<SettingsBloc>(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return StreamBuilder<List<Podcast>>(
-        stream: _podcastBloc.subscriptions,
+        stream: podcastBloc.subscriptions,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data.isEmpty) {
@@ -53,7 +53,7 @@ class _LibraryState extends State<Library> {
               );
             } else {
               return StreamBuilder<AppSettings>(
-                  stream: _settingsBloc.settings,
+                  stream: settingsBloc.settings,
                   builder: (context, settingsSnapshot) {
                     if (settingsSnapshot.hasData) {
                       var mode = settingsSnapshot.data.layout;

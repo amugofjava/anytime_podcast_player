@@ -14,7 +14,7 @@ class OPMLExport extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _OPMLExportState createState() => _OPMLExportState();
+  State<OPMLExport> createState() => _OPMLExportState();
 }
 
 class _OPMLExportState extends State<OPMLExport> {

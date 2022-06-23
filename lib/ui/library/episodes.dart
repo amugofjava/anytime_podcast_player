@@ -18,7 +18,7 @@ import 'package:provider/provider.dart';
 /// the episode & download views.
 class Episodes extends StatefulWidget {
   @override
-  _EpisodesState createState() => _EpisodesState();
+  State<Episodes> createState() => _EpisodesState();
 }
 
 /// Displays a list of podcast episodes that the user has downloaded.

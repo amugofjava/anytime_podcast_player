@@ -40,7 +40,7 @@ class PodcastImage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PodcastImageState createState() => _PodcastImageState();
+  State<PodcastImage> createState() => _PodcastImageState();
 }
 
 class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMixin {
@@ -179,7 +179,7 @@ class PodcastBannerImage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PodcastBannerImageState createState() => _PodcastBannerImageState();
+  State<PodcastBannerImage> createState() => _PodcastBannerImageState();
 }
 
 class _PodcastBannerImageState extends State<PodcastBannerImage> with TickerProviderStateMixin {

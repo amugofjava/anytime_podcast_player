@@ -22,11 +22,11 @@ void main() async {
     print('${record.level.name}: - ${record.time}: ${record.loggerName}: ${record.message}');
   });
 
-  var _mobileSettingsService = await MobileSettingsService.instance();
+  var mobileSettingsService = await MobileSettingsService.instance();
   certificateAuthorityBytes = await setupCertificateAuthority();
 
   runApp(AnytimePodcastApp(
-    _mobileSettingsService,
+    mobileSettingsService,
     certificateAuthorityBytes: certificateAuthorityBytes,
   ));
 }

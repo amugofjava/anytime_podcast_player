@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class LayoutSelectorWidget extends StatefulWidget {
   @override
-  _LayoutSelectorWidgetState createState() => _LayoutSelectorWidgetState();
+  State<LayoutSelectorWidget> createState() => _LayoutSelectorWidgetState();
 }
 
 class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {

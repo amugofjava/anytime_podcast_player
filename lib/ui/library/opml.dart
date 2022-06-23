@@ -13,7 +13,7 @@ class OPMLSelect extends StatefulWidget {
   const OPMLSelect({Key key}) : super(key: key);
 
   @override
-  _OPMLSelectState createState() => _OPMLSelectState();
+  State<OPMLSelect> createState() => _OPMLSelectState();
 }
 
 class _OPMLSelectState extends State<OPMLSelect> {

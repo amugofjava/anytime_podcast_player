@@ -97,10 +97,10 @@ class AnytimePodcastApp extends StatefulWidget {
   }
 
   @override
-  _AnytimePodcastAppState createState() => _AnytimePodcastAppState();
+  AnytimePodcastAppState createState() => AnytimePodcastAppState();
 }
 
-class _AnytimePodcastAppState extends State<AnytimePodcastApp> {
+class AnytimePodcastAppState extends State<AnytimePodcastApp> {
   ThemeData theme;
 
   @override
@@ -222,7 +222,7 @@ class AnytimeHomePage extends StatefulWidget {
   });
 
   @override
-  _AnytimeHomePageState createState() => _AnytimeHomePageState();
+  State<AnytimeHomePage> createState() => _AnytimeHomePageState();
 }
 
 class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingObserver {
@@ -499,9 +499,9 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   void _menuSelect(String choice) async {
-    var _textFieldController = TextEditingController();
-    var _podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
-    final _theme = Theme.of(context);
+    var textFieldController = TextEditingController();
+    var podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final theme = Theme.of(context);
     var url = '';
 
     switch (choice) {
@@ -543,7 +543,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       case 'layout':
         await showModalBottomSheet<void>(
           context: context,
-          backgroundColor: _theme.secondaryHeaderColor,
+          backgroundColor: theme.secondaryHeaderColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16.0),
@@ -565,7 +565,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   url = value;
                 });
               },
-              controller: _textFieldController,
+              controller: textFieldController,
               decoration: InputDecoration(hintText: 'https://'),
             ),
             actions: <Widget>[
@@ -587,7 +587,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     context,
                     MaterialPageRoute<void>(
                         settings: RouteSettings(name: 'podcastdetails'),
-                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), _podcastBloc)),
+                        builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), podcastBloc)),
                   ).then((value) => Navigator.pop(context));
                 },
               ),

@@ -24,10 +24,14 @@ dependencies:
   flutter_launcher_icons: ^0.9.3
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
+  intl: ^0.17.0
   just_audio: ^0.9.25
   logging: ^1.0.2
+  meta: ^1.7.0
   mp3_info: ^0.2.0
+  path: ^1.8.1
   path_provider: ^2.0.11
+  path_provider_platform_interface: ^2.0.4
   percent_indicator: 4.2.2
   permission_handler: ^9.2.0
   podcast_search: ^0.5.1
@@ -47,10 +51,9 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  intl_generator: ^0.2.1
-  mockito: ^5.0.9
-  pedantic: ^1.9.2
-  lints: ^1.0.1
+  intl_generator: ^0.3.0
+  mockito: ^5.2.0
+  flutter_lints: ^2.0.1
   flutter_test:
     sdk: flutter
 

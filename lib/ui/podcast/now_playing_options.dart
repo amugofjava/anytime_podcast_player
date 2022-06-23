@@ -17,7 +17,7 @@ class NowPlayingOptionsSelector extends StatefulWidget {
   NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
 
   @override
-  _NowPlayingOptionsSelectorState createState() => _NowPlayingOptionsSelectorState();
+  State<NowPlayingOptionsSelector> createState() => _NowPlayingOptionsSelectorState();
 }
 
 /// This class places a draggable scrollable sheet at the bottom of the page. Dragging the
