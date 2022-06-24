@@ -1,4 +1,4 @@
-// Copyright 2020-2021 Ben Hills. All rights reserved.
+// Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -116,8 +116,7 @@ class MobileDownloadService extends DownloadService {
     if (episode != null) {
       // We might be called during the cleanup routine during startup.
       // Do not bother updating if nothing has changed.
-      if (episode.downloadPercentage != progress.percentage ||
-          episode.downloadState != progress.status) {
+      if (episode.downloadPercentage != progress.percentage || episode.downloadState != progress.status) {
         episode.downloadPercentage = progress.percentage;
         episode.downloadState = progress.status;
 
