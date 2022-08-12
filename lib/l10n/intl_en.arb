@@ -372,7 +372,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_export_opml": "Import OPML",
+  "settings_export_opml": "Export OPML",
   "@settings_export_opml": {
     "description": "Option label exporting OPML file",
     "type": "text",

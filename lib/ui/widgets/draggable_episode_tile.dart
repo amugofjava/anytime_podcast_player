@@ -13,12 +13,14 @@ class DraggableEpisodeTile extends StatelessWidget {
   final Episode episode;
   final int index;
   final bool draggable;
+  final bool playable;
 
   const DraggableEpisodeTile({
     Key key,
     @required this.episode,
     this.index,
     this.draggable = true,
+    this.playable = false,
   }) : super(key: key);
 
   @override
@@ -28,6 +30,7 @@ class DraggableEpisodeTile extends StatelessWidget {
 
     return ListTile(
       key: Key('DT${episode.guid}'),
+      enabled: playable,
       leading: TileImage(
         url: episode.thumbImageUrl ?? episode.imageUrl,
         size: 56.0,
@@ -51,7 +54,9 @@ class DraggableEpisodeTile extends StatelessWidget {
               height: 0.0,
             ),
       onTap: () {
-        audioBloc.play(episode);
+        if (playable) {
+          audioBloc.play(episode);
+        }
       },
     );
   }

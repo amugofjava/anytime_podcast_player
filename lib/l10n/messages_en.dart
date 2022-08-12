@@ -20,6 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
+
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about_label": MessageLookupByLibrary.simpleMessage("About"),
         "add_rss_feed_option": MessageLookupByLibrary.simpleMessage("Add RSS Feed"),
@@ -110,7 +111,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "New downloads will be saved to internal storage. Existing downloads will remain on the SD card."),
         "settings_download_switch_label": MessageLookupByLibrary.simpleMessage("Change storage location"),
         "settings_episodes_divider_label": MessageLookupByLibrary.simpleMessage("EPISODES"),
-        "settings_export_opml": MessageLookupByLibrary.simpleMessage("Import OPML"),
+        "settings_export_opml": MessageLookupByLibrary.simpleMessage("Export OPML"),
         "settings_import_opml": MessageLookupByLibrary.simpleMessage("Import OPML"),
         "settings_label": MessageLookupByLibrary.simpleMessage("Settings"),
         "settings_mark_deleted_played_label": MessageLookupByLibrary.simpleMessage("Mark deleted episodes as played"),

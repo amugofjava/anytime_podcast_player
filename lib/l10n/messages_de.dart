@@ -20,6 +20,7 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
+
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about_label": MessageLookupByLibrary.simpleMessage("Über"),
         "add_rss_feed_option": MessageLookupByLibrary.simpleMessage("RSS-Feed hinzufügen"),

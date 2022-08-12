@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ui';
+
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +17,18 @@ class PlayerPositionControls extends StatefulWidget {
 }
 
 class _PlayerPositionControlsState extends State<PlayerPositionControls> {
-  // Current playback position
-  var p = 0;
+  /// Current playback position
+  var currentPosition = 0;
 
-  // Indicates the user is moving the position slide. We should ignore
-  // duration updates until the user releases the slide.
+  /// Indicates the user is moving the position slide. We should ignore
+  /// position updates until the user releases the slide.
   var dragging = false;
 
-  // Seconds left of this episode
+  /// Seconds left of this episode.
   var timeRemaining = 0;
+
+  /// The length of the episode in seconds.
+  var episodeLength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,22 +37,22 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
-          var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 1);
-          var divisions = length.inSeconds == null || length.inSeconds == 0 ? 1 : length.inSeconds;
+          var position = snapshot.hasData ? snapshot.data.position.inSeconds : 0;
+          episodeLength = snapshot.hasData ? snapshot.data.length.inSeconds : 0;
+          var divisions = episodeLength == 0 ? 1 : episodeLength;
 
           if (!dragging) {
-            p = position.inSeconds;
+            currentPosition = position;
 
-            if (p < 0) {
-              p = 0;
+            if (currentPosition < 0) {
+              currentPosition = 0;
             }
 
-            if (p > length.inSeconds) {
-              p = length.inSeconds;
+            if (currentPosition > episodeLength) {
+              currentPosition = episodeLength;
             }
 
-            timeRemaining = length.inSeconds - position.inSeconds;
+            timeRemaining = episodeLength - position;
 
             if (timeRemaining < 0) {
               timeRemaining = 0;
@@ -64,22 +69,27 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
             child: Row(
               children: <Widget>[
                 FittedBox(
-                  child: Text(_formatDuration(position)),
+                  child: Text(
+                    _formatDuration(Duration(seconds: currentPosition)),
+                    style: TextStyle(
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                  ),
                 ),
                 Expanded(
                   child: snapshot.hasData
                       ? Slider.adaptive(
-                          label: _formatDuration(Duration(seconds: p)),
+                          label: _formatDuration(Duration(seconds: currentPosition)),
                           onChanged: (value) {
                             setState(() {
-                              p = value.toInt();
+                              _calculatePositions(value.toInt());
                             });
                           },
                           onChangeStart: (value) {
                             if (!snapshot.data.buffering) {
                               setState(() {
                                 dragging = true;
-                                p = value.toInt();
+                                _calculatePositions(currentPosition);
                               });
                             } else {
                               return null;
@@ -92,9 +102,9 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
 
                             return snapshot.data.buffering ? null : audioBloc.transitionPosition(value);
                           },
-                          value: p.toDouble(),
+                          value: currentPosition.toDouble(),
                           min: 0.0,
-                          max: length.inSeconds.toDouble(),
+                          max: episodeLength.toDouble(),
                           divisions: divisions,
                           activeColor: Theme.of(context).primaryColor,
                         )
@@ -110,12 +120,20 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                   child: Text(
                     _formatDuration(Duration(seconds: timeRemaining)),
                     textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
                   ),
                 ),
               ],
             ),
           );
         });
+  }
+
+  void _calculatePositions(int p) {
+    currentPosition = p;
+    timeRemaining = episodeLength - p;
   }
 
   String _formatDuration(Duration duration) {

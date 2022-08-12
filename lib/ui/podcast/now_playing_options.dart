@@ -200,6 +200,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                         key: ValueKey('tilequeue${snapshot.data.queue[index].guid}'),
                                         index: index,
                                         episode: snapshot.data.queue[index],
+                                        playable: true,
                                       ),
                                     );
                                   },
