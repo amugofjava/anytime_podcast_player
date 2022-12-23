@@ -1,6 +1,7 @@
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'search.dart';
 
@@ -65,6 +66,7 @@ class _SearchBarState extends State<SearchBar> {
           onPressed: () {
             _searchController.clear();
             FocusScope.of(context).requestFocus(FocusNode());
+            SystemChannels.textInput.invokeMethod<String>('TextInput.show');
           }),
     );
   }
