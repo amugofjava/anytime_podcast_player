@@ -474,11 +474,11 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   //   label: 'Episodes',
                   // ),
                   BottomNavigationBarItem(
-                    icon: index == 2 ? Icon(Icons.explore) : Icon(Icons.explore_outlined),
+                    icon: index == 1 ? Icon(Icons.explore) : Icon(Icons.explore_outlined),
                     label: L.of(context).discover,
                   ),
                   BottomNavigationBarItem(
-                    icon: index == 3 ? Icon(Icons.download) : Icon(Icons.download_outlined),
+                    icon: index == 2 ? Icon(Icons.download) : Icon(Icons.download_outlined),
                     label: L.of(context).downloads,
                   ),
                 ],
