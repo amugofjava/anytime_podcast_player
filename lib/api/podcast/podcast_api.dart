@@ -36,6 +36,4 @@ abstract class PodcastApi {
 
   /// Load episode chapters via JSON file.
   Future<Chapters> loadChapters(String url);
-
-  void addClientAuthorityBytes(List<int> certificateAuthorityBytes);
 }

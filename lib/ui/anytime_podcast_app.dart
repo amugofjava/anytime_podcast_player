@@ -66,12 +66,8 @@ class AnytimePodcastApp extends StatefulWidget {
   SettingsBloc settingsBloc;
   MobileSettingsService mobileSettingsService;
   OPMLService opmlService;
-  List<int> certificateAuthorityBytes;
 
-  AnytimePodcastApp(
-    this.mobileSettingsService, {
-    this.certificateAuthorityBytes,
-  }) : repository = SembastRepository() {
+  AnytimePodcastApp(this.mobileSettingsService) : repository = SembastRepository() {
     podcastApi = MobilePodcastApi();
     downloadService = MobileDownloadService(
       repository: repository,
@@ -92,8 +88,6 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService,
       repository: repository,
     );
-
-    podcastApi.addClientAuthorityBytes(certificateAuthorityBytes);
   }
 
   @override
