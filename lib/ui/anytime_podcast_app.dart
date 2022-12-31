@@ -510,7 +510,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               height: 52.0,
             ),
             children: <Widget>[
-              Text('\u00a9 2020-2022 Ben Hills'),
+              Text('\u00a9 2020-2023 Ben Hills'),
               GestureDetector(
                 onTap: () {
                   _launchEmail();
@@ -605,7 +605,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
 class TitleWidget extends StatelessWidget {
   final TextStyle _titleTheme1 = theme.textTheme.bodyText2.copyWith(
-    color: Colors.red,
+    color: Colors.orange[700],
     fontWeight: FontWeight.bold,
     fontFamily: 'MontserratRegular',
     fontSize: 18,
