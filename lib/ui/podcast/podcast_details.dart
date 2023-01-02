@@ -334,10 +334,21 @@ class PodcastHeaderImage extends StatelessWidget {
   }
 }
 
-class PodcastTitle extends StatelessWidget {
+class PodcastTitle extends StatefulWidget {
   final Podcast podcast;
 
   PodcastTitle(this.podcast);
+
+  @override
+  State<PodcastTitle> createState() => _PodcastTitleState();
+}
+
+class _PodcastTitleState extends State<PodcastTitle> {
+  final GlobalKey descriptionKey = GlobalKey();
+  final maxHeight = 100.0;
+  PodcastHtml description;
+  bool showOverflow = false;
+  bool expanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -345,29 +356,71 @@ class PodcastTitle extends StatelessWidget {
     final settings = Provider.of<SettingsBloc>(context).currentSettings;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(podcast.title ?? '', style: textTheme.headline6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
+                      child: Text(widget.podcast.title ?? '', style: textTheme.headline6),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      child: Text(widget.podcast.copyright ?? '', style: textTheme.caption),
+                    ),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: showOverflow,
+                child: expanded
+                    ? TextButton(
+                        style: ButtonStyle(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                        child: Icon(Icons.expand_less),
+                        onPressed: () {
+                          setState(() {
+                            expanded = false;
+                          });
+                        },
+                      )
+                    : TextButton(
+                        style: ButtonStyle(visualDensity: VisualDensity.compact),
+                        child: Icon(Icons.expand_more),
+                        onPressed: () {
+                          setState(() {
+                            expanded = true;
+                          });
+                        },
+                      ),
+              )
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-            child: Text(podcast.copyright ?? '', style: textTheme.caption),
+          PodcastDescription(
+            key: descriptionKey,
+            content: description,
+            expanded: expanded,
           ),
-          PodcastHtml(content: podcast.description),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SubscriptionButton(podcast),
-                PodcastContextMenu(podcast),
+                SubscriptionButton(widget.podcast),
+                PodcastContextMenu(widget.podcast),
                 settings.showFunding
-                    ? FundingMenu(podcast.funding)
+                    ? FundingMenu(widget.podcast.funding)
                     : const SizedBox(
                         width: 0.0,
                         height: 0.0,
@@ -383,6 +436,58 @@ class PodcastTitle extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    description = PodcastHtml(
+      content: widget.podcast.description,
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      print(descriptionKey.currentContext.size.height);
+
+      if (descriptionKey.currentContext.size.height == maxHeight) {
+        setState(() {
+          showOverflow = true;
+        });
+      }
+    });
+  }
+}
+
+/// This class wraps the description in an expandable box. This handles the
+/// common case whereby the description is very long and, without this constraint,
+/// would require the use to always scroll before reaching the podcast episodes.
+///
+/// TODO: Animate between the two states.
+class PodcastDescription extends StatelessWidget {
+  final PodcastHtml content;
+  final bool expanded;
+  final maxHeight = 100.0;
+
+  const PodcastDescription({
+    Key key,
+    this.content,
+    this.expanded,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return expanded
+        ? content
+        : ConstrainedBox(
+            constraints: BoxConstraints.loose(Size(double.infinity, maxHeight)),
+            child: ShaderMask(
+                shaderCallback: LinearGradient(
+                  colors: [Colors.white, Colors.white.withAlpha(0)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.9, 1],
+                ).createShader,
+                child: content),
+          );
   }
 }
 

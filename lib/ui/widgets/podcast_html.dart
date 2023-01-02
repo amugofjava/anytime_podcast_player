@@ -11,8 +11,9 @@ class PodcastHtml extends StatelessWidget {
   final tagList = Html.tags;
 
   PodcastHtml({
+    Key key,
     @required this.content,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +27,10 @@ class PodcastHtml extends StatelessWidget {
         )
       },
       tagsList: tagList,
-      onLinkTap: (url, _, __, ___) =>
-          canLaunchUrl(Uri.parse(url)).then((value) => launchUrl(
-                Uri.parse(url),
-                mode: LaunchMode.externalApplication,
-              )),
+      onLinkTap: (url, _, __, ___) => canLaunchUrl(Uri.parse(url)).then((value) => launchUrl(
+            Uri.parse(url),
+            mode: LaunchMode.externalApplication,
+          )),
     );
   }
 }

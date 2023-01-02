@@ -61,7 +61,7 @@ class MobileDownloaderManager implements DownloadManager {
   }
 
   @override
-  Future<String> enqueTask(String url, String downloadPath, String fileName) async {
+  Future<String> enqueueTask(String url, String downloadPath, String fileName) async {
     return await FlutterDownloader.enqueue(
       url: url,
       savedDir: downloadPath,
@@ -108,6 +108,7 @@ class MobileDownloaderManager implements DownloadManager {
     }
   }
 
+  @pragma('vm:entry-point')
   static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
     final send = IsolateNameServer.lookupPortByName('downloader_send_port');
 

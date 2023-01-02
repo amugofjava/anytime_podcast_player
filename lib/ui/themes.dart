@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 final ThemeData _lightTheme = _buildLightTheme();
-final ThemeData _darkTheme = _buildDarktheme();
+final ThemeData _darkTheme = _buildDarkTheme();
 
 ThemeData _buildLightTheme() {
   final base = ThemeData.light();
@@ -66,12 +66,12 @@ ThemeData _buildLightTheme() {
       actionTextColor: Colors.orange,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(primary: Colors.grey[800]),
+      style: OutlinedButton.styleFrom(foregroundColor: Colors.grey[800]),
     ),
   );
 }
 
-ThemeData _buildDarktheme() {
+ThemeData _buildDarkTheme() {
   final base = ThemeData.dark();
 
   return base.copyWith(
@@ -132,7 +132,7 @@ ThemeData _buildDarktheme() {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        primary: Color(0xffffffff),
+        foregroundColor: Color(0xffffffff),
         side: BorderSide(
           color: Color(0xffffffff),
           style: BorderStyle.solid,

@@ -87,7 +87,7 @@ class MobileDownloadService extends DownloadService {
 
         log.fine('Download episode (${episode?.title}) $filename to $downloadPath/$filename');
 
-        final taskId = await downloadManager.enqueTask(episode.contentUrl, downloadPath, filename);
+        final taskId = await downloadManager.enqueueTask(episode.contentUrl, downloadPath, filename);
 
         // Update the episode with download data
         episode.filepath = episodePath;

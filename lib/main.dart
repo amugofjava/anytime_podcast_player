@@ -32,7 +32,7 @@ void main() async {
 /// The Let's Encrypt CA expired on at the end of September 2021. This causes problems when trying to
 /// fetch feeds secured with the CA. Older Android devices, 7.0 and before, cannot be updated with the
 /// latest CA so this routine manually sets up the updated LE CA when running on Android v7.0 or earlier.
-void setupCertificateAuthority() async {
+Future<void> setupCertificateAuthority() async {
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;

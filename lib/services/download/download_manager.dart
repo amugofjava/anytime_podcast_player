@@ -19,7 +19,7 @@ class DownloadProgress {
 }
 
 abstract class DownloadManager {
-  Future<String> enqueTask(String url, String downloadPath, String fileName);
+  Future<String> enqueueTask(String url, String downloadPath, String fileName);
   Stream<DownloadProgress> get downloadProgress;
   void dispose();
 }

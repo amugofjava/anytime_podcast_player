@@ -22,6 +22,9 @@ class _DotDecorationPainter extends BoxPainter {
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
+    const double pillWidth = 8.0;
+    const double pillHeight = 3.0;
+
     final center = configuration.size.center(offset);
     final height = configuration.size.height;
 
@@ -31,6 +34,14 @@ class _DotDecorationPainter extends BoxPainter {
     paint.color = decoration.colour;
     paint.style = PaintingStyle.fill;
 
-    canvas.drawCircle(newOffset, 4, paint);
+    canvas.drawRRect(
+        RRect.fromLTRBR(
+          newOffset.dx - pillWidth,
+          newOffset.dy - pillHeight,
+          newOffset.dx + pillWidth,
+          newOffset.dy + pillHeight,
+          Radius.circular(12.0),
+        ),
+        paint);
   }
 }
