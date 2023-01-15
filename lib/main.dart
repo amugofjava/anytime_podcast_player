@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 
 void main() async {
+  List<int> certificateAuthorityBytes = [];
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
@@ -22,17 +23,20 @@ void main() async {
   });
 
   var mobileSettingsService = await MobileSettingsService.instance();
-  await setupCertificateAuthority();
+  certificateAuthorityBytes = await setupCertificateAuthority();
 
   runApp(AnytimePodcastApp(
-    mobileSettingsService,
+    mobileSettingsService: mobileSettingsService,
+    certificateAuthorityBytes: certificateAuthorityBytes,
   ));
 }
 
 /// The Let's Encrypt CA expired on at the end of September 2021. This causes problems when trying to
 /// fetch feeds secured with the CA. Older Android devices, 7.0 and before, cannot be updated with the
 /// latest CA so this routine manually sets up the updated LE CA when running on Android v7.0 or earlier.
-Future<void> setupCertificateAuthority() async {
+Future<List<int>> setupCertificateAuthority() async {
+  List<int> ca = [];
+
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -40,7 +44,10 @@ Future<void> setupCertificateAuthority() async {
 
     if ((int.tryParse(major[0]) ?? 100.0) < 8.0) {
       ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-      SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
+      ca = data.buffer.asUint8List();
+      SecurityContext.defaultContext.setTrustedCertificatesBytes(ca);
     }
   }
+
+  return ca;
 }

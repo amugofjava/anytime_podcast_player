@@ -36,4 +36,8 @@ abstract class PodcastApi {
 
   /// Load episode chapters via JSON file.
   Future<Chapters> loadChapters(String url);
+
+  /// Allow adding of custom certificates. Required as default context
+  /// does not apply when running in separate Isolate.
+  void addClientAuthorityBytes(List<int> certificateAuthorityBytes);
 }

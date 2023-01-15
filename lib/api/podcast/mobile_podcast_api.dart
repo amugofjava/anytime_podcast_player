@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +13,9 @@ import 'package:podcast_search/podcast_search.dart';
 /// interacts with the iTunes/PodcastIndex search API via the
 /// podcast_search package.
 class MobilePodcastApi extends PodcastApi {
+  SecurityContext _defaultSecurityContext;
+  List<int> _certificateAuthorityBytes = [];
+
   @override
   Future<SearchResult> search(
     String term, {
@@ -99,6 +104,19 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   Future<Podcast> _loadFeed(String url) {
+    _setupSecurityContext();
     return Podcast.loadFeed(url: url, userAgent: Environment.userAgent());
+  }
+
+  void _setupSecurityContext() {
+    if (_certificateAuthorityBytes.isNotEmpty && _defaultSecurityContext == null) {
+      SecurityContext.defaultContext.setTrustedCertificatesBytes(_certificateAuthorityBytes);
+      _defaultSecurityContext = SecurityContext.defaultContext;
+    }
+  }
+
+  @override
+  void addClientAuthorityBytes(List<int> certificateAuthorityBytes) {
+    _certificateAuthorityBytes = certificateAuthorityBytes;
   }
 }
