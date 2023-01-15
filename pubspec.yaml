@@ -18,7 +18,7 @@ dependencies:
   extended_image: ^6.2.1
   file_picker: ^4.6.0
   flutter_dialogs: ^3.0.0
-  flutter_downloader: ^1.9.1
+  flutter_downloader: 1.9.1
   flutter_html: ^3.0.0-alpha.6
   flutter_html_svg: ^3.0.0-alpha.3
   flutter_html_table: ^3.0.0-alpha.3

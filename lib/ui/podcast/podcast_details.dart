@@ -466,7 +466,8 @@ class _PodcastTitleState extends State<PodcastTitle> {
 class PodcastDescription extends StatelessWidget {
   final PodcastHtml content;
   final bool expanded;
-  final maxHeight = 100.0;
+  static const maxHeight = 100.0;
+  static const padding = 4.0;
 
   const PodcastDescription({
     Key key,
@@ -475,19 +476,22 @@ class PodcastDescription extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return expanded
-        ? content
-        : ConstrainedBox(
-            constraints: BoxConstraints.loose(Size(double.infinity, maxHeight)),
-            child: ShaderMask(
-                shaderCallback: LinearGradient(
-                  colors: [Colors.white, Colors.white.withAlpha(0)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.9, 1],
-                ).createShader,
-                child: content),
-          );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: padding),
+      child: expanded
+          ? content
+          : ConstrainedBox(
+              constraints: BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
+              child: ShaderMask(
+                  shaderCallback: LinearGradient(
+                    colors: [Colors.white, Colors.white.withAlpha(0)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: [0.9, 1],
+                  ).createShader,
+                  child: content),
+            ),
+    );
   }
 }
 
