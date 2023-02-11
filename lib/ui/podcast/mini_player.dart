@@ -86,14 +86,17 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
         onTap: () async {
           await _audioStateSubscription.cancel();
 
-          return Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => NowPlaying(),
-              settings: RouteSettings(name: 'nowplaying'),
-              fullscreenDialog: true,
-            ),
-          ).then((value) {
+          showModalBottomSheet<void>(
+            context: context,
+            routeSettings: RouteSettings(name: 'nowplaying'),
+            isScrollControlled: true,
+            builder: (BuildContext modalContext) {
+              return Padding(
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                child: NowPlaying(),
+              );
+            },
+          ).then((_) {
             _audioStateListener();
           });
         },

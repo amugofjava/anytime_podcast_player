@@ -134,7 +134,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 0.0),
                               shape:
-                                  CircleBorder(side: BorderSide(color: Theme.of(context).backgroundColor, width: 0.0)),
+                                  CircleBorder(side: BorderSide(color: Theme.of(context).canvasColor, width: 0.0,)),
                             ),
                             onPressed: () {
                               if (playing) {

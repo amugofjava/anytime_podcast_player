@@ -30,11 +30,12 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     const baseSize = 48;
-    final topMargin = baseSize + MediaQuery.of(context).viewPadding.top;
+    final topPadding = MediaQuery.of(context).padding.top;
+    final topMargin = baseSize + topPadding;
     final theme = Theme.of(context);
     final windowHeight = MediaQuery.of(context).size.height;
     final minSize = baseSize / (windowHeight - baseSize);
-    final maxSize = (windowHeight - topMargin - 16) / windowHeight;
+    final maxSize = (windowHeight - topMargin - 24) / windowHeight;
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
@@ -59,7 +60,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               ),
             ),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height - 64 - MediaQuery.of(context).viewPadding.top,
+              height: MediaQuery.of(context).size.height - 94,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,

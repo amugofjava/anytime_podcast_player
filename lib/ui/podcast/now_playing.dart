@@ -362,7 +362,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 2,
+          flex: 5,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: AutoSizeText(
@@ -373,7 +373,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
               minFontSize: 12.0,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20.0,
+                fontSize: 24.0,
               ),
               maxLines: episode.hasChapters ? 4 : 5,
             ),
@@ -381,9 +381,9 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
         ),
         if (episode.hasChapters)
           Expanded(
-            flex: 1,
+            flex: 4,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 4.0, 0.0, 8.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -396,10 +396,11 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
+                        color: Colors.grey[300],
                         fontWeight: FontWeight.normal,
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                       ),
-                      maxLines: 3,
+                      maxLines: 2,
                     ),
                   ),
                   chapterUrl.isEmpty
@@ -408,6 +409,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                           width: 0,
                         )
                       : IconButton(
+                        padding: EdgeInsets.zero,
                           icon: Icon(Icons.link),
                           color: Theme.of(context).primaryIconTheme.color,
                           onPressed: () {
