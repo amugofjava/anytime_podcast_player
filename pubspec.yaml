@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.2.2+79
+version: 1.2.3+80
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -15,10 +15,10 @@ dependencies:
   cupertino_icons: ^1.0.5
   device_info_plus: ^4.0.0
   expand_widget: ^3.1.0
-  extended_image: ^6.2.1
-  file_picker: ^4.6.0
+  extended_image: ^7.0.2
+  file_picker: ^4.6.1
   flutter_dialogs: ^3.0.0
-  flutter_downloader: 1.9.1
+  flutter_downloader: 1.10.1+2
   flutter_html: ^3.0.0-alpha.6
   flutter_html_svg: ^3.0.0-alpha.3
   flutter_html_table: ^3.0.0-alpha.3

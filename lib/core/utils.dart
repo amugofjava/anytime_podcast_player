@@ -13,7 +13,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// On iOS, the directory that the app has available to it for storing episodes may
-/// change between updated, whereas on Android we are able to save the full path. To
+/// change between updates, whereas on Android we are able to save the full path. To
 /// ensure we can handle the directory name change on iOS without breaking existing
 /// Android installations we have created the following three functions to help with
 /// resolving the various paths correctly depending upon platform.

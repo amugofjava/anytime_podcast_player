@@ -73,21 +73,26 @@ class AnytimePodcastApp extends StatefulWidget {
     this.certificateAuthorityBytes,
   }) : repository = SembastRepository() {
     podcastApi = MobilePodcastApi();
+
     downloadService = MobileDownloadService(
       repository: repository,
       downloadManager: MobileDownloaderManager(),
     );
+
     podcastService = MobilePodcastService(
       api: podcastApi,
       repository: repository,
       settingsService: mobileSettingsService,
     );
+
     audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
       podcastService: podcastService,
     );
+
     settingsBloc = SettingsBloc(mobileSettingsService);
+
     opmlService = MobileOPMLService(
       podcastService: podcastService,
       repository: repository,
@@ -107,6 +112,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
   void initState() {
     super.initState();
 
+    /// Listen to theme change events from settings.
     widget.settingsBloc.settings.listen((event) {
       setState(() {
         var newTheme = event.theme == 'dark' ? Themes.darkTheme().themeData : Themes.lightTheme().themeData;
@@ -240,7 +246,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
     WidgetsBinding.instance.addObserver(this);
 
-    audioBloc.transitionLifecycleState(LifecyleState.resume);
+    audioBloc.transitionLifecycleState(LifecycleState.resume);
 
     /// Handle deep links
     _setupLinkListener();
@@ -306,7 +312,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   @override
   void dispose() {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    audioBloc.transitionLifecycleState(LifecyleState.pause);
+    audioBloc.transitionLifecycleState(LifecycleState.pause);
 
     deepLinkSubscription?.cancel();
 
@@ -320,10 +326,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
     switch (state) {
       case AppLifecycleState.resumed:
-        audioBloc.transitionLifecycleState(LifecyleState.resume);
+        audioBloc.transitionLifecycleState(LifecycleState.resume);
         break;
       case AppLifecycleState.paused:
-        audioBloc.transitionLifecycleState(LifecyleState.pause);
+        audioBloc.transitionLifecycleState(LifecycleState.pause);
         break;
       default:
         break;
@@ -368,7 +374,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           },
                         ),
                         PopupMenuButton<String>(
-                          color: Theme.of(context).dialogBackgroundColor,
                           onSelected: _menuSelect,
                           icon: Icon(
                             Icons.more_vert,

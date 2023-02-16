@@ -26,7 +26,7 @@ enum PodcastEvent {
   refresh,
 }
 
-/// The BLoC provides access to the details of a given Podcast. It takes a feed
+/// This BLoC provides access to the details of a given Podcast. It takes a feed
 /// URL and creates a [Podcast] instance. There are several listeners that handle
 /// actions on a podcast such as requesting an episode download, following/unfollowing
 /// a podcast and marking/unmarking all episodes as played.

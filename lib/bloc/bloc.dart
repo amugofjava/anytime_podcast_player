@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 /// which can then be hooked into the dispose() call from Provider.
 abstract class Bloc {
   /// Handle lifecycle events
-  final PublishSubject<LifecyleState> _lifecycleSubject = PublishSubject<LifecyleState>(sync: true);
+  final PublishSubject<LifecycleState> _lifecycleSubject = PublishSubject<LifecycleState>(sync: true);
 
   Bloc() {
     _init();
@@ -17,11 +17,11 @@ abstract class Bloc {
 
   void _init() {
     _lifecycleSubject.listen((state) async {
-      if (state == LifecyleState.resume) {
+      if (state == LifecycleState.resume) {
         resume();
-      } else if (state == LifecyleState.pause) {
+      } else if (state == LifecycleState.pause) {
         pause();
-      } else if (state == LifecyleState.detach) {
+      } else if (state == LifecycleState.detach) {
         detach();
       }
     });
@@ -39,5 +39,5 @@ abstract class Bloc {
 
   void detach() {}
 
-  void Function(LifecyleState) get transitionLifecycleState => _lifecycleSubject.sink.add;
+  void Function(LifecycleState) get transitionLifecycleState => _lifecycleSubject.sink.add;
 }

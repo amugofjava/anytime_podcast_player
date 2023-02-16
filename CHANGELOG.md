@@ -1,3 +1,21 @@
+## 1.2.3
+
+- Migrate to Flutter v3.3.7.
+- Default to dark theme.
+
+## 1.2.2
+
+- Improve Let's Encrypt fix for Android 7.1.1 and below.
+- Podcast description is now fixed to a few lines. Longer descriptions are expandable.
+- Update dependencies.
+- Bug fixes.
+
+## 1.2.1
+
+- Improve position slider on iOS.
+- Update dependencies.
+- Bug fixes.
+
 ## 1.2.0
 
 - Add queue support.

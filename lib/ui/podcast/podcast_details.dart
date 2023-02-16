@@ -447,8 +447,6 @@ class _PodcastTitleState extends State<PodcastTitle> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      print(descriptionKey.currentContext.size.height);
-
       if (descriptionKey.currentContext.size.height == maxHeight) {
         setState(() {
           showOverflow = true;

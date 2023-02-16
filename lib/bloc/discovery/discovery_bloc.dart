@@ -11,8 +11,8 @@ import 'package:podcast_search/podcast_search.dart' as pcast;
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC to interact with the Discovery UI page and the [PodcastService] to
-/// fetch the iTunes charts. As charts will not change very frequently the
-/// results are cached for [cacheMinutes].
+/// fetch the iTunes/PodcastIndex charts. As charts will not change very frequently
+/// the results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
   static const cacheMinutes = 30;
   final log = Logger('DiscoveryBloc');
@@ -59,7 +59,6 @@ class DiscoveryBloc extends Bloc {
   }
 
   void Function(DiscoveryEvent) get discover => _discoveryInput.add;
-
   Stream<DiscoveryState> get results => _discoveryResults;
   Stream<List<String>> get genres => _genres.stream;
 }

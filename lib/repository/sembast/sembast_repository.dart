@@ -14,7 +14,8 @@ import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sembast/sembast.dart';
 
-/// An implementation of [Repository] that is backed by Sembast.
+/// An implementation of [Repository] that is backed by
+/// [Sembast](https://github.com/tekartik/sembast.dart/tree/master/sembast)
 class SembastRepository extends Repository {
   final log = Logger('SembastRepository');
 

@@ -19,7 +19,7 @@ enum TransitionState {
   rewind,
 }
 
-enum LifecyleState {
+enum LifecycleState {
   pause,
   resume,
   detach,
@@ -116,18 +116,22 @@ class AudioBloc extends Bloc {
     });
   }
 
+  /// Listen for requests to adjust the playback speed.
   void _handlePlaybackSpeedTransitions() {
     _playbackSpeedSubject.listen((double speed) async {
       await audioPlayerService.setPlaybackSpeed(speed);
     });
   }
 
+  /// Listen for requests to toggle trim silence mode. This is currently disabled until
+  /// [issue](https://github.com/ryanheise/just_audio/issues/558) is resolved.
   void _handleTrimSilenceTransitions() {
     _trimSilence.listen((bool trim) async {
       await audioPlayerService.trimSilence(trim);
     });
   }
 
+  /// Listen for requests to toggle the volume boost feature. Android only.
   void _handleVolumeBoostTransitions() {
     _volumeBoost.listen((bool boost) async {
       await audioPlayerService.volumeBoost(boost);

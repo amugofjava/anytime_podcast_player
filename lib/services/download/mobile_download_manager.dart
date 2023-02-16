@@ -14,6 +14,7 @@ import 'package:logging/logging.dart';
 
 /// A [DownloadManager] for handling downloading of podcasts on a mobile device.
 class MobileDownloaderManager implements DownloadManager {
+  static const portName = 'downloader_send_port';
   final log = Logger('MobileDownloaderManager');
   final ReceivePort _port = ReceivePort();
   final downloadController = StreamController<DownloadProgress>();
@@ -30,9 +31,9 @@ class MobileDownloaderManager implements DownloadManager {
     log.fine('Initialising download manager');
 
     await FlutterDownloader.initialize();
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    IsolateNameServer.removePortNameMapping(portName);
 
-    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    IsolateNameServer.registerPortWithName(_port.sendPort, portName);
 
     var tasks = await FlutterDownloader.loadTasks();
 
@@ -40,7 +41,7 @@ class MobileDownloaderManager implements DownloadManager {
     // AnyTime was close or in the background.
     if (tasks != null && tasks.isNotEmpty) {
       for (var t in tasks) {
-        _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status);
+        _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status.value);
 
         /// If we are not queued or running we can safely clean up this event
         if (t.status != DownloadTaskStatus.enqueued && t.status != DownloadTaskStatus.running) {
@@ -51,7 +52,7 @@ class MobileDownloaderManager implements DownloadManager {
 
     _port.listen((dynamic data) {
       final id = data[0] as String;
-      final status = data[1] as DownloadTaskStatus;
+      final status = data[1] as int;
       final progress = data[2] as int;
 
       _updateDownloadState(id: id, progress: progress, status: status);
@@ -68,38 +69,41 @@ class MobileDownloaderManager implements DownloadManager {
       fileName: fileName,
       showNotification: true,
       openFileFromNotification: false,
-      headers: {'User-Agent': Environment.userAgent()},
+      headers: {
+        'User-Agent': Environment.userAgent(),
+      },
     );
   }
 
   @override
   void dispose() {
-    IsolateNameServer.removePortNameMapping('downloader_send_port');
+    IsolateNameServer.removePortNameMapping(portName);
     downloadController.close();
   }
 
-  void _updateDownloadState({String id, int progress, DownloadTaskStatus status}) {
+  void _updateDownloadState({String id, int progress, int status}) {
     var state = DownloadState.none;
     var updateTime = DateTime.now().millisecondsSinceEpoch;
+    var downloadStatus = DownloadTaskStatus(status);
 
-    if (status == DownloadTaskStatus.enqueued) {
+    if (downloadStatus == DownloadTaskStatus.enqueued) {
       state = DownloadState.queued;
-    } else if (status == DownloadTaskStatus.canceled) {
+    } else if (downloadStatus == DownloadTaskStatus.canceled) {
       state = DownloadState.cancelled;
-    } else if (status == DownloadTaskStatus.complete) {
+    } else if (downloadStatus == DownloadTaskStatus.complete) {
       state = DownloadState.downloaded;
-    } else if (status == DownloadTaskStatus.running) {
+    } else if (downloadStatus == DownloadTaskStatus.running) {
       state = DownloadState.downloading;
-    } else if (status == DownloadTaskStatus.failed) {
+    } else if (downloadStatus == DownloadTaskStatus.failed) {
       state = DownloadState.failed;
-    } else if (status == DownloadTaskStatus.paused) {
+    } else if (downloadStatus == DownloadTaskStatus.paused) {
       state = DownloadState.paused;
     }
 
     /// If we are running, we want to limit notifications to 1 per second. Otherwise,
     /// small downloads can cause a flood of events. Any other status we always want
     /// to push through.
-    if (status != DownloadTaskStatus.running ||
+    if (downloadStatus != DownloadTaskStatus.running ||
         progress == 0 ||
         progress == 100 ||
         updateTime > _lastUpdateTime + 1000) {
@@ -110,8 +114,6 @@ class MobileDownloaderManager implements DownloadManager {
 
   @pragma('vm:entry-point')
   static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final send = IsolateNameServer.lookupPortByName('downloader_send_port');
-
-    send.send([id, status, progress]);
+    IsolateNameServer.lookupPortByName('downloader_send_port')?.send([id, status.value, progress]);
   }
 }

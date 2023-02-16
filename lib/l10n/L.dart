@@ -1032,6 +1032,14 @@ class LocalisationsDelegate extends LocalizationsDelegate<L> {
   bool shouldReload(LocalisationsDelegate old) => false;
 }
 
+/// This class can be used by third-parties who wish to override or replace
+/// some of the strings built into Anytime. This class takes a map
+/// of message labels which takes a map of localised string replacements. For
+/// example, to update the app title you may passes messages containing:
+/// app_title: {
+///   'en': 'my new app title',
+///   'de': 'Mein app-titel'
+/// }
 class EmbeddedLocalisationsDelegate extends LocalizationsDelegate<L> {
   Map<String, Map<String, String>> messages = {};
 

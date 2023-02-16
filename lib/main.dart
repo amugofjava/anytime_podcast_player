@@ -31,9 +31,10 @@ void main() async {
   ));
 }
 
-/// The Let's Encrypt CA expired on at the end of September 2021. This causes problems when trying to
-/// fetch feeds secured with the CA. Older Android devices, 7.0 and before, cannot be updated with the
-/// latest CA so this routine manually sets up the updated LE CA when running on Android v7.0 or earlier.
+/// The Let's Encrypt certificate authority expired at the end of September 2021. Android devices
+/// running v7.1.1 or earlier will no longer trust their root certificate which will cause issues
+/// when trying to fetch feeds and images from sites secured with LE. This routine is called to
+/// add the new CA to the trusted list at app start.
 Future<List<int>> setupCertificateAuthority() async {
   List<int> ca = [];
 

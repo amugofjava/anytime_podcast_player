@@ -14,6 +14,7 @@ ThemeData _buildLightTheme() {
   return base.copyWith(
     colorScheme: ColorScheme.light(
       primary: Color(0xffff9800),
+      secondary: Color(0xfffb8c00),
       background: Color(0xffffe0b2),
     ),
     brightness: Brightness.light,
@@ -30,7 +31,6 @@ ThemeData _buildLightTheme() {
     selectedRowColor: Color(0xffff9800),
     unselectedWidgetColor: Color(0x8a000000),
     disabledColor: Color(0x61000000),
-    toggleableActiveColor: Color(0xfffb8c00),
     secondaryHeaderColor: Color(0xffffffff),
     backgroundColor: Color(0xffffffff),
     dialogBackgroundColor: Color(0xffffffff),
@@ -77,6 +77,7 @@ ThemeData _buildDarkTheme() {
   return base.copyWith(
     colorScheme: ColorScheme.dark(
       primary: Color(0xffffffff),
+      secondary: Color(0xfffb8c00),
       background: Color(0x80ffffff),
     ),
     brightness: Brightness.dark,
@@ -93,7 +94,6 @@ ThemeData _buildDarkTheme() {
     selectedRowColor: Color(0x77ffffff),
     unselectedWidgetColor: Colors.white,
     disabledColor: Color(0x77ffffff),
-    toggleableActiveColor: Color(0xfffb8c00),
     secondaryHeaderColor: Color(0xff222222),
     backgroundColor: Color(0xff222222),
     dialogBackgroundColor: Color(0xff222222),
