@@ -10,7 +10,7 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is currently at v1.1 and is built against Flutter 2.8+. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
+Anytime is currently at v1.2 and is built against Flutter 3.3.7+. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
 
 #### Testers
