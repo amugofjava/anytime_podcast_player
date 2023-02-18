@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
@@ -348,7 +349,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
   final maxHeight = 100.0;
   PodcastHtml description;
   bool showOverflow = false;
-  bool expanded = false;
+  final StreamController<bool> isDescriptionExpandedStream = StreamController<bool>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -381,36 +382,39 @@ class _PodcastTitleState extends State<PodcastTitle> {
                   ],
                 ),
               ),
-              Visibility(
-                visible: showOverflow,
-                child: expanded
-                    ? TextButton(
-                        style: ButtonStyle(
-                          visualDensity: VisualDensity.compact,
-                        ),
-                        child: Icon(Icons.expand_less),
-                        onPressed: () {
-                          setState(() {
-                            expanded = false;
-                          });
-                        },
-                      )
-                    : TextButton(
-                        style: ButtonStyle(visualDensity: VisualDensity.compact),
-                        child: Icon(Icons.expand_more),
-                        onPressed: () {
-                          setState(() {
-                            expanded = true;
-                          });
-                        },
-                      ),
+              StreamBuilder<bool>(
+                stream: isDescriptionExpandedStream.stream,
+                initialData: false,
+                builder: (context, snapshot) {
+                  final expanded = snapshot.data;
+                  return Visibility(
+                    visible: showOverflow,
+                    child: expanded
+                        ? TextButton(
+                            style: ButtonStyle(
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            child: Icon(Icons.expand_less),
+                            onPressed: () {
+                              isDescriptionExpandedStream.add(false);
+                            },
+                          )
+                        : TextButton(
+                            style: ButtonStyle(visualDensity: VisualDensity.compact),
+                            child: Icon(Icons.expand_more),
+                            onPressed: () {
+                              isDescriptionExpandedStream.add(true);
+                            },
+                          ),
+                  );
+                }
               )
             ],
           ),
           PodcastDescription(
             key: descriptionKey,
             content: description,
-            expanded: expanded,
+            isDescriptionExpandedStream: isDescriptionExpandedStream,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -445,7 +449,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
     description = PodcastHtml(
       content: widget.podcast.description,
     );
-
+    
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (descriptionKey.currentContext.size.height == maxHeight) {
         setState(() {
@@ -463,32 +467,41 @@ class _PodcastTitleState extends State<PodcastTitle> {
 /// TODO: Animate between the two states.
 class PodcastDescription extends StatelessWidget {
   final PodcastHtml content;
-  final bool expanded;
+  final StreamController<bool> isDescriptionExpandedStream;
   static const maxHeight = 100.0;
   static const padding = 4.0;
 
   const PodcastDescription({
     Key key,
     this.content,
-    this.expanded,
+    this.isDescriptionExpandedStream,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: padding),
-      child: expanded
-          ? content
-          : ConstrainedBox(
-              constraints: BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
-              child: ShaderMask(
-                  shaderCallback: LinearGradient(
-                    colors: [Colors.white, Colors.white.withAlpha(0)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.9, 1],
-                  ).createShader,
-                  child: content),
-            ),
+      padding: const EdgeInsets.only(bottom: PodcastDescription.padding),
+      child:  StreamBuilder<bool>(
+        stream: isDescriptionExpandedStream.stream,
+        initialData: false,
+        builder: (context, snapshot) {
+          return AnimatedSize(
+                  duration: Duration(milliseconds : 150),
+                  curve: Curves.fastOutSlowIn,
+                  // size: snapshot.data ? null : maxHeight- padding,
+                  child: Container( 
+                  constraints: snapshot.data ? BoxConstraints() :  BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
+                    child: ShaderMask(
+                      shaderCallback: LinearGradient(
+                        colors: [Colors.white, Colors.white.withAlpha(0)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: [0.9, 1],
+                      ).createShader,
+                      child: content),
+                ),);
+        }
+      ),
     );
   }
 }
