@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
@@ -459,8 +460,6 @@ class _PodcastTitleState extends State<PodcastTitle> {
 /// This class wraps the description in an expandable box. This handles the
 /// common case whereby the description is very long and, without this constraint,
 /// would require the use to always scroll before reaching the podcast episodes.
-///
-/// TODO: Animate between the two states.
 class PodcastDescription extends StatelessWidget {
   final PodcastHtml content;
   final bool expanded;
@@ -472,23 +471,32 @@ class PodcastDescription extends StatelessWidget {
     this.content,
     this.expanded,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: padding),
-      child: expanded
-          ? content
-          : ConstrainedBox(
-              constraints: BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
-              child: ShaderMask(
-                  shaderCallback: LinearGradient(
-                    colors: [Colors.white, Colors.white.withAlpha(0)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.9, 1],
-                  ).createShader,
-                  child: content),
-            ),
+      padding: const EdgeInsets.only(bottom: PodcastDescription.padding),
+      child: AnimatedSize(
+              duration: Duration(milliseconds: 150),
+              curve: Curves.fastOutSlowIn,
+              alignment: Alignment.topCenter,
+              child: Container(
+                constraints: expanded
+                    ? BoxConstraints()
+                    : BoxConstraints.loose(
+                        Size(double.infinity, maxHeight - padding)),
+                child: expanded ? 
+                  content 
+                  : ShaderMask(
+                    shaderCallback: LinearGradient(
+                      colors: [Colors.white, Colors.white.withAlpha(0)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.9, 1],
+                    ).createShader,
+                    child: content),
+              ),
+          ),
     );
   }
 }
