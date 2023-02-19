@@ -485,13 +485,14 @@ class PodcastDescription extends StatelessWidget {
         stream: isDescriptionExpandedStream.stream,
         initialData: false,
         builder: (context, snapshot) {
+          final expanded = snapshot.data;
           return AnimatedSize(
                   duration: Duration(milliseconds : 150),
                   curve: Curves.fastOutSlowIn,
-                  // size: snapshot.data ? null : maxHeight- padding,
+                  alignment: Alignment.topCenter,
                   child: Container( 
-                  constraints: snapshot.data ? BoxConstraints() :  BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
-                    child: ShaderMask(
+                  constraints: expanded ? BoxConstraints() :  BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
+                    child: expanded ? content :ShaderMask(
                       shaderCallback: LinearGradient(
                         colors: [Colors.white, Colors.white.withAlpha(0)],
                         begin: Alignment.topCenter,
