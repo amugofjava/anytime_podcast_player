@@ -26,7 +26,6 @@ enum LifecycleState {
 }
 
 /// A BLoC to handle interactions between the audio service and the client.
-/// A lot of the code in here could do with moving to the audio player service.
 class AudioBloc extends Bloc {
   final log = Logger('AudioBloc');
 

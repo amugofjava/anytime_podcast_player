@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// OPML (Outline Processor Markup Language) is an XML format for outlines, which is used in Podcast
+/// apps for transferring podcast subscriptions/follows to other podcast apps. Anytime supports 
+/// both import and export of OPML.
 class OPMLBloc extends Bloc {
   final log = Logger('OPMLBloc');
 
@@ -17,10 +20,10 @@ class OPMLBloc extends Bloc {
   final OPMLService opmlService;
 
   OPMLBloc({@required this.opmlService}) {
-    _listendOpmlEvents();
+    _listenOpmlEvents();
   }
 
-  void _listendOpmlEvents() {
+  void _listenOpmlEvents() {
     _opmlEvent.listen((event) {
       if (event is OPMLImportEvent) {
         opmlService.loadOPMLFile(event.file).listen((state) {
@@ -37,5 +40,6 @@ class OPMLBloc extends Bloc {
   }
 
   void Function(OPMLEvent) get opmlEvent => _opmlEvent.add;
+
   Stream<OPMLState> get opmlState => _opmlState.stream;
 }
