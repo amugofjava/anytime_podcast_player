@@ -10,8 +10,10 @@ This is the official repository for the Anytime Podcast Player - the simple Podc
 
 ## Getting Started
 
-Anytime is currently at v1.2 and is built against Flutter 3.3.7+. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
+Anytime is currently at v1.2.x and is built against Flutter 3.7.3+. View the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
+
+The official website can be found at [https://anytimeplayer.app](https://anytimeplayer.app)
 
 #### Testers
 
@@ -90,7 +92,7 @@ are heavily used within the application.
 * [Flutter](https://flutter.dev/) - SDK.
 * [Sembast](https://pub.dev/packages/sembast) - NoSQL persistent store.
 * [RxDart](https://pub.dev/packages/rxdart) - adds additional capabilities to Dart Streams and StreamControllers.
-* [Audio Service](https://pub.dev/packages/audio_service) - Provides background support for supporting audio libraries.
+* [Audio Service](https://pub.dev/packages/audio_service) - Provides background support for audio playback.
 * [Podcast Search](https://pub.dev/packages/podcast_search) - Provides podcast search and parsing.
 
 ## Architecture
