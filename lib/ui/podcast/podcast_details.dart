@@ -253,7 +253,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                                 ),
                                 Text(
                                   L.of(context).no_podcast_details_message,
-                                  style: Theme.of(context).textTheme.bodyText2,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                   textAlign: TextAlign.center,
                                 ),
                               ],
@@ -372,11 +372,11 @@ class _PodcastTitleState extends State<PodcastTitle> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
-                      child: Text(widget.podcast.title ?? '', style: textTheme.headline6),
+                      child: Text(widget.podcast.title ?? '', style: textTheme.titleLarge),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      child: Text(widget.podcast.copyright ?? '', style: textTheme.caption),
+                      child: Text(widget.podcast.copyright ?? '', style: textTheme.bodySmall),
                     ),
                   ],
                 ),
@@ -472,6 +472,7 @@ class PodcastDescription extends StatelessWidget {
     this.content,
     this.expanded,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Padding(

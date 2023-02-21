@@ -66,7 +66,6 @@ class _MaterialFundingMenu extends StatelessWidget {
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
               return PopupMenuButton<String>(
-                color: Theme.of(context).dialogBackgroundColor,
                 onSelected: (url) {
                   FundingLink.fundingLink(
                     url,

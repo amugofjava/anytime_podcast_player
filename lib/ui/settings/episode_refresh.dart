@@ -41,7 +41,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                       return AlertDialog(
                           title: Text(
                             L.of(context).settings_auto_update_episodes_heading,
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: Theme.of(context).textTheme.titleMedium,
                             textAlign: TextAlign.center,
                           ),
                           scrollable: true,

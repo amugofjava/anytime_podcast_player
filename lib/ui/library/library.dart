@@ -44,7 +44,7 @@ class _LibraryState extends State<Library> {
                       ),
                       Text(
                         L.of(context).no_subscriptions_message,
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.titleLarge,
                         textAlign: TextAlign.center,
                       ),
                     ],

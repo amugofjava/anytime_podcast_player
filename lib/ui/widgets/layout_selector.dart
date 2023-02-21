@@ -60,7 +60,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           ),
                           Text(
                             L.of(context).layout_label,
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],
                       )),

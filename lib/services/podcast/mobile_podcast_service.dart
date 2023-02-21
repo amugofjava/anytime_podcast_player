@@ -168,6 +168,8 @@ class MobilePodcastService extends PodcastService {
           final author = episode.author?.replaceAll('\n', '')?.trim() ?? '';
           final title = _format(episode.title);
           final description = _format(episode.description);
+          final content = episode.content;
+
           final episodeImage = episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.imageUrl : episode.imageUrl;
           final episodeThumbImage =
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
@@ -183,6 +185,7 @@ class MobilePodcastService extends PodcastService {
               podcast: pc.title,
               title: title,
               description: description,
+              content: content,
               author: author,
               season: episode.season ?? 0,
               episode: episode.episode ?? 0,
@@ -198,6 +201,7 @@ class MobilePodcastService extends PodcastService {
           } else {
             existingEpisode.title = title;
             existingEpisode.description = description;
+            existingEpisode.content = content;
             existingEpisode.author = author;
             existingEpisode.season = episode.season ?? 0;
             existingEpisode.episode = episode.episode ?? 0;
@@ -382,12 +386,7 @@ class MobilePodcastService extends PodcastService {
   /// Remove HTML padding from the content. The padding may look fine within
   /// the context of a browser, but can look out of place on a mobile screen.
   String _format(String input) {
-    return input
-            ?.replaceAll('\n', '')
-            ?.trim()
-            ?.replaceAll(descriptionRegExp2, '')
-            ?.replaceAll(descriptionRegExp1, '</p>') ??
-        '';
+    return input?.trim()?.replaceAll(descriptionRegExp2, '')?.replaceAll(descriptionRegExp1, '</p>') ?? '';
   }
 
   Future<psearch.Chapters> _loadChaptersByUrl(String url) {

@@ -68,7 +68,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       softWrap: false,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     )),
                 Divider(),
                 Padding(
@@ -76,7 +76,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                     left: 8.0,
                     right: 8.0,
                   ),
-                  child: PodcastHtml(content: episode.description),
+                  child: PodcastHtml(content: episode.content ?? episode.description),
                 )
               ],
             ),

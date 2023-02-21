@@ -47,6 +47,9 @@ class Episode {
   /// The episode description. This could be plain text or HTML.
   String description;
 
+  /// More detailed description - optional.
+  String content;
+
   /// External link
   String link;
 
@@ -126,6 +129,7 @@ class Episode {
     this.downloadState = DownloadState.none,
     this.title,
     this.description,
+    this.content,
     this.link,
     this.imageUrl,
     this.thumbImageUrl,
@@ -155,6 +159,7 @@ class Episode {
       'podcast': podcast,
       'title': title,
       'description': description,
+      'content': content,
       'link': link,
       'imageUrl': imageUrl,
       'thumbImageUrl': thumbImageUrl,
@@ -197,6 +202,7 @@ class Episode {
       podcast: episode['podcast'] as String,
       title: episode['title'] as String,
       description: episode['description'] as String,
+      content: episode['content'] as String,
       link: episode['link'] as String,
       imageUrl: episode['imageUrl'] as String,
       thumbImageUrl: episode['thumbImageUrl'] as String,
@@ -261,6 +267,7 @@ class Episode {
             podcast == other.podcast &&
             title == other.title &&
             description == other.description &&
+            content == other.content &&
             link == other.link &&
             imageUrl == other.imageUrl &&
             thumbImageUrl == other.thumbImageUrl &&
@@ -289,6 +296,7 @@ class Episode {
       podcast.hashCode ^
       title.hashCode ^
       description.hashCode ^
+      content.hashCode ^
       link.hashCode ^
       imageUrl.hashCode ^
       thumbImageUrl.hashCode ^

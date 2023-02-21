@@ -58,7 +58,7 @@ class DiscoveryResults extends StatelessWidget {
                     ),
                     Text(
                       L.of(context).no_search_results_message,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
                   ],

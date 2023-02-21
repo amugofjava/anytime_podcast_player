@@ -20,7 +20,7 @@ class SettingsDividerLabel extends StatelessWidget {
       padding: padding,
       child: Text(
         label,
-        style: Theme.of(context).textTheme.subtitle2.copyWith(
+        style: Theme.of(context).textTheme.titleSmall.copyWith(
               fontSize: 12.0,
               color: Theme.of(context).primaryColor,
             ),

@@ -71,7 +71,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                     child: Text(
                       L.of(context).up_next_queue_label.toUpperCase(),
-                      style: Theme.of(context).textTheme.button,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
                   Divider(),
@@ -81,7 +81,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
                         child: Text(
                           L.of(context).now_playing_queue_label,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                     ],
@@ -108,7 +108,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                         padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                         child: Text(
                           L.of(context).up_next_queue_label,
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
                       ),
                       Spacer(),
@@ -152,7 +152,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                           },
                           child: Text(
                             L.of(context).clear_queue_button_label,
-                            style: Theme.of(context).textTheme.subtitle2.copyWith(
+                            style: Theme.of(context).textTheme.titleSmall.copyWith(
                                   fontSize: 12.0,
                                   color: Theme.of(context).primaryColor,
                                 ),
@@ -179,7 +179,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     padding: const EdgeInsets.all(24.0),
                                     child: Text(
                                       L.of(context).empty_queue_message,
-                                      style: Theme.of(context).textTheme.subtitle1,
+                                      style: Theme.of(context).textTheme.titleMedium,
                                     ),
                                   ),
                                 ),

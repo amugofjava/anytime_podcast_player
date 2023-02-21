@@ -118,7 +118,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Text(
             L.of(context).audio_settings_playback_speed_label,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         Divider(),
@@ -126,7 +126,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           padding: const EdgeInsets.only(top: 16.0),
           child: Text(
             '${speed.toString()}x',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
         Row(

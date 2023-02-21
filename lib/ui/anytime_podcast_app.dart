@@ -381,7 +381,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           itemBuilder: (BuildContext context) {
                             return <PopupMenuEntry<String>>[
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                textStyle: Theme.of(context).textTheme.titleMedium,
                                 value: 'layout',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -395,7 +395,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                textStyle: Theme.of(context).textTheme.titleMedium,
                                 value: 'rss',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -409,7 +409,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                textStyle: Theme.of(context).textTheme.titleMedium,
                                 value: 'settings',
                                 child: Row(
                                   children: [
@@ -422,7 +422,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.subtitle1,
+                                textStyle: Theme.of(context).textTheme.titleMedium,
                                 value: 'about',
                                 child: Row(
                                   children: [
@@ -459,13 +459,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
               return BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                backgroundColor: Theme.of(context).bottomAppBarColor,
+                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
                 selectedIconTheme: Theme.of(context).iconTheme,
                 selectedItemColor: Theme.of(context).iconTheme.color,
                 selectedFontSize: 11.0,
                 unselectedFontSize: 11.0,
                 unselectedItemColor:
-                    HSLColor.fromColor(Theme.of(context).bottomAppBarColor).withLightness(0.8).toColor(),
+                    HSLColor.fromColor(Theme.of(context).bottomAppBarTheme.color).withLightness(0.8).toColor(),
                 currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
@@ -615,21 +615,21 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 }
 
 class TitleWidget extends StatelessWidget {
-  final TextStyle _titleTheme1 = theme.textTheme.bodyText2.copyWith(
+  final TextStyle _titleTheme1 = theme.textTheme.bodyMedium.copyWith(
     color: Color.fromARGB(255, 255, 153, 0),
     fontWeight: FontWeight.bold,
     fontFamily: 'MontserratRegular',
     fontSize: 18,
   );
 
-  final TextStyle _titleTheme2Light = theme.textTheme.bodyText2.copyWith(
+  final TextStyle _titleTheme2Light = theme.textTheme.bodyMedium.copyWith(
     color: Colors.black,
     fontWeight: FontWeight.bold,
     fontFamily: 'MontserratRegular',
     fontSize: 18,
   );
 
-  final TextStyle _titleTheme2Dark = theme.textTheme.bodyText2.copyWith(
+  final TextStyle _titleTheme2Dark = theme.textTheme.bodyMedium.copyWith(
     color: Colors.white,
     fontWeight: FontWeight.bold,
     fontFamily: 'MontserratRegular',

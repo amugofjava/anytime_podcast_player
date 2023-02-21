@@ -43,7 +43,7 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                                 title: Text(L.of(context).search_provider_label,
-                                    style: Theme.of(context).textTheme.subtitle1, textAlign: TextAlign.center),
+                                    style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
                                 content: StatefulBuilder(
                                   builder: (BuildContext context, StateSetter setState) {
                                     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[

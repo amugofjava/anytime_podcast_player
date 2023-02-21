@@ -41,7 +41,7 @@ class DraggableEpisodeTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
         softWrap: false,
-        style: textTheme.bodyText2,
+        style: textTheme.bodyMedium,
       ),
       subtitle: EpisodeSubtitle(episode),
       trailing: draggable
