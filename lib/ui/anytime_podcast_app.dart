@@ -564,14 +564,17 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           useRootNavigator: false,
           builder: (_) => BasicDialogAlert(
             title: Text(L.of(context).add_rss_feed_option),
-            content: TextField(
-              onChanged: (value) {
-                setState(() {
-                  url = value;
-                });
-              },
-              controller: textFieldController,
-              decoration: InputDecoration(hintText: 'https://'),
+            content: Material(
+              color: Colors.transparent,
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    url = value;
+                  });
+                },
+                controller: textFieldController,
+                decoration: InputDecoration(hintText: 'https://'),
+              ),
             ),
             actions: <Widget>[
               BasicDialogAction(
