@@ -37,7 +37,9 @@ class _OPMLImportState extends State<OPMLImport> {
               var d = snapshot.data;
 
               if (d is OPMLCompletedState) {
-                Navigator.pop(context);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pop(context);
+                });
               } else if (d is OPMLLoadingState) {
                 t = d.podcast;
               }

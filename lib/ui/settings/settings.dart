@@ -107,7 +107,8 @@ class _SettingsState extends State<Settings> {
                 onTap: () async {
                   var result = await FilePicker.platform.pickFiles(
                     type: FileType.custom,
-                    allowedExtensions: ['opml', 'xml'],
+                    // `podcast.opml` is a UTTypeDeclaration made in iOS setup.
+                    allowedExtensions: ['opml', 'podcast.opml', 'xml'],
                   );
 
                   if (result.count > 0) {
