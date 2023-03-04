@@ -31,7 +31,9 @@ class _OPMLExportState extends State<OPMLExport> {
           stream: bloc.opmlState,
           builder: (context, snapshot) {
             if (snapshot.data is OPMLCompletedState) {
-              Navigator.pop(context);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pop(context);
+              });
             }
 
             return Row(
