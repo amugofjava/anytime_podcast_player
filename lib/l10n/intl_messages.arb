@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-06-19T16:05:13.346340",
+  "@@last_modified": "2023-03-17T14:00:24.828729",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -682,6 +682,13 @@
   "layout_label": "Layout",
   "@layout_label": {
     "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_label": "Transcript",
+  "@transcript_label": {
+    "description": "Transcript label",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

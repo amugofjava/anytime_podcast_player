@@ -105,8 +105,6 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                             audioBloc.transitionPosition(chapter.startTime.toDouble());
                           },
                           selected: chapterSelected,
-                          // selectedTileColor: Theme.of(context).selectedRowColor,
-                          // tileColor: Colors.pink,
                           leading: Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(

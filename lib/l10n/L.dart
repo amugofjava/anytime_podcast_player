@@ -1017,6 +1017,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get transcript_label {
+    return message('transcript_label') ??
+        Intl.message(
+          'Transcript',
+          name: 'transcript_label',
+          desc: 'Transcript label',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {

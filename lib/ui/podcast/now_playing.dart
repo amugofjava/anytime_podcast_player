@@ -155,21 +155,17 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                         ),
                       ),
                     )),
-                if (scrollPos > 0)
-                  Opacity(
-                    opacity: opacity,
+                SizedBox.expand(
                     child: Column(
-                      children: [
-                        FloatingPlayer(),
-                        Expanded(
-                          child: Container(
-                            color: Theme.of(context).canvasColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                NowPlayingOptionsSelector(),
+                  children: [
+                    if (scrollPos > 0)
+                      Opacity(
+                        opacity: opacity,
+                        child: FloatingPlayer(),
+                      ),
+                    Expanded(child: NowPlayingOptionsSelector()),
+                  ],
+                )),
               ],
             ),
           );
@@ -409,7 +405,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                           width: 0,
                         )
                       : IconButton(
-                        padding: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
                           icon: Icon(Icons.link),
                           color: Theme.of(context).primaryIconTheme.color,
                           onPressed: () {

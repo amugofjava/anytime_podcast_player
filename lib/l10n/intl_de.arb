@@ -595,5 +595,12 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "transcript_label": "Transkript",
+  "@transcript_label": {
+    "description": "Transcript label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   }
 }

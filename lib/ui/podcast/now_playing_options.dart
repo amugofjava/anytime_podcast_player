@@ -11,6 +11,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
+/// This class gives us options that can be dragged up from the bottom of the main player
+/// window. Currently these options are Up Next & Transcript. This class is an initial version
+/// and should by much simpler than it is; however, a [NestedScrollView] is the widget we
+/// need to implement this UI, there is a current issue whereby the scroll view and
+/// [DraggableScrollableSheet] clash and therefore cannot be used together.
+///
+/// See issues (64157)[https://github.com/flutter/flutter/issues/64157]
+///            (67219)[https://github.com/flutter/flutter/issues/67219]
+///
+/// If anyone can come up with a more elegant solution (and one that does not throw
+/// an overflow error in debug) please raise and issue/submit a PR.
+///
+/// TODO: Extract contents of up next UI into separate widget so that it can be
+///       called from other parts of the app.
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double scrollPos;
 
@@ -20,211 +34,328 @@ class NowPlayingOptionsSelector extends StatefulWidget {
   State<NowPlayingOptionsSelector> createState() => _NowPlayingOptionsSelectorState();
 }
 
-/// This class places a draggable scrollable sheet at the bottom of the page. Dragging the
-/// sheep up will display additional options for playback which initially is the queue.
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
-  bool showContainer = false;
-  double o = 0.0;
-
   @override
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     const baseSize = 48;
-    final topPadding = MediaQuery.of(context).padding.top;
-    final topMargin = baseSize + topPadding;
     final theme = Theme.of(context);
-    final windowHeight = MediaQuery.of(context).size.height;
+    final windowHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     final minSize = baseSize / (windowHeight - baseSize);
-    final maxSize = (windowHeight - topMargin - 24) / windowHeight;
+
+    final draggableController = DraggableScrollableController();
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
       minChildSize: minSize,
-      maxChildSize: maxSize,
-      // Why does enabling snap stop the slider working altogether?
+      maxChildSize: 1.0,
+      controller: draggableController,
+      // Snap doesn't work as the sheet and scroll controller just don't get along
       // snap: true,
       // snapSizes: [minSize, maxSize],
       builder: (BuildContext context, ScrollController scrollController) {
-        return SingleChildScrollView(
-          controller: scrollController,
-          child: Material(
-            color: theme.secondaryHeaderColor,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Theme.of(context).highlightColor,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(18.0),
-                topRight: Radius.circular(18.0),
-              ),
-            ),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height - 94,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SliderHandle(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Text(
-                      L.of(context).up_next_queue_label.toUpperCase(),
-                      style: Theme.of(context).textTheme.labelLarge,
+        return DefaultTabController(
+          length: 2,
+          child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.expand(
+                  height: constraints.maxHeight,
+                ),
+                child: Material(
+                  color: theme.secondaryHeaderColor,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: Theme
+                          .of(context)
+                          .highlightColor,
+                      width: 1.0,
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(18.0),
+                      topRight: Radius.circular(18.0),
                     ),
                   ),
-                  Divider(),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
-                        child: Text(
-                          L.of(context).now_playing_queue_label,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                    ],
-                  ),
-                  StreamBuilder<QueueState>(
-                    initialData: QueueEmptyState(),
-                    stream: queueBloc.queue,
-                    builder: (context, snapshot) {
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
-                        child: DraggableEpisodeTile(
-                          key: Key('detileplaying'),
-                          episode: snapshot.data.playing,
-                          draggable: false,
-                        ),
-                      );
-                    },
-                  ),
-                  Row(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
-                        child: Text(
-                          L.of(context).up_next_queue_label,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
-                        child: TextButton(
-                          onPressed: () {
-                            showPlatformDialog<void>(
-                              context: context,
-                              useRootNavigator: false,
-                              builder: (_) => BasicDialogAlert(
-                                title: Text(
-                                  L.of(context).queue_clear_label_title,
-                                ),
-                                content: Text(L.of(context).queue_clear_label),
-                                actions: <Widget>[
-                                  BasicDialogAction(
-                                    title: ActionText(
-                                      L.of(context).cancel_button_label,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  BasicDialogAction(
-                                    title: ActionText(
-                                      Theme.of(context).platform == TargetPlatform.iOS
-                                          ? L.of(context).queue_clear_button_label.toUpperCase()
-                                          : L.of(context).queue_clear_button_label,
-                                    ),
-                                    iosIsDefaultAction: true,
-                                    iosIsDestructiveAction: true,
-                                    onPressed: () {
-                                      queueBloc.queueEvent(QueueClearEvent());
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          child: Text(
-                            L.of(context).clear_queue_button_label,
-                            style: Theme.of(context).textTheme.titleSmall.copyWith(
-                                  fontSize: 12.0,
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                    children: <Widget>[
+                      SliderHandle(),
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.0),
+                          border: Border(
+                            bottom: BorderSide(color: Colors.grey[800], width: 1.0),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  StreamBuilder<QueueState>(
-                      initialData: QueueEmptyState(),
-                      stream: queueBloc.queue,
-                      builder: (context, snapshot) {
-                        return snapshot.hasData && snapshot.data.queue.isEmpty
-                            ? Padding(
-                                padding: const EdgeInsets.all(24.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Theme.of(context).dividerColor,
-                                      border: Border.all(
-                                        color: Theme.of(context).dividerColor,
-                                      ),
-                                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(24.0),
-                                    child: Text(
-                                      L.of(context).empty_queue_message,
-                                      style: Theme.of(context).textTheme.titleMedium,
-                                    ),
-                                  ),
+                        child: TabBar(
+                          automaticIndicatorColorAdjustment: false,
+                          tabs: [
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                DefaultTabController.of(ctx).animateTo(0);
+
+                                if (draggableController.size <= 1.0) {
+                                  draggableController.jumpTo(1.0);
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                child: Text(
+                                  L
+                                      .of(context)
+                                      .up_next_queue_label
+                                      .toUpperCase(),
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .labelLarge,
                                 ),
-                              )
-                            : Expanded(
-                                child: ReorderableListView.builder(
-                                  buildDefaultDragHandles: false,
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.all(8),
-                                  itemCount: snapshot.hasData ? snapshot.data.queue.length : 0,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Dismissible(
-                                      key: ValueKey('disqueue${snapshot.data.queue[index].guid}'),
-                                      direction: DismissDirection.endToStart,
-                                      onDismissed: (direction) {
-                                        queueBloc.queueEvent(QueueRemoveEvent(episode: snapshot.data.queue[index]));
-                                      },
+                              ),
+                            ),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () {
+                                DefaultTabController.of(ctx).animateTo(1);
+
+                                if (draggableController.size <= 1.0) {
+                                  draggableController.jumpTo(1.0);
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                child: Text(
+                                  L
+                                      .of(context)
+                                      .transcript_label
+                                      .toUpperCase(),
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .labelLarge,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                                      child: Text(
+                                        L
+                                            .of(context)
+                                            .now_playing_queue_label,
+                                        style: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                StreamBuilder<QueueState>(
+                                  initialData: QueueEmptyState(),
+                                  stream: queueBloc.queue,
+                                  builder: (context, snapshot) {
+                                    return Padding(
+                                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                                       child: DraggableEpisodeTile(
-                                        key: ValueKey('tilequeue${snapshot.data.queue[index].guid}'),
-                                        index: index,
-                                        episode: snapshot.data.queue[index],
-                                        playable: true,
+                                        key: Key('detileplaying'),
+                                        episode: snapshot.data.playing,
+                                        draggable: false,
                                       ),
                                     );
                                   },
-                                  onReorder: (int oldIndex, int newIndex) {
-                                    /// Seems odd to have to do this, but this -1 was taken from
-                                    /// the Flutter docs.
-                                    if (oldIndex < newIndex) {
-                                      newIndex -= 1;
-                                    }
-
-                                    queueBloc.queueEvent(QueueMoveEvent(
-                                      episode: snapshot.data.queue[oldIndex],
-                                      oldIndex: oldIndex,
-                                      newIndex: newIndex,
-                                    ));
-                                  },
                                 ),
-                              );
-                      }),
-                ],
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
+                                      child: Text(
+                                        L
+                                            .of(context)
+                                            .up_next_queue_label,
+                                        style: Theme
+                                            .of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          showPlatformDialog<void>(
+                                            context: context,
+                                            useRootNavigator: false,
+                                            builder: (_) =>
+                                                BasicDialogAlert(
+                                                  title: Text(
+                                                    L
+                                                        .of(context)
+                                                        .queue_clear_label_title,
+                                                  ),
+                                                  content: Text(L
+                                                      .of(context)
+                                                      .queue_clear_label),
+                                                  actions: <Widget>[
+                                                    BasicDialogAction(
+                                                      title: ActionText(
+                                                        L
+                                                            .of(context)
+                                                            .cancel_button_label,
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    BasicDialogAction(
+                                                      title: ActionText(
+                                                        Theme
+                                                            .of(context)
+                                                            .platform == TargetPlatform.iOS
+                                                            ? L
+                                                            .of(context)
+                                                            .queue_clear_button_label
+                                                            .toUpperCase()
+                                                            : L
+                                                            .of(context)
+                                                            .queue_clear_button_label,
+                                                      ),
+                                                      iosIsDefaultAction: true,
+                                                      iosIsDestructiveAction: true,
+                                                      onPressed: () {
+                                                        queueBloc.queueEvent(QueueClearEvent());
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                          );
+                                        },
+                                        child: Text(
+                                          L
+                                              .of(context)
+                                              .clear_queue_button_label,
+                                          style: Theme
+                                              .of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              .copyWith(
+                                            fontSize: 12.0,
+                                            color: Theme
+                                                .of(context)
+                                                .primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                StreamBuilder<QueueState>(
+                                    initialData: QueueEmptyState(),
+                                    stream: queueBloc.queue,
+                                    builder: (context, snapshot) {
+                                      return snapshot.hasData && snapshot.data.queue.isEmpty
+                                          ? Padding(
+                                        padding: const EdgeInsets.all(24.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Theme
+                                                  .of(context)
+                                                  .dividerColor,
+                                              border: Border.all(
+                                                color: Theme
+                                                    .of(context)
+                                                    .dividerColor,
+                                              ),
+                                              borderRadius: BorderRadius.all(Radius.circular(10))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(24.0),
+                                            child: Text(
+                                              L
+                                                  .of(context)
+                                                  .empty_queue_message,
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .titleMedium,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                          : Expanded(
+                                        child: ReorderableListView.builder(
+                                          buildDefaultDragHandles: false,
+                                          shrinkWrap: true,
+                                          padding: const EdgeInsets.all(8),
+                                          itemCount: snapshot.hasData ? snapshot.data.queue.length : 0,
+                                          itemBuilder: (BuildContext context, int index) {
+                                            return Dismissible(
+                                              key: ValueKey('disqueue${snapshot.data.queue[index].guid}'),
+                                              direction: DismissDirection.endToStart,
+                                              onDismissed: (direction) {
+                                                queueBloc.queueEvent(
+                                                    QueueRemoveEvent(episode: snapshot.data.queue[index]));
+                                              },
+                                              child: DraggableEpisodeTile(
+                                                key: ValueKey('tilequeue${snapshot.data.queue[index].guid}'),
+                                                index: index,
+                                                episode: snapshot.data.queue[index],
+                                                playable: true,
+                                              ),
+                                            );
+                                          },
+                                          onReorder: (int oldIndex, int newIndex) {
+                                            /// Seems odd to have to do this, but this -1 was taken from
+                                            /// the Flutter docs.
+                                            if (oldIndex < newIndex) {
+                                              newIndex -= 1;
+                                            }
+
+                                            queueBloc.queueEvent(QueueMoveEvent(
+                                              episode: snapshot.data.queue[oldIndex],
+                                              oldIndex: oldIndex,
+                                              newIndex: newIndex,
+                                            ));
+                                          },
+                                        ),
+                                      );
+                                    }),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text('HOLDING PAGE'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         );
       },
     );
