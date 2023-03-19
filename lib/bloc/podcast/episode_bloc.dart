@@ -49,8 +49,10 @@ class EpisodeBloc extends Bloc {
   }
 
   void _init() {
-    _downloadsOutput = _downloadsInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadDownloads(silent));
-    _episodesOutput = _episodesInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadEpisodes(silent));
+    _downloadsOutput = _downloadsInput.switchMap<BlocState<List<Episode>>>(
+        (bool silent) => _loadDownloads(silent));
+    _episodesOutput = _episodesInput.switchMap<BlocState<List<Episode>>>(
+        (bool silent) => _loadEpisodes(silent));
 
     _handleDeleteDownloads();
     _handleMarkAsPlayed();
@@ -84,9 +86,10 @@ class EpisodeBloc extends Bloc {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
       if (_episodes != null) {
-        var episode = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
-
-        if (episode != -1) {
+        var episode = _episodes.indexWhere((e) =>
+            e.pguid == state.episode.pguid && e.guid == state.episode.guid);
+        bool downloadCompleted = state.episode.downloaded;
+        if (episode == -1 && downloadCompleted) {
           fetchDownloads(true);
         }
       }
