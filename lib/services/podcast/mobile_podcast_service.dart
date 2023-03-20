@@ -28,6 +28,7 @@ class MobilePodcastService extends PodcastService {
   final log = Logger('MobilePodcastService');
   final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
 
+
   MobilePodcastService({
     @required PodcastApi api,
     @required Repository repository,
@@ -69,10 +70,14 @@ class MobilePodcastService extends PodcastService {
 
   @override
   List<String> genres() {
-    var results = <String>['All'];
-    results.addAll(api.genres(settingsService.searchProvider));
+    var results = <String>[];
 
-    //.addAll(api.genres(settingsService.searchProvider));
+    if (settingsService.searchProvider == 'itunes') {
+      results.addAll(PodcastService.itunesGenres);
+    } else {
+      results.addAll(PodcastService.podcastIndexGenres);
+    }
+
     return results;
   }
 
@@ -172,7 +177,7 @@ class MobilePodcastService extends PodcastService {
 
           final episodeImage = episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.imageUrl : episode.imageUrl;
           final episodeThumbImage =
-              episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
+          episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
           final duration = episode.duration?.inSeconds ?? 0;
 
           if (existingEpisode == null) {

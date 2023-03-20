@@ -497,7 +497,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     if (index == 0) {
       return Library();
     } else if (index == 1) {
-      return Discovery(inlineSearch: widget.inlineSearch);
+      return Discovery(
+        categories: true,
+        inlineSearch: widget.inlineSearch,
+      );
     } else {
       return Downloads();
     }
