@@ -1,6 +1,7 @@
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// An implementation [SettingService] for mobile devices backed by
@@ -8,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MobileSettingsService extends SettingsService {
   static SharedPreferences _sharedPreferences;
   static MobileSettingsService _instance;
+
+  final settingsNotifier = PublishSubject<String>();
 
   MobileSettingsService._create();
 
@@ -27,6 +30,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set markDeletedEpisodesAsPlayed(bool value) {
     _sharedPreferences.setBool('markplayedasdeleted', value);
+    settingsNotifier.sink.add('markplayedasdeleted');
   }
 
   @override
@@ -35,6 +39,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set storeDownloadsSDCard(bool value) {
     _sharedPreferences.setBool('savesdcard', value);
+    settingsNotifier.sink.add('savesdcard');
   }
 
   @override
@@ -47,11 +52,13 @@ class MobileSettingsService extends SettingsService {
   @override
   set themeDarkMode(bool value) {
     _sharedPreferences.setString('theme', value ? 'dark' : 'light');
+    settingsNotifier.sink.add('theme');
   }
 
   @override
   set playbackSpeed(double playbackSpeed) {
     _sharedPreferences.setDouble('speed', playbackSpeed);
+    settingsNotifier.sink.add('speed');
   }
 
   @override
@@ -62,6 +69,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set searchProvider(String provider) {
     _sharedPreferences.setString('search', provider);
+    settingsNotifier.sink.add('search');
   }
 
   @override
@@ -77,6 +85,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set externalLinkConsent(bool consent) {
     _sharedPreferences.setBool('elconsent', consent);
+    settingsNotifier.sink.add('elconsent');
   }
 
   @override
@@ -87,6 +96,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set autoOpenNowPlaying(bool autoOpenNowPlaying) {
     _sharedPreferences.setBool('autoopennowplaying', autoOpenNowPlaying);
+    settingsNotifier.sink.add('autoopennowplaying');
   }
 
   @override
@@ -97,6 +107,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set showFunding(bool show) {
     _sharedPreferences.setBool('showFunding', show);
+    settingsNotifier.sink.add('showFunding');
   }
 
   @override
@@ -107,6 +118,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set autoUpdateEpisodePeriod(int period) {
     _sharedPreferences.setInt('autoUpdateEpisodePeriod', period);
+    settingsNotifier.sink.add('autoUpdateEpisodePeriod');
   }
 
   @override
@@ -118,6 +130,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set trimSilence(bool trim) {
     _sharedPreferences.setBool('trimSilence', trim);
+    settingsNotifier.sink.add('trimSilence');
   }
 
   @override
@@ -128,6 +141,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set volumeBoost(bool boost) {
     _sharedPreferences.setBool('volumeBoost', boost);
+    settingsNotifier.sink.add('volumeBoost');
   }
 
   @override
@@ -138,6 +152,7 @@ class MobileSettingsService extends SettingsService {
   @override
   set layoutMode(int mode) {
     _sharedPreferences.setInt('layout', mode);
+    settingsNotifier.sink.add('layout');
   }
 
   @override
@@ -147,4 +162,7 @@ class MobileSettingsService extends SettingsService {
 
   @override
   AppSettings settings;
+
+  @override
+  Stream<String> get settingsListener => settingsNotifier.stream;
 }

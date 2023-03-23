@@ -16,6 +16,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 
 import '../mocks/mock_path_provider.dart';
 import '../mocks/mock_podcast_api.dart';
+import '../mocks/mock_settings_service.dart';
 
 void main() {
   final api = MockPodcastApi();
@@ -32,7 +33,7 @@ void main() {
     podcastService = MobilePodcastService(
       api: api,
       repository: repository,
-      settingsService: null,
+      settingsService: MockSettingsService(),
     );
 
     opmlService = MobileOPMLService(podcastService: podcastService, repository: repository);

@@ -28,11 +28,14 @@ class DiscoveryBloc extends Bloc {
   /// The last genre to be passed in a [DiscoveryEvent].
   final _selectedGenre = BehaviorSubject<SelectedGenre>(sync: true);
 
+  /// The last fetched results.
   Stream<DiscoveryState> _discoveryResults;
+
+  /// To save bandwidth we cache the results.
   podcast_search.SearchResult _resultsCache;
 
   String _lastGenre = '';
-  int _lastIndex;
+  int _lastIndex = 0;
 
   DiscoveryBloc({@required this.podcastService}) {
     _init();
@@ -40,11 +43,11 @@ class DiscoveryBloc extends Bloc {
 
   void _init() {
     _discoveryResults = _discoveryInput.switchMap<DiscoveryState>((DiscoveryEvent event) => _charts(event));
-    _selectedGenre.value = SelectedGenre(index: 0, genre: '<All>');
-    _genres.onListen = loadGenres;
+    _selectedGenre.value = SelectedGenre(index: 0, genre: '');
+    _genres.onListen = _loadGenres;
   }
 
-  void loadGenres() {
+  void _loadGenres() {
     _genres.sink.add(podcastService.genres());
   }
 
@@ -54,10 +57,20 @@ class DiscoveryBloc extends Bloc {
     if (event is DiscoveryChartEvent) {
       if (_resultsCache == null ||
           event.genre != _lastGenre ||
-          DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
+          DateTime
+              .now()
+              .difference(_resultsCache.processedTime)
+              .inMinutes > cacheMinutes) {
         _lastGenre = event.genre;
         _lastIndex = podcastService.genres().indexOf(_lastGenre);
-        _selectedGenre.add(SelectedGenre(index: _lastIndex, genre: _lastGenre));
+
+        if (_lastIndex > 0) {
+          _selectedGenre.add(SelectedGenre(index: _lastIndex, genre: _lastGenre));
+        } else {
+          /// Must have changed provider
+          _lastGenre = '';
+          _selectedGenre.add(SelectedGenre(index: 0, genre: ''));
+        }
         _resultsCache = await podcastService.charts(size: event.count, genre: event.genre);
       }
 

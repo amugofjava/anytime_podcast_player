@@ -12,7 +12,6 @@ import 'package:sliver_tools/sliver_tools.dart';
 
 /// This class is the root class for rendering the Discover tab. This UI can optionally show
 /// a list of genres provided by iTunes/PodcastIndex.
-/// TODO: Add multi-language support for all categories.
 class Discovery extends StatefulWidget {
   final bool categories;
   final bool inlineSearch;
@@ -96,18 +95,16 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
   Widget build(BuildContext context) {
     String selectedCategory = widget.discoveryBloc.selectedGenre.genre;
 
-    print('Selected genre is ${widget.discoveryBloc.selectedGenre.genre}');
-    print('Selected index is ${widget.discoveryBloc.selectedGenre.index}');
-
     return Container(
       width: double.infinity,
       color: Theme.of(context).canvasColor,
       child: StreamBuilder<List<String>>(
           stream: widget.discoveryBloc.genres,
+          initialData: [],
           builder: (context, snapshot) {
             return snapshot.hasData
                 ? ScrollablePositionedList.builder(
-                    initialScrollIndex: widget.discoveryBloc.selectedGenre.index,
+                    initialScrollIndex: widget.discoveryBloc.selectedGenre.index ?? 0,
                     itemScrollController: widget.itemScrollController,
                     itemCount: snapshot.data.length,
                     scrollDirection: Axis.horizontal,
@@ -115,7 +112,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                       final item = snapshot.data[i];
 
                       return Card(
-                        color: item == selectedCategory
+                        color: item == selectedCategory || (selectedCategory.isEmpty && i == 0)
                             ? Theme.of(context).cardTheme.shadowColor
                             : Theme.of(context).cardTheme.color,
                         child: TextButton(

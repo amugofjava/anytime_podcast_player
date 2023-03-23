@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2022-06-19T16:05:13.346340",
+  "@@last_modified": "2023-03-22T16:48:24.557644",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -682,6 +682,20 @@
   "layout_label": "Layout",
   "@layout_label": {
     "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_itunes": "",
+  "@discovery_categories_itunes": {
+    "description": "Comma separated list of iTunes categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_pindex": "",
+  "@discovery_categories_pindex": {
+    "description": "Comma separated list of Podcast Index categories",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
