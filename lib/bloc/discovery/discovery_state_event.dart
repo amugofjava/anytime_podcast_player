@@ -10,10 +10,12 @@ class DiscoveryEvent {}
 class DiscoveryChartEvent extends DiscoveryEvent {
   final int count;
   String genre;
+  String countryCode;
 
   DiscoveryChartEvent({
     @required this.count,
     this.genre = '',
+    this.countryCode = '',
   });
 }
 

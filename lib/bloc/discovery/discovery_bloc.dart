@@ -57,10 +57,7 @@ class DiscoveryBloc extends Bloc {
     if (event is DiscoveryChartEvent) {
       if (_resultsCache == null ||
           event.genre != _lastGenre ||
-          DateTime
-              .now()
-              .difference(_resultsCache.processedTime)
-              .inMinutes > cacheMinutes) {
+          DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
         _lastGenre = event.genre;
         _lastIndex = podcastService.genres().indexOf(_lastGenre);
 
@@ -71,7 +68,11 @@ class DiscoveryBloc extends Bloc {
           _lastGenre = '';
           _selectedGenre.add(SelectedGenre(index: 0, genre: ''));
         }
-        _resultsCache = await podcastService.charts(size: event.count, genre: event.genre);
+        _resultsCache = await podcastService.charts(
+          size: event.count,
+          genre: event.genre,
+          countryCode: event.countryCode,
+        );
       }
 
       yield DiscoveryPopulatedState<podcast_search.SearchResult>(

@@ -32,7 +32,11 @@ class _DiscoveryState extends State<Discovery> {
 
     final bloc = Provider.of<DiscoveryBloc>(context, listen: false);
 
-    bloc.discover(DiscoveryChartEvent(count: 10, genre: bloc.selectedGenre.genre));
+    bloc.discover(DiscoveryChartEvent(
+      count: 10,
+      genre: bloc.selectedGenre.genre,
+      countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
+    ));
   }
 
   @override
@@ -102,9 +106,11 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
           stream: widget.discoveryBloc.genres,
           initialData: [],
           builder: (context, snapshot) {
-            return snapshot.hasData
+            var i = widget.discoveryBloc.selectedGenre.index ?? 0;
+
+            return snapshot.hasData && snapshot.data.isNotEmpty
                 ? ScrollablePositionedList.builder(
-                    initialScrollIndex: widget.discoveryBloc.selectedGenre.index ?? 0,
+                    initialScrollIndex: (i > 0) ? i : 0,
                     itemScrollController: widget.itemScrollController,
                     itemCount: snapshot.data.length,
                     scrollDirection: Axis.horizontal,
@@ -125,7 +131,11 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               selectedCategory = item;
                             });
 
-                            widget.discoveryBloc.discover(DiscoveryChartEvent(count: 10, genre: item));
+                            widget.discoveryBloc.discover(DiscoveryChartEvent(
+                              count: 10,
+                              genre: item,
+                              countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
+                            ));
                           },
                           child: Text(item),
                         ),

@@ -175,6 +175,7 @@ abstract class PodcastService {
   Future<pcast.SearchResult> charts({
     @required int size,
     String genre,
+    String countryCode,
   });
 
   List<String> genres();

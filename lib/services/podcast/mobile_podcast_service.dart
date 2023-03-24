@@ -93,14 +93,12 @@ class MobilePodcastService extends PodcastService {
   Future<podcast_search.SearchResult> charts({
     int size = 20,
     String genre,
+    String countryCode = '',
   }) {
     var providerGenre = _decodeGenre(genre);
 
     return api.charts(
-      size: size,
-      searchProvider: settingsService.searchProvider,
-      genre: providerGenre,
-    );
+        size: size, searchProvider: settingsService.searchProvider, genre: providerGenre, countryCode: countryCode);
   }
 
   @override
