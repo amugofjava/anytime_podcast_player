@@ -85,8 +85,8 @@ class EpisodeBloc extends Bloc {
       // Do we have this episode?
       if (_episodes != null) {
         var episode = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
-
-        if (episode != -1) {
+        bool downloadCompleted = state.episode.downloaded;
+        if (episode == -1 && downloadCompleted) {
           fetchDownloads(true);
         }
       }
