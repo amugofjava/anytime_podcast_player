@@ -30,8 +30,6 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-		<key>NSAllowsArbitraryLoadsForMedia</key>
-		<true/>
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>File access is required to facilitate locating and importing OPML files</string>
@@ -74,6 +72,28 @@
         </dict>
       </array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>podcast.opml</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>OPML ( Outline Processor Markup Language) is an XML format for outlines.</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>opml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
 </plist>

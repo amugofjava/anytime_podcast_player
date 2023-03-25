@@ -25,6 +25,7 @@ abstract class PodcastApi {
     int size,
     String searchProvider,
     String genre,
+    String countryCode,
   });
 
   List<String> genres(

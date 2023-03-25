@@ -45,6 +45,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete_episode_title": MessageLookupByLibrary.simpleMessage("Folge löschen"),
         "delete_label": MessageLookupByLibrary.simpleMessage("Löschen"),
         "discover": MessageLookupByLibrary.simpleMessage("Entdecken"),
+        "discovery_categories_itunes": MessageLookupByLibrary.simpleMessage(
+            "<Alle>,Künste,Geschäft,Komödie,Ausbildung,Fiktion,Regierung,Gesundheit & Fitness,Geschichte,Kinder & Familie,Freizeit,Musik,Die Nachrichten,Religion & Spiritualität,Wissenschaft,Gesellschaft & Kultur,Sport,Fernsehen & Film,Technologie,Echte Kriminalität"),
+        "discovery_categories_pindex": MessageLookupByLibrary.simpleMessage(
+            "<Alle>,After-Shows,Alternative,Tiere,Animation,Kunst,Astronomie,Automobil,Luftfahrt,Baseball,Basketball,Schönheit,Bücher,Buddhismus,Geschäft,Karriere,Chemie,Christentum,Klima,Komödie,Kommentar,Kurse,Kunsthandwerk,Kricket,Kryptowährung,Kultur,Täglich,Design,Dokumentarfilm,Theater,Erde,Ausbildung,Unterhaltung,Unternehmerschaft,Familie,Fantasie,Mode,Fiktion,Film,Fitness,Essen,Fußball,Spiele,Garten,Golf,Regierung,Gesundheit,Hinduismus,Geschichte,Hobbys,Eishockey,Heim,Wieman,Improvisieren,Vorstellungsgespräche,Investieren,Islam,Zeitschriften,Judentum,Kinder,Sprache,Lernen,Freizeit,Leben,Management,Manga,Marketing,Mathematik,Medizin,geistig,Musik,Natürlich,Natur,Nachricht,Gemeinnützig,Ernährung,Erziehung,Aufführung,Persönlich,Haustiere,Philosophie,Physik,Setzt,Politik,Beziehungen,Religion,Bewertungen,Rollenspiel,Rugby,Betrieb,Wissenschaft,Selbstverbesserung,Sexualität,Fußball,Sozial,Gesellschaft,Spiritualität,Sport,Aufstehen,Geschichten,Baden,FERNSEHER,Tischplatte,Technologie,Tennis,Reisen,EchteKriminalität,Videospiele,Visuell,Volleyball,Wetter,Wildnis,Ringen"),
         "download_episode_button_label": MessageLookupByLibrary.simpleMessage("Folge herunterladen"),
         "downloads": MessageLookupByLibrary.simpleMessage("Herunterladen"),
         "empty_queue_message": MessageLookupByLibrary.simpleMessage("Ihre Warteschlange ist leer"),
