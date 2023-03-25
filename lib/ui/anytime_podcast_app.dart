@@ -137,30 +137,19 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
       providers: [
         Provider<SearchBloc>(
           create: (_) => SearchBloc(
-              podcastService: MobilePodcastService(
-            api: widget.podcastApi,
-            repository: widget.repository,
-            settingsService: widget.mobileSettingsService,
-          )),
+            podcastService: widget.podcastService,
+          ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<DiscoveryBloc>(
           create: (_) => DiscoveryBloc(
-              podcastService: MobilePodcastService(
-            api: widget.podcastApi,
-            repository: widget.repository,
-            settingsService: widget.mobileSettingsService,
-          )),
+            podcastService: widget.podcastService,
+          ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<EpisodeBloc>(
-          create: (_) => EpisodeBloc(
-              podcastService: MobilePodcastService(
-                api: widget.podcastApi,
-                repository: widget.repository,
-                settingsService: widget.mobileSettingsService,
-              ),
-              audioPlayerService: widget.audioPlayerService),
+          create: (_) =>
+              EpisodeBloc(podcastService: widget.podcastService, audioPlayerService: widget.audioPlayerService),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PodcastBloc>(
@@ -497,7 +486,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     if (index == 0) {
       return Library();
     } else if (index == 1) {
-      return Discovery(inlineSearch: widget.inlineSearch);
+      return Discovery(
+        categories: true,
+        inlineSearch: widget.inlineSearch,
+      );
     } else {
       return Downloads();
     }

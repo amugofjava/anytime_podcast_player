@@ -12,30 +12,64 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/l10n/messages_all.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
-import 'package:podcast_search/podcast_search.dart' as psearch;
+import 'package:podcast_search/podcast_search.dart' as podcast_search;
 
 class MobilePodcastService extends PodcastService {
   final descriptionRegExp1 = RegExp(r'(<\/p><br>|<\/p><\/br>|<p><br><\/p>|<p><\/br><\/p>)');
   final descriptionRegExp2 = RegExp(r'(<p><br><\/p>|<p><\/br><\/p>)');
   final log = Logger('MobilePodcastService');
   final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
+  var _categories = <String>[];
+  var _intlCategories = <String>[];
+  var _intlCategoriesSorted = <String>[];
 
   MobilePodcastService({
     @required PodcastApi api,
     @required Repository repository,
     @required SettingsService settingsService,
-  }) : super(api: api, repository: repository, settingsService: settingsService);
+  }) : super(api: api, repository: repository, settingsService: settingsService) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    await initializeMessages(Platform.localeName);
+    _setupGenres();
+
+    /// Listen for user changes in search provider. If changed, reload the genre list
+    settingsService.settingsListener.where((event) => event == 'search').listen((event) {
+      _setupGenres();
+    });
+  }
+
+  void _setupGenres() {
+    var categoryList = '';
+
+    /// Fetch the correct categories for the current local and selected provider.
+    if (settingsService.searchProvider == 'itunes') {
+      _categories = PodcastService.itunesGenres;
+      categoryList = Intl.message('discovery_categories_itunes', locale: Platform.localeName);
+    } else {
+      _categories = PodcastService.podcastIndexGenres;
+      categoryList = Intl.message('discovery_categories_pindex', locale: Platform.localeName);
+    }
+
+    _intlCategories = categoryList.split(',');
+    _intlCategoriesSorted = categoryList.split(',');
+    _intlCategoriesSorted.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+  }
 
   @override
-  Future<psearch.SearchResult> search({
+  Future<podcast_search.SearchResult> search({
     String term,
     String country,
     String attribute,
@@ -56,24 +90,20 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
-  Future<psearch.SearchResult> charts({
+  Future<podcast_search.SearchResult> charts({
     int size = 20,
     String genre,
+    String countryCode = '',
   }) {
+    var providerGenre = _decodeGenre(genre);
+
     return api.charts(
-      size: size,
-      searchProvider: settingsService.searchProvider,
-      genre: genre,
-    );
+        size: size, searchProvider: settingsService.searchProvider, genre: providerGenre, countryCode: countryCode);
   }
 
   @override
   List<String> genres() {
-    var results = <String>['All'];
-    results.addAll(api.genres(settingsService.searchProvider));
-
-    //.addAll(api.genres(settingsService.searchProvider));
-    return results;
+    return _intlCategoriesSorted;
   }
 
   /// Loads the specified [Podcast]. If the Podcast instance has an ID we'll fetch
@@ -89,7 +119,7 @@ class MobilePodcastService extends PodcastService {
     log.fine('loadPodcast. ID ${podcast.id} - refresh $refresh');
 
     if (podcast.id == null || refresh) {
-      psearch.Podcast loadedPodcast;
+      podcast_search.Podcast loadedPodcast;
       var imageUrl = podcast.imageUrl;
       var thumbImageUrl = podcast.thumbImageUrl;
 
@@ -389,12 +419,13 @@ class MobilePodcastService extends PodcastService {
     return input?.trim()?.replaceAll(descriptionRegExp2, '')?.replaceAll(descriptionRegExp1, '</p>') ?? '';
   }
 
-  Future<psearch.Chapters> _loadChaptersByUrl(String url) {
-    return compute<_FeedComputer, psearch.Chapters>(_loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
+  Future<podcast_search.Chapters> _loadChaptersByUrl(String url) {
+    return compute<_FeedComputer, podcast_search.Chapters>(
+        _loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
   }
 
-  static Future<psearch.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) async {
-    psearch.Chapters result;
+  static Future<podcast_search.Chapters> _loadChaptersByUrlCompute(_FeedComputer c) async {
+    podcast_search.Chapters result;
 
     try {
       result = await c.api.loadChapters(c.url);
@@ -412,15 +443,32 @@ class MobilePodcastService extends PodcastService {
   /// can end up blocking the UI thread. We perform our feed load in a
   /// separate isolate so that the UI can continue to present a loading
   /// indicator whilst the data is fetched without locking the UI.
-  Future<psearch.Podcast> _loadPodcastFeed({@required String url}) {
-    return compute<_FeedComputer, psearch.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
+  Future<podcast_search.Podcast> _loadPodcastFeed({@required String url}) {
+    return compute<_FeedComputer, podcast_search.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
   }
 
   /// We have to separate the process of calling compute as you cannot use
   /// named parameters with compute. The podcast feed load API uses named
   /// parameters so we need to change it to a single, positional parameter.
-  static Future<psearch.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
+  static Future<podcast_search.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
     return c.api.loadFeed(c.url);
+  }
+
+  /// The service providers expect the genre to be passed in English. This function takes
+  /// the selected genre and returns the English version.
+  String _decodeGenre(String genre) {
+    var index = _intlCategories.indexOf(genre);
+    var decodedGenre = '';
+
+    if (index >= 0) {
+      decodedGenre = _categories[index];
+
+      if (decodedGenre == '<All>') {
+        decodedGenre = '';
+      }
+    }
+
+    return decodedGenre;
   }
 
   @override
@@ -443,9 +491,9 @@ class _PodcastCache {
 
   _PodcastCache({@required this.maxItems, @required this.expiration}) : _queue = Queue<_CacheItem>();
 
-  psearch.Podcast item(String key) {
+  podcast_search.Podcast item(String key) {
     var hit = _queue.firstWhere((_CacheItem i) => i.podcast.url == key, orElse: () => null);
-    psearch.Podcast p;
+    podcast_search.Podcast p;
 
     if (hit != null) {
       var now = DateTime.now();
@@ -460,7 +508,7 @@ class _PodcastCache {
     return p;
   }
 
-  void store(psearch.Podcast podcast) {
+  void store(podcast_search.Podcast podcast) {
     if (_queue.length == maxItems) {
       _queue.removeFirst();
     }
@@ -473,7 +521,7 @@ class _PodcastCache {
 /// date and time it was added. This can be used by the cache to
 /// keep a small and up-to-date list of searched for Podcasts.
 class _CacheItem {
-  final psearch.Podcast podcast;
+  final podcast_search.Podcast podcast;
   final DateTime dateAdded;
 
   _CacheItem(this.podcast) : dateAdded = DateTime.now();

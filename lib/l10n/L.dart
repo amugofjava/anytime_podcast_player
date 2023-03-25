@@ -1017,6 +1017,26 @@ class L {
           locale: localeName,
         );
   }
+
+  String get discovery_categories_itunes {
+    return message('discovery_categories_itunes') ??
+        Intl.message(
+          '',
+          name: 'discovery_categories_itunes',
+          desc: 'Comma separated list of iTunes categories',
+          locale: localeName,
+        );
+  }
+
+  String get discovery_categories_pindex {
+    return message('discovery_categories_pindex') ??
+        Intl.message(
+          '',
+          name: 'discovery_categories_pindex',
+          desc: 'Comma separated list of Podcast Index categories',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {
