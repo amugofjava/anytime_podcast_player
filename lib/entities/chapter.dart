@@ -9,9 +9,6 @@ import 'package:flutter/foundation.dart';
 ///
 /// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
 class Chapter {
-  /// Database ID
-  int id;
-
   /// Title of this chapter.
   final String title;
 

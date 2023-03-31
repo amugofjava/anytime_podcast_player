@@ -11,6 +11,7 @@ import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/persistable.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
@@ -454,6 +455,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     _episodeEvent.sink.add(_episode);
 
+    // Chapters
     if (_episode.streaming && _episode.hasChapters) {
       _episode.chaptersLoading = true;
       _episode.chapters = <Chapter>[];
@@ -466,6 +468,33 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _episode = await repository.saveEpisode(_episode);
       _episodeEvent.sink.add(_episode);
     }
+
+    if (_episode.hasTranscripts) {
+      Transcript transcript;
+
+      if (_episode.streaming) {
+        var sub = _episode.transcriptUrls
+            .firstWhere((element) => element.type == TranscriptFormat.subrip, orElse: () => null);
+
+        sub ??=
+            _episode.transcriptUrls.firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
+
+        if (sub != null) {
+          _episode.transcriptLoading = true;
+
+          transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+          transcript = await repository.saveTranscript(transcript);
+
+          _episode.transcriptId = transcript.id;
+        }
+      } else {
+        transcript = await repository.findTranscriptById(_episode.transcriptId);
+      }
+
+      _episode.transcript = transcript;
+    }
+
+    _episode.transcriptLoading = false;
 
     await _onUpdatePosition();
   }

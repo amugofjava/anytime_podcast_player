@@ -2,14 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:podcast_search/podcast_search.dart';
+import 'package:anytime/entities/transcript.dart';
+import 'package:podcast_search/podcast_search.dart' as pslib;
 
 /// A simple wrapper class that interacts with the search API via
 /// the podcast_search package.
 abstract class PodcastApi {
   /// Search for podcasts matching the search criteria. Returns a
   /// [SearchResult] instance.
-  Future<SearchResult> search(
+  Future<pslib.SearchResult> search(
     String term, {
     String country,
     String attribute,
@@ -21,7 +22,7 @@ abstract class PodcastApi {
   });
 
   /// Request the top podcast charts from iTunes, and at most [size] records.
-  Future<SearchResult> charts({
+  Future<pslib.SearchResult> charts({
     int size,
     String searchProvider,
     String genre,
@@ -33,10 +34,13 @@ abstract class PodcastApi {
   );
 
   /// URL representing the RSS feed for a podcast.
-  Future<Podcast> loadFeed(String url);
+  Future<pslib.Podcast> loadFeed(String url);
 
   /// Load episode chapters via JSON file.
-  Future<Chapters> loadChapters(String url);
+  Future<pslib.Chapters> loadChapters(String url);
+
+  /// Load episode transcript via SRT or JSON file.
+  Future<pslib.Transcript> loadTranscript(TranscriptUrl transcriptUrl);
 
   /// Allow adding of custom certificates. Required as default context
   /// does not apply when running in separate Isolate.

@@ -24,6 +24,7 @@ class PodcastHtml extends StatelessWidget {
       style: {
         'html': Style(
           fontWeight: textTheme.bodyLarge.fontWeight,
+          fontSize: FontSize.large,
         )
       },
       tagsList: tagList,

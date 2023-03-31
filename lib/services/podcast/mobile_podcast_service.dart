@@ -12,6 +12,7 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/messages_all.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
@@ -204,6 +205,31 @@ class MobilePodcastService extends PodcastService {
           final episodeThumbImage =
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
           final duration = episode.duration?.inSeconds ?? 0;
+          var transcriptUrls = <TranscriptUrl>[];
+
+          if (episode.transcripts == null) {
+            log.fine('No transcript for this episode');
+          } else {
+            log.fine('We have transcripts for this episode');
+          }
+
+          for (var t in episode.transcripts) {
+            TranscriptFormat type;
+
+            switch (t.type) {
+              case podcast_search.TranscriptFormat.subrip:
+                type = TranscriptFormat.subrip;
+                break;
+              case podcast_search.TranscriptFormat.json:
+                type = TranscriptFormat.json;
+                break;
+              case podcast_search.TranscriptFormat.unsupported:
+                type = TranscriptFormat.unsupported;
+                break;
+            }
+
+            transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
+          }
 
           if (existingEpisode == null) {
             pc.newEpisodes = highlightNewEpisodes && pc.id != null;
@@ -226,6 +252,7 @@ class MobilePodcastService extends PodcastService {
               duration: duration,
               publicationDate: episode.publicationDate,
               chaptersUrl: episode.chapters?.url,
+              transcriptUrls: transcriptUrls,
               chapters: <Chapter>[],
             ));
           } else {
@@ -241,6 +268,7 @@ class MobilePodcastService extends PodcastService {
             existingEpisode.thumbImageUrl = episodeThumbImage;
             existingEpisode.publicationDate = episode.publicationDate;
             existingEpisode.chaptersUrl = episode.chapters?.url;
+            existingEpisode.transcriptUrls = transcriptUrls;
 
             // If the source duration is 0 do not update any saved, calculated duration.
             if (duration > 0) {
@@ -307,6 +335,25 @@ class MobilePodcastService extends PodcastService {
     }
 
     return chapters;
+  }
+
+  @override
+  Future<Transcript> loadTranscriptByUrl({@required TranscriptUrl transcriptUrl}) async {
+    var subtitles = <Subtitle>[];
+    var result = await _loadTranscriptByUrl(transcriptUrl);
+
+    if (result != null) {
+      for (var s in result.subtitles) {
+        subtitles.add(Subtitle(
+          data: s.data,
+          start: s.start,
+          end: s.end,
+          index: s.index,
+        ));
+      }
+    }
+
+    return Transcript(subtitles: subtitles);
   }
 
   @override
@@ -404,6 +451,11 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<Transcript> saveTranscript(Transcript transcript) async {
+    return repository.saveTranscript(transcript);
+  }
+
+  @override
   Future<void> saveQueue(List<Episode> episodes) async {
     await repository.saveQueue(episodes);
   }
@@ -433,6 +485,26 @@ class MobilePodcastService extends PodcastService {
       final log = Logger('MobilePodcastService');
 
       log.fine('Failed to download chapters');
+      log.fine(e);
+    }
+
+    return result;
+  }
+
+  Future<podcast_search.Transcript> _loadTranscriptByUrl(TranscriptUrl transcriptUrl) {
+    return compute<_TranscriptComputer, podcast_search.Transcript>(
+        _loadTranscriptByUrlCompute, _TranscriptComputer(api: api, transcriptUrl: transcriptUrl));
+  }
+
+  static Future<podcast_search.Transcript> _loadTranscriptByUrlCompute(_TranscriptComputer c) async {
+    podcast_search.Transcript result;
+
+    try {
+      result = await c.api.loadTranscript(c.transcriptUrl);
+    } catch (e) {
+      final log = Logger('MobilePodcastService');
+
+      log.fine('Failed to download transcript');
       log.fine(e);
     }
 
@@ -532,4 +604,11 @@ class _FeedComputer {
   final String url;
 
   _FeedComputer({@required this.api, @required this.url});
+}
+
+class _TranscriptComputer {
+  final PodcastApi api;
+  final TranscriptUrl transcriptUrl;
+
+  _TranscriptComputer({@required this.api, @required this.transcriptUrl});
 }

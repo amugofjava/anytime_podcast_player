@@ -6,6 +6,7 @@ import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/queue.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_database_service.dart';
 import 'package:anytime/state/episode_state.dart';
@@ -25,6 +26,7 @@ class SembastRepository extends Repository {
   final _podcastStore = intMapStoreFactory.store('podcast');
   final _episodeStore = intMapStoreFactory.store('episode');
   final _queueStore = intMapStoreFactory.store('queue');
+  final _transcriptStore = intMapStoreFactory.store('transcript');
 
   final _queueGuids = <String>[];
 
@@ -169,7 +171,7 @@ class SembastRepository extends Repository {
   Future<Episode> findEpisodeById(int id) async {
     final snapshot = await _episodeStore.record(id).get(await _db);
 
-    return snapshot == null ? null : Episode.fromMap(id, snapshot);
+    return await _loadEpisodeSnapshot(id, snapshot);
   }
 
   @override
@@ -178,7 +180,7 @@ class SembastRepository extends Repository {
 
     final snapshot = await _episodeStore.findFirst(await _db, finder: finder);
 
-    return snapshot == null ? null : Episode.fromMap(snapshot.key, snapshot.value);
+    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
 
   @override
@@ -190,13 +192,13 @@ class SembastRepository extends Repository {
 
     final recordSnapshots = await _episodeStore.find(await _db, finder: finder);
 
-    final results = recordSnapshots.map((snapshot) {
-      final episode = Episode.fromMap(snapshot.key, snapshot.value);
-
-      return episode;
+    final results = recordSnapshots.map((snapshot) async {
+      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
     }).toList();
 
-    return results;
+    final episodeList = Future.wait(results);
+
+    return episodeList;
   }
 
   @override
@@ -331,6 +333,38 @@ class SembastRepository extends Repository {
     }
   }
 
+  @override
+  Future<Transcript> findTranscriptById(int id) async {
+    final snapshot = await _transcriptStore.record(id).get(await _db);
+
+    return snapshot == null ? null : Transcript.fromMap(id, snapshot);
+  }
+
+  @override
+  Future<Transcript> findTranscriptByUrl(String url) async {
+    final finder = Finder(filter: Filter.equals('id', url));
+
+    final snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+
+    return snapshot == null ? null : Transcript.fromMap(snapshot.key, snapshot.value);
+  }
+
+  @override
+  Future<Transcript> saveTranscript(Transcript transcript) async {
+    final finder = Finder(filter: Filter.byKey(transcript.id));
+
+    final snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+
+    if (snapshot == null) {
+      transcript.lastUpdated = DateTime.now();
+      transcript.id = await _transcriptStore.add(await _db, transcript.toMap());
+    } else {
+      await _transcriptStore.update(await _db, transcript.toMap(), finder: finder);
+    }
+
+    return transcript;
+  }
+
   Future<void> _deleteOrphanedEpisodes() async {
     final threshold = DateTime.now().subtract(Duration(days: 60)).millisecondsSinceEpoch;
 
@@ -421,7 +455,21 @@ class SembastRepository extends Repository {
     final finder = Finder(filter: Filter.equals('downloadTaskId', taskId));
     final snapshot = await _episodeStore.findFirst(await _db, finder: finder);
 
-    return snapshot == null ? null : Episode.fromMap(snapshot.key, snapshot.value);
+    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+  }
+
+  Future<Episode> _loadEpisodeSnapshot(int key, Map<String, dynamic> snapshot) async {
+    if (snapshot != null) {
+      var episode = Episode.fromMap(key, snapshot);
+
+      if (episode.transcriptId > 0) {
+        episode.transcript = await findTranscriptById(episode.transcriptId);
+      }
+
+      return episode;
+    }
+
+    return null;
   }
 
   @override

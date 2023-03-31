@@ -158,11 +158,19 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                 SizedBox.expand(
                     child: Column(
                   children: [
-                    if (scrollPos > 0)
-                      Opacity(
-                        opacity: opacity,
-                        child: FloatingPlayer(),
-                      ),
+                    /// Sized boxes without a child are 'invisible' so they do not prevent taps below
+                    /// the stack but are still present in the layout. We have a sized box here to stop
+                    /// the draggable panel from jumping as you start to pull it up. I am really looking
+                    /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
+                    SizedBox(
+                      height: 64.0,
+                      child: scrollPos == 1
+                          ? Opacity(
+                              opacity: opacity,
+                              child: FloatingPlayer(),
+                            )
+                          : null,
+                    ),
                     Expanded(child: NowPlayingOptionsSelector()),
                   ],
                 )),

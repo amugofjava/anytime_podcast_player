@@ -7,6 +7,7 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
@@ -214,6 +215,26 @@ class PodcastBloc extends Bloc {
         e.chapters = chapters;
 
         await podcastService.saveEpisode(e);
+      }
+
+      // Next, if the episode supports transcripts download that next
+      if (episode.hasTranscripts) {
+        var sub =
+            episode.transcriptUrls.firstWhere((element) => element.type == TranscriptFormat.subrip, orElse: () => null);
+
+        sub ??=
+            episode.transcriptUrls.firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
+
+        if (sub != null) {
+          var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+
+          transcript = await podcastService.saveTranscript(transcript);
+
+          episode.transcript = transcript;
+          episode.transcriptId = transcript.id;
+
+          await podcastService.saveEpisode(e);
+        }
       }
 
       var result = await downloadService.downloadEpisode(e);

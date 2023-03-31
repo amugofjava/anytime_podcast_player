@@ -6,8 +6,9 @@ import 'dart:io';
 
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/core/environment.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:flutter/foundation.dart';
-import 'package:podcast_search/podcast_search.dart';
+import 'package:podcast_search/podcast_search.dart' as podcast_search;
 
 /// An implementation of the [PodcastApi]. A simple wrapper class that
 /// interacts with the iTunes/PodcastIndex search API via the
@@ -17,7 +18,7 @@ class MobilePodcastApi extends PodcastApi {
   List<int> _certificateAuthorityBytes = [];
 
   @override
-  Future<SearchResult> search(
+  Future<podcast_search.SearchResult> search(
     String term, {
     String country,
     String attribute,
@@ -36,7 +37,7 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   @override
-  Future<SearchResult> charts({
+  Future<podcast_search.SearchResult> charts({
     int size = 20,
     String genre,
     String searchProvider,
@@ -55,66 +56,86 @@ class MobilePodcastApi extends PodcastApi {
   @override
   List<String> genres(String searchProvider) {
     var provider = searchProvider == 'itunes'
-        ? ITunesProvider()
-        : PodcastIndexProvider(
+        ? podcast_search.ITunesProvider()
+        : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
           );
 
-    return Search(
+    return podcast_search.Search(
       userAgent: Environment.userAgent(),
       searchProvider: provider,
     ).genres();
   }
 
   @override
-  Future<Podcast> loadFeed(String url) async {
+  Future<podcast_search.Podcast> loadFeed(String url) async {
     return _loadFeed(url);
   }
 
   @override
-  Future<Chapters> loadChapters(String url) async {
-    return Podcast.loadChaptersByUrl(url: url);
+  Future<podcast_search.Chapters> loadChapters(String url) async {
+    return podcast_search.Podcast.loadChaptersByUrl(url: url);
   }
 
-  static Future<SearchResult> _search(Map<String, String> searchParams) {
+  @override
+  Future<podcast_search.Transcript> loadTranscript(TranscriptUrl transcriptUrl) async {
+    podcast_search.TranscriptFormat format;
+
+    switch (transcriptUrl.type) {
+      case TranscriptFormat.subrip:
+        format = podcast_search.TranscriptFormat.subrip;
+        break;
+      case TranscriptFormat.json:
+        format = podcast_search.TranscriptFormat.json;
+        break;
+      case TranscriptFormat.unsupported:
+        format = podcast_search.TranscriptFormat.unsupported;
+        break;
+    }
+
+    return podcast_search.Podcast.loadTranscriptByUrl(
+        transcriptUrl: podcast_search.TranscriptUrl(url: transcriptUrl.url, type: format));
+  }
+
+  static Future<podcast_search.SearchResult> _search(Map<String, String> searchParams) {
     var term = searchParams['term'];
     var provider = searchParams['searchProvider'] == 'itunes'
-        ? ITunesProvider()
-        : PodcastIndexProvider(
+        ? podcast_search.ITunesProvider()
+        : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
           );
 
-    return Search(
+    return podcast_search.Search(
       userAgent: Environment.userAgent(),
       searchProvider: provider,
     ).search(term).timeout(Duration(seconds: 30));
   }
 
-  static Future<SearchResult> _charts(Map<String, String> searchParams) {
+  static Future<podcast_search.SearchResult> _charts(Map<String, String> searchParams) {
     var provider = searchParams['searchProvider'] == 'itunes'
-        ? ITunesProvider()
-        : PodcastIndexProvider(
+        ? podcast_search.ITunesProvider()
+        : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
           );
 
     var countryCode = searchParams['countryCode'];
-    var country = Country.none;
+    var country = podcast_search.Country.none;
 
     if (countryCode != null && countryCode.isNotEmpty) {
-      country = Country.values.where((element) => element.code == countryCode).first;
+      country = podcast_search.Country.values.where((element) => element.code == countryCode).first;
     }
 
-    return Search(userAgent: Environment.userAgent(), searchProvider: provider)
+    return podcast_search.Search(userAgent: Environment.userAgent(), searchProvider: provider)
         .charts(genre: searchParams['genre'], country: country)
         .timeout(Duration(seconds: 30));
   }
 
-  Future<Podcast> _loadFeed(String url) {
+  Future<podcast_search.Podcast> _loadFeed(String url) {
     _setupSecurityContext();
-    return Podcast.loadFeed(url: url, userAgent: Environment.userAgent());
+    return podcast_search.Podcast.loadFeed(url: url, userAgent: Environment.userAgent());
   }
 
   void _setupSecurityContext() {

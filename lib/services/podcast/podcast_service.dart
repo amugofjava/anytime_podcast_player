@@ -6,6 +6,7 @@ import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
@@ -196,6 +197,8 @@ abstract class PodcastService {
 
   Future<List<Chapter>> loadChaptersByUrl({@required String url});
 
+  Future<Transcript> loadTranscriptByUrl({@required TranscriptUrl transcriptUrl});
+
   Future<void> deleteDownload(Episode episode);
 
   Future<void> toggleEpisodePlayed(Episode episode);
@@ -209,6 +212,8 @@ abstract class PodcastService {
   Future<Podcast> save(Podcast podcast);
 
   Future<Episode> saveEpisode(Episode episode);
+
+  Future<Transcript> saveTranscript(Transcript transcript);
 
   Future<void> saveQueue(List<Episode> episodes);
 

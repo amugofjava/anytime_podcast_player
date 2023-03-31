@@ -68,97 +68,93 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
-    return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-      child: Container(
-        height: 64,
-        color: Theme.of(context).canvasColor,
-        child: StreamBuilder<Episode>(
-            stream: audioBloc.nowPlaying,
-            builder: (context, snapshot) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 58.0,
-                    width: 58.0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: snapshot.hasData
-                          ? PodcastImage(
-                              key: Key('float${snapshot.data.imageUrl}'),
-                              url: snapshot.data.imageUrl,
-                              width: 58.0,
-                              height: 58.0,
-                              borderRadius: 4.0,
-                              placeholder: placeholderBuilder != null
-                                  ? placeholderBuilder?.builder()(context)
-                                  : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                              errorPlaceholder: placeholderBuilder != null
-                                  ? placeholderBuilder?.errorBuilder()(context)
-                                  : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                            )
-                          : Container(),
-                    ),
+    return Container(
+      height: 64,
+      color: Theme.of(context).canvasColor,
+      child: StreamBuilder<Episode>(
+          stream: audioBloc.nowPlaying,
+          builder: (context, snapshot) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: snapshot.hasData
+                        ? PodcastImage(
+                            key: Key('float${snapshot.data.imageUrl}'),
+                            url: snapshot.data.imageUrl,
+                            width: 58.0,
+                            height: 58.0,
+                            borderRadius: 4.0,
+                            placeholder: placeholderBuilder != null
+                                ? placeholderBuilder?.builder()(context)
+                                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                            errorPlaceholder: placeholderBuilder != null
+                                ? placeholderBuilder?.errorBuilder()(context)
+                                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                          )
+                        : Container(),
                   ),
-                  Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            snapshot.data?.title ?? '',
+                ),
+                Expanded(
+                    flex: 1,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          snapshot.data?.title ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodyMedium,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            snapshot.data?.author ?? '',
                             overflow: TextOverflow.ellipsis,
-                            style: textTheme.bodyMedium,
+                            style: textTheme.bodySmall,
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              snapshot.data?.author ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              style: textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      )),
-                  SizedBox(
-                    height: 64.0,
-                    width: 64.0,
-                    child: StreamBuilder<AudioState>(
-                        stream: audioBloc.playingState,
-                        builder: (context, snapshot) {
-                          var playing = snapshot.data == AudioState.playing;
+                        ),
+                      ],
+                    )),
+                SizedBox(
+                  height: 64.0,
+                  width: 64.0,
+                  child: StreamBuilder<AudioState>(
+                      stream: audioBloc.playingState,
+                      builder: (context, snapshot) {
+                        var playing = snapshot.data == AudioState.playing;
 
-                          return TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                              shape: CircleBorder(
-                                  side: BorderSide(
-                                color: Theme.of(context).canvasColor,
-                                width: 0.0,
-                              )),
-                            ),
-                            onPressed: () {
-                              if (playing) {
-                                _pause(audioBloc);
-                              } else {
-                                _play(audioBloc);
-                              }
-                            },
-                            child: AnimatedIcon(
-                              size: 48.0,
-                              icon: AnimatedIcons.play_pause,
-                              color: Theme.of(context).iconTheme.color,
-                              progress: _playPauseController,
-                            ),
-                          );
-                        }),
-                  ),
-                ],
-              );
-            }),
-      ),
+                        return TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                            shape: CircleBorder(
+                                side: BorderSide(
+                              color: Theme.of(context).canvasColor,
+                              width: 0.0,
+                            )),
+                          ),
+                          onPressed: () {
+                            if (playing) {
+                              _pause(audioBloc);
+                            } else {
+                              _play(audioBloc);
+                            }
+                          },
+                          child: AnimatedIcon(
+                            size: 48.0,
+                            icon: AnimatedIcons.play_pause,
+                            color: Theme.of(context).iconTheme.color,
+                            progress: _playPauseController,
+                          ),
+                        );
+                      }),
+                ),
+              ],
+            );
+          }),
     );
   }
 
