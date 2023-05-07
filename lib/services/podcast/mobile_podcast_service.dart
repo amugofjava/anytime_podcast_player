@@ -207,12 +207,6 @@ class MobilePodcastService extends PodcastService {
           final duration = episode.duration?.inSeconds ?? 0;
           var transcriptUrls = <TranscriptUrl>[];
 
-          if (episode.transcripts == null) {
-            log.fine('No transcript for this episode');
-          } else {
-            log.fine('We have transcripts for this episode');
-          }
-
           for (var t in episode.transcripts) {
             TranscriptFormat type;
 

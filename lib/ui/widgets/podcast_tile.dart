@@ -42,6 +42,7 @@ class PodcastTile extends StatelessWidget {
         podcast.title,
         maxLines: 1,
       ),
+
       /// A ListTile's density changes depending upon whether we have 2 or more lines of text. We
       /// manually add a newline character here to ensure the density is consistent whether the
       /// podcast subtitle spans 1 or more lines. Bit of a hack, but a simple solution.

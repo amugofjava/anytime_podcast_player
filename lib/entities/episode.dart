@@ -120,10 +120,6 @@ class Episode {
   @Transient()
   bool chaptersLoading = false;
 
-  /// Set to true if transcript data is currently being loaded.
-  @Transient()
-  bool transcriptLoading = false;
-
   @Transient()
   bool highlight = false;
 

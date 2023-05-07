@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+/// This widget renders the search bar and allows the user to search for podcasts.
 class Search extends StatefulWidget {
   final String searchTerm;
 

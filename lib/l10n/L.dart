@@ -1,8 +1,6 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:ui';
-
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -1044,6 +1042,36 @@ class L {
           'Transcript',
           name: 'transcript_label',
           desc: 'Transcript label',
+          locale: localeName,
+        );
+  }
+
+  String get no_transcript_available_label {
+    return message('no_transcript_available_label') ??
+        Intl.message(
+          'A transcript is not available for this podcast',
+          name: 'no_transcript_available_label',
+          desc: 'Displayed in transcript view when no transcript is available',
+          locale: localeName,
+        );
+  }
+
+  String get search_transcript_label {
+    return message('search_transcript_label') ??
+        Intl.message(
+          'Search transcript',
+          name: 'search_transcript_label',
+          desc: 'Hint text for transcript search box',
+          locale: localeName,
+        );
+  }
+
+  String get auto_scroll_transcript_label {
+    return message('auto_scroll_transcript_label') ??
+        Intl.message(
+          'Follow transcript',
+          name: 'auto_scroll_transcript_label',
+          desc: 'Auto scroll switch label',
           locale: localeName,
         );
   }

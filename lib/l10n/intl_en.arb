@@ -616,5 +616,26 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-  }
+  },
+  "no_transcript_available_label": "A transcript is not available for this podcast",
+  "@no_transcript_available_label": {
+    "description": "Displayed in transcript view when no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+   },
+   "search_transcript_label": "Search transcript",
+   "@search_transcript_label": {
+     "description": "Hint text for transcript search box",
+     "type": "text",
+     "placeholders_order": [],
+     "placeholders": {}
+  },
+  "auto_scroll_transcript_label": "Follow transcript",
+  "@auto_scroll_transcript_label": {
+    "description": "Auto scroll switch label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+ }
 }

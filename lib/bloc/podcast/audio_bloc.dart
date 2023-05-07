@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/state/transcript_state_event.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -50,6 +51,9 @@ class AudioBloc extends Bloc {
   /// Listen for toggling of volume boost silence requests.
   final PublishSubject<bool> _volumeBoost = PublishSubject<bool>();
 
+  /// Listen for transcript filtering events.
+  final PublishSubject<TranscriptEvent> _transcriptEvent = PublishSubject<TranscriptEvent>();
+
   AudioBloc({
     @required this.audioPlayerService,
   }) {
@@ -70,6 +74,9 @@ class AudioBloc extends Bloc {
 
     /// Listen to volume boost silence requests
     _handleVolumeBoostTransitions();
+
+    /// Listen to transcript filtering events
+    _handleTranscriptEvents();
   }
 
   /// Listens to events from the UI (or any client) to transition from one
@@ -137,6 +144,16 @@ class AudioBloc extends Bloc {
     });
   }
 
+  void _handleTranscriptEvents() {
+    _transcriptEvent.listen((TranscriptEvent event) {
+      if (event is TranscriptFilterEvent) {
+        audioPlayerService.searchTranscript(event.search);
+      } else if (event is TranscriptClearEvent) {
+        audioPlayerService.searchTranscript('');
+      }
+    });
+  }
+
   @override
   void pause() async {
     log.fine('Audio lifecycle pause');
@@ -173,6 +190,9 @@ class AudioBloc extends Bloc {
   /// Get the current playing episode
   Stream<Episode> get nowPlaying => audioPlayerService.episodeEvent;
 
+  /// Get the current transcript (if there is one).
+  Stream<TranscriptState> get nowPlayingTranscript => audioPlayerService.transcriptEvent;
+
   /// Get position and percentage played of playing episode
   Stream<PositionState> get playPosition => audioPlayerService.playPosition;
 
@@ -184,6 +204,9 @@ class AudioBloc extends Bloc {
 
   /// Toggle volume boost silence
   void Function(bool) get volumeBoost => _volumeBoost.sink.add;
+
+  /// Handle filtering & searching of the current transcript.
+  void Function(TranscriptEvent) get filterTranscript => _transcriptEvent.sink.add;
 
   @override
   void dispose() {

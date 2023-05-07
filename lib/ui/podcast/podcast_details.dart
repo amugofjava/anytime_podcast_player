@@ -383,32 +383,31 @@ class _PodcastTitleState extends State<PodcastTitle> {
                 ),
               ),
               StreamBuilder<bool>(
-                stream: isDescriptionExpandedStream.stream,
-                initialData: false,
-                builder: (context, snapshot) {
-                  final expanded = snapshot.data;
-                  return Visibility(
-                    visible: showOverflow,
-                    child: expanded
-                        ? TextButton(
-                            style: ButtonStyle(
-                              visualDensity: VisualDensity.compact,
+                  stream: isDescriptionExpandedStream.stream,
+                  initialData: false,
+                  builder: (context, snapshot) {
+                    final expanded = snapshot.data;
+                    return Visibility(
+                      visible: showOverflow,
+                      child: expanded
+                          ? TextButton(
+                              style: ButtonStyle(
+                                visualDensity: VisualDensity.compact,
+                              ),
+                              child: Icon(Icons.expand_less),
+                              onPressed: () {
+                                isDescriptionExpandedStream.add(false);
+                              },
+                            )
+                          : TextButton(
+                              style: ButtonStyle(visualDensity: VisualDensity.compact),
+                              child: Icon(Icons.expand_more),
+                              onPressed: () {
+                                isDescriptionExpandedStream.add(true);
+                              },
                             ),
-                            child: Icon(Icons.expand_less),
-                            onPressed: () {
-                              isDescriptionExpandedStream.add(false);
-                            },
-                          )
-                        : TextButton(
-                            style: ButtonStyle(visualDensity: VisualDensity.compact),
-                            child: Icon(Icons.expand_more),
-                            onPressed: () {
-                              isDescriptionExpandedStream.add(true);
-                            },
-                          ),
-                  );
-                }
-              )
+                    );
+                  })
             ],
           ),
           PodcastDescription(
@@ -449,7 +448,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
     description = PodcastHtml(
       content: widget.podcast.description,
     );
-    
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (descriptionKey.currentContext.size.height == maxHeight) {
         setState(() {
@@ -481,28 +480,31 @@ class PodcastDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: PodcastDescription.padding),
-      child:  StreamBuilder<bool>(
-        stream: isDescriptionExpandedStream.stream,
-        initialData: false,
-        builder: (context, snapshot) {
-          final expanded = snapshot.data;
-          return AnimatedSize(
-                  duration: Duration(milliseconds : 150),
-                  curve: Curves.fastOutSlowIn,
-                  alignment: Alignment.topCenter,
-                  child: Container( 
-                  constraints: expanded ? BoxConstraints() :  BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
-                    child: expanded ? content :ShaderMask(
-                      shaderCallback: LinearGradient(
-                        colors: [Colors.white, Colors.white.withAlpha(0)],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.9, 1],
-                      ).createShader,
-                      child: content),
-                ),);
-        }
-      ),
+      child: StreamBuilder<bool>(
+          stream: isDescriptionExpandedStream.stream,
+          initialData: false,
+          builder: (context, snapshot) {
+            final expanded = snapshot.data;
+            return AnimatedSize(
+              duration: Duration(milliseconds: 150),
+              curve: Curves.fastOutSlowIn,
+              alignment: Alignment.topCenter,
+              child: Container(
+                constraints:
+                    expanded ? BoxConstraints() : BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
+                child: expanded
+                    ? content
+                    : ShaderMask(
+                        shaderCallback: LinearGradient(
+                          colors: [Colors.white, Colors.white.withAlpha(0)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.9, 1],
+                        ).createShader,
+                        child: content),
+              ),
+            );
+          }),
     );
   }
 }

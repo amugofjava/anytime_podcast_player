@@ -4,7 +4,6 @@
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/queue_event_state.dart';
-import 'package:anytime/ui/podcast/dot_decoration.dart';
 import 'package:anytime/ui/podcast/transcript_view.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/draggable_episode_tile.dart';
@@ -25,8 +24,8 @@ import 'package:provider/provider.dart';
 /// If anyone can come up with a more elegant solution (and one that does not throw
 /// an overflow error in debug) please raise and issue/submit a PR.
 ///
-/// TODO: Extract contents of up next UI into separate widget so that it can be
-///       called from other parts of the app.
+/// TODO: Extract contents of Up Next UI into separate widgets.
+/// TODO: Extract contents of Transcript UI into separate widgets.
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double scrollPos;
 
@@ -39,13 +38,12 @@ class NowPlayingOptionsSelector extends StatefulWidget {
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   @override
   Widget build(BuildContext context) {
-    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     const baseSize = 58;
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
+    final draggableController = DraggableScrollableController();
     final windowHeight = MediaQuery.of(context).size.height;
     final minSize = baseSize / (windowHeight - baseSize);
-
-    final draggableController = DraggableScrollableController();
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
@@ -88,7 +86,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                           color: Colors.white.withOpacity(0.0),
                           border: Border(
                             bottom: !draggableController.isAttached || draggableController.size <= minSize
-                                ? BorderSide(color: Colors.grey[800], width: 0.0)
+                                ? BorderSide.none
                                 : BorderSide(color: Colors.grey[800], width: 1.0),
                           ),
                         ),
@@ -289,7 +287,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             ),
                                     ],
                                   ),
-                                  TranscriptView(transcript: snapshot.data.playing.transcript),
+                                  TranscriptView(),
                                 ],
                               );
                             }),

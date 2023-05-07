@@ -41,6 +41,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     Chapter lastChapter;
+    bool first = true;
 
     // Listen for changes in position. If the change in position results in
     // a change in chapter we scroll to it. This ensures that the current
@@ -59,7 +60,15 @@ class _ChapterSelectorState extends State<ChapterSelector> {
             var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
 
             if (index >= 0) {
-              widget.itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 250));
+              if (first) {
+                widget.itemScrollController.jumpTo(index: index);
+                first = false;
+              } else {
+                widget.itemScrollController.scrollTo(
+                  index: index,
+                  duration: Duration(milliseconds: 100),
+                );
+              }
             }
           }
         }
@@ -102,7 +111,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                         padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
                         child: ListTile(
                           onTap: () {
-                            audioBloc.transitionPosition(chapter.startTime.toDouble());
+                            audioBloc.transitionPosition(chapter.startTime);
                           },
                           selected: chapterSelected,
                           leading: Padding(

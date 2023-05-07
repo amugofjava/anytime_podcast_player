@@ -19,6 +19,7 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/state/transcript_state_event.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
@@ -43,7 +44,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   var _trimSilence = false;
   var _volumeBoost = false;
   var _queue = <Episode>[];
-  Episode _episode;
+
+  /// The currently playing episode
+  Episode _currentEpisode;
+
+  /// The currently 'processed' transcript;
+  Transcript _currentTranscript;
 
   /// Subscription to the position ticker.
   StreamSubscription<int> _positionSubscription;
@@ -55,15 +61,18 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
 
   /// Stream for the current position of the playing track.
-  final BehaviorSubject<PositionState> _playPosition = BehaviorSubject<PositionState>();
+  final _playPosition = BehaviorSubject<PositionState>();
 
   /// Stream the current playing episode
-  final BehaviorSubject<Episode> _episodeEvent = BehaviorSubject<Episode>(sync: true);
+  final _episodeEvent = BehaviorSubject<Episode>(sync: true);
+
+  /// Stream transcript events such as search filters and updates.
+  final _transcriptEvent = BehaviorSubject<TranscriptState>(sync: true);
 
   /// Stream for the last audio error as an integer code.
-  final PublishSubject<int> _playbackError = PublishSubject<int>();
+  final _playbackError = PublishSubject<int>();
 
-  final BehaviorSubject<QueueListState> _queueState = BehaviorSubject<QueueListState>();
+  final _queueState = BehaviorSubject<QueueListState>();
 
   DefaultAudioPlayerService({
     @required this.repository,
@@ -99,7 +108,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> play() {
     if (_cold) {
       _cold = false;
-      return playEpisode(episode: _episode, resume: true);
+      return playEpisode(episode: _currentEpisode, resume: true);
     } else {
       return _audioHandler.play();
     }
@@ -113,14 +122,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (episode.guid != '' && _initialised) {
       var uri = await _generateEpisodeUri(episode);
 
-      _playingState.add(AudioState.buffering);
-
       log.info('Playing episode ${episode?.id} - ${episode?.title} from position ${episode.position}');
       log.fine(' - $uri');
 
-      _episodeEvent.sink.add(episode);
-      _broadcastEpisodePosition(episode);
-
+      _playingState.add(AudioState.buffering);
       _playbackSpeed = settingsService.playbackSpeed;
       _trimSilence = settingsService.trimSilence;
       _volumeBoost = settingsService.volumeBoost;
@@ -133,36 +138,42 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           'Current playback state is $currentState. Speed = $_playbackSpeed. Trim = $_trimSilence. Volume Boost = $_volumeBoost}');
 
       if (currentState == AudioProcessingState.ready) {
-        log.fine('We are currently playing a track. Save position');
         await _saveCurrentEpisodePosition();
       } else if (currentState == AudioProcessingState.loading) {
-        log.fine('We are currently buffering. We should cancel first');
         _audioHandler.stop();
       }
 
       // If we have a queue, we are currently playing and the user has elected to play something new,
       // place the current episode at the top of the queue before moving on.
-      if (_episode != null && _episode.guid != episode.guid && _queue.isNotEmpty) {
-        _queue.insert(0, _episode);
+      if (_currentEpisode != null && _currentEpisode.guid != episode.guid && _queue.isNotEmpty) {
+        _queue.insert(0, _currentEpisode);
       }
 
       // If we are attempting to play an episode that is also in the queue, remove it from the queue.
       _queue.removeWhere((e) => episode.guid == e.guid);
 
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
-      _episode = episode;
-      _episode.played = false;
+      _currentEpisode = episode;
+      _currentTranscript = episode?.transcript;
+      _currentEpisode.played = false;
 
-      await repository.saveEpisode(_episode);
+      await repository.saveEpisode(_currentEpisode);
 
+      /// Update the state of the queue.
       _updateQueueState();
 
+      /// Update the state of the current episode & transcript.
+      _updateEpisodeState();
+
+      /// And the position of our current episode.
+      _broadcastEpisodePosition(_currentEpisode);
+
       try {
-        await _audioHandler.playMediaItem(_episodeToMediaItem(_episode, uri));
+        await _audioHandler.playMediaItem(_episodeToMediaItem(_currentEpisode, uri));
 
-        _episode.duration = _audioHandler.mediaItem.value.duration.inSeconds;
+        _currentEpisode.duration = _audioHandler.mediaItem.value.duration.inSeconds;
 
-        await repository.saveEpisode(_episode);
+        await repository.saveEpisode(_currentEpisode);
       } catch (e) {
         log.fine('Error during playback');
         log.fine(e.toString());
@@ -195,7 +206,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     _updateChapter(p.inSeconds, duration.inSeconds);
 
-    _playPosition.add(PositionState(p, duration, complete.toInt(), _episode, true));
+    _playPosition.add(PositionState(p, duration, complete.toInt(), _currentEpisode, true));
 
     await _audioHandler.seek(Duration(seconds: position));
 
@@ -209,7 +220,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> addUpNextEpisode(Episode episode) async {
     log.fine('addUpNextEpisode Adding ${episode.title} - ${episode.guid}');
 
-    if (episode.guid != _episode?.guid) {
+    if (episode.guid != _currentEpisode?.guid) {
       _queue.add(episode);
       _updateQueueState();
     }
@@ -252,7 +263,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<void> stop() {
-    _episode = null;
+    _currentEpisode = null;
     return _audioHandler.stop();
   }
 
@@ -275,23 +286,23 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<Episode> resume() async {
     if (_audioHandler != null) {
       /// If _episode is null, we must have stopped whilst still active or we were killed.
-      if (_episode == null) {
+      if (_currentEpisode == null) {
         if (_audioHandler?.mediaItem?.value != null) {
           final extras = _audioHandler.mediaItem.value.extras;
 
           if (extras['eid'] != null) {
-            _episode = await repository.findEpisodeByGuid(extras['eid'] as String);
+            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
           }
         } else {
           // Let's see if we have a persisted state
           var ps = await PersistentState.fetchState();
 
           if (ps != null && ps.state == LastState.paused) {
-            _episode = await repository.findEpisodeById(ps.episodeId);
-            _episode.position = ps.position;
+            _currentEpisode = await repository.findEpisodeById(ps.episodeId);
+            _currentEpisode.position = ps.position;
             _playingState.add(AudioState.pausing);
 
-            updateCurrentPosition(_episode);
+            updateCurrentPosition(_currentEpisode);
 
             _cold = true;
           }
@@ -311,16 +322,30 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       await PersistentState.clearState();
 
-      _episodeEvent.sink.add(_episode);
+      _episodeEvent.sink.add(_currentEpisode);
 
-      return Future.value(_episode);
+      return Future.value(_currentEpisode);
     }
 
     return Future.value(null);
   }
 
+  void _updateEpisodeState() {
+    _episodeEvent.sink.add(_currentEpisode);
+  }
+
+  void _updateTranscriptState({TranscriptState state}) {
+    if (state == null) {
+      if (_currentTranscript != null) {
+        _transcriptEvent.sink.add(TranscriptUpdateState(transcript: _currentTranscript));
+      }
+    } else {
+      _transcriptEvent.sink.add(state);
+    }
+  }
+
   void _updateQueueState() {
-    _queueState.add(QueueListState(playing: _episode, queue: _queue));
+    _queueState.add(QueueListState(playing: _currentEpisode, queue: _queue));
   }
 
   Future<String> _generateEpisodeUri(Episode episode) async {
@@ -345,7 +370,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     /// We only need to persist if we are paused.
     if (_playingState.value == AudioState.pausing) {
       await PersistentState.persistState(Persistable(
-        episodeId: _episode.id,
+        episodeId: _currentEpisode.id,
         position: currentPosition,
         state: LastState.paused,
       ));
@@ -364,6 +389,28 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     return _audioHandler.customAction('boost', <String, dynamic>{
       'value': boost,
     });
+  }
+
+  @override
+  Future<void> searchTranscript(String search) async {
+    final subtitles = _currentEpisode.transcript.subtitles.where((subtitle) {
+      return subtitle.data.toLowerCase().contains(search.toLowerCase());
+    }).toList();
+
+    _currentTranscript = Transcript(
+      id: _currentEpisode.transcript.id,
+      guid: _currentEpisode.transcript.guid,
+      subtitles: subtitles,
+    );
+
+    _updateTranscriptState();
+  }
+
+  @override
+  Future<void> clearTranscript() async {
+    _currentTranscript = _currentEpisode.transcript;
+
+    _updateTranscriptState();
   }
 
   MediaItem _episodeToMediaItem(Episode episode, String uri) {
@@ -395,7 +442,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           _stopTicker();
           break;
         case AudioProcessingState.loading:
-          _onLoadEpisode(state);
+          _loadEpisode(state);
           _playingState.add(AudioState.buffering);
           break;
         case AudioProcessingState.buffering:
@@ -427,18 +474,18 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> _completed() async {
     await _saveCurrentEpisodePosition(complete: true);
 
-    log.fine('We have completed episode ${_episode?.title}');
+    log.fine('We have completed episode ${_currentEpisode?.title}');
 
     _stopTicker();
 
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
       _queue = <Episode>[];
-      _episode = null;
+      _currentEpisode = null;
       _playingState.add(AudioState.stopped);
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
-      _episode = null;
+      _currentEpisode = null;
       var ep = _queue.removeAt(0);
 
       await playEpisode(episode: ep);
@@ -447,54 +494,66 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
-  void _onLoadEpisode(PlaybackState state) async {
-    if (_episode == null) {
+  /// This method is called when audio_service sends a [AudioProcessingState.loading] event.
+  void _loadEpisode(PlaybackState state) async {
+    bool requiresSave = false;
+
+    if (_currentEpisode == null) {
       log.fine('_onLoadEpisode: _episode is null - cannot load!');
       return;
     }
 
-    _episodeEvent.sink.add(_episode);
+    _updateEpisodeState();
 
     // Chapters
-    if (_episode.streaming && _episode.hasChapters) {
-      _episode.chaptersLoading = true;
-      _episode.chapters = <Chapter>[];
+    if (_currentEpisode.hasChapters && _currentEpisode.streaming) {
+      _currentEpisode.chaptersLoading = true;
+      _currentEpisode.chapters = <Chapter>[];
 
       await _onUpdatePosition();
 
-      _episode.chapters = await podcastService.loadChaptersByUrl(url: _episode.chaptersUrl);
-      _episode.chaptersLoading = false;
+      _currentEpisode.chapters = await podcastService.loadChaptersByUrl(url: _currentEpisode.chaptersUrl);
+      _currentEpisode.chaptersLoading = false;
+      _updateEpisodeState();
 
-      _episode = await repository.saveEpisode(_episode);
-      _episodeEvent.sink.add(_episode);
+      requiresSave = true;
     }
 
-    if (_episode.hasTranscripts) {
+    if (_currentEpisode.hasTranscripts) {
       Transcript transcript;
 
-      if (_episode.streaming) {
-        var sub = _episode.transcriptUrls
+      if (_currentEpisode.streaming) {
+        var sub = _currentEpisode.transcriptUrls
             .firstWhere((element) => element.type == TranscriptFormat.subrip, orElse: () => null);
 
-        sub ??=
-            _episode.transcriptUrls.firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
+        sub ??= _currentEpisode.transcriptUrls
+            .firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
 
         if (sub != null) {
-          _episode.transcriptLoading = true;
+          _updateTranscriptState(state: TranscriptLoadingState());
 
           transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
           transcript = await repository.saveTranscript(transcript);
 
-          _episode.transcriptId = transcript.id;
+          _currentEpisode.transcriptId = transcript.id;
         }
       } else {
-        transcript = await repository.findTranscriptById(_episode.transcriptId);
+        transcript = await repository.findTranscriptById(_currentEpisode.transcriptId);
       }
 
-      _episode.transcript = transcript;
-    }
+      if (transcript != null) {
+        _currentEpisode.transcript = transcript;
+        _currentTranscript = transcript;
+        requiresSave = true;
+        _updateTranscriptState();
+      }
 
-    _episode.transcriptLoading = false;
+      if (requiresSave) {
+        _currentEpisode = await repository.saveEpisode(_currentEpisode);
+      }
+    } else {
+      _updateTranscriptState(state: TranscriptUnavailableState());
+    }
 
     await _onUpdatePosition();
   }
@@ -512,20 +571,20 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// podcast to continue playing where it left off if played at a later
   /// time.
   Future<void> _saveCurrentEpisodePosition({bool complete = false}) async {
-    if (_episode != null) {
+    if (_currentEpisode != null) {
       // The episode may have been updated elsewhere - re-fetch it.
       var currentPosition = _audioHandler.playbackState.value.position.inMilliseconds ?? 0;
 
-      _episode = await repository.findEpisodeByGuid(_episode.guid);
+      _currentEpisode = await repository.findEpisodeByGuid(_currentEpisode.guid);
 
       log.fine(
-          '_saveCurrentEpisodePosition(): Current position is $currentPosition - stored position is ${_episode.position} complete is $complete');
+          '_saveCurrentEpisodePosition(): Current position is $currentPosition - stored position is ${_currentEpisode.position} complete is $complete');
 
-      if (currentPosition != _episode.position) {
-        _episode.position = complete ? 0 : currentPosition;
-        _episode.played = complete;
+      if (currentPosition != _currentEpisode.position) {
+        _currentEpisode.position = complete ? 0 : currentPosition;
+        _currentEpisode.played = complete;
 
-        _episode = await repository.saveEpisode(_episode);
+        _currentEpisode = await repository.saveEpisode(_currentEpisode);
       }
     } else {
       log.fine(' - Cannot save position as episode is null');
@@ -566,26 +625,27 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       _updateChapter(position.inSeconds, duration.inSeconds);
 
-      _playPosition.add(PositionState(position, duration, complete.toInt(), _episode, buffering));
+      _playPosition.add(PositionState(position, duration, complete.toInt(), _currentEpisode, buffering));
     }
   }
 
   /// Calculate our current chapter based on playback position, and if it's different to
   /// the currently stored chapter - update.
   void _updateChapter(int seconds, int duration) {
-    if (_episode == null) {
+    if (_currentEpisode == null) {
       log.fine('Warning. Attempting to update chapter information on a null _episode');
-    } else if (_episode.hasChapters && _episode.chaptersAreLoaded) {
-      final chapters = _episode.chapters;
+    } else if (_currentEpisode.hasChapters && _currentEpisode.chaptersAreLoaded) {
+      final chapters = _currentEpisode.chapters;
 
-      for (var chapterPtr = 0; chapterPtr < _episode.chapters.length; chapterPtr++) {
+      for (var chapterPtr = 0; chapterPtr < _currentEpisode.chapters.length; chapterPtr++) {
         final startTime = chapters[chapterPtr].startTime;
-        final endTime = chapterPtr == (_episode.chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
+        final endTime =
+            chapterPtr == (_currentEpisode.chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
 
         if (seconds >= startTime && seconds < endTime) {
-          if (chapters[chapterPtr] != _episode.currentChapter) {
-            _episode.currentChapter = chapters[chapterPtr];
-            _episodeEvent.sink.add(_episode);
+          if (chapters[chapterPtr] != _currentEpisode.currentChapter) {
+            _currentEpisode.currentChapter = chapters[chapterPtr];
+            _episodeEvent.sink.add(_currentEpisode);
             break;
           }
         }
@@ -594,7 +654,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Episode get nowPlaying => _episode;
+  Episode get nowPlaying => _currentEpisode;
 
   /// Get the current playing state
   @override
@@ -607,6 +667,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<Episode> get episodeEvent => _episodeEvent.stream;
+
+  @override
+  Stream<TranscriptState> get transcriptEvent => _transcriptEvent.stream;
 
   @override
   Stream<int> get playbackError => _playbackError.stream;
@@ -813,7 +876,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     await _player.setSkipSilenceEnabled(trim);
   }
 
-  void volumeBoost(bool boost) {
+  Future<void> volumeBoost(bool boost) async {
     /// For now, we know we only have one effect so we can cheat
     var e = _audioPipeline.androidAudioEffects[0];
 

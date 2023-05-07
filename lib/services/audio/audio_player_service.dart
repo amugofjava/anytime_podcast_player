@@ -1,9 +1,10 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/state/transcript_state_event.dart';
 import 'package:flutter/cupertino.dart';
 
 enum AudioState {
@@ -82,12 +83,16 @@ abstract class AudioPlayerService {
   /// Call to toggle trim silence.
   Future<void> volumeBoost(bool boost);
 
+  Future<void> searchTranscript(String search);
+  Future<void> clearTranscript();
+
   Episode nowPlaying;
 
   /// Event listeners
   Stream<AudioState> playingState;
   Stream<PositionState> playPosition;
   Stream<Episode> episodeEvent;
+  Stream<TranscriptState> transcriptEvent;
   Stream<int> playbackError;
   Stream<QueueListState> queueState;
 }

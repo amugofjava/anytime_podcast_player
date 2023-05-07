@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "audio_effect_trim_silence_label": MessageLookupByLibrary.simpleMessage("Trim Silence"),
         "audio_effect_volume_boost_label": MessageLookupByLibrary.simpleMessage("Volume Boost"),
         "audio_settings_playback_speed_label": MessageLookupByLibrary.simpleMessage("Playback Speed"),
+        "auto_scroll_transcript_label": MessageLookupByLibrary.simpleMessage("Follow transcript"),
         "cancel_button_label": MessageLookupByLibrary.simpleMessage("Cancel"),
         "cancel_option_label": MessageLookupByLibrary.simpleMessage("Cancel"),
         "chapters_label": MessageLookupByLibrary.simpleMessage("Chapters"),
@@ -74,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_search_results_message": MessageLookupByLibrary.simpleMessage("No podcasts found"),
         "no_subscriptions_message": MessageLookupByLibrary.simpleMessage(
             "Tap the Discovery button below or use the search bar above to find your first podcast"),
+        "no_transcript_available_label":
+            MessageLookupByLibrary.simpleMessage("A transcript is not available for this podcast"),
         "notes_label": MessageLookupByLibrary.simpleMessage("Notes"),
         "now_playing_queue_label": MessageLookupByLibrary.simpleMessage("Now Playing"),
         "ok_button_label": MessageLookupByLibrary.simpleMessage("OK"),
@@ -94,6 +97,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "search_button_label": MessageLookupByLibrary.simpleMessage("Search"),
         "search_for_podcasts_hint": MessageLookupByLibrary.simpleMessage("Search for podcasts"),
         "search_provider_label": MessageLookupByLibrary.simpleMessage("Search provider"),
+        "search_transcript_label": MessageLookupByLibrary.simpleMessage("Search transcript"),
         "settings_auto_open_now_playing":
             MessageLookupByLibrary.simpleMessage("Full screen player mode on episode start"),
         "settings_auto_update_episodes": MessageLookupByLibrary.simpleMessage("Auto update episodes"),
@@ -129,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "stop_download_title": MessageLookupByLibrary.simpleMessage("Stop Download"),
         "subscribe_button_label": MessageLookupByLibrary.simpleMessage("Follow"),
         "subscribe_label": MessageLookupByLibrary.simpleMessage("Subscribe"),
+        "transcript_label": MessageLookupByLibrary.simpleMessage("Transcript"),
         "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("Unfollow"),
         "unsubscribe_label": MessageLookupByLibrary.simpleMessage("Unsubscribe"),
         "unsubscribe_message":

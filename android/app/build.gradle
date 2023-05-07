@@ -39,10 +39,6 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 33
 
-    lintOptions {
-        disable 'InvalidPackage'
-        abortOnError false
-    }
 
     defaultConfig {
         applicationId "uk.me.amugofjava.anytime"
@@ -69,6 +65,11 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
+    }
+    namespace 'uk.me.amugofjava.anytime'
+    lint {
+        abortOnError false
+        disable 'InvalidPackage'
     }
 }
 

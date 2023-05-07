@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-03-22T16:48:24.557644",
+  "@@last_modified": "2023-05-05T15:06:30.083347",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -703,6 +703,27 @@
   "transcript_label": "Transcript",
   "@transcript_label": {
     "description": "Transcript label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "no_transcript_available_label": "A transcript is not available for this podcast",
+  "@no_transcript_available_label": {
+    "description": "Displayed in transcript view when no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "search_transcript_label": "Search transcript",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "auto_scroll_transcript_label": "Follow transcript",
+  "@auto_scroll_transcript_label": {
+    "description": "Auto scroll switch label",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
