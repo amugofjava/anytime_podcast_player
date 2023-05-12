@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/funding.dart';
+import 'package:anytime/entities/person.dart';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 
@@ -51,6 +52,8 @@ class Podcast {
   /// One or more episodes for this podcast.
   List<Episode> episodes;
 
+  final List<Person> persons;
+
   bool newEpisodes;
 
   Podcast({
@@ -67,6 +70,7 @@ class Podcast {
     this.funding,
     this.episodes,
     this.newEpisodes = false,
+    this.persons,
     DateTime lastUpdated,
   }) {
     _lastUpdated = lastUpdated;
@@ -81,7 +85,8 @@ class Podcast {
         thumbImageUrl = null,
         imageUrl = null,
         copyright = '',
-        funding = <Funding>[];
+        funding = <Funding>[],
+        persons = <Person>[];
 
   Podcast.fromSearchResultItem(search.Item item)
       : guid = item.guid,
@@ -92,6 +97,7 @@ class Podcast {
         imageUrl = item.bestArtworkUrl ?? item.artworkUrl,
         thumbImageUrl = item.thumbnailArtworkUrl,
         funding = const <Funding>[],
+        persons = const <Person>[],
         copyright = item.artistName;
 
   Map<String, dynamic> toMap() {
@@ -105,6 +111,7 @@ class Podcast {
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap())?.toList(growable: false),
+      'person': (persons ?? <Person>[]).map((persons) => persons.toMap())?.toList(growable: false),
       'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
@@ -113,6 +120,7 @@ class Podcast {
     final sds = podcast['subscribedDate'] as String;
     final lus = podcast['lastUpdated'] as int;
     final funding = <Funding>[];
+    final persons = <Person>[];
 
     var sd = DateTime.now();
     var lastUpdated = DateTime(1971, 1, 1);
@@ -133,6 +141,14 @@ class Podcast {
       }
     }
 
+    if (podcast['persons'] != null) {
+      for (var person in (podcast['persons'] as List)) {
+        if (person is Map<String, dynamic>) {
+          persons.add(Person.fromMap(person));
+        }
+      }
+    }
+
     return Podcast(
       id: key,
       guid: podcast['guid'] as String,
@@ -144,6 +160,7 @@ class Podcast {
       imageUrl: podcast['imageUrl'] as String,
       thumbImageUrl: podcast['thumbImageUrl'] as String,
       funding: funding,
+      persons: persons,
       subscribedDate: sd,
       lastUpdated: lastUpdated,
     );

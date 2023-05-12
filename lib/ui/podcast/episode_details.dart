@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
@@ -70,7 +71,29 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
-                Divider(),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      episode.title,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ),
+                if (episode.persons.isNotEmpty)
+                  SizedBox(
+                    height: 120.0,
+                    child: Container(
+                      child: ListView.builder(
+                        itemCount: episode.persons.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return PersonAvatar(person: episode.persons[index]);
+                        },
+                      ),
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 8.0,

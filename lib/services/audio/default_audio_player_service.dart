@@ -524,10 +524,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       if (_currentEpisode.streaming) {
         var sub = _currentEpisode.transcriptUrls
-            .firstWhere((element) => element.type == TranscriptFormat.subrip, orElse: () => null);
+            .firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
 
         sub ??= _currentEpisode.transcriptUrls
-            .firstWhere((element) => element.type == TranscriptFormat.json, orElse: () => null);
+            .firstWhere((element) => element.type == TranscriptFormat.subrip, orElse: () => null);
 
         if (sub != null) {
           _updateTranscriptState(state: TranscriptLoadingState());

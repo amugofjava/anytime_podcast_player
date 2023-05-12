@@ -5,8 +5,11 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/person.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +20,12 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 /// This class handles the rendering of the podcast transcript (where available).
 // ignore: must_be_immutable
 class TranscriptView extends StatefulWidget {
-  TranscriptView({Key key}) : super(key: key);
+  final Episode episode;
+
+  TranscriptView({
+    Key key,
+    @required this.episode,
+  }) : super(key: key);
 
   @override
   State<TranscriptView> createState() => _TranscriptViewState();
@@ -28,6 +36,7 @@ class _TranscriptViewState extends State<TranscriptView> {
   final ItemScrollController _itemScrollController = ItemScrollController();
   final ScrollOffsetListener _scrollOffsetListener = ScrollOffsetListener.create(recordProgrammaticScrolls: false);
   final _transcriptSearchController = TextEditingController();
+  StreamSubscription<PositionState> _positionSubscription;
   int position = 0;
   bool autoScroll = true;
   bool autoScrollEnabled = true;
@@ -112,6 +121,12 @@ class _TranscriptViewState extends State<TranscriptView> {
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _positionSubscription.cancel();
   }
 
   @override
@@ -211,8 +226,9 @@ class _TranscriptViewState extends State<TranscriptView> {
                             return Wrap(
                               children: [
                                 SubtitleWidget(
-                                  highlight: i.start.inMilliseconds == position,
                                   subtitle: i,
+                                  persons: widget.episode.persons,
+                                  highlight: i.start.inMilliseconds == position,
                                 ),
                               ],
                             );
@@ -233,11 +249,13 @@ class _TranscriptViewState extends State<TranscriptView> {
 /// line of the transcript. This widget handles rendering the passed line.
 class SubtitleWidget extends StatelessWidget {
   final Subtitle subtitle;
+  final List<Person> persons;
   final bool highlight;
 
   const SubtitleWidget({
     Key key,
     this.subtitle,
+    this.persons,
     this.highlight,
   }) : super(key: key);
 
@@ -255,7 +273,9 @@ class SubtitleWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _formatDuration(subtitle.start),
+            subtitle.speaker.isEmpty
+                ? _formatDuration(subtitle.start)
+                : '${_formatDuration(subtitle.start)} - ${subtitle.speaker}',
             style: Theme.of(context).textTheme.titleSmall,
           ),
           Text(

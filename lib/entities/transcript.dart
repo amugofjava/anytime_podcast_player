@@ -144,14 +144,16 @@ class Transcript {
 class Subtitle {
   final int index;
   final Duration start;
-  final Duration end;
-  final String data;
+  Duration end;
+  String data;
+  String speaker;
 
   Subtitle({
     @required this.index,
     @required this.start,
-    @required this.end,
-    @required this.data,
+    this.end,
+    this.data,
+    this.speaker = '',
   });
 
   Map<String, dynamic> toMap() {
@@ -159,6 +161,7 @@ class Subtitle {
       'i': index,
       'start': start.inMilliseconds,
       'end': end.inMilliseconds,
+      'speaker': speaker,
       'data': data,
     };
   }
@@ -168,6 +171,7 @@ class Subtitle {
       index: subtitle['i'] as int ?? 0,
       start: Duration(milliseconds: subtitle['start'] as int ?? 0),
       end: Duration(milliseconds: subtitle['end'] as int ?? 0),
+      speaker: subtitle['speaker'] as String ?? '',
       data: subtitle['data'] as String ?? '',
     );
   }

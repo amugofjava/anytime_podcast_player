@@ -11,6 +11,7 @@ import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/funding.dart';
+import 'package:anytime/entities/person.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/messages_all.dart';
@@ -145,6 +146,7 @@ class MobilePodcastService extends PodcastService {
       final description = _format(loadedPodcast.description);
       final copyright = _format(loadedPodcast.copyright);
       final funding = <Funding>[];
+      final persons = <Person>[];
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
 
       // If imageUrl is null we have not loaded the podcast as a result of a search.
@@ -159,6 +161,16 @@ class MobilePodcastService extends PodcastService {
         }
       }
 
+      for (var p in loadedPodcast.persons) {
+        persons.add(Person(
+          name: p.name,
+          role: p.role,
+          group: p.group,
+          image: p.image,
+          link: p.link,
+        ));
+      }
+
       var pc = Podcast(
         guid: loadedPodcast.url,
         url: loadedPodcast.url,
@@ -169,6 +181,7 @@ class MobilePodcastService extends PodcastService {
         thumbImageUrl: thumbImageUrl,
         copyright: copyright,
         funding: funding,
+        persons: persons,
         episodes: <Episode>[],
       );
 
@@ -205,7 +218,8 @@ class MobilePodcastService extends PodcastService {
           final episodeThumbImage =
               episode.imageUrl == null || episode.imageUrl.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
           final duration = episode.duration?.inSeconds ?? 0;
-          var transcriptUrls = <TranscriptUrl>[];
+          final transcriptUrls = <TranscriptUrl>[];
+          final episodePersons = <Person>[];
 
           for (var t in episode.transcripts) {
             TranscriptFormat type;
@@ -223,6 +237,20 @@ class MobilePodcastService extends PodcastService {
             }
 
             transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
+          }
+
+          if (episodePersons.isNotEmpty) {
+            for (var p in episodePersons) {
+              episodePersons.add(Person(
+                name: p.name,
+                role: p.role,
+                group: p.group,
+                image: p.image,
+                link: p.link,
+              ));
+            }
+          } else if (persons.isNotEmpty) {
+            episodePersons.addAll(persons);
           }
 
           if (existingEpisode == null) {
@@ -247,6 +275,7 @@ class MobilePodcastService extends PodcastService {
               publicationDate: episode.publicationDate,
               chaptersUrl: episode.chapters?.url,
               transcriptUrls: transcriptUrls,
+              persons: episodePersons,
               chapters: <Chapter>[],
             ));
           } else {
@@ -263,6 +292,7 @@ class MobilePodcastService extends PodcastService {
             existingEpisode.publicationDate = episode.publicationDate;
             existingEpisode.chaptersUrl = episode.chapters?.url;
             existingEpisode.transcriptUrls = transcriptUrls;
+            existingEpisode.persons = episodePersons;
 
             // If the source duration is 0 do not update any saved, calculated duration.
             if (duration > 0) {
@@ -335,15 +365,35 @@ class MobilePodcastService extends PodcastService {
   Future<Transcript> loadTranscriptByUrl({@required TranscriptUrl transcriptUrl}) async {
     var subtitles = <Subtitle>[];
     var result = await _loadTranscriptByUrl(transcriptUrl);
+    Subtitle subtitle;
+    Subtitle lastSubtitle;
 
     if (result != null) {
       for (var s in result.subtitles) {
-        subtitles.add(Subtitle(
-          data: s.data,
+        var split = false;
+        var data = s.data;
+
+        if (lastSubtitle != null) {
+          if (lastSubtitle.start == s.start) {
+            data = '${lastSubtitle.data} ${s.data}';
+            lastSubtitle.data = data;
+            split = true;
+          }
+        }
+
+        subtitle = Subtitle(
+          data: data,
+          speaker: s.speaker,
           start: s.start,
           end: s.end,
           index: s.index,
-        ));
+        );
+
+        if (!split) {
+          subtitles.add(subtitle);
+        }
+
+        lastSubtitle = subtitle;
       }
     }
 

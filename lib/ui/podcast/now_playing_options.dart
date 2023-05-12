@@ -287,7 +287,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             ),
                                     ],
                                   ),
-                                  TranscriptView(),
+                                  TranscriptView(episode: snapshot.data.playing),
                                 ],
                               );
                             }),

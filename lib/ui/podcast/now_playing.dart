@@ -12,6 +12,7 @@ import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
 import 'package:anytime/ui/podcast/now_playing_floating_player.dart';
 import 'package:anytime/ui/podcast/now_playing_options.dart';
+import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
@@ -439,12 +440,10 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
 }
 
 class NowPlayingShowNotes extends StatelessWidget {
-  final String title;
-  final String description;
+  final Episode episode;
 
   const NowPlayingShowNotes({
-    @required this.title,
-    @required this.description,
+    @required this.episode,
   });
 
   @override
@@ -452,13 +451,44 @@ class NowPlayingShowNotes extends StatelessWidget {
     return SizedBox.expand(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 8.0,
-            left: 16.0,
-            right: 16.0,
-          ),
-          child: PodcastHtml(content: description),
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  bottom: 16.0,
+                ),
+                child: Text(
+                  episode.title,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              ),
+            ),
+            if (episode.persons.isNotEmpty)
+              SizedBox(
+                height: 120.0,
+                child: Container(
+                  child: ListView.builder(
+                    itemCount: episode.persons.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      return PersonAvatar(person: episode.persons[index]);
+                    },
+                  ),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8.0,
+                left: 8.0,
+                right: 8.0,
+              ),
+              child: PodcastHtml(content: episode.description),
+            ),
+          ],
         ),
       ),
     );
