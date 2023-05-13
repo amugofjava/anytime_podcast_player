@@ -45,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "delete_episode_title": MessageLookupByLibrary.simpleMessage("Delete Episode"),
         "delete_label": MessageLookupByLibrary.simpleMessage("Delete"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
+        "discovery_categories_itunes": MessageLookupByLibrary.simpleMessage(""),
+        "discovery_categories_pindex": MessageLookupByLibrary.simpleMessage(""),
         "download_episode_button_label": MessageLookupByLibrary.simpleMessage("Download episode"),
         "downloads": MessageLookupByLibrary.simpleMessage("Downloads"),
         "empty_queue_message": MessageLookupByLibrary.simpleMessage("Your queue is empty"),

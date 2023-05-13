@@ -7,7 +7,7 @@ import 'package:anytime/bloc/discovery/discovery_state_event.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
-import 'package:podcast_search/podcast_search.dart' as pcast;
+import 'package:podcast_search/podcast_search.dart' as podcast_search;
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC to interact with the Discovery UI page and the [PodcastService] to
@@ -15,15 +15,27 @@ import 'package:rxdart/rxdart.dart';
 /// the results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
   static const cacheMinutes = 30;
+
   final log = Logger('DiscoveryBloc');
   final PodcastService podcastService;
 
-  final BehaviorSubject<DiscoveryEvent> _discoveryInput = BehaviorSubject<DiscoveryEvent>();
-  final PublishSubject<List<String>> _genres = PublishSubject<List<String>>();
+  /// Takes an event which triggers a loading of chart data from the selected provider.
+  final _discoveryInput = BehaviorSubject<DiscoveryEvent>();
 
+  /// A stream of genres from the selected provider.
+  final _genres = PublishSubject<List<String>>();
+
+  /// The last genre to be passed in a [DiscoveryEvent].
+  final _selectedGenre = BehaviorSubject<SelectedGenre>(sync: true);
+
+  /// The last fetched results.
   Stream<DiscoveryState> _discoveryResults;
-  pcast.SearchResult _resultsCache;
+
+  /// To save bandwidth we cache the results.
+  podcast_search.SearchResult _resultsCache;
+
   String _lastGenre = '';
+  int _lastIndex = 0;
 
   DiscoveryBloc({@required this.podcastService}) {
     _init();
@@ -31,10 +43,11 @@ class DiscoveryBloc extends Bloc {
 
   void _init() {
     _discoveryResults = _discoveryInput.switchMap<DiscoveryState>((DiscoveryEvent event) => _charts(event));
-    _genres.onListen = loadGenres;
+    _selectedGenre.value = SelectedGenre(index: 0, genre: '');
+    _genres.onListen = _loadGenres;
   }
 
-  void loadGenres() {
+  void _loadGenres() {
     _genres.sink.add(podcastService.genres());
   }
 
@@ -46,10 +59,27 @@ class DiscoveryBloc extends Bloc {
           event.genre != _lastGenre ||
           DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
         _lastGenre = event.genre;
-        _resultsCache = await podcastService.charts(size: event.count, genre: event.genre);
+        _lastIndex = podcastService.genres().indexOf(_lastGenre);
+
+        if (_lastIndex > 0) {
+          _selectedGenre.add(SelectedGenre(index: _lastIndex, genre: _lastGenre));
+        } else {
+          /// Must have changed provider
+          _lastGenre = '';
+          _selectedGenre.add(SelectedGenre(index: 0, genre: ''));
+        }
+        _resultsCache = await podcastService.charts(
+          size: event.count,
+          genre: event.genre,
+          countryCode: event.countryCode,
+        );
       }
 
-      yield DiscoveryPopulatedState<pcast.SearchResult>(_resultsCache);
+      yield DiscoveryPopulatedState<podcast_search.SearchResult>(
+        genre: event.genre,
+        index: podcastService.genres().indexOf(event.genre),
+        results: _resultsCache,
+      );
     }
   }
 
@@ -59,6 +89,20 @@ class DiscoveryBloc extends Bloc {
   }
 
   void Function(DiscoveryEvent) get discover => _discoveryInput.add;
+
   Stream<DiscoveryState> get results => _discoveryResults;
+
   Stream<List<String>> get genres => _genres.stream;
+
+  SelectedGenre get selectedGenre => _selectedGenre.value;
+}
+
+class SelectedGenre {
+  final int index;
+  final String genre;
+
+  SelectedGenre({
+    @required this.index,
+    @required this.genre,
+  });
 }

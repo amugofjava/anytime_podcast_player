@@ -21,6 +21,10 @@ ThemeData _buildLightTheme() {
     bottomAppBarTheme: BottomAppBarTheme().copyWith(
       color: Color(0xffffffff),
     ),
+    cardTheme: CardTheme().copyWith(
+      color: Color(0xffffa900),
+      shadowColor: Color(0xfff57c00),
+    ),
     brightness: Brightness.light,
     primaryColor: Color(0xffff9800),
     primaryColorLight: Color(0xffffe0b2),
@@ -84,6 +88,10 @@ ThemeData _buildDarkTheme() {
     ),
     bottomAppBarTheme: BottomAppBarTheme().copyWith(
       color: Color(0xff222222),
+    ),
+    cardTheme: CardTheme().copyWith(
+      color: Color(0xff444444),
+      shadowColor: Color(0x77ffffff),
     ),
     brightness: Brightness.dark,
     primaryColor: Color(0xffffffff),

@@ -40,11 +40,13 @@ class MobilePodcastApi extends PodcastApi {
     int size = 20,
     String genre,
     String searchProvider,
+    String countryCode = '',
   }) async {
     var searchParams = {
       'size': size.toString(),
       'genre': genre,
       'searchProvider': searchProvider,
+      'countryCode': countryCode,
     };
 
     return compute(_charts, searchParams);
@@ -98,8 +100,15 @@ class MobilePodcastApi extends PodcastApi {
             secret: podcastIndexSecret,
           );
 
+    var countryCode = searchParams['countryCode'];
+    var country = Country.none;
+
+    if (countryCode != null && countryCode.isNotEmpty) {
+      country = Country.values.where((element) => element.code == countryCode).first;
+    }
+
     return Search(userAgent: Environment.userAgent(), searchProvider: provider)
-        .charts(genre: searchParams['genre'])
+        .charts(genre: searchParams['genre'], country: country)
         .timeout(Duration(seconds: 30));
   }
 

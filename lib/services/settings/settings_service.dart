@@ -52,4 +52,6 @@ abstract class SettingsService {
   set layoutMode(int mode);
 
   int get layoutMode;
+
+  Stream<String> get settingsListener;
 }
