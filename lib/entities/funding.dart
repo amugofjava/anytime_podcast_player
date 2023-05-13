@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/extensions.dart';
+import 'package:meta/meta.dart';
+
 /// A class that represents and individual funding option that may be
 /// part of a [Podcast].
 ///
@@ -13,10 +16,10 @@ class Funding {
   /// The label for the link which will be presented to the user.
   final String value;
 
-  const Funding({
-    this.url,
+  Funding({
+    @required String url,
     this.value,
-  });
+  }) : url = url?.forceHttps;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
 import 'package:flutter/foundation.dart';
@@ -58,13 +59,13 @@ class Podcast {
 
   Podcast({
     @required this.guid,
-    @required this.url,
+    @required String url,
     @required this.link,
     @required this.title,
     this.id,
     this.description,
-    this.imageUrl,
-    this.thumbImageUrl,
+    String imageUrl,
+    String thumbImageUrl,
     this.copyright,
     this.subscribedDate,
     this.funding,
@@ -72,33 +73,37 @@ class Podcast {
     this.newEpisodes = false,
     this.persons,
     DateTime lastUpdated,
-  }) {
+  })  : url = url.forceHttps,
+        imageUrl = imageUrl?.forceHttps,
+        thumbImageUrl = thumbImageUrl?.forceHttps {
     _lastUpdated = lastUpdated;
     episodes ??= [];
   }
 
-  Podcast.fromUrl({@required this.url})
-      : guid = '',
-        link = '',
-        title = '',
-        description = '',
-        thumbImageUrl = null,
-        imageUrl = null,
-        copyright = '',
-        funding = <Funding>[],
-        persons = <Person>[];
+  factory Podcast.fromUrl({@required String url}) => Podcast(
+        url: url,
+        guid: '',
+        link: '',
+        title: '',
+        description: '',
+        thumbImageUrl: null,
+        imageUrl: null,
+        copyright: '',
+        funding: <Funding>[],
+        persons: <Person>[],
+      );
 
-  Podcast.fromSearchResultItem(search.Item item)
-      : guid = item.guid,
-        url = item.feedUrl,
-        link = item.feedUrl,
-        title = item.trackName,
-        description = '',
-        imageUrl = item.bestArtworkUrl ?? item.artworkUrl,
-        thumbImageUrl = item.thumbnailArtworkUrl,
-        funding = const <Funding>[],
-        persons = const <Person>[],
-        copyright = item.artistName;
+  factory Podcast.fromSearchResultItem(search.Item item) => Podcast(
+        guid: item.guid,
+        url: item.feedUrl,
+        link: item.feedUrl,
+        title: item.trackName,
+        description: '',
+        imageUrl: item.bestArtworkUrl ?? item.artworkUrl,
+        thumbImageUrl: item.thumbnailArtworkUrl,
+        funding: const <Funding>[],
+        copyright: item.artistName,
+      );
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

@@ -1,6 +1,8 @@
 // Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'package:anytime/core/extensions.dart';
+
 class Person {
   final String name;
   final String role;
@@ -8,13 +10,14 @@ class Person {
   final String image;
   final String link;
 
-  const Person({
+  Person({
     this.name,
     this.role,
     this.group,
-    this.image,
-    this.link,
-  });
+    String image,
+    String link,
+  })  : image = image?.forceHttps,
+        link = link?.forceHttps;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

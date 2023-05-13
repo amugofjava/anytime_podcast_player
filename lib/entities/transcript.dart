@@ -1,6 +1,7 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'package:anytime/core/extensions.dart';
 import 'package:meta/meta.dart';
 
 enum TranscriptFormat {
@@ -19,12 +20,12 @@ class TranscriptUrl {
   final DateTime lastUpdated;
 
   TranscriptUrl({
-    @required this.url,
+    @required String url,
     @required this.type,
     this.language = '',
     this.rel = '',
     this.lastUpdated,
-  });
+  }) : url = url?.forceHttps;
 
   Map<String, dynamic> toMap() {
     var t = 0;

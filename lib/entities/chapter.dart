@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/extensions.dart';
 import 'package:flutter/foundation.dart';
 
 /// A class that represents an individual chapter within an [Episode]. Chapters
@@ -30,12 +31,13 @@ class Chapter {
 
   Chapter({
     @required this.title,
-    @required this.imageUrl,
+    @required String imageUrl,
     @required this.startTime,
-    this.url,
+    String url,
     this.toc = true,
     this.endTime,
-  });
+  })  : imageUrl = imageUrl.forceHttps,
+        url = url?.forceHttps;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
