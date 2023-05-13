@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:anytime/core/utils.dart';
 
 /// A class that represents an individual chapter within an [Episode]. Chapters
 /// may, or may not, exist for an episode.
@@ -33,12 +34,13 @@ class Chapter {
 
   Chapter({
     @required this.title,
-    @required this.imageUrl,
+    @required String imageUrl,
     @required this.startTime,
-    this.url,
+    String url,
     this.toc = true,
     this.endTime,
-  });
+  })  : imageUrl = imageUrl.forceHttps,
+        url = url?.forceHttps;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
