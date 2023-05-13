@@ -259,7 +259,7 @@ class EpisodeTabBarView extends StatelessWidget {
                 textGroup: textGroup,
               );
             }),
-        NowPlayingShowNotes(title: episode.title, description: episode.description),
+        NowPlayingShowNotes(episode: episode),
       ],
     );
   }

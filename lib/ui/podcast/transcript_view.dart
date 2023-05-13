@@ -71,7 +71,7 @@ class _TranscriptViewState extends State<TranscriptView> {
       if (_itemScrollController.isAttached) {
         var transcript = event.episode?.transcript;
 
-        if (transcript != null) {
+        if (transcript != null && transcript.subtitles.isNotEmpty) {
           subtitle ??= transcript.subtitles[index];
 
           // Our we outside the range of our current transcript.
@@ -142,7 +142,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 alignment: Alignment.center,
                 child: PlatformProgressIndicator(),
               );
-            } else if (snapshot.data is TranscriptUnavailableState) {
+            } else if (snapshot.data is TranscriptUnavailableState || snapshot.data.transcript.subtitles.isEmpty) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Align(
@@ -266,7 +266,7 @@ class SubtitleWidget extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        audioBloc.transitionPosition(subtitle.start.inSeconds.toDouble());
+        audioBloc.transitionPosition(subtitle.start.inSeconds.toDouble() + 0.1);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
