@@ -36,12 +36,13 @@ class NowPlayingOptionsSelector extends StatefulWidget {
 }
 
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
+  DraggableScrollableController draggableController;
+
   @override
   Widget build(BuildContext context) {
     const baseSize = 58;
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
-    final draggableController = DraggableScrollableController();
     final windowHeight = MediaQuery.of(context).size.height;
     final minSize = baseSize / (windowHeight - baseSize);
 
@@ -55,6 +56,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
       // snapSizes: [minSize, maxSize],
       builder: (BuildContext context, ScrollController scrollController) {
         return DefaultTabController(
+          animationDuration: !draggableController.isAttached || draggableController.size <= minSize
+              ? const Duration(seconds: 0)
+              : kTabScrollDuration,
           length: 2,
           child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
             return SingleChildScrollView(
@@ -105,7 +109,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 DefaultTabController.of(ctx).animateTo(0);
 
                                 if (draggableController.size <= 1.0) {
-                                  draggableController.jumpTo(1.0);
+                                  draggableController.animateTo(
+                                    1.0,
+                                    duration: kTabScrollDuration,
+                                    curve: Curves.easeIn,
+                                  );
                                 }
                               },
                               child: Padding(
@@ -122,7 +130,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 DefaultTabController.of(ctx).animateTo(1);
 
                                 if (draggableController.size <= 1.0) {
-                                  draggableController.jumpTo(1.0);
+                                  draggableController.animateTo(
+                                    1.0,
+                                    duration: kTabScrollDuration,
+                                    curve: Curves.easeIn,
+                                  );
                                 }
                               },
                               child: Padding(
@@ -301,5 +313,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    draggableController = DraggableScrollableController();
+    super.initState();
   }
 }
