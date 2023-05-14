@@ -90,9 +90,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                         event.position.inMilliseconds < a.end.inMilliseconds))
                     .first;
 
-                if (subtitle == null) {
-                  print('Argh! Subtitle is null');
-                } else {
+                if (subtitle != null) {
                   index = transcript.subtitles.indexOf(subtitle);
                 }
               } catch (e) {
@@ -216,7 +214,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: ScrollablePositionedList.builder(
                           itemScrollController: _itemScrollController,
                           scrollOffsetListener: _scrollOffsetListener,
@@ -268,26 +266,27 @@ class SubtitleWidget extends StatelessWidget {
       onTap: () {
         audioBloc.transitionPosition(subtitle.start.inSeconds.toDouble() + 0.1);
       },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            subtitle.speaker.isEmpty
-                ? _formatDuration(subtitle.start)
-                : '${_formatDuration(subtitle.start)} - ${subtitle.speaker}',
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          Text(
-            subtitle.data,
-            style: highlight
-                ? Theme.of(context).textTheme.titleMedium.copyWith(fontWeight: FontWeight.bold)
-                : Theme.of(context).textTheme.titleMedium.copyWith(
-                      fontWeight: FontWeight.w300,
-                    ),
-          ),
-          Padding(padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0))
-        ],
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+        color: highlight ? Theme.of(context).selectedRowColor : Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              subtitle.speaker.isEmpty
+                  ? _formatDuration(subtitle.start)
+                  : '${_formatDuration(subtitle.start)} - ${subtitle.speaker}',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            Text(
+              subtitle.data,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            Padding(padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0))
+          ],
+        ),
       ),
     );
   }

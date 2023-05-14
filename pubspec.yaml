@@ -103,6 +103,3 @@ flutter:
     - family: MontserratBold
       fonts:
         - asset: assets/fonts/Montserrat-Bold.otf
-    - family: JostRegular
-      fonts:
-        - asset: assets/fonts/jost/Jost-Regular.ttf
