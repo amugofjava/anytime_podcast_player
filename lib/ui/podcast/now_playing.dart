@@ -463,7 +463,9 @@ class NowPlayingShowNotes extends StatelessWidget {
                 ),
                 child: Text(
                   episode.title,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
             ),

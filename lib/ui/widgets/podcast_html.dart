@@ -9,10 +9,12 @@ import 'package:url_launcher/url_launcher.dart';
 class PodcastHtml extends StatelessWidget {
   final String content;
   final tagList = Html.tags;
+  final FontSize fontSize;
 
   PodcastHtml({
     Key key,
     @required this.content,
+    this.fontSize,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class PodcastHtml extends StatelessWidget {
       style: {
         'html': Style(
           fontWeight: textTheme.bodyLarge.fontWeight,
-          fontSize: FontSize.large,
+          fontSize: fontSize ?? FontSize.large,
         )
       },
       tagsList: tagList,

@@ -27,6 +27,7 @@ import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
@@ -447,6 +448,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
 
     description = PodcastHtml(
       content: widget.podcast.description,
+      fontSize: FontSize.medium,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

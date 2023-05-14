@@ -71,13 +71,14 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
+                Divider(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       episode.title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.titleLarge.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

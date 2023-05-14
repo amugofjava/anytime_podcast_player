@@ -111,8 +111,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 if (draggableController.size <= 1.0) {
                                   draggableController.animateTo(
                                     1.0,
-                                    duration: kTabScrollDuration,
-                                    curve: Curves.easeIn,
+                                    duration: Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
                                   );
                                 }
                               },
@@ -132,8 +132,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 if (draggableController.size <= 1.0) {
                                   draggableController.animateTo(
                                     1.0,
-                                    duration: kTabScrollDuration,
-                                    curve: Curves.easeIn,
+                                    duration: Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
                                   );
                                 }
                               },

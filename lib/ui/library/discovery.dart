@@ -116,28 +116,32 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, i) {
                       final item = snapshot.data[i];
+                      final padding = i == 0 ? 14.0 : 0.0;
 
-                      return Card(
-                        color: item == selectedCategory || (selectedCategory.isEmpty && i == 0)
-                            ? Theme.of(context).cardTheme.shadowColor
-                            : Theme.of(context).cardTheme.color,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Color(0xffffffff),
-                            visualDensity: VisualDensity.compact,
+                      return Container(
+                        margin: EdgeInsets.only(left: padding),
+                        child: Card(
+                          color: item == selectedCategory || (selectedCategory.isEmpty && i == 0)
+                              ? Theme.of(context).cardTheme.shadowColor
+                              : Theme.of(context).cardTheme.color,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Color(0xffffffff),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                selectedCategory = item;
+                              });
+
+                              widget.discoveryBloc.discover(DiscoveryChartEvent(
+                                count: 10,
+                                genre: item,
+                                countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
+                              ));
+                            },
+                            child: Text(item),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              selectedCategory = item;
-                            });
-
-                            widget.discoveryBloc.discover(DiscoveryChartEvent(
-                              count: 10,
-                              genre: item,
-                              countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
-                            ));
-                          },
-                          child: Text(item),
                         ),
                       );
                     })
