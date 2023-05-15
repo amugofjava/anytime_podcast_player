@@ -84,12 +84,14 @@ class Transcript {
   final String guid;
   final List<Subtitle> subtitles;
   DateTime lastUpdated;
+  bool filtered;
   final _chunks = <List<Subtitle>>[];
 
   Transcript({
     this.id,
     this.guid,
     this.subtitles = const <Subtitle>[],
+    this.filtered = false,
     this.lastUpdated,
   });
 
@@ -140,6 +142,8 @@ class Transcript {
           : DateTime.fromMillisecondsSinceEpoch(transcript['lastUpdated'] as int),
     );
   }
+
+  bool get transcriptAvailable => subtitles != null && (subtitles.isNotEmpty || filtered);
 }
 
 class Subtitle {

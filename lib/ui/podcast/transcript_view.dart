@@ -140,7 +140,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 alignment: Alignment.center,
                 child: PlatformProgressIndicator(),
               );
-            } else if (snapshot.data is TranscriptUnavailableState || snapshot.data.transcript.subtitles.isEmpty) {
+            } else if (snapshot.data is TranscriptUnavailableState || !snapshot.data.transcript.transcriptAvailable) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Align(
@@ -249,6 +249,7 @@ class SubtitleWidget extends StatelessWidget {
   final Subtitle subtitle;
   final List<Person> persons;
   final bool highlight;
+  static const margin = Duration(milliseconds: 1000);
 
   const SubtitleWidget({
     Key key,
@@ -264,7 +265,9 @@ class SubtitleWidget extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        audioBloc.transitionPosition(subtitle.start.inSeconds.toDouble() + 0.1);
+        final p = subtitle.start + margin;
+
+        audioBloc.transitionPosition(p.inSeconds.toDouble());
       },
       child: Container(
         width: double.infinity,

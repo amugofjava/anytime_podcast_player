@@ -149,7 +149,7 @@ class AudioBloc extends Bloc {
       if (event is TranscriptFilterEvent) {
         audioPlayerService.searchTranscript(event.search);
       } else if (event is TranscriptClearEvent) {
-        audioPlayerService.searchTranscript('');
+        audioPlayerService.clearTranscript();
       }
     });
   }

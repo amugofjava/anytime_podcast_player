@@ -393,22 +393,28 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<void> searchTranscript(String search) async {
-    final subtitles = _currentEpisode.transcript.subtitles.where((subtitle) {
-      return subtitle.data.toLowerCase().contains(search.toLowerCase());
-    }).toList();
+    if (search != null) {
+      search = search.trim();
 
-    _currentTranscript = Transcript(
-      id: _currentEpisode.transcript.id,
-      guid: _currentEpisode.transcript.guid,
-      subtitles: subtitles,
-    );
+      final subtitles = _currentEpisode.transcript.subtitles.where((subtitle) {
+        return subtitle.data.toLowerCase().contains(search.toLowerCase());
+      }).toList();
 
-    _updateTranscriptState();
+      _currentTranscript = Transcript(
+        id: _currentEpisode.transcript.id,
+        guid: _currentEpisode.transcript.guid,
+        filtered: true,
+        subtitles: subtitles,
+      );
+
+      _updateTranscriptState();
+    }
   }
 
   @override
   Future<void> clearTranscript() async {
     _currentTranscript = _currentEpisode.transcript;
+    _currentTranscript.filtered = false;
 
     _updateTranscriptState();
   }
