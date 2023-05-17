@@ -38,9 +38,9 @@ class _DownloadsState extends State<Downloads> {
       builder: (BuildContext context, AsyncSnapshot<BlocState> snapshot) {
         final state = snapshot.data;
 
-        if (state is BlocPopulatedState) {
+        if (state is BlocPopulatedState<List<Episode>>) {
           return PodcastEpisodeList(
-            episodes: state.results as List<Episode>,
+            episodes: state.results,
             play: true,
             download: false,
             icon: Icons.cloud_download,
