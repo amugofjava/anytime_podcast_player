@@ -539,9 +539,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           _updateTranscriptState(state: TranscriptLoadingState());
 
           transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
-          transcript = await repository.saveTranscript(transcript);
-
-          _currentEpisode.transcriptId = transcript.id;
         }
       } else {
         transcript = await repository.findTranscriptById(_currentEpisode.transcriptId);

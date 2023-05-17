@@ -426,6 +426,10 @@ class MobilePodcastService extends PodcastService {
       episode.played = true;
     }
 
+    if (episode.transcriptId != null && episode.transcriptId > 0) {
+      await repository.deleteTranscriptById(episode.transcriptId);
+    }
+
     await repository.saveEpisode(episode);
 
     if (await hasStoragePermission()) {

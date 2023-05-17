@@ -46,15 +46,10 @@ class _TranscriptViewState extends State<TranscriptView> {
   @override
   void initState() {
     super.initState();
-
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     Subtitle subtitle;
     int index = 0;
-
-    _transcriptSearchController.addListener(() {
-      print(_transcriptSearchController.text);
-    });
 
     // If the user initiates scrolling, disable auto scroll.
     _scrollOffsetListener.changes.listen((event) {
@@ -78,7 +73,7 @@ class _TranscriptViewState extends State<TranscriptView> {
           if (event.position.inMilliseconds < subtitle.start.inMilliseconds ||
               event.position.inMilliseconds > subtitle.end.inMilliseconds) {
             // Will the next in the list do?
-            if (transcript.subtitles.length > index &&
+            if (transcript.subtitles.length > (index + 1) &&
                 event.position.inMilliseconds >= transcript.subtitles[index + 1].start.inMilliseconds &&
                 event.position.inMilliseconds < transcript.subtitles[index + 1].end.inMilliseconds) {
               index++;
@@ -213,25 +208,30 @@ class _TranscriptViewState extends State<TranscriptView> {
                     ),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: ScrollablePositionedList.builder(
-                          itemScrollController: _itemScrollController,
-                          scrollOffsetListener: _scrollOffsetListener,
-                          itemCount: items.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            var i = items[index];
-                            return Wrap(
-                              children: [
-                                SubtitleWidget(
-                                  subtitle: i,
-                                  persons: widget.episode.persons,
-                                  highlight: i.start.inMilliseconds == position,
-                                ),
-                              ],
-                            );
-                          }),
-                    ),
+                    /// A simple way to ensure the builder is visible before attempting to use it.
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return constraints.minHeight > 60.0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: ScrollablePositionedList.builder(
+                                  itemScrollController: _itemScrollController,
+                                  scrollOffsetListener: _scrollOffsetListener,
+                                  itemCount: items.length ?? 0,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    var i = items[index];
+                                    return Wrap(
+                                      children: [
+                                        SubtitleWidget(
+                                          subtitle: i,
+                                          persons: widget.episode.persons,
+                                          highlight: i.start.inMilliseconds == position,
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                            )
+                          : Container();
+                    }),
                   ),
                 ],
               );

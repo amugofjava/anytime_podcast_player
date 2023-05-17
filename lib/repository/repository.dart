@@ -51,6 +51,10 @@ abstract class Repository {
 
   Future<Transcript> saveTranscript(Transcript transcript);
 
+  Future<void> deleteTranscriptById(int id);
+
+  Future<void> deleteTranscriptsById(List<int> id);
+
   /// Queue
   Future<void> saveQueue(List<Episode> episodes);
 

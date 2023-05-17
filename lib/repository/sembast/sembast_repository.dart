@@ -41,7 +41,7 @@ class SembastRepository extends Repository {
     _databaseService = DatabaseService(databaseName);
 
     if (cleanup) {
-      _deleteOrphanedEpisodes().then((value) {
+      _cleanupEpisodes().then((value) {
         log.fine('Orphan episodes cleanup complete');
       });
     }
@@ -341,6 +341,42 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<void> deleteTranscriptById(int id) async {
+    final finder = Finder(filter: Filter.byKey(id));
+
+    final snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+
+    if (snapshot == null) {
+      // Oops!
+    } else {
+      await _transcriptStore.delete(await _db, finder: finder);
+    }
+  }
+
+  @override
+  Future<void> deleteTranscriptsById(List<int> ids) async {
+    var d = await _db;
+
+    if (ids != null && ids.isNotEmpty) {
+      for (var chunk in ids.chunk(100)) {
+        await d.transaction((txn) async {
+          var futures = <Future<int>>[];
+
+          for (var id in chunk) {
+            final finder = Finder(filter: Filter.byKey(id));
+
+            futures.add(_transcriptStore.delete(txn, finder: finder));
+          }
+
+          if (futures.isNotEmpty) {
+            await Future.wait(futures);
+          }
+        });
+      }
+    }
+  }
+
+  @override
   Future<Transcript> findTranscriptByUrl(String url) async {
     final finder = Finder(filter: Filter.equals('id', url));
 
@@ -365,9 +401,10 @@ class SembastRepository extends Repository {
     return transcript;
   }
 
-  Future<void> _deleteOrphanedEpisodes() async {
-    final threshold = DateTime.now().subtract(Duration(days: 60)).millisecondsSinceEpoch;
+  Future<void> _cleanupEpisodes() async {
+    final threshold = DateTime.now().subtract(Duration(days: 32)).millisecondsSinceEpoch;
 
+    /// Find all streamed episodes over the threshold.
     final filter = Filter.and([
       Filter.equals('downloadState', 0),
       Filter.lessThan('lastUpdated', threshold),

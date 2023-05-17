@@ -81,12 +81,13 @@ class EpisodeBloc extends Bloc {
   }
 
   void _listenEpisodeEvents() {
+    // If we are updating the status of an episode that is not currently in our downloads list, refresh it.
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
       if (_episodes != null) {
-        var episode = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
-        bool downloadCompleted = state.episode.downloaded;
-        if (episode == -1 && downloadCompleted) {
+        var index = _episodes.indexWhere((e) => e.pguid == state.episode.pguid && e.guid == state.episode.guid);
+
+        if (index == -1 && state.episode.downloaded) {
           fetchDownloads(true);
         }
       }
@@ -121,11 +122,14 @@ class EpisodeBloc extends Bloc {
   }
 
   void Function(bool) get fetchDownloads => _downloadsInput.add;
+
   void Function(bool) get fetchEpisodes => _episodesInput.add;
 
   Stream<BlocState<List<Episode>>> get downloads => _downloadsOutput;
+
   Stream<BlocState<List<Episode>>> get episodes => _episodesOutput;
 
   void Function(Episode) get deleteDownload => _deleteDownload.add;
+
   void Function(Episode) get togglePlayed => _togglePlayed.add;
 }

@@ -195,7 +195,7 @@ class Episode {
       'played': played ? 'true' : 'false',
       'chaptersUrl': chaptersUrl,
       'chapters': (chapters ?? <Chapter>[]).map((chapter) => chapter.toMap())?.toList(growable: false),
-      'tid': transcriptId,
+      'tid': transcriptId ?? 0,
       'transcriptUrls': (transcriptUrls ?? <TranscriptUrl>[]).map((tu) => tu.toMap())?.toList(growable: false),
       'persons': (persons ?? <Person>[]).map((person) => person.toMap())?.toList(growable: false),
       'lastUpdated': lastUpdated?.millisecondsSinceEpoch.toString() ?? '',
