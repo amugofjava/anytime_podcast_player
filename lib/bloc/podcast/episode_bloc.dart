@@ -81,13 +81,8 @@ class EpisodeBloc extends Bloc {
   }
 
   void _listenEpisodeEvents() {
-    // If we are updating the status of an episode that is not currently in our downloads list, refresh it.
-    podcastService.episodeListener.listen((state) {
-      // Only refresh if this episode has been downloaded.
-      if (state.episode.downloaded) {
-        fetchDownloads(true);
-      }
-    });
+    // Listen for episode updates. If the episode is downloaded, we need to update.
+    podcastService.episodeListener.where((event) => event.episode.downloaded).listen((event) => fetchDownloads(true));
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {

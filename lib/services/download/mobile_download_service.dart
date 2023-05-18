@@ -87,7 +87,11 @@ class MobileDownloadService extends DownloadService {
 
         log.fine('Download episode (${episode?.title}) $filename to $downloadPath/$filename');
 
-        final taskId = await downloadManager.enqueueTask(episode.contentUrl, downloadPath, filename);
+        /// If we get a redirect to an http endpoint the download will fail. Let's fully resolve
+        /// the URL before calling download and ensure it is https.
+        var url = await resolveUrl(episode.contentUrl, forceHttps: true);
+
+        final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
 
         // Update the episode with download data
         episode.filepath = episodePath;
