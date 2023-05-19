@@ -162,7 +162,7 @@ class Episode {
     this.chapters = const <Chapter>[],
     this.transcriptUrls = const <TranscriptUrl>[],
     this.persons = const <Person>[],
-    this.transcriptId,
+    this.transcriptId = 0,
     this.lastUpdated,
   })  : imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps,

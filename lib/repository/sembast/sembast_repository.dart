@@ -492,7 +492,11 @@ class SembastRepository extends Repository {
     final finder = Finder(filter: Filter.equals('downloadTaskId', taskId));
     final snapshot = await _episodeStore.findFirst(await _db, finder: finder);
 
-    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    if (snapshot != null && snapshot.key != null) {
+      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    } else {
+      return null;
+    }
   }
 
   Future<Episode> _loadEpisodeSnapshot(int key, Map<String, dynamic> snapshot) async {
