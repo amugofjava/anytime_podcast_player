@@ -377,22 +377,14 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<Transcript> findTranscriptByUrl(String url) async {
-    final finder = Finder(filter: Filter.equals('id', url));
-
-    final snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
-
-    return snapshot == null ? null : Transcript.fromMap(snapshot.key, snapshot.value);
-  }
-
-  @override
   Future<Transcript> saveTranscript(Transcript transcript) async {
     final finder = Finder(filter: Filter.byKey(transcript.id));
 
     final snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
 
+    transcript.lastUpdated = DateTime.now();
+
     if (snapshot == null) {
-      transcript.lastUpdated = DateTime.now();
       transcript.id = await _transcriptStore.add(await _db, transcript.toMap());
     } else {
       await _transcriptStore.update(await _db, transcript.toMap(), finder: finder);

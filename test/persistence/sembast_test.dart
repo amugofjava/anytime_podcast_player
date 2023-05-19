@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -266,6 +267,37 @@ void main() {
             podcast3,
           ]),
           true);
+    });
+
+    test('Podcast stream', () async {
+      await persistenceService.savePodcast(podcast1);
+
+      persistenceService.podcastListener.listen(
+        expectAsync1(
+          (event) {
+            expect(event, podcast1);
+          },
+        ),
+      );
+    });
+
+    test('Episode stream', () async {
+      var episode = Episode(
+          guid: 'EP001',
+          title: 'Episode 1',
+          pguid: podcast2.guid,
+          podcast: podcast2.title,
+          publicationDate: DateTime.now());
+
+      await persistenceService.saveEpisode(episode);
+
+      persistenceService.episodeListener.listen(
+        expectAsync1(
+          (event) {
+            expect(event.episode, episode);
+          },
+        ),
+      );
     });
   });
 
@@ -1112,6 +1144,178 @@ void main() {
       // Invalid position
       episode.position = 500000;
       expect(episode.percentagePlayed == 100.0, true);
+    });
+
+    test('Test episode transcript read/write', () async {
+      var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+        Subtitle(
+            index: 0,
+            start: Duration(seconds: 0),
+            data: 'This is line 1',
+            end: Duration(seconds: 10),
+            speaker: 'Speaker 1'),
+        Subtitle(
+            index: 1,
+            start: Duration(seconds: 10),
+            data: 'This is line 2',
+            end: Duration(seconds: 20),
+            speaker: 'Speaker 2'),
+      ]);
+
+      var savedTranscript = await persistenceService.saveTranscript(transcript);
+      var fetchedTranscript = await persistenceService.findTranscriptById(savedTranscript.id);
+
+      expect(savedTranscript == fetchedTranscript, true);
+
+      await persistenceService.deleteTranscriptById(savedTranscript.id);
+
+      var deletedTranscript = await persistenceService.findTranscriptById(savedTranscript.id);
+
+      expect(deletedTranscript == null, true);
+    });
+    test('Test episode transcript read/write', () async {
+      var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+        Subtitle(
+            index: 0,
+            start: Duration(seconds: 0),
+            data: 'This is line 1',
+            end: Duration(seconds: 10),
+            speaker: 'Speaker 1'),
+        Subtitle(
+            index: 1,
+            start: Duration(seconds: 10),
+            data: 'This is line 2',
+            end: Duration(seconds: 20),
+            speaker: 'Speaker 2'),
+      ]);
+
+      var savedTranscript = await persistenceService.saveTranscript(transcript);
+      var fetchedTranscript = await persistenceService.findTranscriptById(savedTranscript.id);
+
+      expect(savedTranscript == fetchedTranscript, true);
+
+      await persistenceService.deleteTranscriptById(savedTranscript.id);
+
+      var deletedTranscript = await persistenceService.findTranscriptById(savedTranscript.id);
+
+      expect(deletedTranscript == null, true);
+    });
+
+    test('Test episode transcript read/write bulk', () async {
+      var transcript1 = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+        Subtitle(
+            index: 0,
+            start: Duration(seconds: 0),
+            data: 'This is line 1',
+            end: Duration(seconds: 10),
+            speaker: 'Speaker 1'),
+        Subtitle(
+            index: 1,
+            start: Duration(seconds: 10),
+            data: 'This is line 2',
+            end: Duration(seconds: 20),
+            speaker: 'Speaker 2'),
+      ]);
+
+      var transcript2 = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+        Subtitle(
+            index: 0,
+            start: Duration(seconds: 0),
+            data: 'This is line 1b',
+            end: Duration(seconds: 100),
+            speaker: 'Speaker 1b'),
+        Subtitle(
+            index: 1,
+            start: Duration(seconds: 100),
+            data: 'This is line 2b',
+            end: Duration(seconds: 200),
+            speaker: 'Speaker 2b'),
+      ]);
+
+      var savedTranscript1 = await persistenceService.saveTranscript(transcript1);
+      var savedTranscript2 = await persistenceService.saveTranscript(transcript2);
+
+      var fetchedTranscript1 = await persistenceService.findTranscriptById(savedTranscript1.id);
+      var fetchedTranscript2 = await persistenceService.findTranscriptById(savedTranscript2.id);
+
+      expect(fetchedTranscript1.id != null, true);
+      expect(fetchedTranscript2.id != null, true);
+      expect(savedTranscript1 == fetchedTranscript1, true);
+      expect(savedTranscript2 == fetchedTranscript2, true);
+
+      await persistenceService.deleteTranscriptsById(<int>[fetchedTranscript1.id, fetchedTranscript2.id]);
+
+      fetchedTranscript1 = await persistenceService.findTranscriptById(savedTranscript1.id);
+      fetchedTranscript2 = await persistenceService.findTranscriptById(savedTranscript2.id);
+
+      expect(fetchedTranscript1 == null, true);
+      expect(fetchedTranscript2 == null, true);
+    });
+
+    test('Test episode transcript data', () async {
+      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
+
+      var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+        Subtitle(
+            index: 0,
+            start: Duration(seconds: 0),
+            data: 'This is line 1',
+            end: Duration(seconds: 10),
+            speaker: 'Speaker 1'),
+        Subtitle(
+            index: 1,
+            start: Duration(seconds: 10),
+            data: 'This is line 2',
+            end: Duration(seconds: 20),
+            speaker: 'Speaker 2'),
+      ]);
+
+      var savedTranscript = await persistenceService.saveTranscript(transcript);
+
+      expect(savedTranscript.id != null, true);
+      expect(transcript == savedTranscript, true);
+
+      transcript.subtitles[0].data = 'This is line 1 updated';
+
+      var updatedTranscript = await persistenceService.saveTranscript(savedTranscript);
+
+      expect(transcript == updatedTranscript, true);
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            description: 'Episode 1 description',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1,
+            transcriptId: savedTranscript.id,
+            position: 60000,
+            // 1 min in ms
+            duration: 120,
+            // 2 min in s
+            downloadPercentage: 0),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2,
+            position: 0,
+            duration: 240,
+            downloadPercentage: 100),
+      ];
+
+      // Save the podcasts.
+      await persistenceService.savePodcast(podcast1);
+
+      // Fetch the downloaded podcast
+      var episode1 = await persistenceService.findEpisodeByGuid('EP001');
+      var episode2 = await persistenceService.findEpisodeByGuid('EP002');
+
+      expect(episode1 == podcast1.episodes[0], true);
+      expect(episode2 == podcast1.episodes[1], true);
     });
   });
 }

@@ -47,8 +47,6 @@ abstract class Repository {
 
   Future<Transcript> findTranscriptById(int id);
 
-  Future<Transcript> findTranscriptByUrl(String url);
-
   Future<Transcript> saveTranscript(Transcript transcript);
 
   Future<void> deleteTranscriptById(int id);

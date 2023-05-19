@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/core/extensions.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 
 enum TranscriptFormat {
   json,
@@ -77,15 +77,29 @@ class TranscriptUrl {
           : DateTime.fromMillisecondsSinceEpoch(transcript['lastUpdated'] as int),
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TranscriptUrl &&
+          runtimeType == other.runtimeType &&
+          url == other.url &&
+          type == other.type &&
+          language == other.language &&
+          rel == other.rel;
+
+  @override
+  int get hashCode => url.hashCode ^ type.hashCode ^ language.hashCode ^ rel.hashCode;
 }
 
+/// This class represents a Podcasting 2.0 transcript container.
+/// [docs](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
 class Transcript {
   int id;
   final String guid;
   final List<Subtitle> subtitles;
   DateTime lastUpdated;
   bool filtered;
-  final _chunks = <List<Subtitle>>[];
 
   Transcript({
     this.id,
@@ -94,26 +108,6 @@ class Transcript {
     this.filtered = false,
     this.lastUpdated,
   });
-
-  List<List<Subtitle>> conversational() {
-    if (_chunks.isEmpty) {
-      Subtitle lastChunk;
-      var block = <Subtitle>[];
-
-      for (var s in subtitles) {
-        lastChunk ??= s;
-
-        if (s.end.inMilliseconds - lastChunk.end.inMilliseconds > 1000) {
-          _chunks.add(block);
-          block = <Subtitle>[];
-        }
-
-        block.add(s);
-      }
-    }
-
-    return _chunks;
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -135,6 +129,7 @@ class Transcript {
     }
 
     return Transcript(
+      id: key,
       guid: transcript['guid'] as String ?? '',
       subtitles: subtitles,
       lastUpdated: transcript['lastUpdated'] == null
@@ -143,9 +138,21 @@ class Transcript {
     );
   }
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Transcript &&
+          runtimeType == other.runtimeType &&
+          guid == other.guid &&
+          listEquals(subtitles, other.subtitles);
+
+  @override
+  int get hashCode => guid.hashCode ^ subtitles.hashCode;
+
   bool get transcriptAvailable => subtitles != null && (subtitles.isNotEmpty || filtered);
 }
 
+/// Represents an individual line within a transcript.
 class Subtitle {
   final int index;
   final Duration start;
@@ -180,4 +187,18 @@ class Subtitle {
       data: subtitle['data'] as String ?? '',
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Subtitle &&
+          runtimeType == other.runtimeType &&
+          index == other.index &&
+          start == other.start &&
+          end == other.end &&
+          data == other.data &&
+          speaker == other.speaker;
+
+  @override
+  int get hashCode => index.hashCode ^ start.hashCode ^ end.hashCode ^ data.hashCode ^ speaker.hashCode;
 }
