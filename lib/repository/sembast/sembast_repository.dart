@@ -354,11 +354,11 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<void> deleteTranscriptsById(List<int> ids) async {
+  Future<void> deleteTranscriptsById(List<int> id) async {
     var d = await _db;
 
-    if (ids != null && ids.isNotEmpty) {
-      for (var chunk in ids.chunk(100)) {
+    if (id != null && id.isNotEmpty) {
+      for (var chunk in id.chunk(100)) {
         await d.transaction((txn) async {
           var futures = <Future<int>>[];
 

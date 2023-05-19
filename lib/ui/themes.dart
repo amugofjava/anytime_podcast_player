@@ -17,6 +17,7 @@ ThemeData _buildLightTheme() {
       secondary: Color(0xfffb8c00),
       background: Color(0xffffffff),
       error: Color(0xffd32f2f),
+      onBackground: Color(0xffff9800),
     ),
     bottomAppBarTheme: BottomAppBarTheme().copyWith(
       color: Color(0xffffffff),
@@ -35,7 +36,6 @@ ThemeData _buildLightTheme() {
     dividerColor: Color(0x1f000000),
     highlightColor: Color(0x66bcbcbc),
     splashColor: Color(0x66c8c8c8),
-    selectedRowColor: Color(0xffff9800),
     unselectedWidgetColor: Color(0x8a000000),
     disabledColor: Color(0x61000000),
     secondaryHeaderColor: Color(0xffffffff),
@@ -87,6 +87,7 @@ ThemeData _buildDarkTheme() {
       secondary: Color(0xfffb8c00),
       background: Color(0xff222222),
       error: Color(0xffd32f2f),
+      onBackground: Color(0xff656565),
     ),
     bottomAppBarTheme: BottomAppBarTheme().copyWith(
       color: Color(0xff222222),
@@ -105,7 +106,6 @@ ThemeData _buildDarkTheme() {
     dividerColor: Color(0xff444444),
     highlightColor: Color(0xff222222),
     splashColor: Color(0x66c8c8c8),
-    selectedRowColor: Color(0xff656565),
     unselectedWidgetColor: Colors.white,
     disabledColor: Color(0x77ffffff),
     secondaryHeaderColor: Color(0xff222222),

@@ -12,6 +12,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +43,8 @@ class _TranscriptViewState extends State<TranscriptView> {
   bool autoScrollEnabled = true;
   bool first = true;
   bool scrolling = false;
+  String speaker = '';
+  RegExp exp = RegExp(r'(^)(?<speaker>[A-Za-z0-9\s]+)(:)');
 
   @override
   void initState() {
@@ -50,6 +53,7 @@ class _TranscriptViewState extends State<TranscriptView> {
 
     Subtitle subtitle;
     int index = 0;
+    bool firstParse = true;
 
     // If the user initiates scrolling, disable auto scroll.
     _scrollOffsetListener.changes.listen((event) {
@@ -67,6 +71,24 @@ class _TranscriptViewState extends State<TranscriptView> {
         var transcript = event.episode?.transcript;
 
         if (transcript != null && transcript.subtitles.isNotEmpty) {
+          if (firstParse) {
+            firstParse = false;
+            var first = transcript.subtitles[0];
+
+            // If we have a transcript but no speaker value, look at the start of the line
+            // and see if a speaker is contained there. This is common in SRT format transcripts.
+            // On the first load, check the speaker at the first subtitle.
+            if (first != null && first.speaker != null && first.speaker.isEmpty) {
+              var match = exp.firstMatch(first.data);
+
+              if (match != null) {
+                setState(() {
+                  speaker = match.namedGroup('speaker');
+                });
+              }
+            }
+          }
+
           subtitle ??= transcript.subtitles[index];
 
           // Our we outside the range of our current transcript.
@@ -95,6 +117,16 @@ class _TranscriptViewState extends State<TranscriptView> {
 
             if (subtitle != null) {
               setState(() {
+                if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
+                  speaker = subtitle.speaker;
+                } else {
+                  var match = exp.firstMatch(subtitle.data);
+
+                  if (match != null) {
+                    speaker = match.namedGroup('speaker');
+                  }
+                }
+
                 position = subtitle.start.inMilliseconds;
               });
             }
@@ -207,6 +239,42 @@ class _TranscriptViewState extends State<TranscriptView> {
                       ],
                     ),
                   ),
+                  if (widget.episode.persons.isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.only(left: 16.0),
+                      width: double.infinity,
+                      height: 72.0,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: widget.episode.persons.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var person = widget.episode.persons[index];
+                            var selected = false;
+
+                            if (speaker != null &&
+                                speaker.isNotEmpty &&
+                                person.name.toLowerCase().startsWith(speaker.toLowerCase())) {
+                              selected = true;
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Container(
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                    color: selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
+                                child: CircleAvatar(
+                                  radius: 28,
+                                  backgroundImage: ExtendedImage.network(
+                                    person.image,
+                                    cache: true,
+                                  ).image,
+                                  child: Text(''),
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
                   Expanded(
                     /// A simple way to ensure the builder is visible before attempting to use it.
                     child: LayoutBuilder(builder: (context, constraints) {
@@ -272,7 +340,7 @@ class SubtitleWidget extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-        color: highlight ? Theme.of(context).selectedRowColor : Colors.transparent,
+        color: highlight ? Theme.of(context).colorScheme.onBackground : Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
