@@ -502,8 +502,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   /// This method is called when audio_service sends a [AudioProcessingState.loading] event.
   void _loadEpisode(PlaybackState state) async {
-    bool requiresSave = false;
-
     if (_currentEpisode == null) {
       log.fine('_onLoadEpisode: _episode is null - cannot load!');
       return;
@@ -518,11 +516,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       await _onUpdatePosition();
 
+      log.fine('Loading chapters from ${_currentEpisode.chaptersUrl}');
+
       _currentEpisode.chapters = await podcastService.loadChaptersByUrl(url: _currentEpisode.chaptersUrl);
       _currentEpisode.chaptersLoading = false;
       _updateEpisodeState();
 
-      requiresSave = true;
+      log.fine('We have ${_currentEpisode.chapters?.length} chapters');
+      _currentEpisode = await repository.saveEpisode(_currentEpisode);
     }
 
     if (_currentEpisode.hasTranscripts) {
@@ -538,7 +539,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         if (sub != null) {
           _updateTranscriptState(state: TranscriptLoadingState());
 
+          log.fine('Loading transcript from $sub');
+
           transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+
+          log.fine('We have ${transcript.subtitles?.length} lines');
         }
       } else {
         transcript = await repository.findTranscriptById(_currentEpisode.transcriptId);
@@ -547,12 +552,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       if (transcript != null) {
         _currentEpisode.transcript = transcript;
         _currentTranscript = transcript;
-        requiresSave = true;
         _updateTranscriptState();
-      }
-
-      if (requiresSave) {
-        _currentEpisode = await repository.saveEpisode(_currentEpisode);
       }
     } else {
       _updateTranscriptState(state: TranscriptUnavailableState());

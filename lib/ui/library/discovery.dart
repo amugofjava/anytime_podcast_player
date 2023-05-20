@@ -35,7 +35,7 @@ class _DiscoveryState extends State<Discovery> {
     bloc.discover(DiscoveryChartEvent(
       count: 10,
       genre: bloc.selectedGenre.genre,
-      countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
+      countryCode: WidgetsBinding.instance.window.locale.countryCode?.toLowerCase() ?? '',
     ));
   }
 

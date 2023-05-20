@@ -371,7 +371,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
         Expanded(
           flex: 5,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
             child: AutoSizeText(
               episode?.title ?? '',
               group: textGroup,
