@@ -138,6 +138,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                         body: Column(
                           children: [
                             Expanded(
+                              flex: 5,
                               child: EpisodeTabBarView(
                                 episode: snapshot.data,
                                 chapters: snapshot.data.hasChapters,
@@ -149,7 +150,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                     height: 148.0,
                                     child: NowPlayingTransport(),
                                   ),
-                            NowPlayingOptionsScaffold(),
+                            Expanded(flex: 1, child: NowPlayingOptionsScaffold(),),
                           ],
                         ),
                       ),

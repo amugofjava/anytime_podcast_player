@@ -28,7 +28,7 @@ import 'package:provider/provider.dart';
 /// TODO: Extract contents of Transcript UI into separate widgets.
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double scrollPos;
-  static const baseSize = 72.0;
+  static const baseSize = 68.0;
 
   NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
 
@@ -328,7 +328,7 @@ class NowPlayingOptionsScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: NowPlayingOptionsSelector.baseSize,
+      height: NowPlayingOptionsSelector.baseSize - 8.0,
     );
   }
 }

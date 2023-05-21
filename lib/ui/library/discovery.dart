@@ -137,7 +137,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               widget.discoveryBloc.discover(DiscoveryChartEvent(
                                 count: 10,
                                 genre: item,
-                                countryCode: WidgetsBinding.instance.window.locale.countryCode.toLowerCase(),
+                                countryCode: WidgetsBinding.instance.window.locale.countryCode?.toLowerCase() ?? '',
                               ));
                             },
                             child: Text(item),

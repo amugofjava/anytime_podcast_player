@@ -154,21 +154,21 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
       _currentEpisode = episode;
-      _currentTranscript = episode?.transcript;
       _currentEpisode.played = false;
 
       await repository.saveEpisode(_currentEpisode);
 
       /// Update the state of the queue.
       _updateQueueState();
-
-      /// Update the state of the current episode & transcript.
       _updateEpisodeState();
 
       /// And the position of our current episode.
       _broadcastEpisodePosition(_currentEpisode);
 
       try {
+        // Load ancillary items
+        _loadEpisodeAncillaryItems();
+
         await _audioHandler.playMediaItem(_episodeToMediaItem(_currentEpisode, uri));
 
         _currentEpisode.duration = _audioHandler.mediaItem.value.duration.inSeconds;
@@ -448,7 +448,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           _stopTicker();
           break;
         case AudioProcessingState.loading:
-          _loadEpisode(state);
           _playingState.add(AudioState.buffering);
           break;
         case AudioProcessingState.buffering:
@@ -501,7 +500,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   /// This method is called when audio_service sends a [AudioProcessingState.loading] event.
-  void _loadEpisode(PlaybackState state) async {
+  void _loadEpisodeAncillaryItems() async {
     if (_currentEpisode == null) {
       log.fine('_onLoadEpisode: _episode is null - cannot load!');
       return;
@@ -514,12 +513,15 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _currentEpisode.chaptersLoading = true;
       _currentEpisode.chapters = <Chapter>[];
 
+      _updateEpisodeState();
+
       await _onUpdatePosition();
 
       log.fine('Loading chapters from ${_currentEpisode.chaptersUrl}');
 
       _currentEpisode.chapters = await podcastService.loadChaptersByUrl(url: _currentEpisode.chaptersUrl);
       _currentEpisode.chaptersLoading = false;
+
       _updateEpisodeState();
 
       log.fine('We have ${_currentEpisode.chapters?.length} chapters');
@@ -539,7 +541,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         if (sub != null) {
           _updateTranscriptState(state: TranscriptLoadingState());
 
-          log.fine('Loading transcript from $sub');
+          log.fine('Loading transcript from ${sub.url}');
 
           transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
 
@@ -557,6 +559,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     } else {
       _updateTranscriptState(state: TranscriptUnavailableState());
     }
+
+    /// Update the state of the current episode & transcript.
+    _updateEpisodeState();
 
     await _onUpdatePosition();
   }
