@@ -149,9 +149,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                     height: 148.0,
                                     child: NowPlayingTransport(),
                                   ),
-                            SizedBox(
-                              height: 48.0,
-                            ),
+                            NowPlayingOptionsScaffold(),
                           ],
                         ),
                       ),
@@ -173,7 +171,9 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                               )
                             : null,
                       ),
-                      Expanded(child: NowPlayingOptionsSelector()),
+                      Expanded(
+                        child: NowPlayingOptionsSelector(),
+                      ),
                     ],
                   ),
                 )),
@@ -354,6 +354,7 @@ class NowPlayingEpisode extends StatelessWidget {
 class NowPlayingEpisodeDetails extends StatelessWidget {
   final Episode episode;
   final AutoSizeGroup textGroup;
+  static const minFontSize = 14.0;
 
   const NowPlayingEpisodeDetails({
     Key key,
@@ -377,12 +378,12 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
               group: textGroup,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              minFontSize: 12.0,
+              minFontSize: minFontSize,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24.0,
               ),
-              maxLines: episode.hasChapters ? 4 : 5,
+              maxLines: episode.hasChapters ? 3 : 4,
             ),
           ),
         ),
@@ -399,7 +400,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                     child: AutoSizeText(
                       chapterTitle ?? '',
                       group: textGroup,
-                      minFontSize: 12.0,
+                      minFontSize: minFontSize,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(

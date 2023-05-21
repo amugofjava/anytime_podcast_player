@@ -258,7 +258,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                             }
 
                             return Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
+                              padding: const EdgeInsets.only(right: 8.0),
                               child: Container(
                                 padding: const EdgeInsets.all(4.0),
                                 decoration: BoxDecoration(

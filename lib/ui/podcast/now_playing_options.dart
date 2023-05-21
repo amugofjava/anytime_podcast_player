@@ -28,6 +28,7 @@ import 'package:provider/provider.dart';
 /// TODO: Extract contents of Transcript UI into separate widgets.
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double scrollPos;
+  static const baseSize = 72.0;
 
   NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
 
@@ -40,11 +41,10 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
 
   @override
   Widget build(BuildContext context) {
-    const baseSize = 58;
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
     final windowHeight = MediaQuery.of(context).size.height;
-    final minSize = baseSize / (windowHeight - baseSize);
+    final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
@@ -319,5 +319,16 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   void initState() {
     draggableController = DraggableScrollableController();
     super.initState();
+  }
+}
+
+class NowPlayingOptionsScaffold extends StatelessWidget {
+  const NowPlayingOptionsScaffold({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: NowPlayingOptionsSelector.baseSize,
+    );
   }
 }
