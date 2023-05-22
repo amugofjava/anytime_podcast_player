@@ -239,8 +239,8 @@ class MobilePodcastService extends PodcastService {
             transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
           }
 
-          if (episodePersons.isNotEmpty) {
-            for (var p in episodePersons) {
+          if (episode.persons != null && episode.persons.isNotEmpty) {
+            for (var p in episode.persons) {
               episodePersons.add(Person(
                 name: p.name,
                 role: p.role,

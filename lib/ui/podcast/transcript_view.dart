@@ -53,8 +53,6 @@ class _TranscriptViewState extends State<TranscriptView> {
 
     Subtitle subtitle;
     int index = 0;
-    bool firstParse = true;
-
     // If the user initiates scrolling, disable auto scroll.
     _scrollOffsetListener.changes.listen((event) {
       if (!scrolling) {
@@ -71,24 +69,6 @@ class _TranscriptViewState extends State<TranscriptView> {
         var transcript = event.episode?.transcript;
 
         if (transcript != null && transcript.subtitles.isNotEmpty) {
-          if (firstParse) {
-            firstParse = false;
-            var first = transcript.subtitles[0];
-
-            // If we have a transcript but no speaker value, look at the start of the line
-            // and see if a speaker is contained there. This is common in SRT format transcripts.
-            // On the first load, check the speaker at the first subtitle.
-            if (first != null && first.speaker != null && first.speaker.isEmpty) {
-              var match = exp.firstMatch(first.data);
-
-              if (match != null) {
-                setState(() {
-                  speaker = match.namedGroup('speaker');
-                });
-              }
-            }
-          }
-
           subtitle ??= transcript.subtitles[index];
 
           // Our we outside the range of our current transcript.
@@ -100,6 +80,16 @@ class _TranscriptViewState extends State<TranscriptView> {
                 event.position.inMilliseconds < transcript.subtitles[index + 1].end.inMilliseconds) {
               index++;
               subtitle = transcript.subtitles[index];
+
+              if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
+                speaker = subtitle.speaker;
+              } else {
+                var match = exp.firstMatch(transcript.subtitles[index].data);
+
+                if (match != null) {
+                  speaker = match.namedGroup('speaker');
+                }
+              }
             } else {
               try {
                 subtitle = transcript.subtitles
@@ -109,6 +99,29 @@ class _TranscriptViewState extends State<TranscriptView> {
 
                 if (subtitle != null) {
                   index = transcript.subtitles.indexOf(subtitle);
+
+                  /// If we have had to jump more than one position within the transcript, we may
+                  /// need to back scan the conversation to find the current speaker.
+                  if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
+                    speaker = subtitle.speaker;
+                  } else {
+                    /// Scan backwards a maximum of 50 lines to see if we can find a speaker
+                    var speakFound = false;
+                    var count = 50;
+                    var countIndex = index;
+
+                    while (!speakFound && count-- > 0 && countIndex-- >= 0) {
+                      var match = exp.firstMatch(transcript.subtitles[countIndex].data);
+
+                      if (match != null) {
+                        speaker = match.namedGroup('speaker');
+
+                        if (speaker != null && speaker.isNotEmpty) {
+                          speakFound = true;
+                        }
+                      }
+                    }
+                  }
                 }
               } catch (e) {
                 log.fine('We failed to find a transcript entry for position ${event.position.inMilliseconds}');
@@ -117,16 +130,6 @@ class _TranscriptViewState extends State<TranscriptView> {
 
             if (subtitle != null) {
               setState(() {
-                if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
-                  speaker = subtitle.speaker;
-                } else {
-                  var match = exp.firstMatch(subtitle.data);
-
-                  if (match != null) {
-                    speaker = match.namedGroup('speaker');
-                  }
-                }
-
                 position = subtitle.start.inMilliseconds;
               });
             }

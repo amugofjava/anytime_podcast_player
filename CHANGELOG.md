@@ -1,3 +1,10 @@
+## 1.3.0
+
+- Add support for PC2.0 Transcripts (where available).
+- Add support for PC2.0 Person tag.
+- Update dependencies.
+- Bug fixes.
+
 ## 1.2.3
 
 - Migrate to Flutter v3.3.7.
@@ -24,17 +31,20 @@
 
 ## 1.1.0+62
 
-- Re-work the speed selector control to make it easier to use and add additional audio effects (Android only).
+- Re-work the speed selector control to make it easier to use and add additional audio effects (
+  Android only).
 - Fix Let's Encrypt CA certificate issue on Android versions 7 and below.
 - Upgrade Gradle to 7.0.3.
 
 ## 0.5.0
 
 - Upgrade dependencies for Flutter 2.
-- Re-work the image routines to improve caching, reduce the number of cached images and improve performance.
+- Re-work the image routines to improve caching, reduce the number of cached images and improve
+  performance.
 - Add option to manually add RSS feed.
 - Refreshing a podcast will now update existing podcast and episode details as appropriate.
-- Change pull-to-refresh; now simpler, faster and the 'standard implementation'. Fixed issue with pull to refresh where it wasn't possible to 'pull' if the window did not need to scroll.
+- Change pull-to-refresh; now simpler, faster and the 'standard implementation'. Fixed issue with
+  pull to refresh where it wasn't possible to 'pull' if the window did not need to scroll.
 - Combined episode and chapter events into single event and improved chapter widget.
 - Charts are now cached only for 30 mins rather than indefinitely.
 
@@ -68,5 +78,9 @@
 
 ## 0.1.1
 
-- Breaking change: New settings page. User can switch between using internal storage or SD card. If you have episodes already downloaded to an SD Card, you must go in to setting and switch on SD Card storage.
-- iTunes season and epiosde tags will be used as part of the filename when available. This fixes an issue whereby the episode filename is always the same. By using season and/or episode the filename can be made unique.
+- Breaking change: New settings page. User can switch between using internal storage or SD card. If
+  you have episodes already downloaded to an SD Card, you must go in to setting and switch on SD
+  Card storage.
+- iTunes season and epiosde tags will be used as part of the filename when available. This fixes an
+  issue whereby the episode filename is always the same. By using season and/or episode the filename
+  can be made unique.
