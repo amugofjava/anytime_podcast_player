@@ -38,7 +38,7 @@ class SembastRepository extends Repository {
     bool cleanup = true,
     String databaseName = 'anytime.db',
   }) {
-    _databaseService = DatabaseService(databaseName);
+    _databaseService = DatabaseService(databaseName, version: 2, upgraderCallback: dbUpgrader);
 
     if (cleanup) {
       _cleanupEpisodes().then((value) {
@@ -53,9 +53,11 @@ class SembastRepository extends Repository {
   /// subscription date.
   @override
   Future<Podcast> savePodcast(Podcast podcast) async {
-    log.fine('Saving podcast ${podcast.url}');
+    log.fine('Saving podcast (${podcast.id}) ${podcast.url}');
 
-    final finder = Finder(filter: Filter.equals('guid', podcast.guid));
+    final finder = podcast.id == null
+        ? Finder(filter: Filter.equals('guid', podcast.guid))
+        : Finder(filter: Filter.byKey(podcast.id));
     final snapshot = await _podcastStore.findFirst(await _db, finder: finder);
 
     podcast.lastUpdated = DateTime.now();
@@ -510,6 +512,65 @@ class SembastRepository extends Repository {
     final d = await _db;
 
     await d.close();
+  }
+
+  Future<void> dbUpgrader(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion == 1) {
+      await _upgradeV2(db);
+    }
+  }
+
+  /// In v1 we allowed http requests, where as now we force to https. As we currently use the
+  /// URL as the GUID we need to upgrade any followed podcasts that have a http base to https.
+  /// We use the passed [Database] rather than _db to prevent deadlocking, hence the direct
+  /// update to data within this routine rather than using the existing find/update methods.
+  Future<void> _upgradeV2(Database db) async {
+    var data = await _podcastStore.find(db);
+    final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
+
+    log.info('Upgrading Sembast store to V2');
+
+    for (var podcast in podcasts) {
+      if (podcast.guid.startsWith('http:')) {
+        final idFinder = Finder(filter: Filter.byKey(podcast.id));
+        final guid = podcast.guid.replaceFirst('http:', 'https:');
+        final episodeFinder = Finder(
+          filter: Filter.equals('pguid', podcast.guid),
+        );
+
+        log.fine('Upgrading GUID ${podcast.guid} - to $guid');
+
+        var upgradedPodcast = Podcast(
+          id: podcast.id,
+          guid: guid,
+          url: podcast.url,
+          link: podcast.link,
+          title: podcast.title,
+          description: podcast.description,
+          imageUrl: podcast.imageUrl,
+          thumbImageUrl: podcast.thumbImageUrl,
+          copyright: podcast.copyright,
+          funding: podcast.funding,
+          persons: podcast.persons,
+          lastUpdated: DateTime.now(),
+        );
+
+        final episodeData = await _episodeStore.find(db, finder: episodeFinder);
+        final episodes = episodeData.map((e) => Episode.fromMap(e.key, e.value)).toList();
+
+        // Now upgrade episodes
+        for (var e in episodes) {
+          e.pguid = guid;
+          log.fine('Updating episode guid for ${e.title} from ${e.pguid} to $guid');
+
+          final epf = Finder(filter: Filter.byKey(e.id));
+          await _episodeStore.update(db, e.toMap(), finder: epf);
+        }
+
+        upgradedPodcast.episodes = episodes;
+        await _podcastStore.update(db, upgradedPodcast.toMap(), finder: idFinder);
+      }
+    }
   }
 
   @override

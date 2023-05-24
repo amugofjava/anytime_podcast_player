@@ -118,7 +118,7 @@ class MobilePodcastService extends PodcastService {
     bool highlightNewEpisodes = false,
     bool refresh,
   }) async {
-    log.fine('loadPodcast. ID ${podcast.id} - refresh $refresh');
+    log.fine('loadPodcast. ID ${podcast.id} (refresh $refresh)');
 
     if (podcast.id == null || refresh) {
       podcast_search.Podcast loadedPodcast;
