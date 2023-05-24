@@ -38,4 +38,18 @@ class Person {
       link: chapter['link'] as String ?? '',
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Person &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          role == other.role &&
+          group == other.group &&
+          image == other.image &&
+          link == other.link;
+
+  @override
+  int get hashCode => name.hashCode ^ role.hashCode ^ group.hashCode ^ image.hashCode ^ link.hashCode;
 }

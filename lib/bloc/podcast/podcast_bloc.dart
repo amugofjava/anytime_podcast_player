@@ -186,8 +186,12 @@ class PodcastBloc extends Bloc {
       _episodes = _podcast?.episodes;
 
       if (_podcast.newEpisodes) {
+        log.fine('We have new episodes to display');
         _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
         _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+      } else if (_podcast.updatedEpisodes) {
+        log.fine('We have updated episodes to re-display');
+        _episodesStream.add(_episodes);
       }
 
       _backgroundLoadStream.sink.add(BlocDefaultState<void>());

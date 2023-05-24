@@ -279,6 +279,12 @@ class MobilePodcastService extends PodcastService {
               chapters: <Chapter>[],
             ));
           } else {
+            /// Check if the ancillary episode data has changed.
+            if (!listEquals(existingEpisode.persons, episodePersons) ||
+                !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
+              pc.updatedEpisodes = true;
+            }
+
             existingEpisode.title = title;
             existingEpisode.description = description;
             existingEpisode.content = content;
