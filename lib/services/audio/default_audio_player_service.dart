@@ -724,7 +724,10 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       _androidLoudnessEnhancer = AndroidLoudnessEnhancer();
       _androidLoudnessEnhancer.setEnabled(true);
       _audioPipeline = AudioPipeline(androidAudioEffects: [_androidLoudnessEnhancer]);
-      _player = AudioPlayer(audioPipeline: _audioPipeline);
+      _player = AudioPlayer(
+        audioPipeline: _audioPipeline,
+        userAgent: Environment.userAgent(),
+      );
     } else {
       _player = AudioPlayer(
           userAgent: Environment.userAgent(),
@@ -762,11 +765,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
             Uri.parse("file://${mediaItem.id}"),
             tag: mediaItem.id,
           )
-        : AudioSource.uri(Uri.parse(mediaItem.id),
-            headers: <String, String>{
-              'User-Agent': Environment.userAgent(),
-            },
-            tag: mediaItem.id);
+        : AudioSource.uri(Uri.parse(mediaItem.id), tag: mediaItem.id);
 
     try {
       var duration = await _player.setAudioSource(source, initialPosition: start);
