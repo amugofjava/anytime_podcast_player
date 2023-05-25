@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-05-05T15:06:30.083347",
+  "@@last_modified": "2023-05-25T12:01:08.196897",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -724,6 +724,20 @@
   "auto_scroll_transcript_label": "Follow transcript",
   "@auto_scroll_transcript_label": {
     "description": "Auto scroll switch label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_label": "Why not?",
+  "@transcript_why_not_label": {
+    "description": "Link to why no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "@transcript_why_not_url": {
+    "description": "Language specific link",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

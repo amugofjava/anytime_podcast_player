@@ -637,5 +637,19 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "transcript_why_not_label": "Warum nicht?",
+  "@transcript_why_not_label": {
+    "description": "Link to why no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_de.html",
+  "@transcript_why_not_url": {
+    "description": "Language specific link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
  }
 }

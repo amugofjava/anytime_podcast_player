@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// This class handles the rendering of the podcast transcript (where available).
 // ignore: must_be_immutable
@@ -172,13 +173,35 @@ class _TranscriptViewState extends State<TranscriptView> {
               );
             } else if (snapshot.data is TranscriptUnavailableState || !snapshot.data.transcript.transcriptAvailable) {
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text(
-                    L.of(context).no_transcript_available_label,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        L.of(context).no_transcript_available_label,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
+                        child: OutlinedButton(
+                            onPressed: () {
+                              final uri = Uri.parse(L.of(context).transcript_why_not_url);
+
+                              unawaited(
+                                canLaunchUrl(uri).then((value) => launchUrl(uri)),
+                              );
+                            },
+                            child: Text(
+                              L.of(context).transcript_why_not_label,
+                              style: Theme.of(context).textTheme.titleSmall,
+                              textAlign: TextAlign.center,
+                            )),
+                      ),
+                    ],
                   ),
                 ),
               );

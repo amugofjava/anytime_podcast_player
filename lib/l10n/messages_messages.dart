@@ -134,6 +134,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "subscribe_button_label": MessageLookupByLibrary.simpleMessage("Follow"),
         "subscribe_label": MessageLookupByLibrary.simpleMessage("Subscribe"),
         "transcript_label": MessageLookupByLibrary.simpleMessage("Transcript"),
+        "transcript_why_not_label": MessageLookupByLibrary.simpleMessage("Why not?"),
+        "transcript_why_not_url":
+            MessageLookupByLibrary.simpleMessage("https://anytimeplayer.app/docs/anytime_transcript_support_en.html"),
         "unsubscribe_button_label": MessageLookupByLibrary.simpleMessage("Unfollow"),
         "unsubscribe_label": MessageLookupByLibrary.simpleMessage("Unsubscribe"),
         "unsubscribe_message":

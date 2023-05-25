@@ -1075,6 +1075,26 @@ class L {
           locale: localeName,
         );
   }
+
+  String get transcript_why_not_label {
+    return message('transcript_why_not_label') ??
+        Intl.message(
+          'Why not?',
+          name: 'transcript_why_not_label',
+          desc: 'Link to why no transcript is available',
+          locale: localeName,
+        );
+  }
+
+  String get transcript_why_not_url {
+    return message('transcript_why_not_url') ??
+        Intl.message(
+          'https://anytimeplayer.app/docs/anytime_transcript_support_en.html',
+          name: 'transcript_why_not_url',
+          desc: 'Language specific link',
+          locale: localeName,
+        );
+  }
 }
 
 class LocalisationsDelegate extends LocalizationsDelegate<L> {
