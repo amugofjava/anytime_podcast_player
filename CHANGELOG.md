@@ -2,8 +2,9 @@
 
 - Add support for PC2.0 Transcripts (where available).
 - Add support for PC2.0 Person tag.
+- Add categories to Discovery tab.
 - Update dependencies.
-- Bug fixes.
+- Bug fixes & UI improvements.
 
 ## 1.2.3
 
