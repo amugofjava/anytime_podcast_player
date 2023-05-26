@@ -545,7 +545,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
           transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
 
-          log.fine('We have ${transcript.subtitles?.length} lines');
+          log.fine('We have ${transcript.subtitles?.length} transcript lines');
         }
       } else {
         transcript = await repository.findTranscriptById(_currentEpisode.transcriptId);
@@ -917,8 +917,8 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         MediaAction.seekBackward,
       },
       androidCompactActionIndices: const [0, 1, 2],
-      processingState: const {
-        ProcessingState.idle: AudioProcessingState.idle,
+      processingState: {
+        ProcessingState.idle: Platform.isIOS ? AudioProcessingState.ready : AudioProcessingState.idle,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,
