@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/material.dart';

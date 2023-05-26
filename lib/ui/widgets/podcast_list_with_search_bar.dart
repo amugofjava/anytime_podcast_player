@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:anytime/ui/search/search_bar.dart';
 import 'package:anytime/ui/widgets/podcast_list.dart';
 import 'package:flutter/material.dart';

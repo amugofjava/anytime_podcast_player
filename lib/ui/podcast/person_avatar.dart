@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 // ignore_for_file: must_be_immutable
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:anytime/entities/person.dart';
