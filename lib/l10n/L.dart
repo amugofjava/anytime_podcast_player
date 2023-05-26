@@ -1097,8 +1097,8 @@ class L {
   }
 }
 
-class LocalisationsDelegate extends LocalizationsDelegate<L> {
-  const LocalisationsDelegate();
+class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
+  const AnytimeLocalisationsDelegate();
 
   @override
   bool isSupported(Locale locale) => ['en', 'de'].contains(locale.languageCode);
@@ -1107,7 +1107,7 @@ class LocalisationsDelegate extends LocalizationsDelegate<L> {
   Future<L> load(Locale locale) => L.load(locale, null);
 
   @override
-  bool shouldReload(LocalisationsDelegate old) => false;
+  bool shouldReload(AnytimeLocalisationsDelegate old) => false;
 }
 
 /// This class can be used by third-parties who wish to override or replace

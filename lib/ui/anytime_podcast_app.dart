@@ -188,8 +188,8 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         debugShowCheckedModeBanner: false,
         title: 'Anytime Podcast Player',
         navigatorObservers: [NavigationRouteObserver()],
-        localizationsDelegates: [
-          const LocalisationsDelegate(),
+        localizationsDelegates: <LocalizationsDelegate<Object>>[
+          const AnytimeLocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
