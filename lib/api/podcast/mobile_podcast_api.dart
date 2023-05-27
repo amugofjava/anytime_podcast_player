@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:io';
 
@@ -16,19 +16,19 @@ import 'package:podcast_search/podcast_search.dart' as podcast_search;
 /// interacts with the iTunes/PodcastIndex search API via the
 /// podcast_search package.
 class MobilePodcastApi extends PodcastApi {
-  SecurityContext _defaultSecurityContext;
+  SecurityContext? _defaultSecurityContext;
   List<int> _certificateAuthorityBytes = [];
 
   @override
   Future<podcast_search.SearchResult> search(
     String term, {
-    String country,
-    String attribute,
-    int limit,
-    String language,
+    String? country,
+    String? attribute,
+    int? limit,
+    String? language,
     int version = 0,
     bool explicit = false,
-    String searchProvider,
+    String? searchProvider,
   }) async {
     var searchParams = {
       'term': term,
@@ -40,10 +40,10 @@ class MobilePodcastApi extends PodcastApi {
 
   @override
   Future<podcast_search.SearchResult> charts({
-    int size = 20,
-    String genre,
-    String searchProvider,
-    String countryCode = '',
+    int? size = 20,
+    String? genre,
+    String? searchProvider,
+    String? countryCode = '',
   }) async {
     var searchParams = {
       'size': size.toString(),
@@ -82,7 +82,7 @@ class MobilePodcastApi extends PodcastApi {
 
   @override
   Future<podcast_search.Transcript> loadTranscript(TranscriptUrl transcriptUrl) async {
-    podcast_search.TranscriptFormat format;
+    late podcast_search.TranscriptFormat format;
 
     switch (transcriptUrl.type) {
       case TranscriptFormat.subrip:
@@ -100,8 +100,8 @@ class MobilePodcastApi extends PodcastApi {
         transcriptUrl: podcast_search.TranscriptUrl(url: transcriptUrl.url, type: format));
   }
 
-  static Future<podcast_search.SearchResult> _search(Map<String, String> searchParams) {
-    var term = searchParams['term'];
+  static Future<podcast_search.SearchResult> _search(Map<String, String?> searchParams) {
+    var term = searchParams['term']!;
     var provider = searchParams['searchProvider'] == 'itunes'
         ? podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
@@ -115,7 +115,7 @@ class MobilePodcastApi extends PodcastApi {
     ).search(term).timeout(Duration(seconds: 30));
   }
 
-  static Future<podcast_search.SearchResult> _charts(Map<String, String> searchParams) {
+  static Future<podcast_search.SearchResult> _charts(Map<String, String?> searchParams) {
     var provider = searchParams['searchProvider'] == 'itunes'
         ? podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
@@ -131,7 +131,7 @@ class MobilePodcastApi extends PodcastApi {
     }
 
     return podcast_search.Search(userAgent: Environment.userAgent(), searchProvider: provider)
-        .charts(genre: searchParams['genre'], country: country)
+        .charts(genre: searchParams['genre']!, country: country)
         .timeout(Duration(seconds: 30));
   }
 

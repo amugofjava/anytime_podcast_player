@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/entities/transcript.dart';
 import 'package:podcast_search/podcast_search.dart' as pslib;
@@ -13,22 +13,22 @@ abstract class PodcastApi {
   /// Search for podcasts matching the search criteria. Returns a
   /// [SearchResult] instance.
   Future<pslib.SearchResult> search(
-    String/*!*/ term, {
-    String country,
-    String attribute,
-    int limit,
-    String language,
+    String term, {
+    String? country,
+    String? attribute,
+    int? limit,
+    String? language,
     int version = 0,
     bool explicit = false,
-    String searchProvider,
+    String? searchProvider,
   });
 
   /// Request the top podcast charts from iTunes, and at most [size] records.
   Future<pslib.SearchResult> charts({
-    int size,
-    String searchProvider,
-    String genre,
-    String countryCode,
+    int? size,
+    String? searchProvider,
+    String? genre,
+    String? countryCode,
   });
 
   List<String> genres(
@@ -36,15 +36,15 @@ abstract class PodcastApi {
   );
 
   /// URL representing the RSS feed for a podcast.
-  Future<pslib.Podcast> loadFeed(String/*!*/ url);
+  Future<pslib.Podcast> loadFeed(String url);
 
   /// Load episode chapters via JSON file.
-  Future<pslib.Chapters> loadChapters(String/*!*/ url);
+  Future<pslib.Chapters> loadChapters(String url);
 
   /// Load episode transcript via SRT or JSON file.
   Future<pslib.Transcript> loadTranscript(TranscriptUrl transcriptUrl);
 
   /// Allow adding of custom certificates. Required as default context
   /// does not apply when running in separate Isolate.
-  void addClientAuthorityBytes(List<int>/*!*/ certificateAuthorityBytes);
+  void addClientAuthorityBytes(List<int> certificateAuthorityBytes);
 }
