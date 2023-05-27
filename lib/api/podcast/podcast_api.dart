@@ -13,7 +13,7 @@ abstract class PodcastApi {
   /// Search for podcasts matching the search criteria. Returns a
   /// [SearchResult] instance.
   Future<pslib.SearchResult> search(
-    String term, {
+    String/*!*/ term, {
     String country,
     String attribute,
     int limit,
@@ -36,15 +36,15 @@ abstract class PodcastApi {
   );
 
   /// URL representing the RSS feed for a podcast.
-  Future<pslib.Podcast> loadFeed(String url);
+  Future<pslib.Podcast> loadFeed(String/*!*/ url);
 
   /// Load episode chapters via JSON file.
-  Future<pslib.Chapters> loadChapters(String url);
+  Future<pslib.Chapters> loadChapters(String/*!*/ url);
 
   /// Load episode transcript via SRT or JSON file.
   Future<pslib.Transcript> loadTranscript(TranscriptUrl transcriptUrl);
 
   /// Allow adding of custom certificates. Required as default context
   /// does not apply when running in separate Isolate.
-  void addClientAuthorityBytes(List<int> certificateAuthorityBytes);
+  void addClientAuthorityBytes(List<int>/*!*/ certificateAuthorityBytes);
 }

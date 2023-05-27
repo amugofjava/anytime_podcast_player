@@ -2,10 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/core/extensions.dart';
-import 'package:flutter/foundation.dart';
 
 /// A class that represents an individual chapter within an [Episode]. Chapters
 /// may, or may not, exist for an episode.
@@ -16,10 +13,10 @@ class Chapter {
   final String title;
 
   /// URL for the chapter image if one is available.
-  final String imageUrl;
+  final String? imageUrl;
 
   /// URL of an external link for this chapter if available.
-  final String url;
+  final String? url;
 
   /// Table of contents flag. If this is false the chapter should be treated as
   /// meta data only and not be displayed.
@@ -29,16 +26,16 @@ class Chapter {
   final double startTime;
 
   /// The optional end time of the chapter in seconds.
-  final double endTime;
+  final double? endTime;
 
   Chapter({
-    @required this.title,
-    @required String imageUrl,
-    @required this.startTime,
-    String url,
+    required this.title,
+    required String? imageUrl,
+    required this.startTime,
+    String? url,
     this.toc = true,
     this.endTime,
-  })  : imageUrl = imageUrl.forceHttps,
+  })  : imageUrl = imageUrl?.forceHttps,
         url = url?.forceHttps;
 
   Map<String, dynamic> toMap() {
@@ -55,8 +52,8 @@ class Chapter {
   static Chapter fromMap(Map<String, dynamic> chapter) {
     return Chapter(
       title: chapter['title'] as String,
-      imageUrl: chapter['imageUrl'] as String,
-      url: chapter['url'] as String,
+      imageUrl: chapter['imageUrl'] as String?,
+      url: chapter['url'] as String?,
       toc: chapter['toc'] == 'false' ? false : true,
       startTime: double.parse(chapter['startTime'] as String),
       endTime: double.parse(chapter['endTime'] as String),

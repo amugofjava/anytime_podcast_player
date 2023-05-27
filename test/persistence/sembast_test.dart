@@ -681,6 +681,7 @@ void main() {
 
     test('Test download state', () async {
       var download = Downloadable(
+        taskId: 'TEST1',
         guid: 'downloadguid1',
         url: 'http://localhost/episode1.mp3',
         directory: 'test1',
@@ -1276,7 +1277,7 @@ void main() {
       expect(savedTranscript.id != null, true);
       expect(transcript == savedTranscript, true);
 
-      transcript.subtitles[0]!.data = 'This is line 1 updated';
+      transcript.subtitles[0].data = 'This is line 1 updated';
 
       var updatedTranscript = await persistenceService!.saveTranscript(savedTranscript);
 

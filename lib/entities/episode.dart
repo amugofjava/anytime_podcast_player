@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/core/annotations.dart';
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/chapter.dart';
@@ -21,57 +19,57 @@ class Episode {
   final log = Logger('Episode');
 
   /// Database ID
-  int id;
+  int? id;
 
   /// A String GUID for the episode.
   final String guid;
 
   /// The GUID for an associated podcast. If an episode has been downloaded
   /// without subscribing to a podcast this may be null.
-  String pguid;
+  String? pguid;
 
   /// If the episode is currently being downloaded, this contains the unique
   /// ID supplied by the download manager for the episode.
-  String downloadTaskId;
+  String? downloadTaskId;
 
   /// The path to the directory containing the download for this episode; or null.
-  String filepath;
+  String? filepath;
 
   /// The filename of the downloaded episode; or null.
-  String filename;
+  String? filename;
 
   /// The current downloading state of the episode.
   DownloadState downloadState = DownloadState.none;
 
   /// The name of the podcast the episode is part of.
-  String podcast;
+  String? podcast;
 
   /// The episode title.
-  String title;
+  String? title;
 
   /// The episode description. This could be plain text or HTML.
-  String description;
+  String? description;
 
   /// More detailed description - optional.
-  String content;
+  String? content;
 
   /// External link
-  String link;
+  String? link;
 
   /// URL to the episode artwork image.
-  String imageUrl;
+  String? imageUrl;
 
   /// URL to a thumbnail version of the episode artwork image.
-  String thumbImageUrl;
+  String? thumbImageUrl;
 
   /// The date the episode was published (if known).
-  DateTime publicationDate;
+  DateTime? publicationDate;
 
   /// The URL for the episode location.
-  String contentUrl;
+  String? contentUrl;
 
   /// Author of the episode if known.
-  String author;
+  String? author;
 
   /// The season the episode is part of if available.
   int season;
@@ -87,13 +85,13 @@ class Episode {
   int position;
 
   /// Stores the progress of the current download progress if available.
-  int downloadPercentage;
+  int? downloadPercentage;
 
   /// True if this episode is 'marked as played'.
   bool played;
 
   /// URL pointing to a JSON file containing chapter information if available.
-  String chaptersUrl;
+  String? chaptersUrl;
 
   /// List of chapters for the episode if available.
   List<Chapter> chapters;
@@ -105,22 +103,22 @@ class Episode {
 
   /// Currently downloaded or in use transcript for the episode.To minimise memory
   /// use, this is cleared when an episode download is deleted, or a streamed episode stopped.
-  Transcript transcript;
+  Transcript? transcript;
 
   /// Link to a currently stored transcript for this episode.
-  int transcriptId;
+  int? transcriptId;
 
   /// Date and time episode was last updated and persisted.
-  DateTime lastUpdated;
+  DateTime? lastUpdated;
 
   /// Processed version of episode description.
-  String _descriptionText;
+  String? _descriptionText;
 
   /// Index of the currently playing chapter it available. Transient.
-  int chapterIndex;
+  int? chapterIndex;
 
   /// Current chapter we are listening to if this episode has chapters.  Transient.
-  Chapter currentChapter;
+  Chapter? currentChapter;
 
   /// Set to true if chapter data is currently being loaded.
   @Transient()
@@ -136,9 +134,9 @@ class Episode {
   bool streaming = true;
 
   Episode({
-    @required this.guid,
-    @required this.pguid,
-    @required this.podcast,
+    required this.guid,
+    this.pguid,
+    required this.podcast,
     this.id,
     this.downloadTaskId,
     this.filepath,
@@ -148,10 +146,10 @@ class Episode {
     this.description,
     this.content,
     this.link,
-    String imageUrl,
-    String thumbImageUrl,
+    String? imageUrl,
+    String? thumbImageUrl,
     this.publicationDate,
-    String contentUrl,
+    String? contentUrl,
     this.author,
     this.season = 0,
     this.episode = 0,
@@ -160,7 +158,7 @@ class Episode {
     this.downloadPercentage = 0,
     this.played = false,
     this.highlight = false,
-    String chaptersUrl,
+    String? chaptersUrl,
     this.chapters = const <Chapter>[],
     this.transcriptUrls = const <TranscriptUrl>[],
     this.persons = const <Person>[],
@@ -196,15 +194,15 @@ class Episode {
       'downloadPercentage': downloadPercentage.toString(),
       'played': played ? 'true' : 'false',
       'chaptersUrl': chaptersUrl,
-      'chapters': (chapters ?? <Chapter>[]).map((chapter) => chapter.toMap())?.toList(growable: false),
+      'chapters': (chapters).map((chapter) => chapter.toMap()).toList(growable: false),
       'tid': transcriptId ?? 0,
-      'transcriptUrls': (transcriptUrls ?? <TranscriptUrl>[]).map((tu) => tu.toMap())?.toList(growable: false),
-      'persons': (persons ?? <Person>[]).map((person) => person.toMap())?.toList(growable: false),
+      'transcriptUrls': (transcriptUrls).map((tu) => tu.toMap()).toList(growable: false),
+      'persons': (persons).map((person) => person.toMap()).toList(growable: false),
       'lastUpdated': lastUpdated?.millisecondsSinceEpoch.toString() ?? '',
     };
   }
 
-  static Episode fromMap(int key, Map<String, dynamic> episode) {
+  static Episode fromMap(int? key, Map<String, dynamic> episode) {
     var chapters = <Chapter>[];
     var transcriptUrls = <TranscriptUrl>[];
     var persons = <Person>[];
@@ -238,41 +236,41 @@ class Episode {
     return Episode(
       id: key,
       guid: episode['guid'] as String,
-      pguid: episode['pguid'] as String,
-      downloadTaskId: episode['downloadTaskId'] as String,
-      filepath: episode['filepath'] as String,
-      filename: episode['filename'] as String,
-      downloadState: _determineState(episode['downloadState'] as int),
-      podcast: episode['podcast'] as String,
-      title: episode['title'] as String,
-      description: episode['description'] as String,
-      content: episode['content'] as String,
-      link: episode['link'] as String,
-      imageUrl: episode['imageUrl'] as String,
-      thumbImageUrl: episode['thumbImageUrl'] as String,
+      pguid: episode['pguid'] as String?,
+      downloadTaskId: episode['downloadTaskId'] as String?,
+      filepath: episode['filepath'] as String?,
+      filename: episode['filename'] as String?,
+      downloadState: _determineState(episode['downloadState'] as int?),
+      podcast: episode['podcast'] as String?,
+      title: episode['title'] as String?,
+      description: episode['description'] as String?,
+      content: episode['content'] as String?,
+      link: episode['link'] as String?,
+      imageUrl: episode['imageUrl'] as String?,
+      thumbImageUrl: episode['thumbImageUrl'] as String?,
       publicationDate: episode['publicationDate'] == null || episode['publicationDate'] == 'null'
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
-      contentUrl: episode['contentUrl'] as String,
-      author: episode['author'] as String,
-      season: int.parse(episode['season'] as String ?? '0'),
-      episode: int.parse(episode['episode'] as String ?? '0'),
-      duration: int.parse(episode['duration'] as String ?? '0'),
-      position: int.parse(episode['position'] as String ?? '0'),
-      downloadPercentage: int.parse(episode['downloadPercentage'] as String ?? '0'),
+      contentUrl: episode['contentUrl'] as String?,
+      author: episode['author'] as String?,
+      season: int.parse(episode['season'] as String? ?? '0'),
+      episode: int.parse(episode['episode'] as String? ?? '0'),
+      duration: int.parse(episode['duration'] as String? ?? '0'),
+      position: int.parse(episode['position'] as String? ?? '0'),
+      downloadPercentage: int.parse(episode['downloadPercentage'] as String? ?? '0'),
       played: episode['played'] == 'true' ? true : false,
-      chaptersUrl: episode['chaptersUrl'] as String,
+      chaptersUrl: episode['chaptersUrl'] as String?,
       chapters: chapters,
       transcriptUrls: transcriptUrls,
       persons: persons,
-      transcriptId: episode['tid'] == null ? 0 : episode['tid'] as int,
+      transcriptId: episode['tid'] == null ? 0 : episode['tid'] as int?,
       lastUpdated: episode['lastUpdated'] == null || episode['lastUpdated'] == 'null'
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['lastUpdated'] as String)),
     );
   }
 
-  static DownloadState _determineState(int index) {
+  static DownloadState _determineState(int? index) {
     switch (index) {
       case 0:
         return DownloadState.none;
@@ -396,13 +394,13 @@ class Episode {
     return 0.0;
   }
 
-  String get descriptionText {
-    if (_descriptionText == null || _descriptionText.isEmpty) {
-      if (description == null || description.isEmpty) {
+  String? get descriptionText {
+    if (_descriptionText == null || _descriptionText!.isEmpty) {
+      if (description == null || description!.isEmpty) {
         _descriptionText = '';
       } else {
         // Replace break tags with space character for readability
-        var formattedDescription = description.replaceAll(RegExp(r'(\<br\/?>)+'), ' ');
+        var formattedDescription = description!.replaceAll(RegExp(r'(\<br\/?>)+'), ' ');
         _descriptionText = parseFragment(formattedDescription).text;
       }
     }
@@ -410,7 +408,7 @@ class Episode {
     return _descriptionText;
   }
 
-  bool get hasChapters => chaptersUrl != null && chaptersUrl.isNotEmpty;
+  bool get hasChapters => chaptersUrl != null && chaptersUrl!.isNotEmpty;
 
   bool get hasTranscripts => transcriptUrls != null && transcriptUrls.isNotEmpty;
 
@@ -418,9 +416,9 @@ class Episode {
 
   bool get chaptersAreNotLoaded => chapters == null;
 
-  String get positionalImageUrl {
-    if (currentChapter != null && currentChapter.imageUrl != null && currentChapter.imageUrl.isNotEmpty) {
-      return currentChapter.imageUrl;
+  String? get positionalImageUrl {
+    if (currentChapter != null && currentChapter!.imageUrl != null && currentChapter!.imageUrl!.isNotEmpty) {
+      return currentChapter!.imageUrl;
     }
 
     return imageUrl;

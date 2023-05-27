@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 enum LastState { none, completed, stopped, paused }
 
 /// This class is used to persist information about the currently playing
@@ -25,36 +23,35 @@ class Persistable {
   LastState state;
 
   /// Date & time episode was last updated.
-  DateTime lastUpdated;
+  DateTime? lastUpdated;
 
   Persistable({
-    this.pguid,
-    this.episodeId,
-    this.position,
-    this.state,
+    required this.pguid,
+    required this.episodeId,
+    required this.position,
+    required this.state,
     this.lastUpdated,
   });
 
-  Persistable.empty() {
-    pguid = '';
-    episodeId = 0;
-    position = 0;
-    state = LastState.none;
-    lastUpdated = DateTime.now();
-  }
+  Persistable.empty()
+      : pguid = '',
+        episodeId = 0,
+        position = 0,
+        state = LastState.none,
+        lastUpdated = DateTime.now();
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'pguid': pguid ?? '',
-      'episodeId': episodeId ?? episodeId.toString(),
-      'position': position ?? position.toString(),
-      'state': state == null ? LastState.none.toString() : state.toString(),
-      'lastUpdated': lastUpdated == null ? DateTime.now().millisecondsSinceEpoch : lastUpdated.millisecondsSinceEpoch,
+      'pguid': pguid,
+      'episodeId': episodeId,
+      'position': position,
+      'state': state.toString(),
+      'lastUpdated': lastUpdated == null ? DateTime.now().millisecondsSinceEpoch : lastUpdated!.millisecondsSinceEpoch,
     };
   }
 
   static Persistable fromMap(Map<String, dynamic> persistable) {
-    var stateString = persistable['state'] as String;
+    var stateString = persistable['state'] as String?;
     var state = LastState.none;
 
     if (stateString != null) {
@@ -71,7 +68,7 @@ class Persistable {
       }
     }
 
-    var lastUpdated = persistable['lastUpdated'] as int;
+    var lastUpdated = persistable['lastUpdated'] as int?;
 
     return Persistable(
       pguid: persistable['pguig'] as String,
