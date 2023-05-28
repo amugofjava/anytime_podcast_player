@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/state/opml_state.dart';
-import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,7 +18,7 @@ class OPMLBloc extends Bloc {
   final PublishSubject<OPMLState> _opmlState = PublishSubject<OPMLState>();
   final OPMLService opmlService;
 
-  OPMLBloc({@required this.opmlService}) {
+  OPMLBloc({required this.opmlService}) {
     _listenOpmlEvents();
   }
 
