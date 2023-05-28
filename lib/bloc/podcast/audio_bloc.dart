@@ -110,7 +110,7 @@ class AudioBloc extends Bloc {
   /// underlying audio service.
   void _handleEpisodeRequests() async {
     _play.listen((episode) {
-      audioPlayerService.playEpisode(episode: episode, resume: true);
+      audioPlayerService.playEpisode(episode: episode!, resume: true);
     });
   }
 

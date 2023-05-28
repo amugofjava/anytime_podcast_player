@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
-import 'package:flutter/cupertino.dart';
 
 enum AudioState {
   none,
@@ -21,23 +18,31 @@ enum AudioState {
 
 class PositionState {
   Duration position;
-  Duration length;
-  int percentage;
-  Episode episode;
-  bool buffering;
+  late Duration length;
+  late int percentage;
+  Episode? episode;
+  late bool buffering;
 
-  PositionState(this.position, this.length, this.percentage, this.episode, [this.buffering = false]);
+  PositionState({
+    required this.position,
+    required this.length,
+    required this.percentage,
+    this.episode,
+    this.buffering = false,
+  });
 
-  PositionState.emptyState() {
-    PositionState(Duration(seconds: 0), Duration(seconds: 0), 0, null, false);
-  }
+  PositionState.emptyState()
+      : position = Duration(seconds: 0),
+        length = Duration(seconds: 0),
+        percentage = 0,
+        buffering = false;
 }
 
 /// This class defines the audio playback options supported by Anytime. The implementing
 /// classes will then handle the specifics for the platform we are running on.
 abstract class AudioPlayerService {
   /// Play a new episode, optionally resume at last save point.
-  Future<void> playEpisode({@required Episode episode, bool resume});
+  Future<void> playEpisode({required Episode episode, bool resume = true});
 
   /// Resume playing of current episode
   Future<void> play();
@@ -56,7 +61,7 @@ abstract class AudioPlayerService {
   Future<void> fastForward();
 
   /// Seek to the specified position within the current episode.
-  Future<void> seek({@required int position});
+  Future<void> seek({required int position});
 
   /// Call when the app is resumed to re-establish the audio service.
   Future<Episode> resume();
@@ -86,15 +91,16 @@ abstract class AudioPlayerService {
   Future<void> volumeBoost(bool boost);
 
   Future<void> searchTranscript(String search);
+
   Future<void> clearTranscript();
 
-  Episode nowPlaying;
+  Episode? nowPlaying;
 
   /// Event listeners
-  Stream<AudioState> playingState;
-  Stream<PositionState> playPosition;
-  Stream<Episode> episodeEvent;
-  Stream<TranscriptState> transcriptEvent;
-  Stream<int> playbackError;
-  Stream<QueueListState> queueState;
+  Stream<AudioState>? playingState;
+  Stream<PositionState>? playPosition;
+  Stream<Episode?>? episodeEvent;
+  Stream<TranscriptState>? transcriptEvent;
+  Stream<int>? playbackError;
+  Stream<QueueListState>? queueState;
 }
