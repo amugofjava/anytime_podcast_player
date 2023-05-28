@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -47,7 +45,7 @@ class PersistentState {
     var file = await _getFile();
 
     if (file.existsSync()) {
-      return file.delete();
+      file.delete();
     }
   }
 

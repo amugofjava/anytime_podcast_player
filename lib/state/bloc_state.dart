@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 /// The BLoCs in this application share common states, such as loading, error
 /// or populated. Rather than having a separate selection of state classes, we
@@ -14,13 +14,13 @@ abstract class BlocState<T> {}
 class BlocDefaultState<T> extends BlocState<T> {}
 
 class BlocLoadingState<T> extends BlocState<T> {
-  final T data;
+  final T? data;
 
   BlocLoadingState([this.data]);
 }
 
 class BlocBackgroundLoadingState<T> extends BlocState<T> {
-  final T data;
+  final T? data;
 
   BlocBackgroundLoadingState([this.data]);
 }
@@ -40,7 +40,7 @@ class BlocErrorState<T> extends BlocState<T> {
 class BlocNoInputState<T> extends BlocState<T> {}
 
 class BlocPopulatedState<T> extends BlocState<T> {
-  final T results;
+  final T? results;
 
   BlocPopulatedState({this.results});
 }

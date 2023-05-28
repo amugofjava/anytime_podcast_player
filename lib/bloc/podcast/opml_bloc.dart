@@ -25,9 +25,11 @@ class OPMLBloc extends Bloc {
   void _listenOpmlEvents() {
     _opmlEvent.listen((event) {
       if (event is OPMLImportEvent) {
-        opmlService.loadOPMLFile(event.file).listen((state) {
-          _opmlState.add(state);
-        });
+        if (event.file != null) {
+          opmlService.loadOPMLFile(event.file!).listen((state) {
+            _opmlState.add(state);
+          });
+        }
       } else if (event is OPMLExportEvent) {
         opmlService.saveOPMLFile().listen((state) {
           _opmlState.add(state);

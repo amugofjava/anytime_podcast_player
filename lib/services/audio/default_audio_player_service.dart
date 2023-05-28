@@ -43,7 +43,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   var _playbackSpeed = 1.0;
   var _trimSilence = false;
   var _volumeBoost = false;
-  var _queue = <Episode?>[];
+  var _queue = <Episode>[];
 
   /// The currently playing episode
   Episode? _currentEpisode;
@@ -146,7 +146,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       // If we have a queue, we are currently playing and the user has elected to play something new,
       // place the current episode at the top of the queue before moving on.
       if (_currentEpisode != null && _currentEpisode!.guid != episode.guid && _queue.isNotEmpty) {
-        _queue.insert(0, _currentEpisode);
+        _queue.insert(0, _currentEpisode!);
       }
 
       // If we are attempting to play an episode that is also in the queue, remove it from the queue.
@@ -349,7 +349,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   void _updateTranscriptState({TranscriptState? state}) {
     if (state == null) {
       if (_currentTranscript != null) {
-        _transcriptEvent.sink.add(TranscriptUpdateState(transcript: _currentTranscript));
+        _transcriptEvent.sink.add(TranscriptUpdateState(transcript: _currentTranscript!));
       }
     } else {
       _transcriptEvent.sink.add(state);
@@ -357,7 +357,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   void _updateQueueState() {
-    _queueState.add(QueueListState(playing: _currentEpisode, queue: _queue));
+    _queueState.add(QueueListState(playing: _currentEpisode!, queue: _queue));
   }
 
   Future<String?> _generateEpisodeUri(Episode episode) async {
@@ -498,7 +498,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
-      _queue = <Episode?>[];
+      _queue = <Episode>[];
       _currentEpisode = null;
       _playingState.add(AudioState.stopped);
     } else {
