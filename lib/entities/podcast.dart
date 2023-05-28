@@ -95,7 +95,7 @@ class Podcast {
 
   factory Podcast.fromSearchResultItem(search.Item item) => Podcast(
         guid: item.guid ?? '',
-        url: item.feedUrl!,
+        url: item.feedUrl ?? '',
         link: item.feedUrl,
         title: item.trackName!,
         description: '',

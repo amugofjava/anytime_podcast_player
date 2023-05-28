@@ -2,12 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_search/podcast_search.dart' as podcast_search;
 import 'package:rxdart/rxdart.dart';
@@ -31,15 +28,15 @@ class DiscoveryBloc extends Bloc {
   final _selectedGenre = BehaviorSubject<SelectedGenre>(sync: true);
 
   /// The last fetched results.
-  Stream<DiscoveryState> _discoveryResults;
+  Stream<DiscoveryState>? _discoveryResults;
 
   /// To save bandwidth we cache the results.
-  podcast_search.SearchResult _resultsCache;
+  podcast_search.SearchResult? _resultsCache;
 
   String _lastGenre = '';
   int _lastIndex = 0;
 
-  DiscoveryBloc({@required this.podcastService}) {
+  DiscoveryBloc({required this.podcastService}) {
     _init();
   }
 
@@ -59,7 +56,7 @@ class DiscoveryBloc extends Bloc {
     if (event is DiscoveryChartEvent) {
       if (_resultsCache == null ||
           event.genre != _lastGenre ||
-          DateTime.now().difference(_resultsCache.processedTime).inMinutes > cacheMinutes) {
+          DateTime.now().difference(_resultsCache!.processedTime).inMinutes > cacheMinutes) {
         _lastGenre = event.genre;
         _lastIndex = podcastService.genres().indexOf(_lastGenre);
 
@@ -92,7 +89,7 @@ class DiscoveryBloc extends Bloc {
 
   void Function(DiscoveryEvent) get discover => _discoveryInput.add;
 
-  Stream<DiscoveryState> get results => _discoveryResults;
+  Stream<DiscoveryState>? get results => _discoveryResults;
 
   Stream<List<String>> get genres => _genres.stream;
 
@@ -104,7 +101,7 @@ class SelectedGenre {
   final String genre;
 
   SelectedGenre({
-    @required this.index,
-    @required this.genre,
+    required this.index,
+    required this.genre,
   });
 }
