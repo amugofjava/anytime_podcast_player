@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/core/environment.dart';
@@ -24,13 +24,13 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadonSDCard = BehaviorSubject<bool>();
   final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
-  final BehaviorSubject<String> _searchProvider = BehaviorSubject<String>();
+  final BehaviorSubject<String?> _searchProvider = BehaviorSubject<String?>();
   final BehaviorSubject<bool> _externalLinkConsent = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _autoOpenNowPlaying = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _showFunding = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _trimSilence = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _volumeBoost = BehaviorSubject<bool>();
-  final BehaviorSubject<int> _autoUpdatePeriod = BehaviorSubject<int>();
+  final BehaviorSubject<int?> _autoUpdatePeriod = BehaviorSubject<int?>();
   final BehaviorSubject<int> _layoutMode = BehaviorSubject<int>();
 
   SettingsBloc(this._settingsService) {
@@ -45,10 +45,10 @@ class SettingsBloc extends Bloc {
     var playbackSpeed = _settingsService.playbackSpeed;
     var autoOpenNowPlaying = _settingsService.autoOpenNowPlaying;
     var themeName = themeDarkMode ? 'dark' : 'light';
-    var searchProvider = _settingsService.searchProvider;
+    String? searchProvider = _settingsService.searchProvider;
     var externalLinkConsent = _settingsService.externalLinkConsent;
     var showFunding = _settingsService.showFunding;
-    var autoUpdateEpisodePeriod = _settingsService.autoUpdateEpisodePeriod;
+    int? autoUpdateEpisodePeriod = _settingsService.autoUpdateEpisodePeriod;
     var trimSilence = _settingsService.trimSilence;
     var volumeBoost = _settingsService.volumeBoost;
     var layoutMode = _settingsService.layoutMode;
@@ -421,13 +421,13 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get setAutoOpenNowPlaying => _autoOpenNowPlaying.add;
 
-  void Function(String) get setSearchProvider => _searchProvider.add;
+  void Function(String?) get setSearchProvider => _searchProvider.add;
 
   void Function(bool) get setExternalLinkConsent => _externalLinkConsent.add;
 
   void Function(bool) get setShowFunding => _showFunding.add;
 
-  void Function(int) get autoUpdatePeriod => _autoUpdatePeriod.add;
+  void Function(int?) get autoUpdatePeriod => _autoUpdatePeriod.add;
 
   void Function(bool) get trimSilence => _trimSilence.add;
 
