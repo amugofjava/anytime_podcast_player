@@ -97,14 +97,14 @@ class TranscriptUrl {
 /// [docs](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
 class Transcript {
   int? id;
-  final String guid;
+  String? guid;
   final List<Subtitle> subtitles;
   DateTime? lastUpdated;
   bool filtered;
 
   Transcript({
     this.id,
-    required this.guid,
+    this.guid,
     this.subtitles = const <Subtitle>[],
     this.filtered = false,
     this.lastUpdated,

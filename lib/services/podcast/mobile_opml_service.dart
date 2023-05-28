@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:io';
 
 import 'package:anytime/entities/podcast.dart';
@@ -11,7 +9,6 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/opml_state.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,8 +23,8 @@ class MobileOPMLService extends OPMLService {
   final Repository repository;
 
   MobileOPMLService({
-    @required this.podcastService,
-    @required this.repository,
+    required this.podcastService,
+    required this.repository,
   });
 
   @override
@@ -45,7 +42,7 @@ class MobileOPMLService extends OPMLService {
       pods.add(OmplOutlineTag.parse(outline));
     }
 
-    var total = pods?.length ?? 0;
+    var total = pods.length ?? 0;
     var current = 0;
 
     for (var p in pods) {
@@ -60,7 +57,7 @@ class MobileOPMLService extends OPMLService {
           log.fine('Importing podcast ${p.xmlUrl}');
 
           var result = await podcastService.loadPodcast(
-            podcast: Podcast(guid: '', link: '', title: p.text, url: p.xmlUrl),
+            podcast: Podcast(guid: '', link: '', title: p.text!, url: p.xmlUrl!),
             refresh: true,
           );
 
@@ -104,7 +101,7 @@ class MobileOPMLService extends OPMLService {
 
     final export = builder.buildDocument();
 
-    var output = Platform.isAndroid ? await getExternalStorageDirectory() : await getApplicationDocumentsDirectory();
+    var output = Platform.isAndroid ? (await getExternalStorageDirectory())! : await getApplicationDocumentsDirectory();
     var outputFile = '${output.path}/anytime_export.opml';
     var file = File(outputFile);
 
@@ -126,8 +123,8 @@ class MobileOPMLService extends OPMLService {
 }
 
 class OmplOutlineTag {
-  final String text;
-  final String xmlUrl;
+  final String? text;
+  final String? xmlUrl;
 
   OmplOutlineTag({
     this.text,

@@ -26,10 +26,10 @@ class EpisodeBloc extends Bloc {
   final BehaviorSubject<bool> _episodesInput = BehaviorSubject<bool>();
 
   /// Add to sink to delete the passed [Episode] from storage.
-  final PublishSubject<Episode?> _deleteDownload = PublishSubject<Episode?>();
+  final PublishSubject<Episode?> _deleteDownload = PublishSubject<Episode>();
 
   /// Add to sink to toggle played status of the [Episode].
-  final PublishSubject<Episode?> _togglePlayed = PublishSubject<Episode?>();
+  final PublishSubject<Episode?> _togglePlayed = PublishSubject<Episode>();
 
   /// Stream of currently downloaded episodes
   Stream<BlocState<List<Episode>>>? _downloadsOutput;
@@ -60,7 +60,7 @@ class EpisodeBloc extends Bloc {
     _deleteDownload.stream.listen((episode) async {
       var nowPlaying = audioPlayerService.nowPlaying == episode;
 
-      await podcastService.deleteDownload(episode);
+      await podcastService.deleteDownload(episode!);
 
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
       if (nowPlaying) {
@@ -73,7 +73,7 @@ class EpisodeBloc extends Bloc {
 
   void _handleMarkAsPlayed() async {
     _togglePlayed.stream.listen((episode) async {
-      await podcastService.toggleEpisodePlayed(episode);
+      await podcastService.toggleEpisodePlayed(episode!);
 
       fetchDownloads(true);
     });

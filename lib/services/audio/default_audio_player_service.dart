@@ -532,8 +532,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       log.fine('Loading chapters from ${_currentEpisode!.chaptersUrl}');
 
-      _currentEpisode!.chapters = await podcastService!.loadChaptersByUrl(url: _currentEpisode!.chaptersUrl);
-      _currentEpisode!.chaptersLoading = false;
+      if (_currentEpisode!.chaptersUrl != null) {
+        _currentEpisode!.chapters = await podcastService!.loadChaptersByUrl(url: _currentEpisode!.chaptersUrl!);
+        _currentEpisode!.chaptersLoading = false;
+      }
 
       _updateEpisodeState();
 

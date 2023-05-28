@@ -214,8 +214,8 @@ class PodcastBloc extends Bloc {
 
       /// TODO: Move this to the download service.
       // If this episode contains chapter, fetch them first.
-      if (episode.hasChapters) {
-        var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl);
+      if (episode.hasChapters && episode.chaptersUrl != null) {
+        var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
 
         e.chapters = chapters;
 
@@ -299,11 +299,13 @@ class PodcastBloc extends Bloc {
           _episodesStream.add(_podcast!.episodes);
           break;
         case PodcastEvent.unsubscribe:
-          await podcastService.unsubscribe(_podcast);
-          _podcast!.id = null;
-          _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
-          _loadSubscriptions();
-          _episodesStream.add(_podcast!.episodes);
+          if (_podcast != null) {
+            await podcastService.unsubscribe(_podcast!);
+            _podcast!.id = null;
+            _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
+            _loadSubscriptions();
+            _episodesStream.add(_podcast!.episodes);
+          }
           break;
         case PodcastEvent.markAllPlayed:
           for (var e in _podcast!.episodes!) {
@@ -313,8 +315,10 @@ class PodcastBloc extends Bloc {
             }
           }
 
-          await podcastService.save(_podcast);
-          _episodesStream.add(_podcast!.episodes);
+          if (_podcast != null) {
+            await podcastService.save(_podcast!);
+            _episodesStream.add(_podcast!.episodes);
+          }
           break;
         case PodcastEvent.clearAllPlayed:
           for (var e in _podcast!.episodes!) {
@@ -324,8 +328,10 @@ class PodcastBloc extends Bloc {
             }
           }
 
-          await podcastService.save(_podcast);
-          _episodesStream.add(_podcast!.episodes);
+          if (_podcast != null) {
+            await podcastService.save(_podcast!);
+            _episodesStream.add(_podcast!.episodes);
+          }
           break;
         case PodcastEvent.reloadSubscriptions:
           _loadSubscriptions();

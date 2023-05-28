@@ -23,7 +23,7 @@ void main() {
   final mockPath = MockPathProvder();
   final dbName = 'anytime-opml.db';
   late OPMLService opmlService;
-  PodcastService? podcastService;
+  late PodcastService podcastService;
   Repository repository;
 
   setUp(() async {
