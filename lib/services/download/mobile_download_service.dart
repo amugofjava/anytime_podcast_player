@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 
@@ -13,7 +11,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,7 +25,7 @@ class MobileDownloadService extends DownloadService {
   final Repository repository;
   final DownloadManager downloadManager;
 
-  MobileDownloadService({@required this.repository, @required this.downloadManager}) {
+  MobileDownloadService({required this.repository, required this.downloadManager}) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
       _updateDownloadProgress(progress);
@@ -53,15 +51,15 @@ class MobileDownloadService extends DownloadService {
 
       final episodePath = await resolveDirectory(episode: episode);
       final downloadPath = await resolveDirectory(episode: episode, full: true);
-      var uri = Uri.parse(episode.contentUrl);
+      var uri = Uri.parse(episode.contentUrl!);
 
       // Ensure the download directory exists
       await createDownloadDirectory(episode);
 
       // Filename should be last segment of URI.
-      var filename = safeFile(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.mp3'), orElse: () => null));
+      var filename = safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.mp3')));
 
-      filename ??= safeFile(uri.pathSegments.lastWhere((e) => e.toLowerCase().endsWith('.m4a'), orElse: () => null));
+      filename ??= safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.m4a')));
 
       if (filename == null) {
         //TODO: Handle unsupported format.
@@ -82,16 +80,16 @@ class MobileDownloadService extends DownloadService {
         var pubDate = '';
 
         if (episode.publicationDate != null) {
-          pubDate = '${episode.publicationDate.millisecondsSinceEpoch ~/ 1000}-';
+          pubDate = '${episode.publicationDate!.millisecondsSinceEpoch ~/ 1000}-';
         }
 
         filename = '$season$epno$pubDate$filename';
 
-        log.fine('Download episode (${episode?.title}) $filename to $downloadPath/$filename');
+        log.fine('Download episode (${episode.title}) $filename to $downloadPath/$filename');
 
         /// If we get a redirect to an http endpoint the download will fail. Let's fully resolve
         /// the URL before calling download and ensure it is https.
-        var url = await resolveUrl(episode.contentUrl, forceHttps: true);
+        var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
 
         final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
 
@@ -112,7 +110,7 @@ class MobileDownloadService extends DownloadService {
   }
 
   @override
-  Future<Episode> findEpisodeByTaskId(String taskId) {
+  Future<Episode?> findEpisodeByTaskId(String taskId) {
     return repository.findEpisodeByTaskId(taskId);
   }
 

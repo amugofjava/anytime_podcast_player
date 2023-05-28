@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/entities/episode.dart';
 
 abstract class DownloadService {
   Future<bool> downloadEpisode(Episode episode);
-  Future<Episode> findEpisodeByTaskId(String taskId);
+  Future<Episode?> findEpisodeByTaskId(String taskId);
 
   void dispose();
 }
