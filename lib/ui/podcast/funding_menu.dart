@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -23,7 +23,7 @@ import 'package:url_launcher/url_launcher.dart';
 ///
 /// The target platform is based on the current [Theme]: [ThemeData.platform].
 class FundingMenu extends StatelessWidget {
-  final List<Funding> funding;
+  final List<Funding>? funding;
 
   FundingMenu(this.funding);
 
@@ -42,15 +42,14 @@ class FundingMenu extends StatelessWidget {
         return _CupertinoFundingMenu(funding);
     }
 
-    // Not needed, but stops the linter complaining.
-    return null;
+    return _MaterialFundingMenu(funding);
   }
 }
 
 /// This is the material design version of the context menu. This will be rendered
 /// for all platforms that are not iOS.
 class _MaterialFundingMenu extends StatelessWidget {
-  final List<Funding> funding;
+  final List<Funding>? funding;
 
   _MaterialFundingMenu(this.funding);
 
@@ -58,7 +57,7 @@ class _MaterialFundingMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
-    return funding == null || funding.isEmpty
+    return funding == null || funding!.isEmpty
         ? const SizedBox(
             width: 0.0,
             height: 0.0,
@@ -71,7 +70,7 @@ class _MaterialFundingMenu extends StatelessWidget {
                 onSelected: (url) {
                   FundingLink.fundingLink(
                     url,
-                    snapshot.data.externalLinkConsent,
+                    snapshot.data!.externalLinkConsent,
                     context,
                   ).then((value) {
                     settingsBloc.setExternalLinkConsent(value);
@@ -81,11 +80,11 @@ class _MaterialFundingMenu extends StatelessWidget {
                   Icons.payment,
                 ),
                 itemBuilder: (BuildContext context) {
-                  return List<PopupMenuEntry<String>>.generate(funding.length, (index) {
+                  return List<PopupMenuEntry<String>>.generate(funding!.length, (index) {
                     return PopupMenuItem<String>(
-                      value: funding[index].url,
+                      value: funding![index].url,
                       enabled: true,
-                      child: Text(funding[index].value),
+                      child: Text(funding![index].value),
                     );
                   });
                 },
@@ -97,7 +96,7 @@ class _MaterialFundingMenu extends StatelessWidget {
 /// This is the Cupertino context menu and is rendered only when running on
 /// an iOS device.
 class _CupertinoFundingMenu extends StatelessWidget {
-  final List<Funding> funding;
+  final List<Funding>? funding;
 
   _CupertinoFundingMenu(this.funding);
 
@@ -105,7 +104,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsBloc = Provider.of<SettingsBloc>(context);
 
-    return funding == null || funding.isEmpty
+    return funding == null || funding!.isEmpty
         ? const SizedBox(
             width: 0.0,
             height: 0.0,
@@ -121,19 +120,19 @@ class _CupertinoFundingMenu extends StatelessWidget {
                   builder: (BuildContext context) {
                     return CupertinoActionSheet(
                       actions: <Widget>[
-                        ...List<CupertinoActionSheetAction>.generate(funding.length, (index) {
+                        ...List<CupertinoActionSheetAction>.generate(funding!.length, (index) {
                           return CupertinoActionSheetAction(
                             onPressed: () {
                               FundingLink.fundingLink(
-                                funding[index].url,
-                                snapshot.data.externalLinkConsent,
+                                funding![index].url,
+                                snapshot.data!.externalLinkConsent,
                                 context,
                               ).then((value) {
                                 settingsBloc.setExternalLinkConsent(value);
                                 Navigator.pop(context, 'Cancel');
                               });
                             },
-                            child: Text(funding[index].value),
+                            child: Text(funding![index].value),
                           );
                         }),
                       ],
@@ -142,7 +141,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context, 'Cancel');
                         },
-                        child: Text(L.of(context).cancel_option_label),
+                        child: Text(L.of(context)!.cancel_option_label),
                       ),
                     );
                   },
@@ -158,7 +157,7 @@ class FundingLink {
   /// information dialog first to make clear that the link is provided
   /// by the podcast owner and not AnyTime.
   static Future<bool> fundingLink(String url, bool consent, BuildContext context) async {
-    var result = false;
+    bool? result = false;
 
     if (consent) {
       result = true;
@@ -172,12 +171,12 @@ class FundingLink {
         context: context,
         useRootNavigator: false,
         builder: (_) => BasicDialogAlert(
-          title: Text(L.of(context).podcast_funding_dialog_header),
-          content: Text(L.of(context).consent_message),
+          title: Text(L.of(context)!.podcast_funding_dialog_header),
+          content: Text(L.of(context)!.consent_message),
           actions: <Widget>[
             BasicDialogAction(
               title: ActionText(
-                L.of(context).go_back_button_label,
+                L.of(context)!.go_back_button_label,
               ),
               onPressed: () {
                 Navigator.pop(context, false);
@@ -185,7 +184,7 @@ class FundingLink {
             ),
             BasicDialogAction(
               title: ActionText(
-                L.of(context).continue_button_label,
+                L.of(context)!.continue_button_label,
               ),
               iosIsDefaultAction: true,
               onPressed: () {
@@ -196,7 +195,7 @@ class FundingLink {
         ),
       );
 
-      if (result) {
+      if (result!) {
         var uri = Uri.parse(url);
 
         unawaited(

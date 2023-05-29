@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -20,12 +20,12 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ChapterSelector extends StatefulWidget {
   final ItemScrollController itemScrollController = ItemScrollController();
   Episode episode;
-  Chapter chapter;
-  StreamSubscription positionSubscription;
+  Chapter? chapter;
+  StreamSubscription? positionSubscription;
   var chapters = <Chapter>[];
 
   ChapterSelector({
-    this.episode,
+    required this.episode,
   }) {
     if (episode.chapters != null) {
       chapters = episode.chapters.where((c) => c.toc).toList(growable: false);
@@ -42,20 +42,20 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     super.initState();
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    Chapter lastChapter;
+    Chapter? lastChapter;
     bool first = true;
 
     // Listen for changes in position. If the change in position results in
     // a change in chapter we scroll to it. This ensures that the current
     // chapter is always visible.
     // TODO: Jump only if current chapter is not visible.
-    widget.positionSubscription = audioBloc.playPosition.listen((event) {
+    widget.positionSubscription = audioBloc.playPosition!.listen((event) {
       var episode = event.episode;
 
       if (widget.itemScrollController.isAttached) {
-        lastChapter ??= episode.currentChapter;
+        lastChapter ??= episode!.currentChapter;
 
-        if (lastChapter != episode.currentChapter) {
+        if (lastChapter != episode!.currentChapter) {
           lastChapter = episode.currentChapter;
 
           if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
@@ -82,10 +82,10 @@ class _ChapterSelectorState extends State<ChapterSelector> {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
 
-    return StreamBuilder<Episode>(
+    return StreamBuilder<Episode?>(
         stream: audioBloc.nowPlaying,
         builder: (context, snapshot) {
-          return !snapshot.hasData || snapshot.data.chaptersLoading
+          return !snapshot.hasData || snapshot.data!.chaptersLoading
               ? Align(
                   alignment: Alignment.center,
                   child: PlatformProgressIndicator(),
@@ -93,12 +93,12 @@ class _ChapterSelectorState extends State<ChapterSelector> {
               : ScrollablePositionedList.builder(
                   initialScrollIndex: _initialIndex(snapshot.data),
                   itemScrollController: widget.itemScrollController,
-                  itemCount: snapshot.data.chapters.length,
+                  itemCount: snapshot.data!.chapters.length,
                   itemBuilder: (context, i) {
                     final index = i < 0 ? 0 : i;
-                    final chapter = snapshot.data.chapters[index];
-                    final chapterSelected = chapter == snapshot.data.currentChapter;
-                    final textStyle = Theme.of(context).textTheme.bodyLarge.copyWith(
+                    final chapter = snapshot.data!.chapters[index];
+                    final chapterSelected = chapter == snapshot.data!.currentChapter;
+                    final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                         );
@@ -124,14 +124,14 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                             ),
                           ),
                           title: Text(
-                            snapshot.data.chapters[index].title?.trim(),
+                            snapshot.data!.chapters[index].title.trim(),
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             maxLines: 3,
                             style: textStyle,
                           ),
                           trailing: Text(
-                            _formatStartTime(snapshot.data.chapters[index].startTime),
+                            _formatStartTime(snapshot.data!.chapters[index].startTime),
                             style: textStyle,
                           ),
                         ),
@@ -148,7 +148,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     super.dispose();
   }
 
-  int _initialIndex(Episode e) {
+  int _initialIndex(Episode? e) {
     var init = 0;
 
     if (e != null && e.currentChapter != null) {

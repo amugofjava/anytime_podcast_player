@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
@@ -29,7 +29,7 @@ class PlayControl extends StatelessWidget {
   final Episode episode;
 
   PlayControl({
-    @required this.episode,
+    required this.episode,
   });
 
   @override
@@ -38,12 +38,12 @@ class PlayControl extends StatelessWidget {
     final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     return StreamBuilder<PlayerControlState>(
-        stream: Rx.combineLatest2(audioBloc.playingState, audioBloc.nowPlaying,
-            (AudioState audioState, Episode episode) => PlayerControlState(audioState, episode)),
+        stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
+            (AudioState audioState, Episode? episode) => PlayerControlState(audioState, episode)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final audioState = snapshot.data.audioState;
-            final nowPlaying = snapshot.data.episode;
+            final audioState = snapshot.data!.audioState;
+            final nowPlaying = snapshot.data!.episode;
 
             if (episode.downloadState != DownloadState.downloading) {
               // If this episode is the one we are playing, allow the user
@@ -55,15 +55,15 @@ class PlayControl extends StatelessWidget {
                       audioBloc.transitionState(TransitionState.pause);
                     },
                     child: PlayPauseButton(
-                      title: episode.title,
-                      label: L.of(context).pause_button_label,
+                      title: episode.title!,
+                      label: L.of(context)!.pause_button_label,
                       icon: Icons.pause,
                     ),
                   );
                 } else if (audioState == AudioState.buffering) {
                   return PlayPauseBusyButton(
-                    title: episode.title,
-                    label: L.of(context).pause_button_label,
+                    title: episode.title!,
+                    label: L.of(context)!.pause_button_label,
                     icon: Icons.pause,
                   );
                 } else if (audioState == AudioState.pausing) {
@@ -73,8 +73,8 @@ class PlayControl extends StatelessWidget {
                       optionalShowNowPlaying(context, settings);
                     },
                     child: PlayPauseButton(
-                      title: episode.title,
-                      label: L.of(context).play_button_label,
+                      title: episode.title!,
+                      label: L.of(context)!.play_button_label,
                       icon: Icons.play_arrow,
                     ),
                   );
@@ -89,8 +89,8 @@ class PlayControl extends StatelessWidget {
                   optionalShowNowPlaying(context, settings);
                 },
                 child: PlayPauseButton(
-                  title: episode.title,
-                  label: L.of(context).play_button_label,
+                  title: episode.title!,
+                  label: L.of(context)!.play_button_label,
                   icon: Icons.play_arrow,
                 ),
               );
@@ -100,8 +100,8 @@ class PlayControl extends StatelessWidget {
               return Opacity(
                 opacity: 0.2,
                 child: PlayPauseButton(
-                  title: episode.title,
-                  label: L.of(context).play_button_label,
+                  title: episode.title!,
+                  label: L.of(context)!.play_button_label,
                   icon: Icons.play_arrow,
                 ),
               );
@@ -116,8 +116,8 @@ class PlayControl extends StatelessWidget {
                   optionalShowNowPlaying(context, settings);
                 },
                 child: PlayPauseButton(
-                  title: episode.title,
-                  label: L.of(context).play_button_label,
+                  title: episode.title!,
+                  label: L.of(context)!.play_button_label,
                   icon: Icons.play_arrow,
                 ),
               );
@@ -125,8 +125,8 @@ class PlayControl extends StatelessWidget {
               return Opacity(
                 opacity: 0.2,
                 child: PlayPauseButton(
-                  title: episode.title,
-                  label: L.of(context).play_button_label,
+                  title: episode.title!,
+                  label: L.of(context)!.play_button_label,
                   icon: Icons.play_arrow,
                 ),
               );
@@ -155,7 +155,7 @@ class DownloadControl extends StatelessWidget {
   final Episode episode;
 
   DownloadControl({
-    @required this.episode,
+    required this.episode,
   });
 
   @override
@@ -164,12 +164,12 @@ class DownloadControl extends StatelessWidget {
     final podcastBloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<PlayerControlState>(
-        stream: Rx.combineLatest2(audioBloc.playingState, audioBloc.nowPlaying,
-            (AudioState audioState, Episode episode) => PlayerControlState(audioState, episode)),
+        stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
+            (AudioState audioState, Episode? episode) => PlayerControlState(audioState, episode)),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final audioState = snapshot.data.audioState;
-            final nowPlaying = snapshot.data.episode;
+            final audioState = snapshot.data!.audioState;
+            final nowPlaying = snapshot.data!.episode;
 
             if (nowPlaying?.guid == episode.guid &&
                 (audioState == AudioState.playing || audioState == AudioState.buffering)) {
@@ -178,10 +178,10 @@ class DownloadControl extends StatelessWidget {
                   opacity: 0.2,
                   child: DownloadButton(
                     onPressed: () {},
-                    title: episode.title,
+                    title: episode.title!,
                     icon: Icons.save_alt,
                     percent: 0,
-                    label: L.of(context).download_episode_button_label,
+                    label: L.of(context)!.download_episode_button_label,
                   ),
                 );
               } else {
@@ -189,10 +189,10 @@ class DownloadControl extends StatelessWidget {
                   opacity: 0.2,
                   child: DownloadButton(
                     onPressed: () {},
-                    title: episode.title,
+                    title: episode.title!,
                     icon: Icons.check,
                     percent: 0,
-                    label: L.of(context).download_episode_button_label,
+                    label: L.of(context)!.download_episode_button_label,
                   ),
                 );
               }
@@ -202,35 +202,35 @@ class DownloadControl extends StatelessWidget {
           if (episode.downloadState == DownloadState.downloaded) {
             return DownloadButton(
               onPressed: () {},
-              title: episode.title,
+              title: episode.title!,
               icon: Icons.check,
               percent: 0,
-              label: L.of(context).download_episode_button_label,
+              label: L.of(context)!.download_episode_button_label,
             );
           } else if (episode.downloadState == DownloadState.queued) {
             return DownloadButton(
               onPressed: () => _showCancelDialog(context),
-              title: episode.title,
+              title: episode.title!,
               icon: Icons.timer_outlined,
               percent: 0,
-              label: L.of(context).download_episode_button_label,
+              label: L.of(context)!.download_episode_button_label,
             );
           } else if (episode.downloadState == DownloadState.downloading) {
             return DownloadButton(
               onPressed: () => _showCancelDialog(context),
-              title: episode.title,
+              title: episode.title!,
               icon: Icons.timer_outlined,
-              percent: episode.downloadPercentage,
-              label: L.of(context).download_episode_button_label,
+              percent: episode.downloadPercentage!,
+              label: L.of(context)!.download_episode_button_label,
             );
           }
 
           return DownloadButton(
             onPressed: () => podcastBloc.downloadEpisode(episode),
-            title: episode.title,
+            title: episode.title!,
             icon: Icons.save_alt,
             percent: 0,
-            label: L.of(context).download_episode_button_label,
+            label: L.of(context)!.download_episode_button_label,
           );
         });
   }
@@ -243,13 +243,13 @@ class DownloadControl extends StatelessWidget {
       useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
         title: Text(
-          L.of(context).stop_download_title,
+          L.of(context)!.stop_download_title,
         ),
-        content: Text(L.of(context).stop_download_confirmation),
+        content: Text(L.of(context)!.stop_download_confirmation),
         actions: <Widget>[
           BasicDialogAction(
             title: ActionText(
-              L.of(context).cancel_button_label,
+              L.of(context)!.cancel_button_label,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -257,7 +257,7 @@ class DownloadControl extends StatelessWidget {
           ),
           BasicDialogAction(
             title: ActionText(
-              L.of(context).stop_download_button_label,
+              L.of(context)!.stop_download_button_label,
             ),
             iosIsDefaultAction: true,
             onPressed: () {
@@ -275,7 +275,7 @@ class DownloadControl extends StatelessWidget {
 /// downloadables. Saves all that nesting of StreamBuilders.
 class PlayerControlState {
   final AudioState audioState;
-  final Episode episode;
+  final Episode? episode;
 
   PlayerControlState(this.audioState, this.episode);
 }

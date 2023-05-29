@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -30,6 +28,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: StreamBuilder<AudioState>(
           stream: audioBloc.playingState,
+          initialData: AudioState.none,
           builder: (context, snapshot) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,14 +43,14 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
                   },
-                  tooltip: L.of(context).rewind_button_label,
+                  tooltip: L.of(context)!.rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
                   icon: Icon(
                     Icons.replay_10,
                     size: 48.0,
                   ),
                 ),
-                AnimatedPlayButton(audioState: snapshot.data),
+                AnimatedPlayButton(audioState: snapshot.data!),
                 IconButton(
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
@@ -86,8 +85,8 @@ class AnimatedPlayButton extends StatefulWidget {
   final PlayHandler onPause;
 
   AnimatedPlayButton({
-    Key key,
-    @required this.audioState,
+    Key? key,
+    required this.audioState,
     this.onPlay = _onPlay,
     this.onPause = _onPause,
   }) : super(key: key);
@@ -105,8 +104,8 @@ void _onPause(AudioBloc audioBloc) {
 }
 
 class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTickerProviderStateMixin {
-  AnimationController _playPauseController;
-  StreamSubscription<AudioState> _audioStateSubscription;
+  late AnimationController _playPauseController;
+  late StreamSubscription<AudioState> _audioStateSubscription;
   bool init = true;
 
   @override
@@ -122,7 +121,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
     /// just set the animation controller to the correct state; for all other
     /// frames we want to animate. Doing it this way prevents the play/pause
     /// button from animating when the form is first loaded.
-    _audioStateSubscription = audioBloc.playingState.listen((event) {
+    _audioStateSubscription = audioBloc.playingState!.listen((event) {
       if (event == AudioState.playing || event == AudioState.buffering) {
         if (init) {
           _playPauseController.value = 1;
@@ -170,7 +169,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
             width: 84,
           ),
         Tooltip(
-          message: playing ? L.of(context).pause_button_label : L.of(context).play_button_label,
+          message: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
           child: TextButton(
             style: TextButton.styleFrom(
               shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
@@ -16,7 +16,7 @@ class ShowNotes extends StatelessWidget {
   final Episode episode;
 
   ShowNotes({
-    @required this.episode,
+    required this.episode,
   });
 
   @override
@@ -27,7 +27,7 @@ class ShowNotes extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: CustomScrollView(controller: _sliverScrollController, slivers: <Widget>[
           SliverAppBar(
-            title: Text(episode.podcast),
+            title: Text(episode.podcast!),
             floating: false,
             pinned: true,
             snap: false,
@@ -43,7 +43,7 @@ class ShowNotes extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-                  child: PodcastHtml(content: episode.content ?? episode.description),
+                  child: PodcastHtml(content: episode.content ?? episode.description!),
                 ),
               ],
             ),

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/l10n/L.dart';
@@ -30,17 +30,17 @@ import 'package:provider/provider.dart';
 /// TODO: Extract contents of Up Next UI into separate widgets.
 /// TODO: Extract contents of Transcript UI into separate widgets.
 class NowPlayingOptionsSelector extends StatefulWidget {
-  final double scrollPos;
+  final double? scrollPos;
   static const baseSize = 68.0;
 
-  NowPlayingOptionsSelector({Key key, this.scrollPos}) : super(key: key);
+  NowPlayingOptionsSelector({Key? key, this.scrollPos}) : super(key: key);
 
   @override
   State<NowPlayingOptionsSelector> createState() => _NowPlayingOptionsSelectorState();
 }
 
 class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
-  DraggableScrollableController draggableController;
+  DraggableScrollableController? draggableController;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
             // snapSizes: [minSize, maxSize],
             builder: (BuildContext context, ScrollController scrollController) {
               return DefaultTabController(
-                animationDuration: !draggableController.isAttached || draggableController.size <= minSize
+                animationDuration: !draggableController!.isAttached || draggableController!.size <= minSize
                     ? const Duration(seconds: 0)
                     : kTabScrollDuration,
                 length: 2,
@@ -94,9 +94,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                               decoration: BoxDecoration(
                                 color: Colors.white.withOpacity(0.0),
                                 border: Border(
-                                  bottom: !draggableController.isAttached || draggableController.size <= minSize
+                                  bottom: !draggableController!.isAttached || draggableController!.size <= minSize
                                       ? BorderSide.none
-                                      : BorderSide(color: Colors.grey[800], width: 1.0),
+                                      : BorderSide(color: Colors.grey[800]!, width: 1.0),
                                 ),
                               ),
                               child: TabBar(
@@ -104,7 +104,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 indicatorPadding: EdgeInsets.zero,
 
                                 /// Little hack to hide the indicator when closed
-                                indicatorColor: !draggableController.isAttached || draggableController.size <= minSize
+                                indicatorColor: !draggableController!.isAttached || draggableController!.size <= minSize
                                     ? Theme.of(context).secondaryHeaderColor
                                     : null,
                                 tabs: [
@@ -113,8 +113,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     onTap: () {
                                       DefaultTabController.of(ctx).animateTo(0);
 
-                                      if (draggableController.size <= 1.0) {
-                                        draggableController.animateTo(
+                                      if (draggableController!.size <= 1.0) {
+                                        draggableController!.animateTo(
                                           1.0,
                                           duration: Duration(milliseconds: 150),
                                           curve: Curves.easeInOut,
@@ -124,7 +124,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                                       child: Text(
-                                        L.of(context).up_next_queue_label.toUpperCase(),
+                                        L.of(context)!.up_next_queue_label.toUpperCase(),
                                         style: Theme.of(context).textTheme.labelLarge,
                                       ),
                                     ),
@@ -134,8 +134,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     onTap: () {
                                       DefaultTabController.of(ctx).animateTo(1);
 
-                                      if (draggableController.size <= 1.0) {
-                                        draggableController.animateTo(
+                                      if (draggableController!.size <= 1.0) {
+                                        draggableController!.animateTo(
                                           1.0,
                                           duration: Duration(milliseconds: 150),
                                           curve: Curves.easeInOut,
@@ -145,7 +145,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                                       child: Text(
-                                        L.of(context).transcript_label.toUpperCase(),
+                                        L.of(context)!.transcript_label.toUpperCase(),
                                         style: Theme.of(context).textTheme.labelLarge,
                                       ),
                                     ),
@@ -171,7 +171,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                 Padding(
                                                   padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
                                                   child: Text(
-                                                    L.of(context).now_playing_queue_label,
+                                                    L.of(context)!.now_playing_queue_label,
                                                     style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                 ),
@@ -181,7 +181,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                                               child: DraggableEpisodeTile(
                                                 key: Key('detileplaying'),
-                                                episode: snapshot.data.playing,
+                                                episode: snapshot.data!.playing,
                                                 draggable: false,
                                               ),
                                             ),
@@ -192,7 +192,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                 Padding(
                                                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                                                   child: Text(
-                                                    L.of(context).up_next_queue_label,
+                                                    L.of(context)!.up_next_queue_label,
                                                     style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                 ),
@@ -206,13 +206,13 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                         useRootNavigator: false,
                                                         builder: (_) => BasicDialogAlert(
                                                           title: Text(
-                                                            L.of(context).queue_clear_label_title,
+                                                            L.of(context)!.queue_clear_label_title,
                                                           ),
-                                                          content: Text(L.of(context).queue_clear_label),
+                                                          content: Text(L.of(context)!.queue_clear_label),
                                                           actions: <Widget>[
                                                             BasicDialogAction(
                                                               title: ActionText(
-                                                                L.of(context).cancel_button_label,
+                                                                L.of(context)!.cancel_button_label,
                                                               ),
                                                               onPressed: () {
                                                                 Navigator.pop(context);
@@ -222,10 +222,10 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                               title: ActionText(
                                                                 Theme.of(context).platform == TargetPlatform.iOS
                                                                     ? L
-                                                                        .of(context)
+                                                                        .of(context)!
                                                                         .queue_clear_button_label
                                                                         .toUpperCase()
-                                                                    : L.of(context).queue_clear_button_label,
+                                                                    : L.of(context)!.queue_clear_button_label,
                                                               ),
                                                               iosIsDefaultAction: true,
                                                               iosIsDestructiveAction: true,
@@ -239,8 +239,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                       );
                                                     },
                                                     child: Text(
-                                                      L.of(context).clear_queue_button_label,
-                                                      style: Theme.of(context).textTheme.titleSmall.copyWith(
+                                                      L.of(context)!.clear_queue_button_label,
+                                                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
                                                             fontSize: 12.0,
                                                             color: Theme.of(context).primaryColor,
                                                           ),
@@ -249,7 +249,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                 ),
                                               ],
                                             ),
-                                            snapshot.hasData && snapshot.data.queue.isEmpty
+                                            snapshot.hasData && snapshot.data!.queue.isEmpty
                                                 ? Padding(
                                                     padding: const EdgeInsets.all(24.0),
                                                     child: Container(
@@ -262,7 +262,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                       child: Padding(
                                                         padding: const EdgeInsets.all(24.0),
                                                         child: Text(
-                                                          L.of(context).empty_queue_message,
+                                                          L.of(context)!.empty_queue_message,
                                                           style: Theme.of(context).textTheme.titleMedium,
                                                         ),
                                                       ),
@@ -273,20 +273,20 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                       buildDefaultDragHandles: false,
                                                       shrinkWrap: true,
                                                       padding: const EdgeInsets.all(8),
-                                                      itemCount: snapshot.hasData ? snapshot.data.queue.length : 0,
+                                                      itemCount: snapshot.hasData ? snapshot.data!.queue.length : 0,
                                                       itemBuilder: (BuildContext context, int index) {
                                                         return Dismissible(
-                                                          key: ValueKey('disqueue${snapshot.data.queue[index].guid}'),
+                                                          key: ValueKey('disqueue${snapshot.data!.queue[index].guid}'),
                                                           direction: DismissDirection.endToStart,
                                                           onDismissed: (direction) {
                                                             queueBloc.queueEvent(
-                                                                QueueRemoveEvent(episode: snapshot.data.queue[index]));
+                                                                QueueRemoveEvent(episode: snapshot.data!.queue[index]));
                                                           },
                                                           child: DraggableEpisodeTile(
                                                             key:
-                                                                ValueKey('tilequeue${snapshot.data.queue[index].guid}'),
+                                                                ValueKey('tilequeue${snapshot.data!.queue[index].guid}'),
                                                             index: index,
-                                                            episode: snapshot.data.queue[index],
+                                                            episode: snapshot.data!.queue[index],
                                                             playable: true,
                                                           ),
                                                         );
@@ -299,7 +299,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                         }
 
                                                         queueBloc.queueEvent(QueueMoveEvent(
-                                                          episode: snapshot.data.queue[oldIndex],
+                                                          episode: snapshot.data!.queue[oldIndex],
                                                           oldIndex: oldIndex,
                                                           newIndex: newIndex,
                                                         ));
@@ -308,7 +308,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                   ),
                                           ],
                                         ),
-                                        TranscriptView(episode: snapshot.data.playing),
+                                        TranscriptView(episode: snapshot.data!.playing),
                                       ],
                                     );
                                   }),
@@ -336,7 +336,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
 }
 
 class NowPlayingOptionsScaffold extends StatelessWidget {
-  const NowPlayingOptionsScaffold({Key key}) : super(key: key);
+  const NowPlayingOptionsScaffold({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -33,8 +33,7 @@ class PodcastContextMenu extends StatelessWidget {
         return _CupertinoContextMenu(podcast);
     }
 
-    // Not needed, but stops the linter complaining.
-    return null;
+    return _MaterialPodcastMenu(podcast);
   }
 }
 
@@ -64,12 +63,12 @@ class _MaterialPodcastMenu extends StatelessWidget {
                 PopupMenuItem<String>(
                   value: 'ma',
                   enabled: podcast.subscribed,
-                  child: Text(L.of(context).mark_episodes_played_label),
+                  child: Text(L.of(context)!.mark_episodes_played_label),
                 ),
                 PopupMenuItem<String>(
                   value: 'ua',
                   enabled: podcast.subscribed,
-                  child: Text(L.of(context).mark_episodes_not_played_label),
+                  child: Text(L.of(context)!.mark_episodes_not_played_label),
                 ),
               ];
             },
@@ -78,8 +77,8 @@ class _MaterialPodcastMenu extends StatelessWidget {
   }
 
   void togglePlayed({
-    @required String value,
-    @required PodcastBloc bloc,
+    required String value,
+    required PodcastBloc bloc,
   }) {
     if (value == 'ma') {
       bloc.podcastEvent(PodcastEvent.markAllPlayed);
@@ -116,7 +115,7 @@ class _CupertinoContextMenu extends StatelessWidget {
                         bloc.podcastEvent(PodcastEvent.markAllPlayed);
                         Navigator.pop(context, 'Cancel');
                       },
-                      child: Text(L.of(context).mark_episodes_played_label),
+                      child: Text(L.of(context)!.mark_episodes_played_label),
                     ),
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
@@ -124,7 +123,7 @@ class _CupertinoContextMenu extends StatelessWidget {
                         bloc.podcastEvent(PodcastEvent.clearAllPlayed);
                         Navigator.pop(context, 'Cancel');
                       },
-                      child: Text(L.of(context).mark_episodes_not_played_label),
+                      child: Text(L.of(context)!.mark_episodes_not_played_label),
                     ),
                   ],
                   cancelButton: CupertinoActionSheetAction(
@@ -132,7 +131,7 @@ class _CupertinoContextMenu extends StatelessWidget {
                     onPressed: () {
                       Navigator.pop(context, 'Cancel');
                     },
-                    child: Text(L.of(context).cancel_option_label),
+                    child: Text(L.of(context)!.cancel_option_label),
                   ),
                 );
               },

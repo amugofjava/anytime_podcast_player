@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 // ignore_for_file: must_be_immutable
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -22,8 +22,8 @@ class PersonAvatar extends StatelessWidget {
   String role = '';
 
   PersonAvatar({
-    Key key,
-    @required this.person,
+    Key? key,
+    required this.person,
   }) : super(key: key) {
     if (person != null && person.name.isNotEmpty) {
       initial = person.name.substring(0, 1).toUpperCase();
@@ -38,9 +38,9 @@ class PersonAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: person.link != null && person.link.isNotEmpty
+      onTap: person.link != null && person.link!.isNotEmpty
           ? () {
-              final uri = Uri.parse(person.link);
+              final uri = Uri.parse(person.link!);
 
               unawaited(
                 canLaunchUrl(uri).then((value) => launchUrl(uri)),
@@ -57,7 +57,7 @@ class PersonAvatar extends StatelessWidget {
               CircleAvatar(
                 radius: 32,
                 foregroundImage: ExtendedImage.network(
-                  person.image,
+                  person.image!,
                   cache: true,
                 ).image,
                 child: Text(initial),

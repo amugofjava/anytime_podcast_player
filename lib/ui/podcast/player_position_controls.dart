@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:ui';
 
@@ -39,8 +39,8 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          var position = snapshot.hasData ? snapshot.data.position.inSeconds : 0;
-          episodeLength = snapshot.hasData ? snapshot.data.length.inSeconds : 0;
+          var position = snapshot.hasData ? snapshot.data!.position.inSeconds : 0;
+          episodeLength = snapshot.hasData ? snapshot.data!.length.inSeconds : 0;
           var divisions = episodeLength == 0 ? 1 : episodeLength;
 
           if (!dragging) {
@@ -88,7 +88,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                             });
                           },
                           onChangeStart: (value) {
-                            if (!snapshot.data.buffering) {
+                            if (!snapshot.data!.buffering) {
                               setState(() {
                                 dragging = true;
                                 _calculatePositions(currentPosition);
@@ -102,7 +102,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                               dragging = false;
                             });
 
-                            return snapshot.data.buffering ? null : audioBloc.transitionPosition(value);
+                            return snapshot.data!.buffering ? null : audioBloc.transitionPosition(value);
                           },
                           value: currentPosition.toDouble(),
                           min: 0.0,
