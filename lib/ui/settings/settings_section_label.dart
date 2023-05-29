@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 
@@ -11,8 +11,8 @@ class SettingsDividerLabel extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   const SettingsDividerLabel({
-    Key key,
-    this.label,
+    Key? key,
+    required this.label,
     this.padding = const EdgeInsets.fromLTRB(16.0, 24.0, 0.0, 0.0),
   }) : super(key: key);
 
@@ -22,7 +22,7 @@ class SettingsDividerLabel extends StatelessWidget {
       padding: padding,
       child: Text(
         label,
-        style: Theme.of(context).textTheme.titleSmall.copyWith(
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(
               fontSize: 12.0,
               color: Theme.of(context).primaryColor,
             ),

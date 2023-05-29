@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -54,29 +52,29 @@ class _SettingsState extends State<Settings> {
         builder: (context, snapshot) {
           return ListView(
             children: [
-              SettingsDividerLabel(label: L.of(context).settings_personalisation_divider_label),
+              SettingsDividerLabel(label: L.of(context)!.settings_personalisation_divider_label),
               ListTile(
                 shape: RoundedRectangleBorder(side: BorderSide.none),
-                title: Text(L.of(context).settings_theme_switch_label),
+                title: Text(L.of(context)!.settings_theme_switch_label),
                 trailing: Switch.adaptive(
-                    value: snapshot.data.theme == 'dark',
+                    value: snapshot.data!.theme == 'dark',
                     onChanged: (value) {
                       settingsBloc.darkMode(value);
                     }),
               ),
-              SettingsDividerLabel(label: L.of(context).settings_episodes_divider_label),
+              SettingsDividerLabel(label: L.of(context)!.settings_episodes_divider_label),
               ListTile(
-                title: Text(L.of(context).settings_mark_deleted_played_label),
+                title: Text(L.of(context)!.settings_mark_deleted_played_label),
                 trailing: Switch.adaptive(
-                  value: snapshot.data.markDeletedEpisodesAsPlayed,
+                  value: snapshot.data!.markDeletedEpisodesAsPlayed,
                   onChanged: (value) => setState(() => settingsBloc.markDeletedAsPlayed(value)),
                 ),
               ),
               sdcard
                   ? ListTile(
-                      title: Text(L.of(context).settings_download_sd_card_label),
+                      title: Text(L.of(context)!.settings_download_sd_card_label),
                       trailing: Switch.adaptive(
-                        value: snapshot.data.storeDownloadsSDCard,
+                        value: snapshot.data!.storeDownloadsSDCard,
                         onChanged: (value) => sdcard
                             ? setState(() {
                                 if (value) {
@@ -94,24 +92,24 @@ class _SettingsState extends State<Settings> {
                       height: 0,
                       width: 0,
                     ),
-              SettingsDividerLabel(label: L.of(context).settings_playback_divider_label),
+              SettingsDividerLabel(label: L.of(context)!.settings_playback_divider_label),
               ListTile(
-                title: Text(L.of(context).settings_auto_open_now_playing),
+                title: Text(L.of(context)!.settings_auto_open_now_playing),
                 trailing: Switch.adaptive(
-                  value: snapshot.data.autoOpenNowPlaying,
+                  value: snapshot.data!.autoOpenNowPlaying,
                   onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
               ),
               EpisodeRefreshWidget(),
-              SettingsDividerLabel(label: L.of(context).settings_data_divider_label),
+              SettingsDividerLabel(label: L.of(context)!.settings_data_divider_label),
               ListTile(
-                title: Text(L.of(context).settings_import_opml),
+                title: Text(L.of(context)!.settings_import_opml),
                 onTap: () async {
-                  var result = await FilePicker.platform.pickFiles(
+                  var result = (await FilePicker.platform.pickFiles(
                     type: FileType.custom,
                     // `podcast.opml` is a UTTypeDeclaration made in iOS setup.
                     allowedExtensions: ['opml', 'podcast.opml', 'xml'],
-                  );
+                  ))!;
 
                   if (result.count > 0) {
                     var file = result.files.first;
@@ -123,11 +121,11 @@ class _SettingsState extends State<Settings> {
                       builder: (_) => WillPopScope(
                         onWillPop: () async => false,
                         child: BasicDialogAlert(
-                          title: Text(L.of(context).settings_import_opml),
-                          content: OPMLImport(file: file.path),
+                          title: Text(L.of(context)!.settings_import_opml),
+                          content: OPMLImport(file: file.path!),
                           actions: <Widget>[
                             BasicDialogAction(
-                              title: ActionText(L.of(context).cancel_button_label),
+                              title: ActionText(L.of(context)!.cancel_button_label),
                               onPressed: () {
                                 return Navigator.pop(context, true);
                               },
@@ -145,7 +143,7 @@ class _SettingsState extends State<Settings> {
                 },
               ),
               ListTile(
-                title: Text(L.of(context).settings_export_opml),
+                title: Text(L.of(context)!.settings_export_opml),
                 onTap: () async {
                   await showPlatformDialog<void>(
                     context: context,
@@ -164,12 +162,12 @@ class _SettingsState extends State<Settings> {
 
   Widget _buildAndroid(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: Theme.of(context).appBarTheme.systemOverlayStyle,
+      value: Theme.of(context).appBarTheme.systemOverlayStyle!,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           title: Text(
-            L.of(context).settings_label,
+            L.of(context)!.settings_label,
           ),
         ),
         body: _buildList(context),
@@ -186,21 +184,21 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _showStorageDialog({@required bool enableExternalStorage}) {
+  void _showStorageDialog({required bool enableExternalStorage}) {
     showPlatformDialog<void>(
       context: context,
       useRootNavigator: false,
       builder: (_) => BasicDialogAlert(
-        title: Text(L.of(context).settings_download_switch_label),
+        title: Text(L.of(context)!.settings_download_switch_label),
         content: Text(
           enableExternalStorage
-              ? L.of(context).settings_download_switch_card
-              : L.of(context).settings_download_switch_internal,
+              ? L.of(context)!.settings_download_switch_card
+              : L.of(context)!.settings_download_switch_internal,
         ),
         actions: <Widget>[
           BasicDialogAction(
             title: Text(
-              L.of(context).ok_button_label,
+              L.of(context)!.ok_button_label,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -220,7 +218,7 @@ class _SettingsState extends State<Settings> {
         return _buildIos(context);
       default:
         assert(false, 'Unexpected platform $defaultTargetPlatform');
-        return null;
+        return _buildAndroid(context);
     }
   }
 
