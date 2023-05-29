@@ -38,7 +38,7 @@ class PersonAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: person.link.isNotEmpty
+      onTap: person.link != null && person.link.isNotEmpty
           ? () {
               final uri = Uri.parse(person.link);
 

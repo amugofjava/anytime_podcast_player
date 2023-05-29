@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:io';
 
@@ -18,15 +18,15 @@ import 'package:provider/provider.dart';
 class Search extends StatefulWidget {
   final String searchTerm;
 
-  Search({this.searchTerm});
+  Search({required this.searchTerm});
 
   @override
   State<Search> createState() => _SearchState();
 }
 
 class _SearchState extends State<Search> {
-  TextEditingController _searchController;
-  FocusNode _searchFocusNode;
+  late TextEditingController _searchController;
+  late FocusNode _searchFocusNode;
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _SearchState extends State<Search> {
         slivers: <Widget>[
           SliverAppBar(
             leading: IconButton(
-              tooltip: L.of(context).search_back_button_label,
+              tooltip: L.of(context)!.search_back_button_label,
               icon: Platform.isAndroid
                   ? Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor)
                   : Icon(Icons.arrow_back_ios),
@@ -75,7 +75,7 @@ class _SearchState extends State<Search> {
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  hintText: L.of(context).search_for_podcasts_hint,
+                  hintText: L.of(context)!.search_for_podcasts_hint,
                   border: InputBorder.none,
                 ),
                 style: TextStyle(
@@ -90,7 +90,7 @@ class _SearchState extends State<Search> {
             snap: false,
             actions: <Widget>[
               IconButton(
-                tooltip: L.of(context).clear_search_button_label,
+                tooltip: L.of(context)!.clear_search_button_label,
                 icon: Icon(Icons.clear),
                 onPressed: () {
                   _searchController.clear();
@@ -101,7 +101,7 @@ class _SearchState extends State<Search> {
             ],
           ),
           Container(
-            child: SearchResults(data: bloc.results),
+            child: SearchResults(data: bloc.results!),
           ),
         ],
       ),

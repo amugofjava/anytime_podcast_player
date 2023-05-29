@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
@@ -13,8 +13,8 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  TextEditingController _searchController;
-  FocusNode _searchFocusNode;
+  late TextEditingController _searchController;
+  late FocusNode _searchFocusNode;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _SearchBarState extends State<SearchBar> {
         focusNode: _searchFocusNode,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.search,
-        decoration: InputDecoration(hintText: L.of(context).search_for_podcasts_hint, border: InputBorder.none),
+        decoration: InputDecoration(hintText: L.of(context)!.search_for_podcasts_hint, border: InputBorder.none),
         style: TextStyle(
             color: Theme.of(context).primaryIconTheme.color,
             fontSize: 18.0,
@@ -60,7 +60,7 @@ class _SearchBarState extends State<SearchBar> {
       ),
       trailing: IconButton(
           padding: EdgeInsets.zero,
-          tooltip: _searchFocusNode.hasFocus ? L.of(context).clear_search_button_label : null,
+          tooltip: _searchFocusNode.hasFocus ? L.of(context)!.clear_search_button_label : null,
           color: _searchFocusNode.hasFocus ? Theme.of(context).iconTheme.color : null,
           splashColor: _searchFocusNode.hasFocus ? Theme.of(context).splashColor : Colors.transparent,
           highlightColor: _searchFocusNode.hasFocus ? Theme.of(context).highlightColor : Colors.transparent,

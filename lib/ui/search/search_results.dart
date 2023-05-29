@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
@@ -14,7 +14,7 @@ import 'package:podcast_search/podcast_search.dart' as search;
 class SearchResults extends StatelessWidget {
   final Stream<BlocState> data;
 
-  SearchResults({@required this.data});
+  SearchResults({required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class SearchResults extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                     Text(
-                      L.of(context).no_search_results_message,
+                      L.of(context)!.no_search_results_message,
                       style: Theme.of(context).textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
