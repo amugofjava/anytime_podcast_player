@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -16,9 +16,9 @@ abstract class Repository {
   Future<void> close();
 
   /// Podcasts
-  Future<Podcast> findPodcastById(num id);
+  Future<Podcast?> findPodcastById(num id);
 
-  Future<Podcast> findPodcastByGuid(String guid);
+  Future<Podcast?> findPodcastByGuid(String guid);
 
   Future<Podcast> savePodcast(Podcast podcast);
 
@@ -29,15 +29,15 @@ abstract class Repository {
   /// Episodes
   Future<List<Episode>> findAllEpisodes();
 
-  Future<Episode> findEpisodeById(int id);
+  Future<Episode?> findEpisodeById(int id);
 
-  Future<Episode> findEpisodeByGuid(String guid);
+  Future<Episode?> findEpisodeByGuid(String guid);
 
-  Future<List<Episode>> findEpisodesByPodcastGuid(String pguid);
+  Future<List<Episode?>> findEpisodesByPodcastGuid(String pguid);
 
-  Future<Episode> findEpisodeByTaskId(String taskId);
+  Future<Episode?> findEpisodeByTaskId(String taskId);
 
-  Future<Episode> saveEpisode(Episode episode, [bool updateIfSame]);
+  Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]);
 
   Future<void> deleteEpisode(Episode episode);
 
@@ -47,7 +47,7 @@ abstract class Repository {
 
   Future<List<Episode>> findDownloads();
 
-  Future<Transcript> findTranscriptById(int id);
+  Future<Transcript?> findTranscriptById(int id);
 
   Future<Transcript> saveTranscript(Transcript transcript);
 
@@ -61,6 +61,6 @@ abstract class Repository {
   Future<List<Episode>> loadQueue();
 
   /// Event listeners
-  Stream<Podcast> podcastListener;
-  Stream<EpisodeState> episodeListener;
+  Stream<Podcast>? podcastListener;
+  Stream<EpisodeState>? episodeListener;
 }

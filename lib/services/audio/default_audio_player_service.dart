@@ -156,14 +156,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _currentEpisode = episode;
       _currentEpisode!.played = false;
 
-      await repository.saveEpisode(_currentEpisode);
+      await repository.saveEpisode(_currentEpisode!);
 
       /// Update the state of the queue.
       _updateQueueState();
       _updateEpisodeState();
 
       /// And the position of our current episode.
-      _broadcastEpisodePosition(_currentEpisode);
+      _broadcastEpisodePosition(_currentEpisode!);
 
       try {
         // Load ancillary items
@@ -173,7 +173,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
         _currentEpisode!.duration = _audioHandler!.mediaItem.value!.duration!.inSeconds;
 
-        await repository.saveEpisode(_currentEpisode);
+        await repository.saveEpisode(_currentEpisode!);
       } catch (e) {
         log.fine('Error during playback');
         log.fine(e.toString());
@@ -303,7 +303,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           final extras = _audioHandler!.mediaItem.value!.extras!;
 
           if (extras['eid'] != null) {
-            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String?);
+            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
           }
         } else {
           // Let's see if we have a persisted state
@@ -540,7 +540,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _updateEpisodeState();
 
       log.fine('We have ${_currentEpisode!.chapters.length} chapters');
-      _currentEpisode = await repository.saveEpisode(_currentEpisode);
+      _currentEpisode = await repository.saveEpisode(_currentEpisode!);
     }
 
     if (_currentEpisode!.hasTranscripts) {
@@ -561,7 +561,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           log.fine('We have ${transcript.subtitles.length} transcript lines');
         }
       } else {
-        transcript = await repository.findTranscriptById(_currentEpisode!.transcriptId);
+        transcript = await repository.findTranscriptById(_currentEpisode!.transcriptId!);
       }
 
       if (transcript != null) {
@@ -611,7 +611,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         _currentEpisode!.position = complete ? 0 : currentPosition;
         _currentEpisode!.played = complete;
 
-        _currentEpisode = await repository.saveEpisode(_currentEpisode);
+        _currentEpisode = await repository.saveEpisode(_currentEpisode!);
       }
     } else {
       log.fine(' - Cannot save position as episode is null');
@@ -961,7 +961,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     if (_currentItem != null) {
       // The episode may have been updated elsewhere - re-fetch it.
       var currentPosition = playbackState.value.position.inMilliseconds ?? 0;
-      var storedEpisode = (await repository.findEpisodeByGuid(_currentItem!.extras!['eid'] as String?))!;
+      var storedEpisode = (await repository.findEpisodeByGuid(_currentItem!.extras!['eid'] as String))!;
 
       log.fine(
           '_savePosition(): Current position is $currentPosition - stored position is ${storedEpisode.position} complete is $complete on episode ${storedEpisode.title}');

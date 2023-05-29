@@ -20,9 +20,9 @@ void main() {
   MockPathProvder mockPath;
   Repository? persistenceService;
 
-  Podcast? podcast1;
-  Podcast? podcast2;
-  Podcast? podcast3;
+  late Podcast podcast1;
+  late Podcast podcast2;
+  late Podcast podcast3;
 
   setUp(() async {
     mockPath = MockPathProvder();
@@ -126,7 +126,7 @@ void main() {
 
       expect((podcast1.id! > 0), true);
 
-      var podcast = await persistenceService!.findPodcastById(podcast1.id);
+      var podcast = await persistenceService!.findPodcastById(podcast1.id!);
 
       expect(podcast == podcast1, true);
     });
@@ -162,14 +162,14 @@ void main() {
 
       await persistenceService!.savePodcast(podcast3);
 
-      var podcast = (await persistenceService!.findPodcastById(podcast3.id))!;
+      var podcast = (await persistenceService!.findPodcastById(podcast3.id!))!;
 
       expect(podcast == podcast3, true);
 
       expect(listEquals(podcast.episodes, podcast3.episodes), true);
 
       // Retrieve same Podcast via GUID and test it is still the same.
-      var podcastByGuid = await persistenceService!.findPodcastByGuid(podcast3.guid);
+      var podcastByGuid = await persistenceService!.findPodcastByGuid(podcast3.guid!);
 
       expect(podcastByGuid == podcast3, true);
       expect(listEquals(podcast.episodes, podcast3.episodes), true);
@@ -206,7 +206,7 @@ void main() {
 
       await persistenceService!.savePodcast(podcast4);
 
-      var podcast = (await persistenceService!.findPodcastById(podcast4.id))!;
+      var podcast = (await persistenceService!.findPodcastById(podcast4.id!))!;
 
       expect(podcast == podcast4, true);
       expect(listEquals(podcast.episodes, podcast4.episodes), true);
@@ -222,7 +222,7 @@ void main() {
       await persistenceService!.savePodcast(podcast);
 
       // Re-fetch and ensure all episodes played.
-      podcast = (await persistenceService!.findPodcastById(podcast4.id))!;
+      podcast = (await persistenceService!.findPodcastById(podcast4.id!))!;
 
       expect(podcast.episodes![0]!.played, true);
       expect(podcast.episodes![1]!.played, true);
@@ -332,7 +332,7 @@ void main() {
       await persistenceService!.savePodcast(podcast2);
       await persistenceService!.savePodcast(podcast3);
 
-      var podcast = (await persistenceService!.findPodcastByGuid(podcast2!.guid))!;
+      var podcast = (await persistenceService!.findPodcastByGuid(podcast2.guid!))!;
 
       expect(listEquals(podcast2!.episodes, podcast.episodes), true);
 
@@ -340,7 +340,7 @@ void main() {
 
       expect(episode == episode2, true);
 
-      var episodeById = await persistenceService!.findEpisodeById(podcast.episodes![1]!.id);
+      var episodeById = await persistenceService!.findEpisodeById(podcast.episodes![1]!.id!);
 
       expect(episode == episodeById, true);
 
@@ -601,7 +601,7 @@ void main() {
       await persistenceService!.savePodcast(podcast3);
 
       // Episodes should be returned in reverse publication-date order.
-      var episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1!.guid);
+      var episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1!.guid!);
 
       expect(listEquals(episodes, orderedEpisodes), true);
     });
@@ -862,7 +862,7 @@ void main() {
       await persistenceService!.savePodcast(podcast3);
 
       // Fetch podcast1. Episodes should match.
-      var p = (await persistenceService!.findPodcastByGuid(podcast1!.guid))!;
+      var p = (await persistenceService!.findPodcastByGuid(podcast1!.guid!))!;
 
       // Episodes 2 and 5 will be the saved episodes rather than
       // the blank episodes.
@@ -949,8 +949,8 @@ void main() {
       await persistenceService!.savePodcast(podcast2);
       await persistenceService!.savePodcast(podcast3);
 
-      var pd1 = await persistenceService!.findDownloadsByPodcastGuid(podcast1!.guid);
-      var pd2 = await persistenceService!.findDownloadsByPodcastGuid(podcast2!.guid);
+      var pd1 = await persistenceService!.findDownloadsByPodcastGuid(podcast1!.guid!);
+      var pd2 = await persistenceService!.findDownloadsByPodcastGuid(podcast2!.guid!);
 
       expect(listEquals(pd1, <Episode>[episode5, episode2]), true);
       expect(listEquals(pd2, <Episode>[]), true);
@@ -1164,13 +1164,13 @@ void main() {
       ]);
 
       var savedTranscript = await persistenceService!.saveTranscript(transcript);
-      var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id);
+      var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
 
       expect(savedTranscript == fetchedTranscript, true);
 
-      await persistenceService!.deleteTranscriptById(savedTranscript.id);
+      await persistenceService!.deleteTranscriptById(savedTranscript.id!);
 
-      var deletedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id);
+      var deletedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
 
       expect(deletedTranscript == null, true);
     });
@@ -1191,13 +1191,13 @@ void main() {
       ]);
 
       var savedTranscript = await persistenceService!.saveTranscript(transcript);
-      var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id);
+      var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
 
       expect(savedTranscript == fetchedTranscript, true);
 
-      await persistenceService!.deleteTranscriptById(savedTranscript.id);
+      await persistenceService!.deleteTranscriptById(savedTranscript.id!);
 
-      var deletedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id);
+      var deletedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
 
       expect(deletedTranscript == null, true);
     });
@@ -1236,18 +1236,18 @@ void main() {
       var savedTranscript1 = await persistenceService!.saveTranscript(transcript1);
       var savedTranscript2 = await persistenceService!.saveTranscript(transcript2);
 
-      var fetchedTranscript1 = (await persistenceService!.findTranscriptById(savedTranscript1.id))!;
-      var fetchedTranscript2 = (await persistenceService!.findTranscriptById(savedTranscript2.id))!;
+      var fetchedTranscript1 = (await persistenceService!.findTranscriptById(savedTranscript1.id!));
+      var fetchedTranscript2 = (await persistenceService!.findTranscriptById(savedTranscript2.id!));
 
-      expect(fetchedTranscript1.id != null, true);
-      expect(fetchedTranscript2.id != null, true);
+      expect(fetchedTranscript1?.id != null, true);
+      expect(fetchedTranscript2?.id != null, true);
       expect(savedTranscript1 == fetchedTranscript1, true);
       expect(savedTranscript2 == fetchedTranscript2, true);
 
-      await persistenceService!.deleteTranscriptsById(<int?>[fetchedTranscript1.id, fetchedTranscript2.id]);
+      await persistenceService!.deleteTranscriptsById(<int>[fetchedTranscript1?.id ?? 0, fetchedTranscript2?.id ?? 0]);
 
-      fetchedTranscript1 = (await persistenceService!.findTranscriptById(savedTranscript1.id))!;
-      fetchedTranscript2 = (await persistenceService!.findTranscriptById(savedTranscript2.id))!;
+      fetchedTranscript1 = (await persistenceService!.findTranscriptById(savedTranscript1.id!));
+      fetchedTranscript2 = (await persistenceService!.findTranscriptById(savedTranscript2.id!));
 
       expect(fetchedTranscript1 == null, true);
       expect(fetchedTranscript2 == null, true);

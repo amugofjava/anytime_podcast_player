@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:io';
 
 import 'package:anytime/bloc/search/search_bloc.dart';
@@ -16,9 +14,9 @@ import 'package:provider/provider.dart';
 
 /// This widget renders the search bar and allows the user to search for podcasts.
 class Search extends StatefulWidget {
-  final String searchTerm;
+  final String? searchTerm;
 
-  Search({required this.searchTerm});
+  Search({this.searchTerm});
 
   @override
   State<Search> createState() => _SearchState();
@@ -40,8 +38,8 @@ class _SearchState extends State<Search> {
     _searchController = TextEditingController();
 
     if (widget.searchTerm != null) {
-      bloc.search(SearchTermEvent(widget.searchTerm));
-      _searchController.text = widget.searchTerm;
+      bloc.search(SearchTermEvent(widget.searchTerm!));
+      _searchController.text = widget.searchTerm!;
     }
   }
 

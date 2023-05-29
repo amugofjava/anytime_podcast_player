@@ -148,7 +148,7 @@ class MobilePodcastService extends PodcastService {
       final copyright = _format(loadedPodcast.copyright);
       final funding = <Funding>[];
       final persons = <Person>[];
-      final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url);
+      final existingEpisodes = await repository.findEpisodesByPodcastGuid(loadedPodcast.url!);
 
       // If imageUrl is null we have not loaded the podcast as a result of a search.
       if (imageUrl == null || imageUrl.isEmpty || refresh) {
@@ -187,7 +187,7 @@ class MobilePodcastService extends PodcastService {
       );
 
       /// We could be following this podcast already. Let's check.
-      var follow = await repository.findPodcastByGuid(loadedPodcast.url);
+      var follow = await repository.findPodcastByGuid(loadedPodcast.url!);
 
       if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
@@ -316,7 +316,7 @@ class MobilePodcastService extends PodcastService {
 
       // Add any downloaded episodes that are no longer in the feed - they
       // may have expired but we still want them.
-      var expired = <Episode?>[];
+      var expired = <Episode>[];
 
       for (final episode in existingEpisodes) {
         var feedEpisode = loadedPodcast.episodes!.firstWhereOrNull((ep) => ep.guid == episode!.guid);
@@ -324,7 +324,7 @@ class MobilePodcastService extends PodcastService {
         if (feedEpisode == null && episode!.downloaded) {
           pc!.episodes!.add(episode);
         } else {
-          expired.add(episode);
+          expired.add(episode!);
         }
       }
 
@@ -338,12 +338,12 @@ class MobilePodcastService extends PodcastService {
 
       return pc;
     } else {
-      return await loadPodcastById(id: podcast.id);
+      return await loadPodcastById(id: podcast.id ?? 0);
     }
   }
 
   @override
-  Future<Podcast?> loadPodcastById({required int? id}) {
+  Future<Podcast?> loadPodcastById({required int id}) {
     return repository.findPodcastById(id);
   }
 
@@ -434,7 +434,7 @@ class MobilePodcastService extends PodcastService {
     }
 
     if (episode.transcriptId != null && episode.transcriptId! > 0) {
-      await repository.deleteTranscriptById(episode.transcriptId);
+      await repository.deleteTranscriptById(episode.transcriptId!);
     }
 
     await repository.saveEpisode(episode);
@@ -484,17 +484,21 @@ class MobilePodcastService extends PodcastService {
   Future<Podcast?> subscribe(Podcast? podcast) async {
     // We may already have episodes download for this podcast before the user
     // hit subscribe.
-    var savedEpisodes = await repository.findEpisodesByPodcastGuid(podcast!.guid);
+    if (podcast != null && podcast.guid != null) {
+      var savedEpisodes = await repository.findEpisodesByPodcastGuid(podcast.guid!);
 
-    for (var episode in podcast.episodes!) {
-      episode = savedEpisodes?.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
+      for (var episode in podcast.episodes!) {
+        episode = savedEpisodes?.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
 
-      if (episode != null) {
-        episode.pguid = podcast.guid;
+        if (episode != null) {
+          episode.pguid = podcast.guid;
+        }
       }
+
+      return repository.savePodcast(podcast);
     }
 
-    return repository.savePodcast(podcast);
+    return Future.value(null);
   }
 
   @override

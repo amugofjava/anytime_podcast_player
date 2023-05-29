@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'dart:async';
 
@@ -16,10 +16,10 @@ typedef DatabaseUpgrade = Future<void> Function(Database, int, int);
 /// Provides a database instance to other services and handles the opening
 /// of the Sembast DB.
 class DatabaseService {
-  Completer<Database> _databaseCompleter;
+  Completer<Database>? _databaseCompleter;
   String databaseName;
-  int version = 1;
-  DatabaseUpgrade upgraderCallback;
+  int? version = 1;
+  DatabaseUpgrade? upgraderCallback;
 
   DatabaseService(
     this.databaseName, {
@@ -33,7 +33,7 @@ class DatabaseService {
       await _openDatabase();
     }
 
-    return _databaseCompleter.future;
+    return _databaseCompleter!.future;
   }
 
   Future _openDatabase() async {
@@ -44,11 +44,11 @@ class DatabaseService {
       version: version,
       onVersionChanged: (db, oldVersion, newVersion) async {
         if (upgraderCallback != null) {
-          await upgraderCallback(db, oldVersion, newVersion);
+          await upgraderCallback!(db, oldVersion, newVersion);
         }
       },
     );
 
-    _databaseCompleter.complete(database);
+    _databaseCompleter!.complete(database);
   }
 }
