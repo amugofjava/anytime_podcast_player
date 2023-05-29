@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -15,12 +15,12 @@ class DownloadButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const DownloadButton({
-    Key key,
-    @required this.label,
-    @required this.title,
-    @required this.icon,
-    @required this.percent,
-    @required this.onPressed,
+    Key? key,
+    required this.label,
+    required this.title,
+    required this.icon,
+    required this.percent,
+    required this.onPressed,
   }) : super(key: key);
 
   @override

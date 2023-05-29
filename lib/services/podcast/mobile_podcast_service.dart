@@ -489,7 +489,9 @@ class MobilePodcastService extends PodcastService {
     for (var episode in podcast.episodes!) {
       episode = savedEpisodes?.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
 
-      episode!.pguid = podcast.guid;
+      if (episode != null) {
+        episode.pguid = podcast.guid;
+      }
     }
 
     return repository.savePodcast(podcast);

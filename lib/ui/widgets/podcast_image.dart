@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/core/environment.dart';
 import 'package:extended_image/extended_image.dart';
@@ -26,12 +26,12 @@ class PodcastImage extends StatefulWidget {
   final BoxFit fit;
   final bool highlight;
   final double borderRadius;
-  final Widget placeholder;
-  final Widget errorPlaceholder;
+  final Widget? placeholder;
+  final Widget? errorPlaceholder;
 
   PodcastImage({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
     this.fit = BoxFit.cover,
@@ -166,12 +166,12 @@ class PodcastBannerImage extends StatefulWidget {
   final double width;
   final BoxFit fit;
   final double borderRadius;
-  final Widget placeholder;
-  final Widget errorPlaceholder;
+  final Widget? placeholder;
+  final Widget? errorPlaceholder;
 
   PodcastBannerImage({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
     this.fit = BoxFit.cover,

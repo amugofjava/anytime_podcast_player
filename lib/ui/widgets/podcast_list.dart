@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
@@ -16,8 +16,8 @@ import 'package:provider/provider.dart';
 
 class PodcastList extends StatelessWidget {
   const PodcastList({
-    Key key,
-    @required this.results,
+    Key? key,
+    required this.results,
   }) : super(key: key);
 
   final search.SearchResult results;
@@ -31,7 +31,7 @@ class PodcastList extends StatelessWidget {
           stream: settingsBloc.settings,
           builder: (context, settingsSnapshot) {
             if (settingsSnapshot.hasData) {
-              var mode = settingsSnapshot.data.layout;
+              var mode = settingsSnapshot.data!.layout;
               var size = mode == 1 ? 100.0 : 160.0;
 
               if (mode == 0) {
@@ -88,7 +88,7 @@ class PodcastList extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
               Text(
-                L.of(context).no_search_results_message,
+                L.of(context)!.no_search_results_message,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),

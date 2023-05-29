@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 
@@ -15,11 +15,11 @@ class DecoratedIconButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   DecoratedIconButton({
-    Key key,
-    @required this.iconColour,
-    @required this.decorationColour,
-    @required this.icon,
-    @required this.onPressed,
+    Key? key,
+    required this.iconColour,
+    required this.decorationColour,
+    required this.icon,
+    required this.onPressed,
   }) : super(key: key);
 
   @override

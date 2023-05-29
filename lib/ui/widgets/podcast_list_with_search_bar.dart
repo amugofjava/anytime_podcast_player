@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:anytime/ui/search/search_bar.dart';
 import 'package:anytime/ui/widgets/podcast_list.dart';
@@ -9,7 +9,7 @@ import 'package:podcast_search/podcast_search.dart' as search;
 class PodcastListWithSearchBar extends StatelessWidget {
   final search.SearchResult results;
 
-  const PodcastListWithSearchBar({Key key, @required this.results}) : super(key: key);
+  const PodcastListWithSearchBar({Key? key, required this.results}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

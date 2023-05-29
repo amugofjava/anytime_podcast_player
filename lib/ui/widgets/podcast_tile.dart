@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -15,7 +15,7 @@ class PodcastTile extends StatelessWidget {
   final Podcast podcast;
 
   const PodcastTile({
-    @required this.podcast,
+    required this.podcast,
   });
 
   @override
@@ -36,7 +36,7 @@ class PodcastTile extends StatelessWidget {
         key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
         tag: '${podcast.imageUrl}:${podcast.link}',
         child: TileImage(
-          url: podcast.imageUrl,
+          url: podcast.imageUrl!,
           size: 60,
         ),
       ),

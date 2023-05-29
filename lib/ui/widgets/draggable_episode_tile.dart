@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
@@ -18,9 +16,9 @@ class DraggableEpisodeTile extends StatelessWidget {
   final bool playable;
 
   const DraggableEpisodeTile({
-    Key key,
-    @required this.episode,
-    this.index,
+    Key? key,
+    required this.episode,
+    this.index = 0,
     this.draggable = true,
     this.playable = false,
   }) : super(key: key);
@@ -34,12 +32,12 @@ class DraggableEpisodeTile extends StatelessWidget {
       key: Key('DT${episode.guid}'),
       enabled: playable,
       leading: TileImage(
-        url: episode.thumbImageUrl ?? episode.imageUrl,
+        url: episode.thumbImageUrl ?? episode.imageUrl ?? '',
         size: 56.0,
         highlight: episode.highlight,
       ),
       title: Text(
-        episode.title,
+        episode.title!,
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
         softWrap: false,

@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -11,11 +11,11 @@ import 'package:url_launcher/url_launcher.dart';
 class PodcastHtml extends StatelessWidget {
   final String content;
   final tagList = Html.tags;
-  final FontSize fontSize;
+  final FontSize? fontSize;
 
   PodcastHtml({
-    Key key,
-    @required this.content,
+    Key? key,
+    required this.content,
     this.fontSize,
   }) : super(key: key);
 
@@ -27,12 +27,12 @@ class PodcastHtml extends StatelessWidget {
       data: content ?? '',
       style: {
         'html': Style(
-          fontWeight: textTheme.bodyLarge.fontWeight,
+          fontWeight: textTheme.bodyLarge!.fontWeight,
           fontSize: fontSize ?? FontSize.large,
         )
       },
       tagsList: tagList,
-      onLinkTap: (url, _, __, ___) => canLaunchUrl(Uri.parse(url)).then((value) => launchUrl(
+      onLinkTap: (url, _, __, ___) => canLaunchUrl(Uri.parse(url!)).then((value) => launchUrl(
             Uri.parse(url),
             mode: LaunchMode.externalApplication,
           )),

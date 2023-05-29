@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 
 class SliderHandle extends StatelessWidget {
   const SliderHandle({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

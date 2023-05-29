@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -14,10 +14,10 @@ class PlayPauseButton extends StatelessWidget {
   final String title;
 
   const PlayPauseButton({
-    Key key,
-    @required this.icon,
-    @required this.label,
-    @required this.title,
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.title,
   }) : super(key: key);
 
   @override
@@ -47,10 +47,10 @@ class PlayPauseBusyButton extends StatelessWidget {
   final String title;
 
   const PlayPauseBusyButton({
-    Key key,
-    @required this.icon,
-    @required this.label,
-    @required this.title,
+    Key? key,
+    required this.icon,
+    required this.label,
+    required this.title,
   }) : super(key: key);
 
   @override
