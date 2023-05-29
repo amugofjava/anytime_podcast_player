@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +22,7 @@ class DelayedCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Widget>(
-        future: Future.delayed(Duration(milliseconds: delayInMilliseconds)),
+        future: Future.delayed(Duration(milliseconds: delayInMilliseconds), () => Container()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return Center(

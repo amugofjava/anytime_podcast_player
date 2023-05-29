@@ -64,7 +64,7 @@ abstract class AudioPlayerService {
   Future<void> seek({required int position});
 
   /// Call when the app is resumed to re-establish the audio service.
-  Future<Episode> resume();
+  Future<Episode?> resume();
 
   /// Add an episode to the playback queue
   Future<void> addUpNextEpisode(Episode episode);

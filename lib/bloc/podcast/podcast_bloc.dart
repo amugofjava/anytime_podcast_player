@@ -49,7 +49,7 @@ class PodcastBloc extends Bloc {
   final BehaviorSubject<BlocState<Podcast>> _podcastStream = BehaviorSubject<BlocState<Podcast>>(sync: true);
 
   /// A separate stream that allows us to listen to changes in the podcast's episodes.
-  final BehaviorSubject<List<Episode?>?> _episodesStream = BehaviorSubject<List<Episode>?>();
+  final BehaviorSubject<List<Episode?>?> _episodesStream = BehaviorSubject<List<Episode?>?>();
 
   /// Receives subscription and mark/clear as played events.
   final PublishSubject<PodcastEvent> _podcastEvent = PublishSubject<PodcastEvent>();

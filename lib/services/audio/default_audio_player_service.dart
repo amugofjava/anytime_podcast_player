@@ -58,7 +58,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final BehaviorSubject<AudioState> _playingState = BehaviorSubject<AudioState>.seeded(AudioState.none);
 
   /// Ticks whilst playing. Updates our current position within an episode.
-  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
+  final _durationTicker = Stream<int>.periodic(
+    Duration(milliseconds: 500),
+    (count) => count,
+  ).asBroadcastStream();
 
   /// Stream for the current position of the playing track.
   final _playPosition = BehaviorSubject<PositionState>();
@@ -295,7 +298,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<Episode> resume() async {
+  Future<Episode?> resume() async {
     if (_audioHandler != null) {
       /// If _episode is null, we must have stopped whilst still active or we were killed.
       if (_currentEpisode == null) {

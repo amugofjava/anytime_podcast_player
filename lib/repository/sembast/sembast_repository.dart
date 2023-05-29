@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -55,12 +53,13 @@ class SembastRepository extends Repository {
   /// subscription date.
   @override
   Future<Podcast> savePodcast(Podcast podcast) async {
-    log.fine('Saving podcast (${podcast.id}) ${podcast.url}');
+    log.fine('Saving podcast (${podcast.id ?? -1}) ${podcast.url}');
 
     final finder = podcast.id == null
         ? Finder(filter: Filter.equals('guid', podcast.guid))
         : Finder(filter: Filter.byKey(podcast.id));
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _podcastStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _podcastStore.findFirst(await _db, finder: finder);
 
     podcast.lastUpdated = DateTime.now();
 
@@ -122,7 +121,8 @@ class SembastRepository extends Repository {
   Future<Podcast?> findPodcastById(num id) async {
     final finder = Finder(filter: Filter.byKey(id));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _podcastStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _podcastStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null) {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
@@ -140,7 +140,8 @@ class SembastRepository extends Repository {
   Future<Podcast?> findPodcastByGuid(String guid) async {
     final finder = Finder(filter: Filter.equals('guid', guid));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _podcastStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _podcastStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null) {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
@@ -160,7 +161,8 @@ class SembastRepository extends Repository {
       sortOrders: [SortOrder('publicationDate', false)],
     );
 
-    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots = await _episodeStore.find(await _db, finder: finder);
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
 
     final results = recordSnapshots.map((snapshot) {
       final episode = Episode.fromMap(snapshot.key, snapshot.value);
@@ -174,7 +176,8 @@ class SembastRepository extends Repository {
   @override
   Future<Episode?> findEpisodeById(int? id) async {
     final finder = Finder(filter: Filter.byKey(id));
-    final RecordSnapshot<int, Map<String, Object?>> snapshot = (await _episodeStore.findFirst(await _db, finder: finder))!;
+    final RecordSnapshot<int, Map<String, Object?>> snapshot =
+        (await _episodeStore.findFirst(await _db, finder: finder))!;
 
     return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
@@ -183,7 +186,8 @@ class SembastRepository extends Repository {
   Future<Episode?> findEpisodeByGuid(String guid) async {
     final finder = Finder(filter: Filter.equals('guid', guid));
 
-    final RecordSnapshot<int, Map<String, Object?>> snapshot = (await _episodeStore.findFirst(await _db, finder: finder))!;
+    final RecordSnapshot<int, Map<String, Object?>> snapshot =
+        (await _episodeStore.findFirst(await _db, finder: finder))!;
 
     return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
@@ -195,7 +199,8 @@ class SembastRepository extends Repository {
       sortOrders: [SortOrder('publicationDate', false)],
     );
 
-    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots = await _episodeStore.find(await _db, finder: finder);
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
 
     final results = recordSnapshots.map((snapshot) async {
       return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
@@ -216,7 +221,8 @@ class SembastRepository extends Repository {
       sortOrders: [SortOrder('publicationDate', false)],
     );
 
-    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots = await _episodeStore.find(await _db, finder: finder);
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
 
     final results = recordSnapshots.map((snapshot) {
       final episode = Episode.fromMap(snapshot.key, snapshot.value);
@@ -232,7 +238,8 @@ class SembastRepository extends Repository {
     final finder =
         Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
 
-    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots = await _episodeStore.find(await _db, finder: finder);
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
 
     final results = recordSnapshots.map((snapshot) {
       final episode = Episode.fromMap(snapshot.key, snapshot.value);
@@ -247,7 +254,8 @@ class SembastRepository extends Repository {
   Future<void> deleteEpisode(Episode episode) async {
     final finder = Finder(filter: Filter.byKey(episode.id));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _episodeStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _episodeStore.findFirst(await _db, finder: finder);
 
     if (snapshot == null) {
       // Oops!
@@ -301,7 +309,8 @@ class SembastRepository extends Repository {
       if (queue != null) {
         var episodeFinder = Finder(filter: Filter.inList('guid', queue.guids));
 
-        final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots = await _episodeStore.find(await _db, finder: episodeFinder);
+        final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+            await _episodeStore.find(await _db, finder: episodeFinder);
 
         episodes = recordSnapshots.map((snapshot) {
           final episode = Episode.fromMap(snapshot.key, snapshot.value);
@@ -341,7 +350,8 @@ class SembastRepository extends Repository {
   @override
   Future<Transcript?> findTranscriptById(int? id) async {
     final finder = Finder(filter: Filter.byKey(id));
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _transcriptStore.findFirst(await _db, finder: finder);
 
     return snapshot == null ? null : Transcript.fromMap(snapshot.key, snapshot.value);
   }
@@ -350,7 +360,8 @@ class SembastRepository extends Repository {
   Future<void> deleteTranscriptById(int id) async {
     final finder = Finder(filter: Filter.byKey(id));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _transcriptStore.findFirst(await _db, finder: finder);
 
     if (snapshot == null) {
       // Oops!
@@ -386,7 +397,8 @@ class SembastRepository extends Repository {
   Future<Transcript> saveTranscript(Transcript transcript) async {
     final finder = Finder(filter: Filter.byKey(transcript.id));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _transcriptStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _transcriptStore.findFirst(await _db, finder: finder);
 
     transcript.lastUpdated = DateTime.now();
 
@@ -410,7 +422,8 @@ class SembastRepository extends Repository {
 
     final orphaned = <Episode>[];
     final pguids = <String?>[];
-    final List<RecordSnapshot<int, Map<String, Object?>>> episodes = await _episodeStore.find(await _db, finder: Finder(filter: filter));
+    final List<RecordSnapshot<int, Map<String, Object?>>> episodes =
+        await _episodeStore.find(await _db, finder: Finder(filter: filter));
 
     // First, find all podcasts
     for (var podcast in await _podcastStore.find(await _db)) {
@@ -468,7 +481,8 @@ class SembastRepository extends Repository {
   Future<Episode> _saveEpisode(Episode episode, bool updateIfSame) async {
     final finder = Finder(filter: Filter.byKey(episode.id));
 
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _episodeStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _episodeStore.findFirst(await _db, finder: finder);
 
     if (snapshot == null) {
       episode.lastUpdated = DateTime.now();
@@ -488,7 +502,8 @@ class SembastRepository extends Repository {
   @override
   Future<Episode?> findEpisodeByTaskId(String taskId) async {
     final finder = Finder(filter: Filter.equals('downloadTaskId', taskId));
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _episodeStore.findFirst(await _db, finder: finder);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _episodeStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null && snapshot.key != null) {
       return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
@@ -559,7 +574,8 @@ class SembastRepository extends Repository {
           lastUpdated: DateTime.now(),
         );
 
-        final List<RecordSnapshot<int, Map<String, Object?>>> episodeData = await _episodeStore.find(db, finder: episodeFinder);
+        final List<RecordSnapshot<int, Map<String, Object?>>> episodeData =
+            await _episodeStore.find(db, finder: episodeFinder);
         final episodes = episodeData.map((e) => Episode.fromMap(e.key, e.value)).toList();
 
         // Now upgrade episodes
