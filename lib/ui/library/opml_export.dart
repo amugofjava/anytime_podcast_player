@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/l10n/L.dart';
@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class OPMLExport extends StatefulWidget {
   const OPMLExport({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -49,7 +49,7 @@ class _OPMLExportState extends State<OPMLExport> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      L.of(context).settings_export_opml,
+                      L.of(context)!.settings_export_opml,
                       maxLines: 1,
                     ),
                   ),

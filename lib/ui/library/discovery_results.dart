@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
@@ -17,10 +17,10 @@ import 'package:podcast_search/podcast_search.dart' as search;
 import 'package:provider/provider.dart';
 
 class DiscoveryResults extends StatelessWidget {
-  final Stream<DiscoveryState> data;
+  final Stream<DiscoveryState>? data;
   final bool inlineSearch;
 
-  DiscoveryResults({@required this.data, this.inlineSearch});
+  DiscoveryResults({required this.data, this.inlineSearch = false});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,7 @@ class DiscoveryResults extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                     Text(
-                      L.of(context).no_search_results_message,
+                      L.of(context)!.no_search_results_message,
                       style: Theme.of(context).textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
@@ -83,8 +83,8 @@ class DiscoveryHeader extends StatefulWidget {
   final search.SearchResult results;
 
   DiscoveryHeader({
-    Key key,
-    this.results,
+    Key? key,
+    required this.results,
   }) : super(key: key);
 
   @override
@@ -117,12 +117,12 @@ class _DiscoveryHeaderState extends State<DiscoveryHeader> {
                           height: 2,
                           color: Colors.white,
                         ),
-                        onChanged: (String newValue) {
+                        onChanged: (String? newValue) {
                           setState(() {
                             // dropdownValue = newValue!;
                           });
                         },
-                        items: snapshot.data.map<DropdownMenuItem<String>>((String value) {
+                        items: snapshot.data!.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),

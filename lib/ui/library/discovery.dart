@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
@@ -86,8 +86,8 @@ class CategorySelectorWidget extends StatefulWidget {
   final ItemScrollController itemScrollController = ItemScrollController();
 
   CategorySelectorWidget({
-    Key key,
-    @required this.discoveryBloc,
+    Key? key,
+    required this.discoveryBloc,
   }) : super(key: key);
 
   final DiscoveryBloc discoveryBloc;
@@ -110,14 +110,14 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
           builder: (context, snapshot) {
             var i = widget.discoveryBloc.selectedGenre.index ?? 0;
 
-            return snapshot.hasData && snapshot.data.isNotEmpty
+            return snapshot.hasData && snapshot.data!.isNotEmpty
                 ? ScrollablePositionedList.builder(
                     initialScrollIndex: (i > 0) ? i : 0,
                     itemScrollController: widget.itemScrollController,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, i) {
-                      final item = snapshot.data[i];
+                      final item = snapshot.data![i];
                       final padding = i == 0 ? 14.0 : 0.0;
 
                       return Container(

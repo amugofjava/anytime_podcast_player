@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -30,7 +30,7 @@ class _LibraryState extends State<Library> {
         stream: podcastBloc.subscriptions,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data.isEmpty) {
+            if (snapshot.data!.isEmpty) {
               return SliverFillRemaining(
                 hasScrollBody: false,
                 child: Padding(
@@ -45,7 +45,7 @@ class _LibraryState extends State<Library> {
                         color: Theme.of(context).primaryColor,
                       ),
                       Text(
-                        L.of(context).no_subscriptions_message,
+                        L.of(context)!.no_subscriptions_message,
                         style: Theme.of(context).textTheme.titleLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -58,16 +58,16 @@ class _LibraryState extends State<Library> {
                   stream: settingsBloc.settings,
                   builder: (context, settingsSnapshot) {
                     if (settingsSnapshot.hasData) {
-                      var mode = settingsSnapshot.data.layout;
+                      var mode = settingsSnapshot.data!.layout;
                       var size = mode == 1 ? 100.0 : 160.0;
 
                       if (mode == 0) {
                         return SliverList(
                             delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
-                            return PodcastTile(podcast: snapshot.data.elementAt(index));
+                            return PodcastTile(podcast: snapshot.data!.elementAt(index));
                           },
-                          childCount: snapshot.data.length,
+                          childCount: snapshot.data!.length,
                           addAutomaticKeepAlives: false,
                         ));
                       }
@@ -79,9 +79,9 @@ class _LibraryState extends State<Library> {
                         ),
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
-                            return PodcastGridTile(podcast: snapshot.data.elementAt(index));
+                            return PodcastGridTile(podcast: snapshot.data!.elementAt(index));
                           },
-                          childCount: snapshot.data.length,
+                          childCount: snapshot.data!.length,
                         ),
                       );
                     } else {

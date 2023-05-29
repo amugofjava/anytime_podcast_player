@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
+
 
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
@@ -46,11 +46,11 @@ class _EpisodesState extends State<Episodes> {
 
         if (state is BlocPopulatedState) {
           return PodcastEpisodeList(
-            episodes: state.results as List<Episode>,
+            episodes: state.results as List<Episode>?,
             play: true,
             download: true,
             icon: Icons.cloud_download,
-            emptyMessage: L.of(context).no_downloads_message,
+            emptyMessage: L.of(context)!.no_downloads_message,
           );
         } else {
           if (state is BlocLoadingState) {
@@ -95,7 +95,7 @@ class _EpisodesState extends State<Episodes> {
                 var episode = episodes[index];
 
                 if (snapshot.hasData) {
-                  queued = snapshot.data.queue.any((element) => element.guid == episode.guid);
+                  queued = snapshot.data!.queue.any((element) => element.guid == episode.guid);
                 }
 
                 return EpisodeTile(
@@ -124,7 +124,7 @@ class _EpisodesState extends State<Episodes> {
                 color: Theme.of(context).primaryColor,
               ),
               Text(
-                L.of(context).no_downloads_message,
+                L.of(context)!.no_downloads_message,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
