@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
@@ -246,7 +244,7 @@ class SettingsBloc extends Bloc {
 
       _settings.add(s);
 
-      _settingsService.searchProvider = search;
+      _settingsService.searchProvider = search!;
     });
 
     _externalLinkConsent.listen((consent) {
@@ -297,7 +295,7 @@ class SettingsBloc extends Bloc {
 
       _settings.add(s);
 
-      _settingsService.autoUpdateEpisodePeriod = period;
+      _settingsService.autoUpdateEpisodePeriod = period!;
     });
 
     _externalLinkConsent.listen((consent) {

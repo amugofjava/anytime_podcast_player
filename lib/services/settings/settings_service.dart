@@ -1,11 +1,11 @@
-// @dart=2.9
+
 
 import 'package:anytime/entities/app_settings.dart';
 
 abstract class SettingsService {
-  AppSettings get settings;
+  AppSettings? get settings;
 
-  set settings(AppSettings settings);
+  set settings(AppSettings? settings);
 
   bool get themeDarkMode;
 
