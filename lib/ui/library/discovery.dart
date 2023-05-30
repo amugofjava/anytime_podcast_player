@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
 import 'package:anytime/ui/library/discovery_results.dart';
@@ -108,7 +106,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
           stream: widget.discoveryBloc.genres,
           initialData: [],
           builder: (context, snapshot) {
-            var i = widget.discoveryBloc.selectedGenre.index ?? 0;
+            var i = widget.discoveryBloc.selectedGenre.index;
 
             return snapshot.hasData && snapshot.data!.isNotEmpty
                 ? ScrollablePositionedList.builder(

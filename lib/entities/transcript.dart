@@ -150,7 +150,7 @@ class Transcript {
   @override
   int get hashCode => guid.hashCode ^ subtitles.hashCode;
 
-  bool get transcriptAvailable => subtitles != null && (subtitles.isNotEmpty || filtered);
+  bool get transcriptAvailable => (subtitles.isNotEmpty || filtered);
 }
 
 /// Represents an individual line within a transcript.

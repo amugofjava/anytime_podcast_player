@@ -156,9 +156,9 @@ class MobilePodcastService extends PodcastService {
         thumbImageUrl = loadedPodcast.image;
       }
 
-      if (loadedPodcast.funding != null) {
-        for (var f in loadedPodcast.funding) {
-          funding.add(Funding(url: f.url!, value: f.value!));
+      for (var f in loadedPodcast.funding) {
+        if (f.url != null) {
+          funding.add(Funding(url: f.url!, value: f.value ?? ''));
         }
       }
 
@@ -172,7 +172,7 @@ class MobilePodcastService extends PodcastService {
         ));
       }
 
-      Podcast? pc = Podcast(
+      Podcast pc = Podcast(
         guid: loadedPodcast.url,
         url: loadedPodcast.url!,
         link: loadedPodcast.link,
@@ -191,7 +191,7 @@ class MobilePodcastService extends PodcastService {
 
       if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
-        pc!.id = follow.id;
+        pc.id = follow.id;
       }
 
       // Find all episodes from the feed.
@@ -215,9 +215,9 @@ class MobilePodcastService extends PodcastService {
           final description = _format(episode.description);
           final content = episode.content;
 
-          final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc!.imageUrl : episode.imageUrl;
+          final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.imageUrl : episode.imageUrl;
           final episodeThumbImage =
-              episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc!.thumbImageUrl : episode.imageUrl;
+              episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
           final duration = episode.duration?.inSeconds ?? 0;
           final transcriptUrls = <TranscriptUrl>[];
           final episodePersons = <Person>[];
@@ -240,7 +240,7 @@ class MobilePodcastService extends PodcastService {
             transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
           }
 
-          if (episode.persons != null && episode.persons.isNotEmpty) {
+          if (episode.persons.isNotEmpty) {
             for (var p in episode.persons) {
               episodePersons.add(Person(
                 name: p.name,
@@ -255,9 +255,9 @@ class MobilePodcastService extends PodcastService {
           }
 
           if (existingEpisode == null) {
-            pc!.newEpisodes = highlightNewEpisodes && pc.id != null;
+            pc.newEpisodes = highlightNewEpisodes && pc.id != null;
 
-            pc.episodes!.add(Episode(
+            pc.episodes.add(Episode(
               highlight: pc.newEpisodes,
               pguid: pc.guid,
               guid: episode.guid,
@@ -283,7 +283,7 @@ class MobilePodcastService extends PodcastService {
             /// Check if the ancillary episode data has changed.
             if (!listEquals(existingEpisode.persons, episodePersons) ||
                 !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
-              pc!.updatedEpisodes = true;
+              pc.updatedEpisodes = true;
             }
 
             existingEpisode.title = title;
@@ -306,7 +306,7 @@ class MobilePodcastService extends PodcastService {
               existingEpisode.duration = duration;
             }
 
-            pc!.episodes!.add(existingEpisode);
+            pc.episodes.add(existingEpisode);
 
             // Clear this episode from our existing list
             existingEpisodes.remove(existingEpisode);
@@ -322,7 +322,7 @@ class MobilePodcastService extends PodcastService {
         var feedEpisode = loadedPodcast.episodes!.firstWhereOrNull((ep) => ep.guid == episode!.guid);
 
         if (feedEpisode == null && episode!.downloaded) {
-          pc!.episodes!.add(episode);
+          pc.episodes.add(episode);
         } else {
           expired.add(episode!);
         }
@@ -487,11 +487,13 @@ class MobilePodcastService extends PodcastService {
     if (podcast != null && podcast.guid != null) {
       var savedEpisodes = await repository.findEpisodesByPodcastGuid(podcast.guid!);
 
-      for (var episode in podcast.episodes!) {
-        episode = savedEpisodes?.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
+      if (podcast.episodes.isNotEmpty) {
+        for (var episode in podcast.episodes) {
+          episode = savedEpisodes.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
 
-        if (episode != null) {
-          episode.pguid = podcast.guid;
+          if (episode != null) {
+            episode.pguid = podcast.guid;
+          }
         }
       }
 

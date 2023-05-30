@@ -37,7 +37,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final SettingsService settingsService;
   final PodcastService? podcastService;
 
-  AudioHandler? _audioHandler;
+  late AudioHandler _audioHandler;
   var _initialised = false;
   var _cold = false;
   var _playbackSpeed = 1.0;
@@ -105,7 +105,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> pause() async => _audioHandler!.pause();
+  Future<void> pause() async => _audioHandler.pause();
 
   @override
   Future<void> play() {
@@ -113,7 +113,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _cold = false;
       return playEpisode(episode: _currentEpisode!, resume: true);
     } else {
-      return _audioHandler!.play();
+      return _audioHandler.play();
     }
   }
 
@@ -135,7 +135,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       // If we are currently playing a track - save the position of the current
       // track before switching to the next.
-      var currentState = _audioHandler!.playbackState.value.processingState ?? AudioProcessingState.idle;
+      var currentState = _audioHandler.playbackState.value.processingState;
 
       log.fine(
           'Current playback state is $currentState. Speed = $_playbackSpeed. Trim = $_trimSilence. Volume Boost = $_volumeBoost}');
@@ -143,7 +143,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       if (currentState == AudioProcessingState.ready) {
         await _saveCurrentEpisodePosition();
       } else if (currentState == AudioProcessingState.loading) {
-        _audioHandler!.stop();
+        _audioHandler.stop();
       }
 
       // If we have a queue, we are currently playing and the user has elected to play something new,
@@ -153,7 +153,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       }
 
       // If we are attempting to play an episode that is also in the queue, remove it from the queue.
-      _queue.removeWhere((e) => episode.guid == e!.guid);
+      _queue.removeWhere((e) => episode.guid == e.guid);
 
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
       _currentEpisode = episode;
@@ -172,9 +172,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         // Load ancillary items
         _loadEpisodeAncillaryItems();
 
-        await _audioHandler!.playMediaItem(_episodeToMediaItem(_currentEpisode!, uri));
+        await _audioHandler.playMediaItem(_episodeToMediaItem(_currentEpisode!, uri));
 
-        _currentEpisode!.duration = _audioHandler!.mediaItem.value!.duration!.inSeconds;
+        _currentEpisode!.duration = _audioHandler.mediaItem.value?.duration?.inSeconds ?? 0;
 
         await repository.saveEpisode(_currentEpisode!);
       } catch (e) {
@@ -184,7 +184,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         _playingState.add(AudioState.error);
         _playingState.add(AudioState.stopped);
 
-        await _audioHandler!.stop();
+        await _audioHandler.stop();
       }
     } else {
       log.fine('ERROR: Attempting to play an empty episode');
@@ -192,14 +192,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> rewind() => _audioHandler!.rewind();
+  Future<void> rewind() => _audioHandler.rewind();
 
   @override
-  Future<void> fastForward() => _audioHandler!.fastForward();
+  Future<void> fastForward() => _audioHandler.fastForward();
 
   @override
   Future<void> seek({required int position}) async {
-    var currentMediaItem = _audioHandler!.mediaItem.value;
+    var currentMediaItem = _audioHandler.mediaItem.value;
     var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
     var p = Duration(seconds: position);
     var complete = p.inSeconds > 0 ? (duration.inSeconds / p.inSeconds) * 100 : 0;
@@ -217,13 +217,13 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       buffering: true,
     ));
 
-    await _audioHandler!.seek(Duration(seconds: position));
+    await _audioHandler.seek(Duration(seconds: position));
 
     _positionSubscription?.resume();
   }
 
   @override
-  Future<void> setPlaybackSpeed(double speed) => _audioHandler!.setSpeed(speed);
+  Future<void> setPlaybackSpeed(double speed) => _audioHandler.setSpeed(speed);
 
   @override
   Future<void> addUpNextEpisode(Episode episode) async {
@@ -240,7 +240,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     var removed = false;
     log.fine('removeUpNextEpisode Removing ${episode.title} - ${episode.guid}');
 
-    var i = _queue.indexWhere((element) => element!.guid == episode.guid);
+    var i = _queue.indexWhere((element) => element.guid == episode.guid);
 
     if (i >= 0) {
       removed = true;
@@ -273,7 +273,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> stop() {
     _currentEpisode = null;
-    return _audioHandler!.stop();
+    return _audioHandler.stop();
   }
 
   void updateCurrentPosition(Episode? e) {
@@ -299,50 +299,46 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<Episode?> resume() async {
-    if (_audioHandler != null) {
-      /// If _episode is null, we must have stopped whilst still active or we were killed.
-      if (_currentEpisode == null) {
-        if (_audioHandler?.mediaItem.value != null) {
-          final extras = _audioHandler!.mediaItem.value!.extras!;
+    /// If _episode is null, we must have stopped whilst still active or we were killed.
+    if (_currentEpisode == null) {
+      if (_audioHandler.mediaItem.value != null) {
+        final extras = _audioHandler.mediaItem.value?.extras;
 
-          if (extras['eid'] != null) {
-            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
-          }
-        } else {
-          // Let's see if we have a persisted state
-          var ps = await PersistentState.fetchState();
-
-          if (ps != null && ps.state == LastState.paused) {
-            _currentEpisode = await repository.findEpisodeById(ps.episodeId);
-            _currentEpisode!.position = ps.position;
-            _playingState.add(AudioState.pausing);
-
-            updateCurrentPosition(_currentEpisode);
-
-            _cold = true;
-          }
+        if (extras != null && extras['eid'] != null) {
+          _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
         }
       } else {
-        final playbackState = _audioHandler!.playbackState.value;
-        final basicState = playbackState.processingState ?? AudioProcessingState.idle;
+        // Let's see if we have a persisted state
+        var ps = await PersistentState.fetchState();
 
-        // If we have no state we'll have to assume we stopped whilst suspended.
-        if (basicState == AudioProcessingState.idle) {
-          /// We will have to assume we have stopped.
-          _playingState.add(AudioState.stopped);
-        } else if (basicState == AudioProcessingState.ready) {
-          _startTicker();
+        if (ps.state == LastState.paused) {
+          _currentEpisode = await repository.findEpisodeById(ps.episodeId);
+          _currentEpisode!.position = ps.position;
+          _playingState.add(AudioState.pausing);
+
+          updateCurrentPosition(_currentEpisode);
+
+          _cold = true;
         }
       }
+    } else {
+      final playbackState = _audioHandler.playbackState.value;
+      final basicState = playbackState.processingState;
 
-      await PersistentState.clearState();
-
-      _episodeEvent.sink.add(_currentEpisode);
-
-      return Future.value(_currentEpisode);
+      // If we have no state we'll have to assume we stopped whilst suspended.
+      if (basicState == AudioProcessingState.idle) {
+        /// We will have to assume we have stopped.
+        _playingState.add(AudioState.stopped);
+      } else if (basicState == AudioProcessingState.ready) {
+        _startTicker();
+      }
     }
 
-    return Future.value(null);
+    await PersistentState.clearState();
+
+    _episodeEvent.sink.add(_currentEpisode);
+
+    return Future.value(_currentEpisode);
   }
 
   void _updateEpisodeState() {
@@ -380,7 +376,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _persistState() async {
-    var currentPosition = _audioHandler?.playbackState.value.position.inMilliseconds ?? 0;
+    var currentPosition = _audioHandler.playbackState.value.position.inMilliseconds;
 
     /// We only need to persist if we are paused.
     if (_playingState.value == AudioState.pausing) {
@@ -395,36 +391,34 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<void> trimSilence(bool trim) {
-    return _audioHandler!.customAction('trim', <String, dynamic>{
+    return _audioHandler.customAction('trim', <String, dynamic>{
       'value': trim,
     });
   }
 
   @override
   Future<void> volumeBoost(bool boost) {
-    return _audioHandler!.customAction('boost', <String, dynamic>{
+    return _audioHandler.customAction('boost', <String, dynamic>{
       'value': boost,
     });
   }
 
   @override
   Future<void> searchTranscript(String search) async {
-    if (search != null) {
-      search = search.trim();
+    search = search.trim();
 
-      final subtitles = _currentEpisode!.transcript!.subtitles.where((subtitle) {
-        return subtitle.data!.toLowerCase().contains(search.toLowerCase());
-      }).toList();
+    final subtitles = _currentEpisode!.transcript!.subtitles.where((subtitle) {
+      return subtitle.data!.toLowerCase().contains(search.toLowerCase());
+    }).toList();
 
-      _currentTranscript = Transcript(
-        id: _currentEpisode!.transcript!.id,
-        guid: _currentEpisode!.transcript!.guid,
-        filtered: true,
-        subtitles: subtitles,
-      );
+    _currentTranscript = Transcript(
+      id: _currentEpisode!.transcript!.id,
+      guid: _currentEpisode!.transcript!.guid,
+      filtered: true,
+      subtitles: subtitles,
+    );
 
-      _updateTranscriptState();
-    }
+    _updateTranscriptState();
   }
 
   @override
@@ -441,9 +435,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       title: episode.title ?? 'Unknown Title',
       artist: episode.author ?? 'Unknown Title',
       artUri: Uri.parse(episode.imageUrl!),
-      duration: Duration(seconds: episode.duration ?? 0),
+      duration: Duration(seconds: episode.duration),
       extras: <String, dynamic>{
-        'position': episode.position ?? 0,
+        'position': episode.position,
         'downloaded': episode.downloaded,
         'speed': _playbackSpeed,
         'trim': _trimSilence,
@@ -454,7 +448,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   void _handleAudioServiceTransitions() {
-    _audioHandler!.playbackState.distinct((previousState, currentState) {
+    _audioHandler.playbackState.distinct((previousState, currentState) {
       return previousState.playing == currentState.playing &&
           previousState.processingState == currentState.processingState;
     }).listen((PlaybackState state) {
@@ -507,7 +501,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
       _currentEpisode = null;
-      var ep = _queue.removeAt(0)!;
+      var ep = _queue.removeAt(0);
 
       await playEpisode(episode: ep);
 
@@ -603,7 +597,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> _saveCurrentEpisodePosition({bool complete = false}) async {
     if (_currentEpisode != null) {
       // The episode may have been updated elsewhere - re-fetch it.
-      var currentPosition = _audioHandler!.playbackState.value.position.inMilliseconds ?? 0;
+      var currentPosition = _audioHandler.playbackState.value.position.inMilliseconds;
 
       _currentEpisode = await repository.findEpisodeByGuid(_currentEpisode!.guid);
 
@@ -644,25 +638,23 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _onUpdatePosition() async {
-    var playbackState = _audioHandler?.playbackState.value;
+    var playbackState = _audioHandler.playbackState.value;
 
-    if (playbackState != null) {
-      var currentMediaItem = _audioHandler!.mediaItem.value;
-      var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
-      var position = playbackState.position;
-      var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
-      var buffering = playbackState.processingState == AudioProcessingState.buffering;
+    var currentMediaItem = _audioHandler.mediaItem.value;
+    var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
+    var position = playbackState.position;
+    var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
+    var buffering = playbackState.processingState == AudioProcessingState.buffering;
 
-      _updateChapter(position.inSeconds, duration.inSeconds);
+    _updateChapter(position.inSeconds, duration.inSeconds);
 
-      _playPosition.add(PositionState(
-        position: position,
-        length: duration,
-        percentage: complete.toInt(),
-        episode: _currentEpisode,
-        buffering: buffering,
-      ));
-    }
+    _playPosition.add(PositionState(
+      position: position,
+      length: duration,
+      percentage: complete.toInt(),
+      episode: _currentEpisode,
+      buffering: buffering,
+    ));
   }
 
   /// Calculate our current chapter based on playback position, and if it's different to
@@ -864,7 +856,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> fastForward() async {
-    var forwardPosition = _player.position.inMilliseconds ?? 0;
+    var forwardPosition = _player.position.inMilliseconds;
 
     await _player.seek(Duration(milliseconds: forwardPosition + fastForwardMillis));
   }
@@ -876,7 +868,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> rewind() async {
-    var rewindPosition = _player.position.inMilliseconds ?? 0;
+    var rewindPosition = _player.position.inMilliseconds;
 
     if (rewindPosition > 0) {
       rewindPosition -= rewindMillis;
@@ -895,11 +887,9 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       case 'trim':
         var t = extras!['value'] as bool;
         return trimSilence(t);
-        break;
       case 'boost':
         var t = extras!['value'] as bool?;
         return volumeBoost(t);
-        break;
     }
   }
 
@@ -963,7 +953,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   Future<void> _savePosition({bool complete = false}) async {
     if (_currentItem != null) {
       // The episode may have been updated elsewhere - re-fetch it.
-      var currentPosition = playbackState.value.position.inMilliseconds ?? 0;
+      var currentPosition = playbackState.value.position.inMilliseconds;
       var storedEpisode = (await repository.findEpisodeByGuid(_currentItem!.extras!['eid'] as String))!;
 
       log.fine(

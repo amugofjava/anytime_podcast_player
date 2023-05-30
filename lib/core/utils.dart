@@ -67,9 +67,9 @@ Future<String> getStorageDirectory() async {
 
 Future<bool> hasExternalStorage() async {
   try {
-    var result = await _getSDCard();
+    await _getSDCard();
 
-    return result != null;
+    return Future.value(true);
   } catch (e) {
     return Future.value(false);
   }
@@ -130,7 +130,7 @@ Future<String> resolveUrl(String url, {bool forceHttps = false}) async {
     }
   }
 
-  if (uri != null && uri.scheme == 'http') {
+  if (uri.scheme == 'http') {
     uri = uri.replace(scheme: 'https');
   }
 

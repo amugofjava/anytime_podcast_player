@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -91,10 +89,10 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                             height: 58.0,
                             borderRadius: 4.0,
                             placeholder: placeholderBuilder != null
-                                ? placeholderBuilder?.builder()(context)
+                                ? placeholderBuilder.builder()(context)
                                 : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                             errorPlaceholder: placeholderBuilder != null
-                                ? placeholderBuilder?.errorBuilder()(context)
+                                ? placeholderBuilder.errorBuilder()(context)
                                 : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                           )
                         : Container(),

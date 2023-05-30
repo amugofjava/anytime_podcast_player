@@ -304,10 +304,10 @@ class NowPlayingEpisode extends StatelessWidget {
                         fit: BoxFit.contain,
                         borderRadius: 6.0,
                         placeholder: placeholderBuilder != null
-                            ? placeholderBuilder?.builder()(context)
+                            ? placeholderBuilder.builder()(context)
                             : DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
+                            ? placeholderBuilder.errorBuilder()(context)
                             : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
@@ -333,10 +333,10 @@ class NowPlayingEpisode extends StatelessWidget {
                         fit: BoxFit.contain,
                         borderRadius: 8.0,
                         placeholder: placeholderBuilder != null
-                            ? placeholderBuilder?.builder()(context)
+                            ? placeholderBuilder.builder()(context)
                             : DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
-                            ? placeholderBuilder?.errorBuilder()(context)
+                            ? placeholderBuilder.errorBuilder()(context)
                             : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
@@ -402,7 +402,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                 children: [
                   Flexible(
                     child: AutoSizeText(
-                      chapterTitle ?? '',
+                      chapterTitle,
                       group: textGroup,
                       minFontSize: minFontSize,
                       textAlign: TextAlign.center,
@@ -526,9 +526,7 @@ class PlayerControlsBuilder extends InheritedWidget {
     Key? key,
     required this.builder,
     required Widget child,
-  })  : assert(builder != null),
-        assert(child != null),
-        super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   static PlayerControlsBuilder? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<PlayerControlsBuilder>();

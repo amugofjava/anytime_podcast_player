@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -41,8 +39,6 @@ class FundingMenu extends StatelessWidget {
       case TargetPlatform.macOS:
         return _CupertinoFundingMenu(funding);
     }
-
-    return _MaterialFundingMenu(funding);
   }
 }
 

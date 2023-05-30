@@ -274,25 +274,18 @@ class Episode {
     switch (index) {
       case 0:
         return DownloadState.none;
-        break;
       case 1:
         return DownloadState.queued;
-        break;
       case 2:
         return DownloadState.downloading;
-        break;
       case 3:
         return DownloadState.failed;
-        break;
       case 4:
         return DownloadState.cancelled;
-        break;
       case 5:
         return DownloadState.paused;
-        break;
       case 6:
         return DownloadState.downloaded;
-        break;
     }
 
     return DownloadState.none;
@@ -410,11 +403,11 @@ class Episode {
 
   bool get hasChapters => chaptersUrl != null && chaptersUrl!.isNotEmpty;
 
-  bool get hasTranscripts => transcriptUrls != null && transcriptUrls.isNotEmpty;
+  bool get hasTranscripts => transcriptUrls.isNotEmpty;
 
-  bool get chaptersAreLoaded => chapters != null;
+  bool get chaptersAreLoaded => chaptersLoading == false && chapters.isNotEmpty;
 
-  bool get chaptersAreNotLoaded => chapters == null;
+  bool get chaptersAreNotLoaded => chaptersLoading == true && chapters.isEmpty;
 
   String? get positionalImageUrl {
     if (currentChapter != null && currentChapter!.imageUrl != null && currentChapter!.imageUrl!.isNotEmpty) {

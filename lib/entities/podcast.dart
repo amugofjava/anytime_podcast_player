@@ -50,7 +50,7 @@ class Podcast {
   DateTime? _lastUpdated;
 
   /// One or more episodes for this podcast.
-  List<Episode?>? episodes;
+  List<Episode?> episodes;
 
   final List<Person>? persons;
 
@@ -69,7 +69,7 @@ class Podcast {
     this.copyright,
     this.subscribedDate,
     this.funding,
-    this.episodes,
+    this.episodes = const <Episode>[],
     this.newEpisodes = false,
     this.persons,
     DateTime? lastUpdated,
@@ -77,7 +77,6 @@ class Podcast {
         imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps {
     _lastUpdated = lastUpdated;
-    episodes ??= [];
   }
 
   factory Podcast.fromUrl({required String url}) => Podcast(

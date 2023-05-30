@@ -58,7 +58,7 @@ void main() {
           emits(isInstanceOf<OPMLCompletedState>()),
         ]));
 
-    var subs = await podcastService!.subscriptions();
+    var subs = await podcastService.subscriptions();
 
     expect(subs.length, 1);
     expect(subs[0].title, 'Podcast Load Test 1');

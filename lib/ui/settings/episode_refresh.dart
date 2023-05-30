@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
@@ -164,28 +162,20 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
     switch (settings.autoUpdateEpisodePeriod) {
       case -1:
         return Text(L.of(context)!.settings_auto_update_episodes_never);
-        break;
       case 0:
         return Text(L.of(context)!.settings_auto_update_episodes_always);
-        break;
       case 10:
         return Text(L.of(context)!.settings_auto_update_episodes_10min);
-        break;
       case 30:
         return Text(L.of(context)!.settings_auto_update_episodes_30min);
-        break;
       case 60:
         return Text(L.of(context)!.settings_auto_update_episodes_1hour);
-        break;
       case 180:
         return Text(L.of(context)!.settings_auto_update_episodes_3hour);
-        break;
       case 360:
         return Text(L.of(context)!.settings_auto_update_episodes_6hour);
-        break;
       case 720:
         return Text(L.of(context)!.settings_auto_update_episodes_12hour);
-        break;
     }
 
     return Text('Never');

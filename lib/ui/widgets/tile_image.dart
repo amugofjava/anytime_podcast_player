@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +35,13 @@ class TileImage extends StatelessWidget {
       borderRadius: 4.0,
       fit: BoxFit.contain,
       placeholder: placeholderBuilder != null
-          ? placeholderBuilder?.builder()(context)
+          ? placeholderBuilder.builder()(context)
           : Image(
               fit: BoxFit.contain,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),
             ),
       errorPlaceholder: placeholderBuilder != null
-          ? placeholderBuilder?.errorBuilder()(context)
+          ? placeholderBuilder.errorBuilder()(context)
           : Image(
               fit: BoxFit.contain,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),

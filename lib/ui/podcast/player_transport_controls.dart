@@ -152,7 +152,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     final playing = widget.audioState == AudioState.playing;
-    final buffering = widget.audioState == null || widget.audioState == AudioState.buffering;
+    final buffering = widget.audioState == AudioState.buffering;
 
     return Stack(
       alignment: AlignmentDirectional.center,

@@ -3,8 +3,6 @@
 // found in the LICENSE file.
 // ignore_for_file: must_be_immutable
 
-
-
 import 'dart:async';
 
 import 'package:anytime/entities/person.dart';
@@ -25,11 +23,11 @@ class PersonAvatar extends StatelessWidget {
     Key? key,
     required this.person,
   }) : super(key: key) {
-    if (person != null && person.name.isNotEmpty) {
+    if (person.name.isNotEmpty) {
       initial = person.name.substring(0, 1).toUpperCase();
     }
 
-    if (person != null && person.role.isNotEmpty) {
+    if (person.role.isNotEmpty) {
       role = person.role.substring(0, 1).toUpperCase() + person.role.substring(1);
     }
   }

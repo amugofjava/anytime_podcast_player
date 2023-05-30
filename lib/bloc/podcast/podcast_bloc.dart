@@ -308,7 +308,7 @@ class PodcastBloc extends Bloc {
           }
           break;
         case PodcastEvent.markAllPlayed:
-          for (var e in _podcast!.episodes!) {
+          for (var e in _podcast!.episodes) {
             if (!e!.played) {
               e.played = true;
               e.position = 0;
@@ -321,7 +321,7 @@ class PodcastBloc extends Bloc {
           }
           break;
         case PodcastEvent.clearAllPlayed:
-          for (var e in _podcast!.episodes!) {
+          for (var e in _podcast!.episodes) {
             if (e!.played) {
               e.played = false;
               e.position = 0;

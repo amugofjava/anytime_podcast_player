@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/core/environment.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +65,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
 
         if (state.extendedImageLoadState == LoadState.failed) {
           renderWidget = ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
             child: widget.errorPlaceholder ??
                 SizedBox(
                   width: widget.width,
@@ -81,7 +79,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                 : CrossFadeState.showFirst,
             duration: Duration(milliseconds: 500),
             firstChild: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.placeholder ??
                   Container(
                     width: widget.width,
@@ -89,7 +87,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                   ),
             ),
             secondChild: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: ExtendedRawImage(
                 image: state.extendedImageInfo?.image,
                 fit: widget.fit,
@@ -210,7 +208,7 @@ class _PodcastBannerImageState extends State<PodcastBannerImage> with TickerProv
             width: widget.width - 2.0,
             height: widget.height - 2.0,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.errorPlaceholder ??
                   SizedBox(
                     width: widget.width - 2.0,

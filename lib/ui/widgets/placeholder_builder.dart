@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class PlaceholderBuilder extends InheritedWidget {
@@ -11,10 +9,7 @@ class PlaceholderBuilder extends InheritedWidget {
     required this.builder,
     required this.errorBuilder,
     required Widget child,
-  })  : assert(builder != null),
-        assert(errorBuilder != null),
-        assert(child != null),
-        super(key: key, child: child);
+  }) : super(key: key, child: child);
 
   static PlaceholderBuilder? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<PlaceholderBuilder>();

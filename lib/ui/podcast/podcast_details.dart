@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 import 'dart:io';
 
@@ -318,7 +316,7 @@ class PodcastHeaderImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (podcast == null || podcast.imageUrl == null || podcast.imageUrl!.isEmpty) {
+    if (podcast.imageUrl == null || podcast.imageUrl!.isEmpty) {
       return Container(
         height: 560,
         width: 560,
@@ -376,7 +374,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
-                      child: Text(widget.podcast.title ?? '', style: textTheme.titleLarge),
+                      child: Text(widget.podcast.title, style: textTheme.titleLarge),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),

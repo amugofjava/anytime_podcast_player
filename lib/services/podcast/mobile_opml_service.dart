@@ -42,7 +42,7 @@ class MobileOPMLService extends OPMLService {
       pods.add(OmplOutlineTag.parse(outline));
     }
 
-    var total = pods.length ?? 0;
+    var total = pods.length;
     var current = 0;
 
     for (var p in pods) {

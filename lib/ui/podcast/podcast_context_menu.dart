@@ -1,5 +1,3 @@
-
-
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
@@ -32,8 +30,6 @@ class PodcastContextMenu extends StatelessWidget {
       case TargetPlatform.macOS:
         return _CupertinoContextMenu(podcast);
     }
-
-    return _MaterialPodcastMenu(podcast);
   }
 }
 

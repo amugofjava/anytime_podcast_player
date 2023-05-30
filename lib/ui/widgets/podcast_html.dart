@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +22,7 @@ class PodcastHtml extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Html(
-      data: content ?? '',
+      data: content,
       style: {
         'html': Style(
           fontWeight: textTheme.bodyLarge!.fontWeight,

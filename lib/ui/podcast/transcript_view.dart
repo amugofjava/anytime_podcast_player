@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -84,13 +82,15 @@ class _TranscriptViewState extends State<TranscriptView> {
               index++;
               subtitle = transcript.subtitles[index];
 
-              if (subtitle!.speaker != null && subtitle!.speaker.isNotEmpty) {
-                speaker = subtitle!.speaker;
-              } else {
-                var match = exp.firstMatch(transcript.subtitles[index].data!);
+              if (subtitle != null) {
+                if (subtitle!.speaker.isNotEmpty) {
+                  speaker = subtitle!.speaker;
+                } else {
+                  var match = exp.firstMatch(transcript.subtitles[index].data!);
 
-                if (match != null) {
-                  speaker = match.namedGroup('speaker');
+                  if (match != null) {
+                    speaker = match.namedGroup('speaker');
+                  }
                 }
               }
             } else {
@@ -105,7 +105,7 @@ class _TranscriptViewState extends State<TranscriptView> {
 
                   /// If we have had to jump more than one position within the transcript, we may
                   /// need to back scan the conversation to find the current speaker.
-                  if (subtitle!.speaker != null && subtitle!.speaker.isNotEmpty) {
+                  if (subtitle!.speaker.isNotEmpty) {
                     speaker = subtitle!.speaker;
                   } else {
                     /// Scan backwards a maximum of 50 lines to see if we can find a speaker
@@ -312,7 +312,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                               child: ScrollablePositionedList.builder(
                                   itemScrollController: _itemScrollController,
                                   scrollOffsetListener: _scrollOffsetListener,
-                                  itemCount: items.length ?? 0,
+                                  itemCount: items.length,
                                   itemBuilder: (BuildContext context, int index) {
                                     var i = items[index];
                                     return Wrap(

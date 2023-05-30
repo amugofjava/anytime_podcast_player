@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:ui';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -93,8 +91,6 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                                 dragging = true;
                                 _calculatePositions(currentPosition);
                               });
-                            } else {
-                              return null;
                             }
                           },
                           onChangeEnd: (value) {

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,8 +10,6 @@ class PlatformProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    assert(theme.platform != null);
-
     switch (theme.platform) {
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
@@ -24,7 +20,5 @@ class PlatformProgressIndicator extends StatelessWidget {
       case TargetPlatform.macOS:
         return CupertinoActivityIndicator();
     }
-
-    return CircularProgressIndicator();
   }
 }
