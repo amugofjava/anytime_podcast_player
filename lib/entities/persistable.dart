@@ -72,7 +72,7 @@ class Persistable {
     var lastUpdated = persistable['lastUpdated'] as int;
 
     return Persistable(
-      pguid: persistable['pguig'] as String,
+      pguid: persistable['pguid'] as String,
       episodeId: persistable['episodeId'] as int,
       position: persistable['position'] as int,
       state: state,

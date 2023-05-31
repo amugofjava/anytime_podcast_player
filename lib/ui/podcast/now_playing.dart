@@ -150,7 +150,10 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                     height: 148.0,
                                     child: NowPlayingTransport(),
                                   ),
-                            Expanded(flex: 1, child: NowPlayingOptionsScaffold(),),
+                            Expanded(
+                              flex: 1,
+                              child: NowPlayingOptionsScaffold(),
+                            ),
                           ],
                         ),
                       ),

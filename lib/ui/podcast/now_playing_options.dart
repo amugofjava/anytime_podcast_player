@@ -81,82 +81,91 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                             topRight: Radius.circular(18.0),
                           ),
                         ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SliderHandle(),
-                            DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.0),
-                                border: Border(
-                                  bottom: !draggableController.isAttached || draggableController.size <= minSize
-                                      ? BorderSide.none
-                                      : BorderSide(color: Colors.grey[800], width: 1.0),
-                                ),
-                              ),
-                              child: TabBar(
-                                automaticIndicatorColorAdjustment: false,
-                                indicatorPadding: EdgeInsets.zero,
-
-                                /// Little hack to hide the indicator when closed
-                                indicatorColor: !draggableController.isAttached || draggableController.size <= minSize
-                                    ? Theme.of(context).secondaryHeaderColor
-                                    : null,
-                                tabs: [
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      DefaultTabController.of(ctx).animateTo(0);
-
-                                      if (draggableController.size <= 1.0) {
-                                        draggableController.animateTo(
-                                          1.0,
-                                          duration: Duration(milliseconds: 150),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                      child: Text(
-                                        L.of(context).up_next_queue_label.toUpperCase(),
-                                        style: Theme.of(context).textTheme.labelLarge,
+                        child: StreamBuilder<QueueState>(
+                            initialData: QueueEmptyState(),
+                            stream: queueBloc.queue,
+                            builder: (context, snapshot) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SliderHandle(),
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.0),
+                                      border: Border(
+                                        bottom: !draggableController.isAttached || draggableController.size <= minSize
+                                            ? BorderSide.none
+                                            : BorderSide(color: Colors.grey[800], width: 1.0),
                                       ),
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      DefaultTabController.of(ctx).animateTo(1);
+                                    child: TabBar(
+                                      automaticIndicatorColorAdjustment: false,
+                                      indicatorPadding: EdgeInsets.zero,
 
-                                      if (draggableController.size <= 1.0) {
-                                        draggableController.animateTo(
-                                          1.0,
-                                          duration: Duration(milliseconds: 150),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                      child: Text(
-                                        L.of(context).transcript_label.toUpperCase(),
-                                        style: Theme.of(context).textTheme.labelLarge,
-                                      ),
+                                      /// Little hack to hide the indicator when closed
+                                      indicatorColor:
+                                          !draggableController.isAttached || draggableController.size <= minSize
+                                              ? Theme.of(context).secondaryHeaderColor
+                                              : null,
+                                      tabs: [
+                                        GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () {
+                                            DefaultTabController.of(ctx).animateTo(0);
+
+                                            if (draggableController.size <= 1.0) {
+                                              draggableController.animateTo(
+                                                1.0,
+                                                duration: Duration(milliseconds: 150),
+                                                curve: Curves.easeInOut,
+                                              );
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                            child: Text(
+                                              L.of(context).up_next_queue_label.toUpperCase(),
+                                              style: Theme.of(context).textTheme.labelLarge,
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () {
+                                            DefaultTabController.of(ctx).animateTo(1);
+
+                                            if (draggableController.size <= 1.0) {
+                                              draggableController.animateTo(
+                                                1.0,
+                                                duration: Duration(milliseconds: 150),
+                                                curve: Curves.easeInOut,
+                                              );
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                            child: snapshot.data.playing.hasTranscripts
+                                                ? Text(
+                                                    L.of(context).transcript_label.toUpperCase(),
+                                                    style: Theme.of(context).textTheme.labelLarge,
+                                                  )
+                                                : Text(
+                                                    L.of(context).transcript_label.toUpperCase(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelLarge
+                                                        .copyWith(color: theme.disabledColor),
+                                                  ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                            Padding(padding: EdgeInsets.only(bottom: 12.0)),
-                            Expanded(
-                              child: StreamBuilder<QueueState>(
-                                  initialData: QueueEmptyState(),
-                                  stream: queueBloc.queue,
-                                  builder: (context, snapshot) {
-                                    return TabBarView(
+                                  Padding(padding: EdgeInsets.only(bottom: 12.0)),
+                                  Expanded(
+                                    child: TabBarView(
                                       children: [
                                         Column(
                                           mainAxisSize: MainAxisSize.min,
@@ -307,11 +316,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                         ),
                                         TranscriptView(episode: snapshot.data.playing),
                                       ],
-                                    );
-                                  }),
-                            ),
-                          ],
-                        ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
                       ),
                     ),
                   );
