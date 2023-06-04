@@ -22,11 +22,11 @@ class MiniPlayer extends StatelessWidget {
 
     return StreamBuilder<AudioState>(
         stream: audioBloc.playingState,
+        initialData: AudioState.stopped,
         builder: (context, snapshot) {
-          return (snapshot.hasData &&
-                  !(snapshot.data == AudioState.stopped ||
-                      snapshot.data == AudioState.none ||
-                      snapshot.data == AudioState.error))
+          return snapshot.data != AudioState.stopped &&
+                  snapshot.data != AudioState.none &&
+                  snapshot.data != AudioState.error
               ? _MiniPlayerBuilder()
               : const SizedBox(
                   height: 0.0,
@@ -68,155 +68,167 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final width = MediaQuery.of(context).size.width;
     final placeholderBuilder = PlaceholderBuilder.of(context);
+    var visible = true;
 
-    return Dismissible(
-      key: Key('miniplayerdismissable'),
-      confirmDismiss: (direction) async {
-        await _audioStateSubscription.cancel();
-        audioBloc.transitionState(TransitionState.stop);
-        return true;
-      },
-      direction: DismissDirection.startToEnd,
-      background: Container(
-        color: Theme.of(context).colorScheme.background,
-        height: 64.0,
-      ),
-      child: GestureDetector(
-        key: Key('miniplayergesture'),
-        onTap: () async {
+    if (visible) {
+      return Dismissible(
+        key: Key('miniplayerdismissable'),
+        confirmDismiss: (direction) async {
           await _audioStateSubscription.cancel();
-
-          showModalBottomSheet<void>(
-            context: context,
-            routeSettings: RouteSettings(name: 'nowplaying'),
-            isScrollControlled: true,
-            builder: (BuildContext modalContext) {
-              return Padding(
-                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: NowPlaying(),
-              );
-            },
-          ).then((_) {
-            _audioStateListener();
-          });
+          audioBloc.transitionState(TransitionState.stop);
+          visible = false;
+          return true;
         },
-        child: Container(
-          height: 66,
-          decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              border: Border(
-                top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
-                bottom: Divider.createBorderSide(context, width: 0.0, color: Theme.of(context).dividerColor),
-              )),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              StreamBuilder<Episode>(
-                  stream: audioBloc.nowPlaying,
-                  builder: (context, snapshot) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 58.0,
-                          width: 58.0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: snapshot.hasData
-                                ? PodcastImage(
-                                    key: Key('mini${snapshot.data.imageUrl}'),
-                                    url: snapshot.data.imageUrl,
-                                    width: 58.0,
-                                    height: 58.0,
-                                    borderRadius: 4.0,
-                                    placeholder: placeholderBuilder != null
-                                        ? placeholderBuilder?.builder()(context)
-                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                                    errorPlaceholder: placeholderBuilder != null
-                                        ? placeholderBuilder?.errorBuilder()(context)
-                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                                  )
-                                : Container(),
+        direction: DismissDirection.startToEnd,
+        background: Container(
+          color: Theme.of(context).colorScheme.background,
+          height: 64.0,
+        ),
+        child: GestureDetector(
+          key: Key('miniplayergesture'),
+          onTap: () async {
+            await _audioStateSubscription.cancel();
+
+            showModalBottomSheet<void>(
+              context: context,
+              routeSettings: RouteSettings(name: 'nowplaying'),
+              isScrollControlled: true,
+              builder: (BuildContext modalContext) {
+                return Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  child: NowPlaying(),
+                );
+              },
+            ).then((_) {
+              _audioStateListener();
+            });
+          },
+          child: Container(
+            height: 66,
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.background,
+                border: Border(
+                  top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
+                  bottom: Divider.createBorderSide(context, width: 0.0, color: Theme.of(context).dividerColor),
+                )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                StreamBuilder<Episode>(
+                    stream: audioBloc.nowPlaying,
+                    builder: (context, snapshot) {
+                      print('Rendering now playing mini');
+                      print(snapshot.data);
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 58.0,
+                            width: 58.0,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: snapshot.hasData
+                                  ? PodcastImage(
+                                      key: Key('mini${snapshot.data.imageUrl}'),
+                                      url: snapshot.data.imageUrl,
+                                      width: 58.0,
+                                      height: 58.0,
+                                      borderRadius: 4.0,
+                                      placeholder: placeholderBuilder != null
+                                          ? placeholderBuilder?.builder()(context)
+                                          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                      errorPlaceholder: placeholderBuilder != null
+                                          ? placeholderBuilder?.errorBuilder()(context)
+                                          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                    )
+                                  : Container(),
+                            ),
                           ),
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  snapshot.data?.title ?? '',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: textTheme.bodyMedium,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 4.0),
-                                  child: Text(
-                                    snapshot.data?.author ?? '',
+                          Expanded(
+                              flex: 1,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    snapshot.data?.title ?? '',
                                     overflow: TextOverflow.ellipsis,
-                                    style: textTheme.bodySmall,
+                                    style: textTheme.bodyMedium,
                                   ),
-                                ),
-                              ],
-                            )),
-                        SizedBox(
-                          height: 64.0,
-                          width: 64.0,
-                          child: StreamBuilder<AudioState>(
-                              stream: audioBloc.playingState,
-                              builder: (context, snapshot) {
-                                var playing = snapshot.data == AudioState.playing;
-
-                                return TextButton(
-                                  style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                    shape: CircleBorder(
-                                        side: BorderSide(color: Theme.of(context).colorScheme.background, width: 0.0)),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      snapshot.data?.author ?? '',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: textTheme.bodySmall,
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    if (playing) {
-                                      _pause(audioBloc);
-                                    } else {
-                                      _play(audioBloc);
-                                    }
-                                  },
-                                  child: AnimatedIcon(
-                                    size: 48.0,
-                                    icon: AnimatedIcons.play_pause,
-                                    color: Theme.of(context).iconTheme.color,
-                                    progress: _playPauseController,
-                                  ),
-                                );
-                              }),
-                        ),
-                      ],
-                    );
-                  }),
-              StreamBuilder<PositionState>(
-                  stream: audioBloc.playPosition,
-                  builder: (context, snapshot) {
-                    var cw = 0.0;
-                    var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
-                    var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 0);
+                                ],
+                              )),
+                          SizedBox(
+                            height: 64.0,
+                            width: 64.0,
+                            child: StreamBuilder<AudioState>(
+                                stream: audioBloc.playingState,
+                                builder: (context, snapshot) {
+                                  var playing = snapshot.data == AudioState.playing;
 
-                    if (length.inSeconds > 0) {
-                      final pc = length.inSeconds / position.inSeconds;
-                      cw = width / pc;
-                    }
+                                  return TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                      shape: CircleBorder(
+                                          side:
+                                              BorderSide(color: Theme.of(context).colorScheme.background, width: 0.0)),
+                                    ),
+                                    onPressed: () {
+                                      if (playing) {
+                                        _pause(audioBloc);
+                                      } else {
+                                        _play(audioBloc);
+                                      }
+                                    },
+                                    child: AnimatedIcon(
+                                      size: 48.0,
+                                      icon: AnimatedIcons.play_pause,
+                                      color: Theme.of(context).iconTheme.color,
+                                      progress: _playPauseController,
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ],
+                      );
+                    }),
+                StreamBuilder<PositionState>(
+                    stream: audioBloc.playPosition,
+                    builder: (context, snapshot) {
+                      var cw = 0.0;
+                      var position = snapshot.hasData ? snapshot.data.position : Duration(seconds: 0);
+                      var length = snapshot.hasData ? snapshot.data.length : Duration(seconds: 0);
 
-                    return Container(
-                      width: cw,
-                      height: 1.0,
-                      color: Theme.of(context).primaryColor,
-                    );
-                  }),
-            ],
+                      if (length.inSeconds > 0) {
+                        final pc = length.inSeconds / position.inSeconds;
+                        cw = width / pc;
+                      }
+
+                      return Container(
+                        width: cw,
+                        height: 1.0,
+                        color: Theme.of(context).primaryColor,
+                      );
+                    }),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SizedBox(
+        height: 0.0,
+        width: 0.0,
+      );
+    }
   }
 
   /// We call this method to setup a listener for changing [AudioState]. This in turns calls upon the [_pauseController]

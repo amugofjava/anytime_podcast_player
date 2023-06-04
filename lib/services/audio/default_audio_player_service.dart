@@ -284,47 +284,45 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<Episode> resume() async {
-    if (_audioHandler != null) {
-      /// If _episode is null, we must have stopped whilst still active or we were killed.
-      if (_currentEpisode == null) {
-        if (_audioHandler?.mediaItem?.value != null) {
-          final extras = _audioHandler.mediaItem.value.extras;
+    /// If _episode is null, we must have stopped whilst still active or we were killed.
+    if (_currentEpisode == null) {
+      if (_audioHandler?.mediaItem?.value != null) {
+        final extras = _audioHandler.mediaItem.value.extras;
 
-          if (extras['eid'] != null) {
-            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
-          }
-        } else {
-          // Let's see if we have a persisted state
-          var ps = await PersistentState.fetchState();
-
-          if (ps != null && ps.state == LastState.paused) {
-            _currentEpisode = await repository.findEpisodeById(ps.episodeId);
-            _currentEpisode.position = ps.position;
-            _playingState.add(AudioState.pausing);
-
-            updateCurrentPosition(_currentEpisode);
-
-            _cold = true;
-          }
+        if (extras['eid'] != null) {
+          _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
         }
       } else {
-        final playbackState = _audioHandler.playbackState.value;
-        final basicState = playbackState?.processingState ?? AudioProcessingState.idle;
+        // Let's see if we have a persisted state
+        var ps = await PersistentState.fetchState();
 
-        // If we have no state we'll have to assume we stopped whilst suspended.
-        if (basicState == AudioProcessingState.idle) {
-          /// We will have to assume we have stopped.
-          _playingState.add(AudioState.stopped);
-        } else if (basicState == AudioProcessingState.ready) {
-          _startTicker();
+        if (ps != null && ps.state == LastState.paused) {
+          _currentEpisode = await repository.findEpisodeById(ps.episodeId);
+          _currentEpisode.position = ps.position;
+          _playingState.add(AudioState.pausing);
+
+          updateCurrentPosition(_currentEpisode);
+
+          _cold = true;
         }
       }
+    } else {
+      final playbackState = _audioHandler.playbackState.value;
+      final basicState = playbackState?.processingState ?? AudioProcessingState.idle;
 
-      await PersistentState.clearState();
+      // If we have no state we'll have to assume we stopped whilst suspended.
+      if (basicState == AudioProcessingState.idle) {
+        /// We will have to assume we have stopped.
+        _playingState.add(AudioState.stopped);
+      } else if (basicState == AudioProcessingState.ready) {
+        _startTicker();
+      }
+    }
 
+    await PersistentState.clearState();
+
+    if (_currentEpisode != null) {
       _episodeEvent.sink.add(_currentEpisode);
-
-      return Future.value(_currentEpisode);
     }
 
     return Future.value(null);
@@ -454,12 +452,18 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           _playingState.add(AudioState.buffering);
           break;
         case AudioProcessingState.ready:
-          if (state.playing) {
-            _startTicker();
-            _playingState.add(AudioState.playing);
-          } else {
-            _stopTicker();
-            _playingState.add(AudioState.pausing);
+          // On iOS we send ready rather than idle, as an idle can
+          // cause iOS to prevent further items from the queue being
+          // played. Therefore, we add an additional check against
+          // _currentEpisode.
+          if (_currentEpisode != null) {
+            if (state.playing) {
+              _startTicker();
+              _playingState.add(AudioState.playing);
+            } else {
+              _stopTicker();
+              _playingState.add(AudioState.pausing);
+            }
           }
           break;
         case AudioProcessingState.completed:
