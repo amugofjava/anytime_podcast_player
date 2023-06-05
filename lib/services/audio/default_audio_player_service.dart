@@ -452,18 +452,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           _playingState.add(AudioState.buffering);
           break;
         case AudioProcessingState.ready:
-          // On iOS we send ready rather than idle, as an idle can
-          // cause iOS to prevent further items from the queue being
-          // played. Therefore, we add an additional check against
-          // _currentEpisode.
-          if (_currentEpisode != null) {
-            if (state.playing) {
-              _startTicker();
-              _playingState.add(AudioState.playing);
-            } else {
-              _stopTicker();
-              _playingState.add(AudioState.pausing);
-            }
+          if (state.playing) {
+            _startTicker();
+            _playingState.add(AudioState.playing);
+          } else {
+            _stopTicker();
+            _playingState.add(AudioState.pausing);
           }
           break;
         case AudioProcessingState.completed:
@@ -744,6 +738,8 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     }
 
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) async {
+      log.fine('Playback error received');
+      log.fine(o.toString());
       await _player.stop();
     });
 
@@ -834,7 +830,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   Future<void> complete() async {
     log.fine('complete() triggered');
-    await _player.stop();
     await _savePosition(complete: true);
   }
 
@@ -922,7 +917,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       },
       androidCompactActionIndices: const [0, 1, 2],
       processingState: {
-        ProcessingState.idle: Platform.isIOS ? AudioProcessingState.ready : AudioProcessingState.idle,
+        ProcessingState.idle: AudioProcessingState.idle,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,

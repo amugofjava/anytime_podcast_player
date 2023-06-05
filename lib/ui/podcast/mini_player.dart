@@ -68,15 +68,13 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final width = MediaQuery.of(context).size.width;
     final placeholderBuilder = PlaceholderBuilder.of(context);
-    var visible = true;
 
-    if (visible) {
       return Dismissible(
-        key: Key('miniplayerdismissable'),
+        // key: Key('miniplayerdismissable'),
+        key: UniqueKey(),
         confirmDismiss: (direction) async {
           await _audioStateSubscription.cancel();
           audioBloc.transitionState(TransitionState.stop);
-          visible = false;
           return true;
         },
         direction: DismissDirection.startToEnd,
@@ -223,12 +221,6 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
           ),
         ),
       );
-    } else {
-      return SizedBox(
-        height: 0.0,
-        width: 0.0,
-      );
-    }
   }
 
   /// We call this method to setup a listener for changing [AudioState]. This in turns calls upon the [_pauseController]
