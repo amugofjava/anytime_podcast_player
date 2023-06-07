@@ -140,7 +140,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       if (currentState == AudioProcessingState.ready) {
         await _saveCurrentEpisodePosition();
       } else if (currentState == AudioProcessingState.loading) {
-        _audioHandler.stop();
+        log.fine('We are loading, so call stop on current playback');
+        await _audioHandler.stop();
       }
 
       // If we have a queue, we are currently playing and the user has elected to play something new,
@@ -486,6 +487,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _queue = <Episode>[];
       _currentEpisode = null;
       _playingState.add(AudioState.stopped);
+      await _audioHandler.stop();
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
       _currentEpisode = null;
