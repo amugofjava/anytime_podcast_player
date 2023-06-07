@@ -898,7 +898,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
-    log.fine('_transformEvent Sending state ${_player.processingState}');
+    log.fine('_transformEvent Sending state ${_player.processingState}. Playing: ${_player.playing}');
 
     if (_player.processingState == ProcessingState.completed) {
       complete();
@@ -917,7 +917,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       },
       androidCompactActionIndices: const [0, 1, 2],
       processingState: {
-        ProcessingState.idle: AudioProcessingState.idle,
+        ProcessingState.idle: _player.playing ? AudioProcessingState.ready : AudioProcessingState.idle,
         ProcessingState.loading: AudioProcessingState.loading,
         ProcessingState.buffering: AudioProcessingState.buffering,
         ProcessingState.ready: AudioProcessingState.ready,
