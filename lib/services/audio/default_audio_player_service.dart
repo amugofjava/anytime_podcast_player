@@ -476,8 +476,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _completed() async {
-    await _saveCurrentEpisodePosition(complete: true);
-
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
     _stopTicker();
@@ -487,7 +485,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _queue = <Episode>[];
       _currentEpisode = null;
       _playingState.add(AudioState.stopped);
-      await _audioHandler.stop();
+
+      await _audioHandler.customAction('queueend');
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
       _currentEpisode = null;
@@ -739,9 +738,12 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           ));
     }
 
+    /// List to events from the player itself, transform the player event to an audio service one
+    /// and hand it off to the playback state stream to inform our client(s).
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) async {
       log.fine('Playback error received');
       log.fine(o.toString());
+
       await _player.stop();
     });
 
@@ -818,20 +820,21 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> pause() async {
-    log.fine('pause() triggered');
+    log.fine('pause() triggered - saving position');
     await _savePosition();
     await _player.pause();
   }
 
   @override
   Future<void> stop() async {
-    log.fine('stop() triggered');
+    log.fine('stop() triggered - saving position');
+
     await _player.stop();
     await _savePosition();
   }
 
   Future<void> complete() async {
-    log.fine('complete() triggered');
+    log.fine('complete() triggered - saving position');
     await _savePosition(complete: true);
   }
 
@@ -873,6 +876,10 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         var t = extras['value'] as bool;
         return volumeBoost(t);
         break;
+      case 'queueend':
+        log.fine('Received custom action: queue end');
+        await _player.stop();
+        break;
     }
   }
 
@@ -903,6 +910,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     log.fine('_transformEvent Sending state ${_player.processingState}. Playing: ${_player.playing}');
 
     if (_player.processingState == ProcessingState.completed) {
+      log.fine('Transform event has received a complete - calling complete();');
       complete();
     }
 

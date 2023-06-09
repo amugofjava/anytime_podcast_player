@@ -20,6 +20,7 @@ import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
@@ -44,25 +45,49 @@ class MobilePodcastService extends PodcastService {
   }
 
   Future<void> _init() async {
-    await initializeMessages(Platform.localeName);
-    _setupGenres();
+    final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
+
+    var currentLocale = Platform.localeName;
+    // Attempt to get current locale
+    var supportedLocale = await initializeMessages(Platform.localeName);
+
+    // If we do not support the default, try all supported locales
+    if (!supportedLocale) {
+      if (systemLocales != null) {
+        for (var l in systemLocales) {
+          supportedLocale = await initializeMessages('${l.languageCode}_${l.countryCode}');
+          if (supportedLocale) {
+            currentLocale = '${l.languageCode}_${l.countryCode}';
+            break;
+          }
+        }
+
+        if (!supportedLocale) {
+          // We give up! Default to English
+          currentLocale = 'en';
+          supportedLocale = await initializeMessages(currentLocale);
+        }
+      }
+    }
+
+    _setupGenres(currentLocale);
 
     /// Listen for user changes in search provider. If changed, reload the genre list
     settingsService.settingsListener.where((event) => event == 'search').listen((event) {
-      _setupGenres();
+      _setupGenres(currentLocale);
     });
   }
 
-  void _setupGenres() {
+  void _setupGenres(String locale) {
     var categoryList = '';
 
     /// Fetch the correct categories for the current local and selected provider.
     if (settingsService.searchProvider == 'itunes') {
       _categories = PodcastService.itunesGenres;
-      categoryList = Intl.message('discovery_categories_itunes', locale: Platform.localeName);
+      categoryList = Intl.message('discovery_categories_itunes', locale: locale);
     } else {
       _categories = PodcastService.podcastIndexGenres;
-      categoryList = Intl.message('discovery_categories_pindex', locale: Platform.localeName);
+      categoryList = Intl.message('discovery_categories_pindex', locale: locale);
     }
 
     _intlCategories = categoryList.split(',');
