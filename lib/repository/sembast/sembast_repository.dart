@@ -182,7 +182,11 @@ class SembastRepository extends Repository {
 
     final snapshot = await _episodeStore.findFirst(await _db, finder: finder);
 
-    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    if (snapshot != null) {
+      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    } else {
+      return null;
+    }
   }
 
   @override
