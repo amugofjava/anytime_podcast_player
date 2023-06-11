@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -17,9 +16,9 @@ import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
-import 'package:anytime/ui/widgets/decorated_icon_button.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
+import 'package:anytime/ui/widgets/platform_back_button.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
@@ -178,12 +177,11 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                         opacity: toolbarCollapsed ? 1.0 : 0.0,
                         duration: Duration(milliseconds: 500),
                         child: Text(widget.podcast.title)),
-                    leading: DecoratedIconButton(
-                      icon: Platform.isAndroid ? Icons.close : Icons.arrow_back_ios,
+                    leading: PlatformBackButton(
                       iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
                           ? Theme.of(context).appBarTheme.foregroundColor
                           : Colors.white,
-                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22000000),
+                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x88888888),
                       onPressed: () {
                         _resetSystemOverlayStyle();
                         Navigator.pop(context);

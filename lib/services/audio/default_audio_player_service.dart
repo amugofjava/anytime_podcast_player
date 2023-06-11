@@ -719,6 +719,10 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     @required this.repository,
     @required this.settings,
   }) {
+    _initPlayer();
+  }
+
+  void _initPlayer() {
     if (Platform.isAndroid) {
       _androidLoudnessEnhancer = AndroidLoudnessEnhancer();
       _androidLoudnessEnhancer.setEnabled(true);
@@ -729,7 +733,9 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       );
     } else {
       _player = AudioPlayer(
-          userAgent: Environment.userAgent(),
+        /// Temporarily disable custom user agent to get over proxy issue in just_audio on iOS.
+        /// https://github.com/ryanheise/audio_service/issues/915
+        //   userAgent: Environment.userAgent(),
           audioLoadConfiguration: AudioLoadConfiguration(
             androidLoadControl: AndroidLoadControl(
               backBufferDuration: Duration(seconds: 45),
@@ -746,8 +752,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
       await _player.stop();
     });
-
-    _handleQueueChangeState();
   }
 
   @override
@@ -800,12 +804,17 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         }
       }
     } on PlayerException catch (e) {
+      log.fine('PlayerException');
+      log.fine(' - Error code ${e.code}');
+      log.fine('  - ${e.message}');
       await stop();
       log.fine(e);
     } on PlayerInterruptedException catch (e) {
+      log.fine('PlayerInterruptedException');
       await stop();
       log.fine(e);
     } catch (e) {
+      log.fine('General playback exception');
       await stop();
       log.fine(e);
     }
@@ -898,12 +907,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     if (e is AndroidLoudnessEnhancer) {
       e.setTargetGain(boost ? audioGain : 0.0);
     }
-  }
-
-  void _handleQueueChangeState() {
-    _player.currentIndexStream.listen((int index) {
-      log.fine('_handleQueueChangeState: Queue change state. Index is $index');
-    });
   }
 
   PlaybackState _transformEvent(PlaybackEvent event) {
