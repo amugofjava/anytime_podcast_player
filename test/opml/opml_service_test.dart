@@ -27,6 +27,7 @@ void main() {
   Repository repository;
 
   setUp(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
     PathProviderPlatform.instance = mockPath;
     repository = SembastRepository(databaseName: dbName);
 
