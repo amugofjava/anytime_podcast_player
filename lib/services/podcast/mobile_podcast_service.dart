@@ -392,39 +392,74 @@ class MobilePodcastService extends PodcastService {
     return chapters;
   }
 
+  /// This method will load either of the supported transcript types. Currently, we do not support
+  /// word level highlighting of transcripts, therefore this routine will also group transcript
+  /// lines together by speaker and/or timeframe.
   @override
   Future<Transcript> loadTranscriptByUrl({@required TranscriptUrl transcriptUrl}) async {
     var subtitles = <Subtitle>[];
     var result = await _loadTranscriptByUrl(transcriptUrl);
-    Subtitle subtitle;
-    Subtitle lastSubtitle;
+    var threshold = Duration(seconds: 5);
+    Subtitle groupSubtitle;
 
     if (result != null) {
-      for (var s in result.subtitles) {
-        var split = false;
-        var data = s.data;
+      for (var index = 0; index < result.subtitles.length; index++) {
+        var subtitle = result.subtitles[index];
+        var completeGroup = true;
+        var data = subtitle.data;
 
-        if (lastSubtitle != null) {
-          if (lastSubtitle.start == s.start) {
-            data = '${lastSubtitle.data} ${s.data}';
-            lastSubtitle.data = data;
-            split = true;
+        if (groupSubtitle != null) {
+          if (transcriptUrl.type == TranscriptFormat.json) {
+            if (groupSubtitle.speaker == subtitle.speaker &&
+                subtitle.start.compareTo(groupSubtitle.start + threshold) < 0) {
+              /// We need to handle transcripts that have spaces between sentences, and those
+              /// which do not.
+              if (groupSubtitle.data.endsWith(' ') || subtitle.data.startsWith(' ') || subtitle.data.length == 1) {
+                data = '${groupSubtitle.data}${subtitle.data}';
+              } else {
+                data = '${groupSubtitle.data} ${subtitle.data.trim()}';
+              }
+              completeGroup = false;
+            }
+          } else {
+            if (groupSubtitle.start == subtitle.start) {
+              data = '${groupSubtitle.data} ${subtitle.data}';
+              completeGroup = false;
+            }
           }
+        } else {
+          completeGroup = false;
+          groupSubtitle = Subtitle(
+            data: subtitle.data,
+            speaker: subtitle.speaker,
+            start: subtitle.start,
+            end: subtitle.end,
+            index: subtitle.index,
+          );
         }
 
-        subtitle = Subtitle(
-          data: data,
-          speaker: s.speaker,
-          start: s.start,
-          end: s.end,
-          index: s.index,
-        );
+        /// If we have a complete group, or we're the very last subtitle - add it.
+        if (completeGroup || index == result.subtitles.length - 1) {
+          groupSubtitle.data = groupSubtitle.data.trim();
 
-        if (!split) {
-          subtitles.add(subtitle);
+          subtitles.add(groupSubtitle);
+
+          groupSubtitle = Subtitle(
+            data: subtitle.data,
+            speaker: subtitle.speaker,
+            start: subtitle.start,
+            end: subtitle.end,
+            index: subtitle.index,
+          );
+        } else {
+          groupSubtitle = Subtitle(
+            data: data,
+            speaker: subtitle.speaker,
+            start: groupSubtitle.start,
+            end: subtitle.end,
+            index: groupSubtitle.index,
+          );
         }
-
-        lastSubtitle = subtitle;
       }
     }
 

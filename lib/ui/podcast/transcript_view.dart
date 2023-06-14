@@ -45,7 +45,7 @@ class _TranscriptViewState extends State<TranscriptView> {
   bool first = true;
   bool scrolling = false;
   String speaker = '';
-  RegExp exp = RegExp(r'(^)(?<speaker>[A-Za-z0-9\s]+)(:)');
+  RegExp exp = RegExp(r'(^)(\[?)(?<speaker>[A-Za-z0-9\s]+)(\]?)(\s?)(:)');
 
   @override
   void initState() {
@@ -68,9 +68,18 @@ class _TranscriptViewState extends State<TranscriptView> {
     _positionSubscription = audioBloc.playPosition.listen((event) {
       if (_itemScrollController.isAttached) {
         var transcript = event.episode?.transcript;
-
         if (transcript != null && transcript.subtitles.isNotEmpty) {
           subtitle ??= transcript.subtitles[index];
+
+          if (index == 0) {
+            var match = exp.firstMatch(subtitle.data);
+
+            if (match != null) {
+              setState(() {
+                speaker = match.namedGroup('speaker');
+              });
+            }
+          }
 
           // Our we outside the range of our current transcript.
           if (event.position.inMilliseconds < subtitle.start.inMilliseconds ||
