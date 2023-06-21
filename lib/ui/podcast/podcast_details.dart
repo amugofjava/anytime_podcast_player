@@ -181,7 +181,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                       iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
                           ? Theme.of(context).appBarTheme.foregroundColor
                           : Colors.white,
-                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x88888888),
+                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22FFFFFF),
                       onPressed: () {
                         _resetSystemOverlayStyle();
                         Navigator.pop(context);

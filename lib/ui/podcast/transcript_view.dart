@@ -134,7 +134,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                   }
                 }
               } catch (e) {
-                log.fine('We failed to find a transcript entry for position ${event.position.inMilliseconds}');
+                // We don't have a transcript entry for this position.
               }
             }
 

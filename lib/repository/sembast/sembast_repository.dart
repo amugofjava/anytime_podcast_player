@@ -400,7 +400,7 @@ class SembastRepository extends Repository {
   }
 
   Future<void> _cleanupEpisodes() async {
-    final threshold = DateTime.now().subtract(Duration(days: 32)).millisecondsSinceEpoch;
+    final threshold = DateTime.now().subtract(Duration(days: 60)).millisecondsSinceEpoch;
 
     /// Find all streamed episodes over the threshold.
     final filter = Filter.and([

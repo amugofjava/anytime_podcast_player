@@ -423,7 +423,11 @@ class MobilePodcastService extends PodcastService {
             }
           } else {
             if (groupSubtitle.start == subtitle.start) {
-              data = '${groupSubtitle.data} ${subtitle.data}';
+              if (groupSubtitle.data.endsWith(' ') || subtitle.data.startsWith(' ') || subtitle.data.length == 1) {
+                data = '${groupSubtitle.data}${subtitle.data}';
+              } else {
+                data = '${groupSubtitle.data} ${subtitle.data.trim()}';
+              }
               completeGroup = false;
             }
           }

@@ -58,7 +58,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final BehaviorSubject<AudioState> _playingState = BehaviorSubject<AudioState>.seeded(AudioState.none);
 
   /// Ticks whilst playing. Updates our current position within an episode.
-  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 500)).asBroadcastStream();
+  final _durationTicker = Stream<int>.periodic(Duration(milliseconds: 250)).asBroadcastStream();
 
   /// Stream for the current position of the playing track.
   final _playPosition = BehaviorSubject<PositionState>();
