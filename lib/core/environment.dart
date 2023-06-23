@@ -16,8 +16,8 @@ const userAgentAppString = String.fromEnvironment('USER_AGENT', defaultValue: ''
 class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
-  static const _projectVersion = '1.3.1';
-  static const _build = '92';
+  static const _projectVersion = '1.3.2';
+  static const _build = '93';
 
   static var _agentString = userAgentAppString;
 

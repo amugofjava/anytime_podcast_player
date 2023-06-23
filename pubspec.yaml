@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.3.1+92
+version: 1.3.2+93
 
 environment:
   sdk: ">=2.10.0 <3.0.0"
@@ -16,7 +16,7 @@ dependencies:
   device_info_plus: ^4.0.0
   expand_widget: ^3.1.0
   extended_image: ^7.0.2
-  file_picker: ^4.6.1
+  file_picker: ^5.2.6
   flutter_dialogs: ^3.0.0
   flutter_downloader: 1.10.1+2
   flutter_html: 3.0.0-alpha.6

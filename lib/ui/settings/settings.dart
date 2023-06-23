@@ -111,7 +111,7 @@ class _SettingsState extends State<Settings> {
                     allowedExtensions: ['opml', 'podcast.opml', 'xml'],
                   );
 
-                  if (result.count > 0) {
+                  if (result != null && result.count > 0) {
                     var file = result.files.first;
 
                     var e = await showPlatformDialog<bool>(
