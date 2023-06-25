@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
@@ -62,7 +64,7 @@ class MobileDownloaderManager implements DownloadManager {
   }
 
   @override
-  Future<String> enqueueTask(String url, String downloadPath, String fileName) async {
+  Future<String?> enqueueTask(String url, String downloadPath, String fileName) async {
     return await FlutterDownloader.enqueue(
       url: url,
       savedDir: downloadPath,
@@ -81,7 +83,7 @@ class MobileDownloaderManager implements DownloadManager {
     downloadController.close();
   }
 
-  void _updateDownloadState({String id, int progress, int status}) {
+  void _updateDownloadState({required String id, required int progress, required int status}) {
     var state = DownloadState.none;
     var updateTime = DateTime.now().millisecondsSinceEpoch;
     var downloadStatus = DownloadTaskStatus(status);

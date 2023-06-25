@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -30,9 +32,9 @@ class EpisodeTile extends StatelessWidget {
   final bool queued;
 
   const EpisodeTile({
-    @required this.episode,
-    @required this.download,
-    @required this.play,
+    required this.episode,
+    required this.download,
+    required this.play,
     this.playing = false,
     this.queued = false,
   });
@@ -61,7 +63,7 @@ class EpisodeTile extends StatelessWidget {
           Opacity(
             opacity: episode.played ? 0.5 : 1.0,
             child: TileImage(
-              url: episode.thumbImageUrl ?? episode.imageUrl,
+              url: episode.thumbImageUrl ?? episode.imageUrl!,
               size: 56.0,
               highlight: episode.highlight,
             ),
@@ -82,7 +84,7 @@ class EpisodeTile extends StatelessWidget {
       title: Opacity(
         opacity: episode.played ? 0.5 : 1.0,
         child: Text(
-          episode.title,
+          episode.title!,
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
           softWrap: false,
@@ -98,11 +100,11 @@ class EpisodeTile extends StatelessWidget {
               vertical: 4.0,
             ),
             child: Text(
-              episode.descriptionText,
+              episode.descriptionText!,
               overflow: TextOverflow.ellipsis,
               softWrap: false,
               maxLines: 5,
-              style: Theme.of(context).textTheme.bodyLarge.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                   ),
@@ -128,13 +130,13 @@ class EpisodeTile extends StatelessWidget {
                             useRootNavigator: false,
                             builder: (_) => BasicDialogAlert(
                               title: Text(
-                                L.of(context).delete_episode_title,
+                                L.of(context)!.delete_episode_title,
                               ),
-                              content: Text(L.of(context).delete_episode_confirmation),
+                              content: Text(L.of(context)!.delete_episode_confirmation),
                               actions: <Widget>[
                                 BasicDialogAction(
                                   title: ActionText(
-                                    L.of(context).cancel_button_label,
+                                    L.of(context)!.cancel_button_label,
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
@@ -142,7 +144,7 @@ class EpisodeTile extends StatelessWidget {
                                 ),
                                 BasicDialogAction(
                                   title: ActionText(
-                                    L.of(context).delete_button_label,
+                                    L.of(context)!.delete_button_label,
                                   ),
                                   iosIsDefaultAction: true,
                                   iosIsDestructiveAction: true,
@@ -166,7 +168,7 @@ class EpisodeTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
-                        L.of(context).delete_label,
+                        L.of(context)!.delete_label,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -232,7 +234,7 @@ class EpisodeTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
-                        episode.played ? L.of(context).mark_unplayed_label : L.of(context).mark_played_label,
+                        episode.played ? L.of(context)!.mark_unplayed_label : L.of(context)!.mark_played_label,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -277,7 +279,7 @@ class EpisodeTile extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
-                        L.of(context).more_label,
+                        L.of(context)!.more_label,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
@@ -301,9 +303,9 @@ class EpisodeTransportControls extends StatelessWidget {
   final bool play;
 
   EpisodeTransportControls({
-    @required this.episode,
-    @required this.download,
-    @required this.play,
+    required this.episode,
+    required this.download,
+    required this.play,
   });
 
   @override
@@ -345,8 +347,8 @@ class EpisodeSubtitle extends StatelessWidget {
   EpisodeSubtitle(this.episode)
       : date = episode.publicationDate == null
             ? ''
-            : DateFormat(episode.publicationDate.year == DateTime.now().year ? 'd MMM' : 'd MMM yy')
-                .format(episode.publicationDate),
+            : DateFormat(episode.publicationDate!.year == DateTime.now().year ? 'd MMM' : 'd MMM yy')
+                .format(episode.publicationDate!),
         length = Duration(seconds: episode.duration);
 
   @override

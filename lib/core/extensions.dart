@@ -25,16 +25,16 @@ extension IterableExtensions<E> on Iterable<E> {
   }
 }
 
-extension ExtString on String {
+extension ExtString on String? {
   String get forceHttps {
     if (this != null) {
-      final url = Uri.tryParse(this);
+      final url = Uri.tryParse(this!);
 
-      if (url == null || !url.isScheme('http')) return this;
+      if (url == null || !url.isScheme('http')) return this!;
 
       return url.replace(scheme: 'https').toString();
     }
 
-    return this;
+    return this ?? '';
   }
 }

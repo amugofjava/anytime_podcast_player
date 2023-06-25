@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
@@ -64,7 +66,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   width: 36.0,
                   child: Center(
                     child: Text(
-                      snapshot.data.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data.playbackSpeed}',
+                      snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Theme.of(context).iconTheme.color,
@@ -80,7 +82,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
 }
 
 class SpeedSlider extends StatefulWidget {
-  const SpeedSlider({Key key}) : super(key: key);
+  const SpeedSlider({Key? key}) : super(key: key);
 
   @override
   State<SpeedSlider> createState() => _SpeedSliderState();
@@ -117,7 +119,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Text(
-            L.of(context).audio_settings_playback_speed_label,
+            L.of(context)!.audio_settings_playback_speed_label,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -204,7 +206,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           //   ),
           // ),
           ListTile(
-            title: Text(L.of(context).audio_effect_volume_boost_label),
+            title: Text(L.of(context)!.audio_effect_volume_boost_label),
             trailing: Switch.adaptive(
               value: volumeBoost,
               onChanged: (boost) {

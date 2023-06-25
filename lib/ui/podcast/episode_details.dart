@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
@@ -14,8 +16,8 @@ class EpisodeDetails extends StatefulWidget {
   final Episode episode;
 
   EpisodeDetails({
-    Key key,
-    this.episode,
+    Key? key,
+    required this.episode,
   }) : super(key: key);
 
   @override
@@ -50,7 +52,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       fit: StackFit.passthrough,
                       children: <Widget>[
                         TileImage(
-                          url: episode.thumbImageUrl ?? episode.imageUrl,
+                          url: episode.thumbImageUrl ?? episode.imageUrl!,
                           size: 56.0,
                           highlight: episode.highlight,
                         ),
@@ -65,7 +67,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                     ),
                     subtitle: EpisodeSubtitle(episode),
                     title: Text(
-                      episode.title,
+                      episode.title!,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       softWrap: false,
@@ -77,8 +79,8 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      episode.title,
-                      style: Theme.of(context).textTheme.titleLarge.copyWith(fontWeight: FontWeight.bold),
+                      episode.title!,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -100,7 +102,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                     left: 8.0,
                     right: 8.0,
                   ),
-                  child: PodcastHtml(content: episode.content ?? episode.description),
+                  child: PodcastHtml(content: episode.content ?? episode.description!),
                 )
               ],
             ),

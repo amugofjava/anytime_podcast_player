@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:flutter/material.dart';
 
 /// A transitioning route that slides the child in from the
@@ -13,8 +15,8 @@ class SlideRightRoute extends PageRouteBuilder<void> {
   final RouteSettings settings;
 
   SlideRightRoute({
-    this.widget,
-    this.settings,
+    required this.widget,
+    required this.settings,
   }) : super(
             pageBuilder: (
               BuildContext context,

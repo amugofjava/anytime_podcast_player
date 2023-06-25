@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
@@ -13,7 +15,7 @@ class PodcastGridTile extends StatelessWidget {
   final Podcast podcast;
 
   const PodcastGridTile({
-    @required this.podcast,
+    required this.podcast,
   });
 
   @override
@@ -34,7 +36,7 @@ class PodcastGridTile extends StatelessWidget {
           key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
           tag: '${podcast.imageUrl}:${podcast.link}',
           child: TileImage(
-            url: podcast.imageUrl,
+            url: podcast.imageUrl!,
             size: 18.0,
           ),
         ),
@@ -47,7 +49,7 @@ class PodcastTitledGridTile extends StatelessWidget {
   final Podcast podcast;
 
   const PodcastTitledGridTile({
-    @required this.podcast,
+    required this.podcast,
   });
 
   @override
@@ -71,7 +73,7 @@ class PodcastTitledGridTile extends StatelessWidget {
           child: Column(
             children: [
               TileImage(
-                url: podcast.imageUrl,
+                url: podcast.imageUrl!,
                 size: 128.0,
               ),
               Padding(

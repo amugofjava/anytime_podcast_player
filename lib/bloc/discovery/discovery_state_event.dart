@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
-
 /// Events
 class DiscoveryEvent {}
 
@@ -13,7 +11,7 @@ class DiscoveryChartEvent extends DiscoveryEvent {
   String countryCode;
 
   DiscoveryChartEvent({
-    @required this.count,
+    required this.count,
     this.genre = '',
     this.countryCode = '',
   });
@@ -25,9 +23,9 @@ class DiscoveryState {}
 class DiscoveryLoadingState extends DiscoveryState {}
 
 class DiscoveryPopulatedState<T> extends DiscoveryState {
-  final String genre;
+  final String? genre;
   final int index;
-  final T results;
+  final T? results;
 
   DiscoveryPopulatedState({
     this.genre,

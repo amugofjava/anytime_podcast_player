@@ -17,6 +17,9 @@ class PersistentState {
     var sink = file.openWrite();
     var json = jsonEncode(persistable.toMap());
 
+    print('Saving state:');
+    print(json);
+
     sink.write(json);
     await sink.flush();
     await sink.close();
@@ -28,13 +31,15 @@ class PersistentState {
     var file = File(join(d.path, 'state.json'));
     var p = Persistable.empty();
 
+    print('Loading state:');
     if (file.existsSync()) {
       var result = file.readAsStringSync();
 
-      if (result != null && result.isNotEmpty) {
+      if (result.isNotEmpty) {
         var data = jsonDecode(result) as Map<String, dynamic>;
 
         p = Persistable.fromMap(data);
+        print(p);
       }
     }
 
@@ -45,7 +50,7 @@ class PersistentState {
     var file = await _getFile();
 
     if (file.existsSync()) {
-      return file.delete();
+      file.delete();
     }
   }
 
@@ -56,7 +61,7 @@ class PersistentState {
   static Future<int> readInt(String name) async {
     var result = await _readValue(name);
 
-    return result == null || result.isEmpty ? 0 : int.parse(result);
+    return result.isEmpty ? 0 : int.parse(result);
   }
 
   static Future<void> writeString(String name, String value) async {

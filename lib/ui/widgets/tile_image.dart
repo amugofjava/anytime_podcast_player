@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 
 class TileImage extends StatelessWidget {
   const TileImage({
-    Key key,
-    @required this.url,
-    @required this.size,
+    Key? key,
+    required this.url,
+    required this.size,
     this.highlight = false,
   }) : super(key: key);
 
@@ -35,13 +35,13 @@ class TileImage extends StatelessWidget {
       borderRadius: 4.0,
       fit: BoxFit.contain,
       placeholder: placeholderBuilder != null
-          ? placeholderBuilder?.builder()(context)
+          ? placeholderBuilder.builder()(context)
           : Image(
               fit: BoxFit.contain,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),
             ),
       errorPlaceholder: placeholderBuilder != null
-          ? placeholderBuilder?.errorBuilder()(context)
+          ? placeholderBuilder.errorBuilder()(context)
           : Image(
               fit: BoxFit.contain,
               image: AssetImage('assets/images/anytime-placeholder-logo.png'),

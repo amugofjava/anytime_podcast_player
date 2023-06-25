@@ -25,8 +25,8 @@ class TranscriptView extends StatefulWidget {
   final Episode episode;
 
   TranscriptView({
-    Key key,
-    @required this.episode,
+    Key? key,
+    required this.episode,
   }) : super(key: key);
 
   @override
@@ -38,7 +38,7 @@ class _TranscriptViewState extends State<TranscriptView> {
   final ItemScrollController _itemScrollController = ItemScrollController();
   final ScrollOffsetListener _scrollOffsetListener = ScrollOffsetListener.create(recordProgrammaticScrolls: false);
   final _transcriptSearchController = TextEditingController();
-  StreamSubscription<PositionState> _positionSubscription;
+  late StreamSubscription<PositionState> _positionSubscription;
   int position = 0;
   bool autoScroll = true;
   bool autoScrollEnabled = true;
@@ -52,7 +52,7 @@ class _TranscriptViewState extends State<TranscriptView> {
     super.initState();
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    Subtitle subtitle;
+    Subtitle? subtitle;
     int index = 0;
     // If the user initiates scrolling, disable auto scroll.
     _scrollOffsetListener.changes.listen((event) {
@@ -65,55 +65,56 @@ class _TranscriptViewState extends State<TranscriptView> {
 
     // Listen to playback position updates and scroll to the correct items in the transcript
     // if we have auto scroll enabled.
-    _positionSubscription = audioBloc.playPosition.listen((event) {
+    _positionSubscription = audioBloc.playPosition!.listen((event) {
       if (_itemScrollController.isAttached) {
         var transcript = event.episode?.transcript;
+
         if (transcript != null && transcript.subtitles.isNotEmpty) {
           subtitle ??= transcript.subtitles[index];
 
           if (index == 0) {
-            var match = exp.firstMatch(subtitle.data);
+            var match = exp.firstMatch(subtitle?.data ?? '');
 
             if (match != null) {
               setState(() {
-                speaker = match.namedGroup('speaker');
+                speaker = match.namedGroup('speaker') ?? '';
               });
             }
           }
 
           // Our we outside the range of our current transcript.
-          if (event.position.inMilliseconds < subtitle.start.inMilliseconds ||
-              event.position.inMilliseconds > subtitle.end.inMilliseconds) {
+          if (event.position.inMilliseconds < subtitle!.start.inMilliseconds ||
+              event.position.inMilliseconds > subtitle!.end!.inMilliseconds) {
             // Will the next in the list do?
             if (transcript.subtitles.length > (index + 1) &&
                 event.position.inMilliseconds >= transcript.subtitles[index + 1].start.inMilliseconds &&
-                event.position.inMilliseconds < transcript.subtitles[index + 1].end.inMilliseconds) {
+                event.position.inMilliseconds < transcript.subtitles[index + 1].end!.inMilliseconds) {
               index++;
               subtitle = transcript.subtitles[index];
 
-              if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
-                speaker = subtitle.speaker;
+              if (subtitle != null && subtitle!.speaker.isNotEmpty) {
+                speaker = subtitle!.speaker;
               } else {
-                var match = exp.firstMatch(transcript.subtitles[index].data);
+                var match = exp.firstMatch(transcript.subtitles[index].data ?? '');
 
                 if (match != null) {
-                  speaker = match.namedGroup('speaker');
+                  speaker = match.namedGroup('speaker') ?? '';
                 }
               }
             } else {
               try {
                 subtitle = transcript.subtitles
                     .where((a) => (event.position.inMilliseconds >= a.start.inMilliseconds &&
-                        event.position.inMilliseconds < a.end.inMilliseconds))
+                        event.position.inMilliseconds < a.end!.inMilliseconds))
                     .first;
 
                 if (subtitle != null) {
-                  index = transcript.subtitles.indexOf(subtitle);
+                  index = transcript.subtitles.indexOf(subtitle!);
 
                   /// If we have had to jump more than one position within the transcript, we may
                   /// need to back scan the conversation to find the current speaker.
-                  if (subtitle.speaker != null && subtitle.speaker.isNotEmpty) {
-                    speaker = subtitle.speaker;
+                  if (subtitle!.speaker.isNotEmpty) {
+                    speaker = subtitle!.speaker;
                   } else {
                     /// Scan backwards a maximum of 50 lines to see if we can find a speaker
                     var speakFound = false;
@@ -121,12 +122,12 @@ class _TranscriptViewState extends State<TranscriptView> {
                     var countIndex = index;
 
                     while (!speakFound && count-- > 0 && countIndex-- >= 0) {
-                      var match = exp.firstMatch(transcript.subtitles[countIndex].data);
+                      var match = exp.firstMatch(transcript.subtitles[countIndex].data!);
 
                       if (match != null) {
-                        speaker = match.namedGroup('speaker');
+                        speaker = match.namedGroup('speaker') ?? '';
 
-                        if (speaker != null && speaker.isNotEmpty) {
+                        if (speaker.isNotEmpty) {
                           speakFound = true;
                         }
                       }
@@ -140,7 +141,7 @@ class _TranscriptViewState extends State<TranscriptView> {
 
             if (subtitle != null) {
               setState(() {
-                position = subtitle.start.inMilliseconds;
+                position = subtitle!.start.inMilliseconds;
               });
             }
 
@@ -180,7 +181,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 alignment: Alignment.center,
                 child: PlatformProgressIndicator(),
               );
-            } else if (snapshot.data is TranscriptUnavailableState || !snapshot.data.transcript.transcriptAvailable) {
+            } else if (snapshot.data is TranscriptUnavailableState || !snapshot.data!.transcript!.transcriptAvailable) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
@@ -190,7 +191,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        L.of(context).no_transcript_available_label,
+                        L.of(context)!.no_transcript_available_label,
                         style: Theme.of(context).textTheme.titleLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -198,14 +199,14 @@ class _TranscriptViewState extends State<TranscriptView> {
                         padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
                         child: OutlinedButton(
                             onPressed: () {
-                              final uri = Uri.parse(L.of(context).transcript_why_not_url);
+                              final uri = Uri.parse(L.of(context)!.transcript_why_not_url);
 
                               unawaited(
                                 canLaunchUrl(uri).then((value) => launchUrl(uri)),
                               );
                             },
                             child: Text(
-                              L.of(context).transcript_why_not_label,
+                              L.of(context)!.transcript_why_not_label,
                               style: Theme.of(context).textTheme.titleSmall,
                               textAlign: TextAlign.center,
                             )),
@@ -215,7 +216,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 ),
               );
             } else {
-              final items = snapshot.data.transcript?.subtitles ?? <Subtitle>[];
+              final items = snapshot.data!.transcript?.subtitles ?? <Subtitle>[];
 
               return Column(
                 children: [
@@ -241,7 +242,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                           borderRadius: const BorderRadius.all(Radius.circular(12.0)),
                           gapPadding: 0.0,
                         ),
-                        hintText: L.of(context).search_transcript_label,
+                        hintText: L.of(context)!.search_transcript_label,
                       ),
                       onSubmitted: ((search) {
                         if (search.isNotEmpty) {
@@ -260,7 +261,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(L.of(context).auto_scroll_transcript_label),
+                        Text(L.of(context)!.auto_scroll_transcript_label),
                         Switch(
                           value: autoScroll,
                           onChanged: autoScrollEnabled
@@ -286,9 +287,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                             var person = widget.episode.persons[index];
                             var selected = false;
 
-                            if (speaker != null &&
-                                speaker.isNotEmpty &&
-                                person.name.toLowerCase().startsWith(speaker.toLowerCase())) {
+                            if (speaker.isNotEmpty && person.name.toLowerCase().startsWith(speaker.toLowerCase())) {
                               selected = true;
                             }
 
@@ -301,7 +300,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                                 child: CircleAvatar(
                                   radius: 28,
                                   backgroundImage: ExtendedImage.network(
-                                    person.image,
+                                    person.image!,
                                     cache: true,
                                   ).image,
                                   child: Text(''),
@@ -319,7 +318,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                               child: ScrollablePositionedList.builder(
                                   itemScrollController: _itemScrollController,
                                   scrollOffsetListener: _scrollOffsetListener,
-                                  itemCount: items.length ?? 0,
+                                  itemCount: items.length,
                                   itemBuilder: (BuildContext context, int index) {
                                     var i = items[index];
                                     return Wrap(
@@ -350,15 +349,15 @@ class _TranscriptViewState extends State<TranscriptView> {
 /// line of the transcript. This widget handles rendering the passed line.
 class SubtitleWidget extends StatelessWidget {
   final Subtitle subtitle;
-  final List<Person> persons;
+  final List<Person>? persons;
   final bool highlight;
   static const margin = Duration(milliseconds: 1000);
 
   const SubtitleWidget({
-    Key key,
-    this.subtitle,
+    Key? key,
+    required this.subtitle,
     this.persons,
-    this.highlight,
+    this.highlight = false,
   }) : super(key: key);
 
   @override
@@ -387,7 +386,7 @@ class SubtitleWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             Text(
-              subtitle.data,
+              subtitle.data!,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             Padding(padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0))

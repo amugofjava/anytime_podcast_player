@@ -10,10 +10,10 @@ class PlatformBackButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   PlatformBackButton({
-    Key key,
-    @required this.iconColour,
-    @required this.decorationColour,
-    @required this.onPressed,
+    Key? key,
+    required this.iconColour,
+    required this.decorationColour,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -29,7 +29,10 @@ class PlatformBackButton extends StatelessWidget {
             shape: CircleBorder(),
           ),
           child: IconButton(
-            icon: Icon(Platform.isIOS ? Icons.arrow_back_ios : Icons.close, size: Platform.isIOS ? 18.0 : 32.0,),
+            icon: Icon(
+              Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
+              size: Platform.isIOS ? 18.0 : 32.0,
+            ),
             padding: Platform.isIOS ? const EdgeInsets.only(left: 7.0) : const EdgeInsets.all(0.0),
             color: iconColour,
             onPressed: onPressed,

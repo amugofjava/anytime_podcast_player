@@ -2,15 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:flutter/widgets.dart';
 
 class DotDecoration extends Decoration {
   final Color colour;
 
-  const DotDecoration({@required this.colour});
+  const DotDecoration({required this.colour});
 
   @override
-  BoxPainter createBoxPainter([void Function() onChanged]) {
+  BoxPainter createBoxPainter([void Function()? onChanged]) {
     return _DotDecorationPainter(decoration: this);
   }
 }
@@ -18,15 +20,15 @@ class DotDecoration extends Decoration {
 class _DotDecorationPainter extends BoxPainter {
   final DotDecoration decoration;
 
-  _DotDecorationPainter({@required this.decoration});
+  _DotDecorationPainter({required this.decoration});
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
     const double pillWidth = 8.0;
     const double pillHeight = 3.0;
 
-    final center = configuration.size.center(offset);
-    final height = configuration.size.height;
+    final center = configuration.size!.center(offset);
+    final height = configuration.size!.height;
 
     final newOffset = Offset(center.dx, height - 8);
 

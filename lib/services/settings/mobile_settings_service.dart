@@ -1,3 +1,5 @@
+
+
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
@@ -7,14 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// An implementation [SettingService] for mobile devices backed by
 /// shared preferences.
 class MobileSettingsService extends SettingsService {
-  static SharedPreferences _sharedPreferences;
-  static MobileSettingsService _instance;
+  static late SharedPreferences _sharedPreferences;
+  static MobileSettingsService? _instance;
 
   final settingsNotifier = PublishSubject<String>();
 
   MobileSettingsService._create();
 
-  static Future<MobileSettingsService> instance() async {
+  static Future<MobileSettingsService?> instance() async {
     if (_instance == null) {
       _instance = MobileSettingsService._create();
 
@@ -161,7 +163,7 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
-  AppSettings settings;
+  AppSettings? settings;
 
   @override
   Stream<String> get settingsListener => settingsNotifier.stream;

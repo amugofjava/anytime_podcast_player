@@ -84,8 +84,8 @@ class CategorySelectorWidget extends StatefulWidget {
   final ItemScrollController itemScrollController = ItemScrollController();
 
   CategorySelectorWidget({
-    Key key,
-    @required this.discoveryBloc,
+    Key? key,
+    required this.discoveryBloc,
   }) : super(key: key);
 
   final DiscoveryBloc discoveryBloc;
@@ -106,16 +106,16 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
           stream: widget.discoveryBloc.genres,
           initialData: [],
           builder: (context, snapshot) {
-            var i = widget.discoveryBloc.selectedGenre.index ?? 0;
+            var i = widget.discoveryBloc.selectedGenre.index;
 
-            return snapshot.hasData && snapshot.data.isNotEmpty
+            return snapshot.hasData && snapshot.data!.isNotEmpty
                 ? ScrollablePositionedList.builder(
                     initialScrollIndex: (i > 0) ? i : 0,
                     itemScrollController: widget.itemScrollController,
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data!.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, i) {
-                      final item = snapshot.data[i];
+                      final item = snapshot.data![i];
                       final padding = i == 0 ? 14.0 : 0.0;
 
                       return Container(

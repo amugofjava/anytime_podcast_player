@@ -4,43 +4,43 @@ import 'package:rxdart/rxdart.dart';
 
 class MockSettingsService extends SettingsService {
   @override
-  bool autoOpenNowPlaying;
+  bool autoOpenNowPlaying = false;
 
   @override
-  int autoUpdateEpisodePeriod;
+  int autoUpdateEpisodePeriod = 1;
 
   @override
-  bool externalLinkConsent;
+  bool externalLinkConsent = false;
 
   @override
-  int layoutMode;
+  int layoutMode = 1;
 
   @override
-  bool markDeletedEpisodesAsPlayed;
+  bool markDeletedEpisodesAsPlayed = false;
 
   @override
-  double playbackSpeed;
+  double playbackSpeed = 1;
 
   @override
-  String searchProvider;
+  String searchProvider = 'itunes';
 
   @override
-  AppSettings settings;
+  AppSettings? settings;
 
   @override
-  bool showFunding;
+  bool showFunding = true;
 
   @override
-  bool storeDownloadsSDCard;
+  bool storeDownloadsSDCard = false;
 
   @override
-  bool themeDarkMode;
+  bool themeDarkMode = true;
 
   @override
-  bool trimSilence;
+  bool trimSilence = false;
 
   @override
-  bool volumeBoost;
+  bool volumeBoost = false;
 
   @override
   Stream<String> get settingsListener => PublishSubject<String>().stream;

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
-
 enum DownloadState { none, queued, downloading, failed, cancelled, paused, downloaded }
 
 /// A Downloadble is an object that holds information about a podcast episode
@@ -13,7 +11,7 @@ enum DownloadState { none, queued, downloading, failed, cancelled, paused, downl
 /// if an episode can be played from the filesystem.
 class Downloadable {
   /// Database ID
-  int id;
+  int? id;
 
   /// Unique identifier for the download
   final String guid;
@@ -34,15 +32,15 @@ class Downloadable {
   DownloadState state;
 
   /// Percentage of MP3 downloaded
-  int percentage;
+  int? percentage;
 
   Downloadable({
-    @required this.guid,
-    @required this.url,
-    this.directory,
-    this.filename,
-    this.taskId,
-    this.state,
+    required this.guid,
+    required this.url,
+    required this.directory,
+    required this.filename,
+    required this.taskId,
+    required this.state,
     this.percentage,
   });
 
@@ -65,34 +63,27 @@ class Downloadable {
       directory: downloadable['directory'] as String,
       filename: downloadable['filename'] as String,
       taskId: downloadable['taskId'] as String,
-      state: _determineState(downloadable['state'] as int),
+      state: _determineState(downloadable['state'] as int?),
       percentage: int.parse(downloadable['percentage'] as String),
     );
   }
 
-  static DownloadState _determineState(int index) {
+  static DownloadState _determineState(int? index) {
     switch (index) {
       case 0:
         return DownloadState.none;
-        break;
       case 1:
         return DownloadState.queued;
-        break;
       case 2:
         return DownloadState.downloading;
-        break;
       case 3:
         return DownloadState.failed;
-        break;
       case 4:
         return DownloadState.cancelled;
-        break;
       case 5:
         return DownloadState.paused;
-        break;
       case 6:
         return DownloadState.downloaded;
-        break;
     }
 
     return DownloadState.none;

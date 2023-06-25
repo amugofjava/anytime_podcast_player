@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/search_providers.dart';
-import 'package:flutter/foundation.dart';
 
 class AppSettings {
   /// The current theme name.
@@ -19,7 +18,7 @@ class AppSettings {
   final double playbackSpeed;
 
   /// The search provider: itunes or podcastindex.
-  final String searchProvider;
+  final String? searchProvider;
 
   /// List of search providers: currently itunes or podcastindex.
   final List<SearchProvider> searchProviders;
@@ -34,7 +33,7 @@ class AppSettings {
   final bool showFunding;
 
   /// If -1 never; 0 always; otherwise time in minutes.
-  final int autoUpdateEpisodePeriod;
+  final int? autoUpdateEpisodePeriod;
 
   /// If true, silence in audio playback is trimmed. Currently Android only.
   final bool trimSilence;
@@ -46,19 +45,19 @@ class AppSettings {
   final int layout;
 
   AppSettings({
-    @required this.theme,
-    @required this.markDeletedEpisodesAsPlayed,
-    @required this.storeDownloadsSDCard,
-    @required this.playbackSpeed,
-    @required this.searchProvider,
-    @required this.searchProviders,
-    @required this.externalLinkConsent,
-    @required this.autoOpenNowPlaying,
-    @required this.showFunding,
-    @required this.autoUpdateEpisodePeriod,
-    @required this.trimSilence,
-    @required this.volumeBoost,
-    @required this.layout,
+    required this.theme,
+    required this.markDeletedEpisodesAsPlayed,
+    required this.storeDownloadsSDCard,
+    required this.playbackSpeed,
+    required this.searchProvider,
+    required this.searchProviders,
+    required this.externalLinkConsent,
+    required this.autoOpenNowPlaying,
+    required this.showFunding,
+    required this.autoUpdateEpisodePeriod,
+    required this.trimSilence,
+    required this.volumeBoost,
+    required this.layout,
   });
 
   AppSettings.sensibleDefaults()

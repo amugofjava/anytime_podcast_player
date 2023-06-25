@@ -5,7 +5,6 @@
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
-import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 
 import 'episode.dart';
@@ -14,74 +13,73 @@ import 'episode.dart';
 /// this represents a podcast that is being followed.
 class Podcast {
   /// Database ID
-  int id;
+  int? id;
 
   /// Unique identifier for podcast.
-  final String guid;
+  final String? guid;
 
   /// The link to the podcast RSS feed.
   final String url;
 
   /// RSS link URL.
-  final String link;
+  final String? link;
 
   /// Podcast title.
   final String title;
 
   /// Podcast description. Can be either plain text or HTML.
-  final String description;
+  final String? description;
 
   /// URL to the full size artwork image.
-  final String imageUrl;
+  final String? imageUrl;
 
   /// URL for thumbnail version of artwork image. Not contained within
   /// the RSS but may be calculated or provided within search results.
-  final String thumbImageUrl;
+  final String? thumbImageUrl;
 
   /// Copyright owner of the podcast.
-  final String copyright;
+  final String? copyright;
 
   /// Zero or more funding links.
-  final List<Funding> funding;
+  final List<Funding>? funding;
 
   /// Date and time user subscribed to the podcast.
-  DateTime subscribedDate;
+  DateTime? subscribedDate;
 
   /// Date and time podcast was last updated/refreshed.
-  DateTime _lastUpdated;
+  DateTime? _lastUpdated;
 
   /// One or more episodes for this podcast.
-  List<Episode> episodes;
+  List<Episode?> episodes;
 
-  final List<Person> persons;
+  final List<Person>? persons;
 
   bool newEpisodes;
-  bool updatedEpisodes;
+  late bool updatedEpisodes;
 
   Podcast({
-    @required this.guid,
-    @required String url,
-    @required this.link,
-    @required this.title,
+    required this.guid,
+    required String url,
+    required this.link,
+    required this.title,
     this.id,
     this.description,
-    String imageUrl,
-    String thumbImageUrl,
+    String? imageUrl,
+    String? thumbImageUrl,
     this.copyright,
     this.subscribedDate,
     this.funding,
-    this.episodes,
+    this.episodes = const <Episode>[],
     this.newEpisodes = false,
     this.persons,
-    DateTime lastUpdated,
+    DateTime? lastUpdated,
   })  : url = url.forceHttps,
         imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps {
     _lastUpdated = lastUpdated;
-    episodes ??= [];
   }
 
-  factory Podcast.fromUrl({@required String url}) => Podcast(
+  factory Podcast.fromUrl({required String url}) => Podcast(
         url: url,
         guid: '',
         link: '',
@@ -95,10 +93,10 @@ class Podcast {
       );
 
   factory Podcast.fromSearchResultItem(search.Item item) => Podcast(
-        guid: item.guid,
-        url: item.feedUrl,
+        guid: item.guid ?? '',
+        url: item.feedUrl ?? '',
         link: item.feedUrl,
-        title: item.trackName,
+        title: item.trackName!,
         description: '',
         imageUrl: item.bestArtworkUrl ?? item.artworkUrl,
         thumbImageUrl: item.thumbnailArtworkUrl,
@@ -109,22 +107,22 @@ class Podcast {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'guid': guid,
-      'title': title ?? '',
+      'title': title,
       'copyright': copyright ?? '',
       'description': description ?? '',
       'url': url,
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
-      'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap())?.toList(growable: false),
-      'person': (persons ?? <Person>[]).map((persons) => persons.toMap())?.toList(growable: false),
+      'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
+      'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
       'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
 
   static Podcast fromMap(int key, Map<String, dynamic> podcast) {
-    final sds = podcast['subscribedDate'] as String;
-    final lus = podcast['lastUpdated'] as int;
+    final sds = podcast['subscribedDate'] as String?;
+    final lus = podcast['lastUpdated'] as int?;
     final funding = <Funding>[];
     final persons = <Person>[];
 
@@ -158,13 +156,13 @@ class Podcast {
     return Podcast(
       id: key,
       guid: podcast['guid'] as String,
-      link: podcast['link'] as String,
+      link: podcast['link'] as String?,
       title: podcast['title'] as String,
-      copyright: podcast['copyright'] as String,
-      description: podcast['description'] as String,
+      copyright: podcast['copyright'] as String?,
+      description: podcast['description'] as String?,
       url: podcast['url'] as String,
-      imageUrl: podcast['imageUrl'] as String,
-      thumbImageUrl: podcast['thumbImageUrl'] as String,
+      imageUrl: podcast['imageUrl'] as String?,
+      thumbImageUrl: podcast['thumbImageUrl'] as String?,
       funding: funding,
       persons: persons,
       subscribedDate: sd,

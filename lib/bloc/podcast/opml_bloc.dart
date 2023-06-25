@@ -5,7 +5,6 @@
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/state/opml_state.dart';
-import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,16 +18,18 @@ class OPMLBloc extends Bloc {
   final PublishSubject<OPMLState> _opmlState = PublishSubject<OPMLState>();
   final OPMLService opmlService;
 
-  OPMLBloc({@required this.opmlService}) {
+  OPMLBloc({required this.opmlService}) {
     _listenOpmlEvents();
   }
 
   void _listenOpmlEvents() {
     _opmlEvent.listen((event) {
       if (event is OPMLImportEvent) {
-        opmlService.loadOPMLFile(event.file).listen((state) {
-          _opmlState.add(state);
-        });
+        if (event.file != null) {
+          opmlService.loadOPMLFile(event.file!).listen((state) {
+            _opmlState.add(state);
+          });
+        }
       } else if (event is OPMLExportEvent) {
         opmlService.saveOPMLFile().listen((state) {
           _opmlState.add(state);

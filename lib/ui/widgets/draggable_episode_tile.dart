@@ -16,9 +16,9 @@ class DraggableEpisodeTile extends StatelessWidget {
   final bool playable;
 
   const DraggableEpisodeTile({
-    Key key,
-    @required this.episode,
-    this.index,
+    Key? key,
+    required this.episode,
+    this.index = 0,
     this.draggable = true,
     this.playable = false,
   }) : super(key: key);
@@ -32,12 +32,12 @@ class DraggableEpisodeTile extends StatelessWidget {
       key: Key('DT${episode.guid}'),
       enabled: playable,
       leading: TileImage(
-        url: episode.thumbImageUrl ?? episode.imageUrl,
+        url: episode.thumbImageUrl ?? episode.imageUrl ?? '',
         size: 56.0,
         highlight: episode.highlight,
       ),
       title: Text(
-        episode.title,
+        episode.title!,
         overflow: TextOverflow.ellipsis,
         maxLines: 2,
         softWrap: false,

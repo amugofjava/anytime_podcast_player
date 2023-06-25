@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'dart:async';
 
 import 'package:anytime/entities/downloadable.dart';
@@ -19,7 +21,7 @@ class DownloadProgress {
 }
 
 abstract class DownloadManager {
-  Future<String> enqueueTask(String url, String downloadPath, String fileName);
+  Future<String?> enqueueTask(String url, String downloadPath, String fileName);
   Stream<DownloadProgress> get downloadProgress;
   void dispose();
 }

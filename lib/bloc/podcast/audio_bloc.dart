@@ -8,7 +8,6 @@ import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/transcript_state_event.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,7 +30,7 @@ class AudioBloc extends Bloc {
   final log = Logger('AudioBloc');
 
   /// Listen for new episode play requests.
-  final BehaviorSubject<Episode> _play = BehaviorSubject<Episode>();
+  final BehaviorSubject<Episode?> _play = BehaviorSubject<Episode?>();
 
   /// Move from one playing state to another such as from paused to play
   final PublishSubject<TransitionState> _transitionPlayingState = PublishSubject<TransitionState>();
@@ -55,7 +54,7 @@ class AudioBloc extends Bloc {
   final PublishSubject<TranscriptEvent> _transcriptEvent = PublishSubject<TranscriptEvent>();
 
   AudioBloc({
-    @required this.audioPlayerService,
+    required this.audioPlayerService,
   }) {
     /// Listen for transition events from the client.
     _handlePlayingStateTransitions();
@@ -111,7 +110,7 @@ class AudioBloc extends Bloc {
   /// underlying audio service.
   void _handleEpisodeRequests() async {
     _play.listen((episode) {
-      audioPlayerService.playEpisode(episode: episode, resume: true);
+      audioPlayerService.playEpisode(episode: episode!, resume: true);
     });
   }
 
@@ -166,14 +165,14 @@ class AudioBloc extends Bloc {
     var ep = await audioPlayerService.resume();
 
     if (ep != null) {
-      log.fine('Resuming with episode ${ep?.title} - ${ep?.position} - ${ep?.played}');
+      log.fine('Resuming with episode ${ep.title} - ${ep.position} - ${ep.played}');
     } else {
       log.fine('Resuming without an episode');
     }
   }
 
   /// Play the specified track now
-  void Function(Episode) get play => _play.add;
+  void Function(Episode?) get play => _play.add;
 
   /// Transition the state from connecting, to play, pause, stop etc.
   void Function(TransitionState) get transitionState => _transitionPlayingState.add;
@@ -182,19 +181,19 @@ class AudioBloc extends Bloc {
   void Function(double) get transitionPosition => _transitionPosition.sink.add;
 
   /// Get the current playing state
-  Stream<AudioState> get playingState => audioPlayerService.playingState;
+  Stream<AudioState>? get playingState => audioPlayerService.playingState;
 
   /// Listen for any playback errors
-  Stream<int> get playbackError => audioPlayerService.playbackError;
+  Stream<int>? get playbackError => audioPlayerService.playbackError;
 
   /// Get the current playing episode
-  Stream<Episode> get nowPlaying => audioPlayerService.episodeEvent;
+  Stream<Episode?>? get nowPlaying => audioPlayerService.episodeEvent;
 
   /// Get the current transcript (if there is one).
-  Stream<TranscriptState> get nowPlayingTranscript => audioPlayerService.transcriptEvent;
+  Stream<TranscriptState>? get nowPlayingTranscript => audioPlayerService.transcriptEvent;
 
   /// Get position and percentage played of playing episode
-  Stream<PositionState> get playPosition => audioPlayerService.playPosition;
+  Stream<PositionState>? get playPosition => audioPlayerService.playPosition;
 
   /// Change playback speed
   void Function(double) get playbackSpeed => _playbackSpeedSubject.sink.add;

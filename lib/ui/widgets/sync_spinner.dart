@@ -2,21 +2,23 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SyncSpinner extends StatefulWidget {
-  const SyncSpinner({Key key}) : super(key: key);
+  const SyncSpinner({Key? key}) : super(key: key);
 
   @override
   State<SyncSpinner> createState() => _SyncSpinnerState();
 }
 
 class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Widget _child;
+  late AnimationController _controller;
+  Widget? _child;
 
   @override
   void initState() {

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -15,7 +17,7 @@ class PlaybackErrorListener extends StatefulWidget {
   final Widget child;
 
   PlaybackErrorListener({
-    @required this.child,
+    required this.child,
   });
 
   @override
@@ -23,7 +25,7 @@ class PlaybackErrorListener extends StatefulWidget {
 }
 
 class _PlaybackErrorListenerState extends State<PlaybackErrorListener> {
-  StreamSubscription<int> errorSubscription;
+  StreamSubscription<int>? errorSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class _PlaybackErrorListenerState extends State<PlaybackErrorListener> {
     super.initState();
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    errorSubscription = audioBloc.playbackError.listen((code) {
+    errorSubscription = audioBloc.playbackError!.listen((code) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_codeToMessage(context, code))));
     });
   }
@@ -53,10 +55,10 @@ class _PlaybackErrorListenerState extends State<PlaybackErrorListener> {
 
     switch (code) {
       case 401:
-        result = L.of(context).error_no_connection;
+        result = L.of(context)!.error_no_connection;
         break;
       case 501:
-        result = L.of(context).error_playback_fail;
+        result = L.of(context)!.error_playback_fail;
         break;
     }
 

@@ -37,8 +37,8 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
         builder: (context, snapshot) {
-          var position = snapshot.hasData ? snapshot.data.position.inSeconds : 0;
-          episodeLength = snapshot.hasData ? snapshot.data.length.inSeconds : 0;
+          var position = snapshot.hasData ? snapshot.data!.position.inSeconds : 0;
+          episodeLength = snapshot.hasData ? snapshot.data!.length.inSeconds : 0;
           var divisions = episodeLength == 0 ? 1 : episodeLength;
 
           if (!dragging) {
@@ -86,13 +86,11 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                             });
                           },
                           onChangeStart: (value) {
-                            if (!snapshot.data.buffering) {
+                            if (!snapshot.data!.buffering) {
                               setState(() {
                                 dragging = true;
                                 _calculatePositions(currentPosition);
                               });
-                            } else {
-                              return null;
                             }
                           },
                           onChangeEnd: (value) {
@@ -100,7 +98,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                               dragging = false;
                             });
 
-                            return snapshot.data.buffering ? null : audioBloc.transitionPosition(value);
+                            return snapshot.data!.buffering ? null : audioBloc.transitionPosition(value);
                           },
                           value: currentPosition.toDouble(),
                           min: 0.0,

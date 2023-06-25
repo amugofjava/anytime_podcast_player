@@ -9,7 +9,6 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/bloc_state.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -27,23 +26,23 @@ class EpisodeBloc extends Bloc {
   final BehaviorSubject<bool> _episodesInput = BehaviorSubject<bool>();
 
   /// Add to sink to delete the passed [Episode] from storage.
-  final PublishSubject<Episode> _deleteDownload = PublishSubject<Episode>();
+  final PublishSubject<Episode?> _deleteDownload = PublishSubject<Episode>();
 
   /// Add to sink to toggle played status of the [Episode].
-  final PublishSubject<Episode> _togglePlayed = PublishSubject<Episode>();
+  final PublishSubject<Episode?> _togglePlayed = PublishSubject<Episode>();
 
   /// Stream of currently downloaded episodes
-  Stream<BlocState<List<Episode>>> _downloadsOutput;
+  Stream<BlocState<List<Episode>>>? _downloadsOutput;
 
   /// Stream of current episodes
-  Stream<BlocState<List<Episode>>> _episodesOutput;
+  Stream<BlocState<List<Episode>>>? _episodesOutput;
 
   /// Cache of our currently downloaded episodes.
-  List<Episode> _episodes;
+  List<Episode>? _episodes;
 
   EpisodeBloc({
-    @required this.podcastService,
-    @required this.audioPlayerService,
+    required this.podcastService,
+    required this.audioPlayerService,
   }) {
     _init();
   }
@@ -61,7 +60,7 @@ class EpisodeBloc extends Bloc {
     _deleteDownload.stream.listen((episode) async {
       var nowPlaying = audioPlayerService.nowPlaying == episode;
 
-      await podcastService.deleteDownload(episode);
+      await podcastService.deleteDownload(episode!);
 
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
       if (nowPlaying) {
@@ -74,7 +73,7 @@ class EpisodeBloc extends Bloc {
 
   void _handleMarkAsPlayed() async {
     _togglePlayed.stream.listen((episode) async {
-      await podcastService.toggleEpisodePlayed(episode);
+      await podcastService.toggleEpisodePlayed(episode!);
 
       fetchDownloads(true);
     });
@@ -82,7 +81,7 @@ class EpisodeBloc extends Bloc {
 
   void _listenEpisodeEvents() {
     // Listen for episode updates. If the episode is downloaded, we need to update.
-    podcastService.episodeListener.where((event) => event.episode.downloaded).listen((event) => fetchDownloads(true));
+    podcastService.episodeListener!.where((event) => event.episode.downloaded).listen((event) => fetchDownloads(true));
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {
@@ -116,11 +115,11 @@ class EpisodeBloc extends Bloc {
 
   void Function(bool) get fetchEpisodes => _episodesInput.add;
 
-  Stream<BlocState<List<Episode>>> get downloads => _downloadsOutput;
+  Stream<BlocState<List<Episode>>>? get downloads => _downloadsOutput;
 
-  Stream<BlocState<List<Episode>>> get episodes => _episodesOutput;
+  Stream<BlocState<List<Episode>>>? get episodes => _episodesOutput;
 
-  void Function(Episode) get deleteDownload => _deleteDownload.add;
+  void Function(Episode?) get deleteDownload => _deleteDownload.add;
 
-  void Function(Episode) get togglePlayed => _togglePlayed.add;
+  void Function(Episode?) get togglePlayed => _togglePlayed.add;
 }

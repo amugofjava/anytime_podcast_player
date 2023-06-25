@@ -1,6 +1,9 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+
+
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -44,7 +47,7 @@ class _DownloadsState extends State<Downloads> {
             play: true,
             download: false,
             icon: Icons.cloud_download,
-            emptyMessage: L.of(context).no_downloads_message,
+            emptyMessage: L.of(context)!.no_downloads_message,
           );
         } else {
           if (state is BlocLoadingState) {
@@ -89,7 +92,7 @@ class _DownloadsState extends State<Downloads> {
                 var episode = episodes[index];
 
                 if (snapshot.hasData) {
-                  queued = snapshot.data.queue.any((element) => element.guid == episode.guid);
+                  queued = snapshot.data!.queue.any((element) => element.guid == episode.guid);
                 }
 
                 return EpisodeTile(
@@ -118,7 +121,7 @@ class _DownloadsState extends State<Downloads> {
                 color: Theme.of(context).primaryColor,
               ),
               Text(
-                L.of(context).no_downloads_message,
+                L.of(context)!.no_downloads_message,
                 style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),

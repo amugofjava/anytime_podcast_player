@@ -20,14 +20,14 @@ class PersonAvatar extends StatelessWidget {
   String role = '';
 
   PersonAvatar({
-    Key key,
-    @required this.person,
+    Key? key,
+    required this.person,
   }) : super(key: key) {
-    if (person != null && person.name.isNotEmpty) {
+    if (person.name.isNotEmpty) {
       initial = person.name.substring(0, 1).toUpperCase();
     }
 
-    if (person != null && person.role.isNotEmpty) {
+    if (person.role.isNotEmpty) {
       role = person.role.substring(0, 1).toUpperCase() + person.role.substring(1);
     }
   }
@@ -36,9 +36,9 @@ class PersonAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: person.link.isNotEmpty
+      onTap: person.link != null && person.link!.isNotEmpty
           ? () {
-              final uri = Uri.parse(person.link);
+              final uri = Uri.parse(person.link!);
 
               unawaited(
                 canLaunchUrl(uri).then((value) => launchUrl(uri)),
@@ -55,7 +55,7 @@ class PersonAvatar extends StatelessWidget {
               CircleAvatar(
                 radius: 32,
                 foregroundImage: ExtendedImage.network(
-                  person.image,
+                  person.image!,
                   cache: true,
                 ).image,
                 child: Text(initial),

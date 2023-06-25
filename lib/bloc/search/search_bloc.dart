@@ -9,7 +9,6 @@ import 'package:anytime/bloc/search/search_state_event.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_search/podcast_search.dart' as pcast;
 import 'package:rxdart/rxdart.dart';
@@ -27,12 +26,12 @@ class SearchBloc extends Bloc {
   final BehaviorSubject<int> _chartsInput = BehaviorSubject<int>();
 
   /// Stream of the current search results, be it from search or charts.
-  Stream<BlocState<pcast.SearchResult>> _searchResults;
+  Stream<BlocState<pcast.SearchResult>>? _searchResults;
 
   /// Cache of last results.
-  pcast.SearchResult _resultsCache;
+  pcast.SearchResult? _resultsCache;
 
-  SearchBloc({@required this.podcastService}) {
+  SearchBloc({required this.podcastService}) {
     _init();
   }
 
@@ -90,5 +89,5 @@ class SearchBloc extends Bloc {
 
   void Function(SearchEvent) get search => _searchInput.add;
 
-  Stream<BlocState> get results => _searchResults;
+  Stream<BlocState>? get results => _searchResults;
 }

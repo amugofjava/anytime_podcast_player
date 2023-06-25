@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
@@ -34,7 +36,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
         stream: settingsBloc.settings,
         initialData: AppSettings.sensibleDefaults(),
         builder: (context, snapshot) {
-          final mode = snapshot.data.layout;
+          final mode = snapshot.data!.layout;
 
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -59,7 +61,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                             ),
                           ),
                           Text(
-                            L.of(context).layout_label,
+                            L.of(context)!.layout_label,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                         ],

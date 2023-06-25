@@ -24,12 +24,12 @@ class PodcastImage extends StatefulWidget {
   final BoxFit fit;
   final bool highlight;
   final double borderRadius;
-  final Widget placeholder;
-  final Widget errorPlaceholder;
+  final Widget? placeholder;
+  final Widget? errorPlaceholder;
 
   PodcastImage({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
     this.fit = BoxFit.cover,
@@ -65,7 +65,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
 
         if (state.extendedImageLoadState == LoadState.failed) {
           renderWidget = ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+            borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
             child: widget.errorPlaceholder ??
                 SizedBox(
                   width: widget.width,
@@ -79,7 +79,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                 : CrossFadeState.showFirst,
             duration: Duration(milliseconds: 500),
             firstChild: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.placeholder ??
                   Container(
                     width: widget.width,
@@ -87,7 +87,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                   ),
             ),
             secondChild: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: ExtendedRawImage(
                 image: state.extendedImageInfo?.image,
                 fit: widget.fit,
@@ -164,12 +164,12 @@ class PodcastBannerImage extends StatefulWidget {
   final double width;
   final BoxFit fit;
   final double borderRadius;
-  final Widget placeholder;
-  final Widget errorPlaceholder;
+  final Widget? placeholder;
+  final Widget? errorPlaceholder;
 
   PodcastBannerImage({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
     this.fit = BoxFit.cover,
@@ -208,7 +208,7 @@ class _PodcastBannerImageState extends State<PodcastBannerImage> with TickerProv
             width: widget.width - 2.0,
             height: widget.height - 2.0,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius ?? 0.0)),
+              borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.errorPlaceholder ??
                   SizedBox(
                     width: widget.width - 2.0,

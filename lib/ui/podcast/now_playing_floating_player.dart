@@ -41,8 +41,8 @@ class _FloatingPlayerBuilder extends StatefulWidget {
 }
 
 class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with SingleTickerProviderStateMixin {
-  AnimationController _playPauseController;
-  StreamSubscription<AudioState> _audioStateSubscription;
+  late AnimationController _playPauseController;
+  late StreamSubscription<AudioState> _audioStateSubscription;
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
     return Container(
       height: 64,
       color: Theme.of(context).canvasColor,
-      child: StreamBuilder<Episode>(
+      child: StreamBuilder<Episode?>(
           stream: audioBloc.nowPlaying,
           builder: (context, snapshot) {
             return Row(
@@ -83,16 +83,16 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                     padding: const EdgeInsets.all(8.0),
                     child: snapshot.hasData
                         ? PodcastImage(
-                            key: Key('float${snapshot.data.imageUrl}'),
-                            url: snapshot.data.imageUrl,
+                            key: Key('float${snapshot.data!.imageUrl}'),
+                            url: snapshot.data!.imageUrl!,
                             width: 58.0,
                             height: 58.0,
                             borderRadius: 4.0,
                             placeholder: placeholderBuilder != null
-                                ? placeholderBuilder?.builder()(context)
+                                ? placeholderBuilder.builder()(context)
                                 : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                             errorPlaceholder: placeholderBuilder != null
-                                ? placeholderBuilder?.errorBuilder()(context)
+                                ? placeholderBuilder.errorBuilder()(context)
                                 : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                           )
                         : Container(),
@@ -168,7 +168,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     var firstEvent = true;
 
-    _audioStateSubscription = audioBloc.playingState.listen((event) {
+    _audioStateSubscription = audioBloc.playingState!.listen((event) {
       if (event == AudioState.playing || event == AudioState.buffering) {
         if (firstEvent) {
           _playPauseController.value = 1;

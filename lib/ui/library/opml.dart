@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class OPMLSelect extends StatefulWidget {
-  const OPMLSelect({Key key}) : super(key: key);
+  const OPMLSelect({Key? key}) : super(key: key);
 
   @override
   State<OPMLSelect> createState() => _OPMLSelectState();
@@ -26,7 +26,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
         return _buildIos(context);
       default:
         assert(false, 'Unexpected platform $defaultTargetPlatform');
-        return null;
+        return _buildAndroid(context);
     }
   }
 
@@ -35,7 +35,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
       appBar: AppBar(
         elevation: 0.0,
         title: Text(
-          L.of(context).opml_import_export_label,
+          L.of(context)!.opml_import_export_label,
         ),
       ),
       body: _buildBody(context),
@@ -59,7 +59,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
           children: [
             ElevatedButton(
               onPressed: () async {
-                var result = await FilePicker.platform.pickFiles();
+                var result = (await FilePicker.platform.pickFiles())!;
 
                 if (result.count > 0) {
                   var file = result.files.first;
@@ -68,7 +68,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
                     context,
                     MaterialPageRoute<void>(
                       settings: RouteSettings(name: 'opmlimport'),
-                      builder: (context) => OPMLImport(file: file.path),
+                      builder: (context) => OPMLImport(file: file.path!),
                       fullscreenDialog: true,
                     ),
                   );
@@ -76,11 +76,11 @@ class _OPMLSelectState extends State<OPMLSelect> {
                   Navigator.pop(context);
                 }
               },
-              child: Text(L.of(context).opml_import_button_label),
+              child: Text(L.of(context)!.opml_import_button_label),
             ),
             ElevatedButton(
               onPressed: () {},
-              child: Text(L.of(context).opml_export_button_label),
+              child: Text(L.of(context)!.opml_export_button_label),
             ),
           ],
         ),

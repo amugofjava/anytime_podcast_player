@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+
+
 import 'package:anytime/entities/transcript.dart';
 import 'package:podcast_search/podcast_search.dart' as pslib;
 
@@ -12,21 +14,21 @@ abstract class PodcastApi {
   /// [SearchResult] instance.
   Future<pslib.SearchResult> search(
     String term, {
-    String country,
-    String attribute,
-    int limit,
-    String language,
+    String? country,
+    String? attribute,
+    int? limit,
+    String? language,
     int version = 0,
     bool explicit = false,
-    String searchProvider,
+    String? searchProvider,
   });
 
   /// Request the top podcast charts from iTunes, and at most [size] records.
   Future<pslib.SearchResult> charts({
-    int size,
-    String searchProvider,
-    String genre,
-    String countryCode,
+    int? size,
+    String? searchProvider,
+    String? genre,
+    String? countryCode,
   });
 
   List<String> genres(

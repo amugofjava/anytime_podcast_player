@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
-import 'package:meta/meta.dart';
 
-/// A class that represents and individual funding option that may be
 /// part of a [Podcast].
 ///
 /// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
@@ -17,9 +15,9 @@ class Funding {
   final String value;
 
   Funding({
-    @required String url,
-    this.value,
-  }) : url = url?.forceHttps;
+    required String url,
+    required this.value,
+  }) : url = url.forceHttps;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

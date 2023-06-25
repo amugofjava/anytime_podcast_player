@@ -1,6 +1,7 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -10,7 +11,7 @@ class L {
   L(this.localeName, this.overrides);
 
   static Future<L> load(Locale locale, Map<String, Map<String, String>> overrides) {
-    final name = locale.countryCode.isEmpty ? locale.languageCode : locale.toString();
+    final name = locale.countryCode?.isEmpty ?? true ? locale.languageCode : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
 
     return initializeMessages(localeName).then((_) {
@@ -18,7 +19,7 @@ class L {
     });
   }
 
-  static L of(BuildContext context) {
+  static L? of(BuildContext context) {
     return Localizations.of<L>(context, L);
   }
 
@@ -26,11 +27,11 @@ class L {
   Map<String, Map<String, String>> overrides;
 
   /// Message definitions start here
-  String message(String name) {
+  String? message(String name) {
     if (overrides == null || overrides.isEmpty || !overrides.containsKey(name)) {
       return null;
     } else {
-      return overrides[name][localeName] ?? 'Missing translation for $name and locale $localeName';
+      return overrides[name]![localeName] ?? 'Missing translation for $name and locale $localeName';
     }
   }
 
@@ -1097,17 +1098,17 @@ class L {
   }
 }
 
-class LocalisationsDelegate extends LocalizationsDelegate<L> {
-  const LocalisationsDelegate();
+class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
+  const AnytimeLocalisationsDelegate();
 
   @override
   bool isSupported(Locale locale) => ['en', 'de'].contains(locale.languageCode);
 
   @override
-  Future<L> load(Locale locale) => L.load(locale, null);
+  Future<L> load(Locale locale) => L.load(locale, const {});
 
   @override
-  bool shouldReload(LocalisationsDelegate old) => false;
+  bool shouldReload(AnytimeLocalisationsDelegate old) => false;
 }
 
 /// This class can be used by third-parties who wish to override or replace
@@ -1119,9 +1120,9 @@ class LocalisationsDelegate extends LocalizationsDelegate<L> {
 ///   'de': 'Mein app-titel'
 /// }
 class EmbeddedLocalisationsDelegate extends LocalizationsDelegate<L> {
-  Map<String, Map<String, String>> messages = {};
+  final Map<String, Map<String, String>> messages;
 
-  EmbeddedLocalisationsDelegate({@required this.messages});
+  EmbeddedLocalisationsDelegate({@required this.messages = const {}});
 
   @override
   bool isSupported(Locale locale) => ['en', 'de'].contains(locale.languageCode);

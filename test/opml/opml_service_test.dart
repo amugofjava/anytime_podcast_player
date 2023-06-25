@@ -22,8 +22,8 @@ void main() {
   final api = MockPodcastApi();
   final mockPath = MockPathProvder();
   final dbName = 'anytime-opml.db';
-  OPMLService opmlService;
-  PodcastService podcastService;
+  late OPMLService opmlService;
+  late PodcastService podcastService;
   Repository repository;
 
   setUp(() async {
@@ -61,7 +61,7 @@ void main() {
 
     var subs = await podcastService.subscriptions();
 
-    expect(subs?.length, 1);
+    expect(subs.length, 1);
     expect(subs[0].title, 'Podcast Load Test 1');
     expect(subs[0].url, 'test_resources/podcast1.rss');
   });
