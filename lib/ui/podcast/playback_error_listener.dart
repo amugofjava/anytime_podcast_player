@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
@@ -16,7 +14,8 @@ import 'package:provider/provider.dart';
 class PlaybackErrorListener extends StatefulWidget {
   final Widget child;
 
-  PlaybackErrorListener({
+  const PlaybackErrorListener({
+    super.key,
     required this.child,
   });
 

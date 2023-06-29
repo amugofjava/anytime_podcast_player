@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
@@ -14,7 +12,10 @@ import 'package:provider/provider.dart';
 class SearchProviderWidget extends StatefulWidget {
   final ValueChanged<String?>? onChanged;
 
-  SearchProviderWidget({this.onChanged});
+  const SearchProviderWidget({
+    super.key,
+    this.onChanged,
+  });
 
   @override
   State<SearchProviderWidget> createState() => _SearchProviderWidgetState();
@@ -50,10 +51,10 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                   builder: (BuildContext context, StateSetter setState) {
                                     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
                                       RadioListTile<String>(
-                                        title: Text('iTunes'),
+                                        title: const Text('iTunes'),
                                         value: 'itunes',
                                         dense: true,
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {
@@ -68,10 +69,10 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                         },
                                       ),
                                       RadioListTile<String>(
-                                        title: Text('PodcastIndex'),
+                                        title: const Text('PodcastIndex'),
                                         value: 'podcastindex',
                                         dense: true,
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {

@@ -33,6 +33,10 @@ import 'package:url_launcher/url_launcher.dart';
 /// Using [Opacity] is a very inefficient way of achieving this effect, but will do as a place
 /// holder until a better animation can be achieved.
 class NowPlaying extends StatefulWidget {
+  const NowPlaying({
+    super.key,
+  });
+
   @override
   State<NowPlaying> createState() => _NowPlayingState();
 }
@@ -146,11 +150,11 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                             ),
                             transportBuilder != null
                                 ? transportBuilder(context)
-                                : SizedBox(
+                                : const SizedBox(
                                     height: 148.0,
                                     child: NowPlayingTransport(),
                                   ),
-                            Expanded(
+                            const Expanded(
                               flex: 1,
                               child: NowPlayingOptionsScaffold(),
                             ),
@@ -171,11 +175,11 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                         child: scrollPos == 1
                             ? Opacity(
                                 opacity: opacity,
-                                child: FloatingPlayer(),
+                                child: const FloatingPlayer(),
                               )
                             : null,
                       ),
-                      Expanded(
+                      const Expanded(
                         child: NowPlayingOptionsSelector(),
                       ),
                     ],
@@ -237,7 +241,7 @@ class EpisodeTabBarView extends StatelessWidget {
   final AutoSizeGroup? textGroup;
   final bool chapters;
 
-  EpisodeTabBarView({
+  const EpisodeTabBarView({
     Key? key,
     this.episode,
     this.textGroup,
@@ -277,6 +281,7 @@ class NowPlayingEpisode extends StatelessWidget {
   final AutoSizeGroup? textGroup;
 
   const NowPlayingEpisode({
+    super.key,
     required this.imageUrl,
     required this.episode,
     required this.textGroup,
@@ -305,10 +310,10 @@ class NowPlayingEpisode extends StatelessWidget {
                         borderRadius: 6.0,
                         placeholder: placeholderBuilder != null
                             ? placeholderBuilder.builder()(context)
-                            : DelayedCircularProgressIndicator(),
+                            : const DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
                             ? placeholderBuilder.errorBuilder()(context)
-                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                            : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
                     Expanded(
@@ -334,10 +339,10 @@ class NowPlayingEpisode extends StatelessWidget {
                         borderRadius: 8.0,
                         placeholder: placeholderBuilder != null
                             ? placeholderBuilder.builder()(context)
-                            : DelayedCircularProgressIndicator(),
+                            : const DelayedCircularProgressIndicator(),
                         errorPlaceholder: placeholderBuilder != null
                             ? placeholderBuilder.errorBuilder()(context)
-                            : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                            : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                       ),
                     ),
                     Expanded(
@@ -383,7 +388,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               minFontSize: minFontSize,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24.0,
               ),
@@ -422,7 +427,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                         )
                       : IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(Icons.link),
+                          icon: const Icon(Icons.link),
                           color: Theme.of(context).primaryIconTheme.color,
                           onPressed: () {
                             _chapterLink(chapterUrl);
@@ -450,6 +455,7 @@ class NowPlayingShowNotes extends StatelessWidget {
   final Episode? episode;
 
   const NowPlayingShowNotes({
+    super.key,
     required this.episode,
   });
 
@@ -479,14 +485,12 @@ class NowPlayingShowNotes extends StatelessWidget {
             if (episode!.persons.isNotEmpty)
               SizedBox(
                 height: 120.0,
-                child: Container(
-                  child: ListView.builder(
-                    itemCount: episode!.persons.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return PersonAvatar(person: episode!.persons[index]);
-                    },
-                  ),
+                child: ListView.builder(
+                  itemCount: episode!.persons.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return PersonAvatar(person: episode!.persons[index]);
+                  },
                 ),
               ),
             Padding(
@@ -505,9 +509,11 @@ class NowPlayingShowNotes extends StatelessWidget {
 }
 
 class NowPlayingTransport extends StatelessWidget {
+  const NowPlayingTransport({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: <Widget>[
         Divider(
           height: 0.0,
@@ -522,7 +528,7 @@ class NowPlayingTransport extends StatelessWidget {
 class PlayerControlsBuilder extends InheritedWidget {
   final WidgetBuilder Function(int duration) builder;
 
-  PlayerControlsBuilder({
+  const PlayerControlsBuilder({
     Key? key,
     required this.builder,
     required Widget child,

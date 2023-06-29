@@ -30,7 +30,7 @@ class NowPlayingOptionsSelector extends StatefulWidget {
   final double? scrollPos;
   static const baseSize = 68.0;
 
-  NowPlayingOptionsSelector({Key? key, this.scrollPos}) : super(key: key);
+  const NowPlayingOptionsSelector({Key? key, this.scrollPos}) : super(key: key);
 
   @override
   State<NowPlayingOptionsSelector> createState() => _NowPlayingOptionsSelectorState();
@@ -76,7 +76,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                             color: Theme.of(context).highlightColor,
                             width: 0.0,
                           ),
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(18.0),
                             topRight: Radius.circular(18.0),
                           ),
@@ -90,7 +90,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  SliderHandle(),
+                                  const SliderHandle(),
                                   DecoratedBox(
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.0),
@@ -120,7 +120,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             if (draggableController != null && draggableController!.size <= 1.0) {
                                               draggableController!.animateTo(
                                                 1.0,
-                                                duration: Duration(milliseconds: 150),
+                                                duration: const Duration(milliseconds: 150),
                                                 curve: Curves.easeInOut,
                                               );
                                             }
@@ -141,7 +141,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             if (draggableController!.size <= 1.0) {
                                               draggableController!.animateTo(
                                                 1.0,
-                                                duration: Duration(milliseconds: 150),
+                                                duration: const Duration(milliseconds: 150),
                                                 curve: Curves.easeInOut,
                                               );
                                             }
@@ -165,7 +165,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                       ],
                                     ),
                                   ),
-                                  Padding(padding: EdgeInsets.only(bottom: 12.0)),
+                                  const Padding(padding: EdgeInsets.only(bottom: 12.0)),
                                   Expanded(
                                     child: TabBarView(
                                       children: [
@@ -188,7 +188,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             Padding(
                                               padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                                               child: DraggableEpisodeTile(
-                                                key: Key('detileplaying'),
+                                                key: const Key('detileplaying'),
                                                 episode: snapshot.data!.playing,
                                                 draggable: false,
                                               ),
@@ -204,7 +204,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                     style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                 ),
-                                                Spacer(),
+                                                const Spacer(),
                                                 Padding(
                                                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                                                   child: TextButton(
@@ -266,7 +266,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                                           border: Border.all(
                                                             color: Theme.of(context).dividerColor,
                                                           ),
-                                                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                          borderRadius: const BorderRadius.all(Radius.circular(10))),
                                                       child: Padding(
                                                         padding: const EdgeInsets.all(24.0),
                                                         child: Text(
@@ -330,7 +330,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               );
             },
           )
-        : SizedBox(
+        : const SizedBox(
             height: 0.0,
             width: 0.0,
           );
@@ -348,7 +348,7 @@ class NowPlayingOptionsScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       height: NowPlayingOptionsSelector.baseSize - 8.0,
     );
   }

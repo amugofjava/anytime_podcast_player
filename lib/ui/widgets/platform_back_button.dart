@@ -1,15 +1,16 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 
 class PlatformBackButton extends StatelessWidget {
   final Color decorationColour;
   final Color iconColour;
   final VoidCallback onPressed;
 
-  PlatformBackButton({
+  const PlatformBackButton({
     Key? key,
     required this.iconColour,
     required this.decorationColour,
@@ -26,7 +27,7 @@ class PlatformBackButton extends StatelessWidget {
           height: Platform.isIOS ? 28.0 : 42.0,
           decoration: ShapeDecoration(
             color: decorationColour,
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
           ),
           child: IconButton(
             icon: Icon(

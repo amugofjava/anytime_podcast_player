@@ -47,9 +47,9 @@ class DraggableEpisodeTile extends StatelessWidget {
       trailing: draggable
           ? ReorderableDragStartListener(
               index: index,
-              child: Icon(Icons.drag_handle),
+              child: const Icon(Icons.drag_handle),
             )
-          : SizedBox(
+          : const SizedBox(
               width: 0.0,
               height: 0.0,
             ),

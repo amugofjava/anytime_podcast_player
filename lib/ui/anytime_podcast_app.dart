@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:async';
 
 import 'package:anytime/api/podcast/mobile_podcast_api.dart';
@@ -71,6 +69,7 @@ class AnytimePodcastApp extends StatefulWidget {
   List<int> certificateAuthorityBytes;
 
   AnytimePodcastApp({
+    super.key,
     required this.mobileSettingsService,
     required this.certificateAuthorityBytes,
   }) : repository = SembastRepository() {
@@ -190,18 +189,18 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         debugShowCheckedModeBanner: false,
         title: 'Anytime Podcast Player',
         navigatorObservers: [NavigationRouteObserver()],
-        localizationsDelegates: <LocalizationsDelegate<Object>>[
-          const AnytimeLocalisationsDelegate(),
+        localizationsDelegates: const <LocalizationsDelegate<Object>>[
+          AnytimeLocalisationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: [
-          const Locale('en', ''),
-          const Locale('de', ''),
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('de', ''),
         ],
         theme: theme,
-        home: AnytimeHomePage(title: 'Anytime Podcast Player'),
+        home: const AnytimeHomePage(title: 'Anytime Podcast Player'),
       ),
     );
   }
@@ -212,7 +211,8 @@ class AnytimeHomePage extends StatefulWidget {
   final bool topBarVisible;
   final bool inlineSearch;
 
-  AnytimeHomePage({
+  const AnytimeHomePage({
+    super.key,
     this.title,
     this.topBarVisible = true,
     this.inlineSearch = false,
@@ -293,7 +293,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           context,
           MaterialPageRoute<void>(
               fullscreenDialog: true,
-              settings: RouteSettings(name: 'podcastdetails'),
+              settings: const RouteSettings(name: 'podcastdetails'),
               builder: (context) => PodcastDetails(Podcast.fromUrl(url: path), loadPodcastBloc)),
         );
       }
@@ -353,20 +353,20 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       actions: <Widget>[
                         IconButton(
                           tooltip: L.of(context)!.search_button_label,
-                          icon: Icon(Icons.search),
+                          icon: const Icon(Icons.search),
                           onPressed: () async {
                             await Navigator.push(
                               context,
                               SlideRightRoute(
-                                widget: Search(),
-                                settings: RouteSettings(name: 'search'),
+                                widget: const Search(),
+                                settings: const RouteSettings(name: 'search'),
                               ),
                             );
                           },
                         ),
                         PopupMenuButton<String>(
                           onSelected: _menuSelect,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                           ),
                           itemBuilder: (BuildContext context) {
@@ -377,8 +377,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Icon(Icons.dashboard, size: 18.0),
                                     ),
                                     Text(L.of(context)!.layout_label),
@@ -391,8 +391,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Icon(Icons.rss_feed, size: 18.0),
                                     ),
                                     Text(L.of(context)!.add_rss_feed_option),
@@ -404,8 +404,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 value: 'settings',
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Icon(Icons.settings, size: 18.0),
                                     ),
                                     Text(L.of(context)!.settings_label),
@@ -417,8 +417,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 value: 'about',
                                 child: Row(
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Icon(Icons.info_outline, size: 18.0),
                                     ),
                                     Text(L.of(context)!.about_label),
@@ -439,7 +439,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 ],
               ),
             ),
-            MiniPlayer(),
+            const MiniPlayer(),
           ],
         ),
         bottomNavigationBar: StreamBuilder<int>(
@@ -461,7 +461,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: index == 0 ? Icon(Icons.library_music) : Icon(Icons.library_music_outlined),
+                    icon: index == 0 ? const Icon(Icons.library_music) : const Icon(Icons.library_music_outlined),
                     label: L.of(context)!.library,
                   ),
                   // To be fleshed out later.
@@ -470,11 +470,11 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   //   label: 'Episodes',
                   // ),
                   BottomNavigationBarItem(
-                    icon: index == 1 ? Icon(Icons.explore) : Icon(Icons.explore_outlined),
+                    icon: index == 1 ? const Icon(Icons.explore) : const Icon(Icons.explore_outlined),
                     label: L.of(context)!.discover,
                   ),
                   BottomNavigationBarItem(
-                    icon: index == 2 ? Icon(Icons.download) : Icon(Icons.download_outlined),
+                    icon: index == 2 ? const Icon(Icons.download) : const Icon(Icons.download_outlined),
                     label: L.of(context)!.downloads,
                   ),
                 ],
@@ -486,14 +486,14 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   Widget _fragment(int? index, EpisodeBloc searchBloc) {
     if (index == 0) {
-      return Library();
+      return const Library();
     } else if (index == 1) {
       return Discovery(
         categories: true,
         inlineSearch: widget.inlineSearch,
       );
     } else {
-      return Downloads();
+      return const Downloads();
     }
   }
 
@@ -515,7 +515,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
               height: 52.0,
             ),
             children: <Widget>[
-              Text('\u00a9 2020 Ben Hills'),
+              const Text('\u00a9 2020 Ben Hills'),
               GestureDetector(
                 onTap: () {
                   _launchEmail();
@@ -534,8 +534,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         await Navigator.push(
           context,
           MaterialPageRoute<void>(
-            settings: RouteSettings(name: 'settings'),
-            builder: (context) => Settings(),
+            settings: const RouteSettings(name: 'settings'),
+            builder: (context) => const Settings(),
           ),
         );
         break;
@@ -543,13 +543,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         await showModalBottomSheet<void>(
           context: context,
           backgroundColor: theme.secondaryHeaderColor,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16.0),
               topRight: Radius.circular(16.0),
             ),
           ),
-          builder: (context) => LayoutSelectorWidget(),
+          builder: (context) => const LayoutSelectorWidget(),
         );
         break;
       case 'rss':
@@ -567,7 +567,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   });
                 },
                 controller: textFieldController,
-                decoration: InputDecoration(hintText: 'https://'),
+                decoration: const InputDecoration(hintText: 'https://'),
               ),
             ),
             actions: <Widget>[
@@ -588,7 +588,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   Navigator.push(
                     context,
                     MaterialPageRoute<void>(
-                        settings: RouteSettings(name: 'podcastdetails'),
+                        settings: const RouteSettings(name: 'podcastdetails'),
                         builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), podcastBloc)),
                   ).then((value) => Navigator.pop(context));
                 },
@@ -613,7 +613,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
 class TitleWidget extends StatelessWidget {
   final TextStyle _titleTheme1 = theme.textTheme.bodyMedium!.copyWith(
-    color: Color.fromARGB(255, 255, 153, 0),
+    color: const Color.fromARGB(255, 255, 153, 0),
     fontWeight: FontWeight.bold,
     fontFamily: 'MontserratRegular',
     fontSize: 18,
@@ -632,6 +632,10 @@ class TitleWidget extends StatelessWidget {
     fontFamily: 'MontserratRegular',
     fontSize: 18,
   );
+
+  TitleWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

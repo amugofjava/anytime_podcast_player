@@ -21,7 +21,7 @@ import '../mocks/mock_settings_service.dart';
 void main() {
   final api = MockPodcastApi();
   final mockPath = MockPathProvder();
-  final dbName = 'anytime-opml.db';
+  const dbName = 'anytime-opml.db';
   late OPMLService opmlService;
   late PodcastService podcastService;
   Repository repository;

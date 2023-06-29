@@ -23,6 +23,7 @@ class ChapterSelector extends StatefulWidget {
   var chapters = <Chapter>[];
 
   ChapterSelector({
+    super.key,
     required this.episode,
   }) {
     chapters = episode.chapters.where((c) => c.toc).toList(growable: false);
@@ -64,7 +65,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
               } else {
                 widget.itemScrollController.scrollTo(
                   index: index,
-                  duration: Duration(milliseconds: 100),
+                  duration: const Duration(milliseconds: 100),
                 );
               }
             }
@@ -82,7 +83,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
         stream: audioBloc.nowPlaying,
         builder: (context, snapshot) {
           return !snapshot.hasData || snapshot.data!.chaptersLoading
-              ? Align(
+              ? const Align(
                   alignment: Alignment.center,
                   child: PlatformProgressIndicator(),
                 )

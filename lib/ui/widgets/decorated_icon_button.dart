@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 
 /// An [IconButton] cannot have a background or border. This class
@@ -14,7 +12,7 @@ class DecoratedIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
 
-  DecoratedIconButton({
+  const DecoratedIconButton({
     Key? key,
     required this.iconColour,
     required this.decorationColour,
@@ -32,7 +30,7 @@ class DecoratedIconButton extends StatelessWidget {
           height: 42.0,
           decoration: ShapeDecoration(
             color: decorationColour,
-            shape: CircleBorder(),
+            shape: const CircleBorder(),
           ),
           child: IconButton(
             icon: Icon(icon),

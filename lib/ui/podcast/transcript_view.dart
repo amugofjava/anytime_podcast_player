@@ -24,7 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 class TranscriptView extends StatefulWidget {
   final Episode episode;
 
-  TranscriptView({
+  const TranscriptView({
     Key? key,
     required this.episode,
   }) : super(key: key);
@@ -151,7 +151,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 first = false;
               } else {
                 scrolling = true;
-                _itemScrollController.scrollTo(index: index, duration: Duration(milliseconds: 100)).then((value) {
+                _itemScrollController.scrollTo(index: index, duration: const Duration(milliseconds: 100)).then((value) {
                   scrolling = false;
                 });
               }
@@ -177,7 +177,7 @@ class _TranscriptViewState extends State<TranscriptView> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data is TranscriptLoadingState) {
-              return Align(
+              return const Align(
                 alignment: Alignment.center,
                 child: PlatformProgressIndicator(),
               );
@@ -225,9 +225,9 @@ class _TranscriptViewState extends State<TranscriptView> {
                     child: TextField(
                       controller: _transcriptSearchController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
+                        prefixIcon: const Icon(Icons.search),
                         suffixIcon: IconButton(
-                          icon: Icon(Icons.close),
+                          icon: const Icon(Icons.close),
                           onPressed: () {
                             _transcriptSearchController.clear();
                             audioBloc.filterTranscript(TranscriptClearEvent());
@@ -238,8 +238,8 @@ class _TranscriptViewState extends State<TranscriptView> {
                         ),
                         isDense: true,
                         filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
                           gapPadding: 0.0,
                         ),
                         hintText: L.of(context)!.search_transcript_label,
@@ -277,7 +277,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                   ),
                   if (widget.episode.persons.isNotEmpty)
                     Container(
-                      padding: EdgeInsets.only(left: 16.0),
+                      padding: const EdgeInsets.only(left: 16.0),
                       width: double.infinity,
                       height: 72.0,
                       child: ListView.builder(
@@ -303,7 +303,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                                     person.image!,
                                     cache: true,
                                   ).image,
-                                  child: Text(''),
+                                  child: const Text(''),
                                 ),
                               ),
                             );
@@ -373,7 +373,7 @@ class SubtitleWidget extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
         color: highlight ? Theme.of(context).colorScheme.onBackground : Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -389,7 +389,7 @@ class SubtitleWidget extends StatelessWidget {
               subtitle.data!,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            Padding(padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0))
+            const Padding(padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 16.0))
           ],
         ),
       ),

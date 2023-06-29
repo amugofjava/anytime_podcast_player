@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -32,6 +30,7 @@ class EpisodeTile extends StatelessWidget {
   final bool queued;
 
   const EpisodeTile({
+    super.key,
     required this.episode,
     required this.download,
     required this.play,
@@ -160,17 +159,17 @@ class EpisodeTile extends StatelessWidget {
                       : null,
                   child: Column(
                     children: <Widget>[
-                      Icon(
+                      const Icon(
                         Icons.delete_outline,
                         size: 22,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
                         L.of(context)!.delete_label,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -199,13 +198,13 @@ class EpisodeTile extends StatelessWidget {
                         queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
                         size: 22,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
                         queued ? 'Remove' : 'Add',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -230,13 +229,13 @@ class EpisodeTile extends StatelessWidget {
                         episode.played ? Icons.unpublished_outlined : Icons.check_circle_outline,
                         size: 22,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
                         episode.played ? L.of(context)!.mark_unplayed_label : L.of(context)!.mark_played_label,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -255,7 +254,7 @@ class EpisodeTile extends StatelessWidget {
                         context: context,
                         backgroundColor: theme.bottomAppBarTheme.color,
                         isScrollControlled: true,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10.0),
                             topRight: Radius.circular(10.0),
@@ -271,17 +270,17 @@ class EpisodeTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Icon(
+                      const Icon(
                         Icons.unfold_more_outlined,
                         size: 22,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
                       ),
                       Text(
                         L.of(context)!.more_label,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.normal,
                         ),
                       ),
@@ -302,7 +301,8 @@ class EpisodeTransportControls extends StatelessWidget {
   final bool download;
   final bool play;
 
-  EpisodeTransportControls({
+  const EpisodeTransportControls({
+    super.key,
     required this.episode,
     required this.download,
     required this.play,
@@ -344,7 +344,7 @@ class EpisodeSubtitle extends StatelessWidget {
   final String date;
   final Duration length;
 
-  EpisodeSubtitle(this.episode)
+  EpisodeSubtitle(this.episode, {super.key})
       : date = episode.publicationDate == null
             ? ''
             : DateFormat(episode.publicationDate!.year == DateTime.now().year ? 'd MMM' : 'd MMM yy')

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -17,6 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Downloads extends StatefulWidget {
+  const Downloads({
+    super.key,
+  });
+
   @override
   State<Downloads> createState() => _DownloadsState();
 }
@@ -51,7 +53,7 @@ class _DownloadsState extends State<Downloads> {
           );
         } else {
           if (state is BlocLoadingState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +64,7 @@ class _DownloadsState extends State<Downloads> {
               ),
             );
           } else if (state is BlocErrorState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Text('ERROR'),
             );

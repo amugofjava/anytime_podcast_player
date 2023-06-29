@@ -4,7 +4,7 @@ class PlaceholderBuilder extends InheritedWidget {
   final WidgetBuilder Function() builder;
   final WidgetBuilder Function() errorBuilder;
 
-  PlaceholderBuilder({
+  const PlaceholderBuilder({
     Key? key,
     required this.builder,
     required this.errorBuilder,

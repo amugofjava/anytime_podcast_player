@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 /// when running on iOS or MacOS and a [CircularProgressIndicator] for
 /// everything else.
 class PlatformProgressIndicator extends StatelessWidget {
+  const PlatformProgressIndicator({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -15,10 +19,10 @@ class PlatformProgressIndicator extends StatelessWidget {
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
-        return CircularProgressIndicator();
+        return const CircularProgressIndicator();
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        return CupertinoActivityIndicator();
+        return const CupertinoActivityIndicator();
     }
   }
 }

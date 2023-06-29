@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,36 +12,36 @@ ThemeData _buildLightTheme() {
   final base = ThemeData.light();
 
   return base.copyWith(
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: Color(0xffff9800),
       secondary: Color(0xfffb8c00),
       background: Color(0xffffffff),
       error: Color(0xffd32f2f),
       onBackground: Color(0xffff9800),
     ),
-    bottomAppBarTheme: BottomAppBarTheme().copyWith(
-      color: Color(0xffffffff),
+    bottomAppBarTheme: const BottomAppBarTheme().copyWith(
+      color: const Color(0xffffffff),
     ),
-    cardTheme: CardTheme().copyWith(
-      color: Color(0xffffa900),
-      shadowColor: Color(0xfff57c00),
+    cardTheme: const CardTheme().copyWith(
+      color: const Color(0xffffa900),
+      shadowColor: const Color(0xfff57c00),
     ),
     brightness: Brightness.light,
-    primaryColor: Color(0xffff9800),
-    primaryColorLight: Color(0xffffe0b2),
-    primaryColorDark: Color(0xfff57c00),
-    canvasColor: Color(0xffffffff),
-    scaffoldBackgroundColor: Color(0xffffffff),
-    cardColor: Color(0xffffffff),
-    dividerColor: Color(0x1f000000),
-    highlightColor: Color(0x66bcbcbc),
-    splashColor: Color(0x66c8c8c8),
-    unselectedWidgetColor: Color(0x8a000000),
-    disabledColor: Color(0x61000000),
-    secondaryHeaderColor: Color(0xffffffff),
-    dialogBackgroundColor: Color(0xffffffff),
+    primaryColor: const Color(0xffff9800),
+    primaryColorLight: const Color(0xffffe0b2),
+    primaryColorDark: const Color(0xfff57c00),
+    canvasColor: const Color(0xffffffff),
+    scaffoldBackgroundColor: const Color(0xffffffff),
+    cardColor: const Color(0xffffffff),
+    dividerColor: const Color(0x1f000000),
+    highlightColor: const Color(0x66bcbcbc),
+    splashColor: const Color(0x66c8c8c8),
+    unselectedWidgetColor: const Color(0x8a000000),
+    disabledColor: const Color(0x61000000),
+    secondaryHeaderColor: const Color(0xffffffff),
+    dialogBackgroundColor: const Color(0xffffffff),
     indicatorColor: Colors.orange,
-    hintColor: Color(0x8a000000),
+    hintColor: const Color(0x8a000000),
     primaryTextTheme: Typography.material2021(platform: TargetPlatform.android).black,
     textTheme: Typography.material2021(
       platform: TargetPlatform.android,
@@ -55,10 +53,10 @@ ThemeData _buildLightTheme() {
     iconTheme: base.iconTheme.copyWith(
       color: Colors.orange,
     ),
-    sliderTheme: SliderThemeData().copyWith(
+    sliderTheme: const SliderThemeData().copyWith(
       valueIndicatorColor: Colors.orange,
       trackHeight: 2.0,
-      thumbShape: RoundSliderThumbShape(
+      thumbShape: const RoundSliderThumbShape(
         enabledThumbRadius: 6.0,
         disabledThumbRadius: 6.0,
       ),
@@ -84,61 +82,61 @@ ThemeData _buildDarkTheme() {
   final base = ThemeData.dark();
 
   return base.copyWith(
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
       primary: Color(0xffffffff),
       secondary: Color(0xfffb8c00),
       background: Color(0xff222222),
       error: Color(0xffd32f2f),
       onBackground: Color(0xff656565),
     ),
-    bottomAppBarTheme: BottomAppBarTheme().copyWith(
-      color: Color(0xff222222),
+    bottomAppBarTheme: const BottomAppBarTheme().copyWith(
+      color: const Color(0xff222222),
     ),
-    cardTheme: CardTheme().copyWith(
-      color: Color(0xff444444),
-      shadowColor: Color(0x77ffffff),
+    cardTheme: const CardTheme().copyWith(
+      color: const Color(0xff444444),
+      shadowColor: const Color(0x77ffffff),
     ),
     brightness: Brightness.dark,
-    primaryColor: Color(0xffffffff),
-    primaryColorLight: Color(0xffffe0b2),
-    primaryColorDark: Color(0xfff57c00),
-    canvasColor: Color(0xff000000),
-    scaffoldBackgroundColor: Color(0xff000000),
+    primaryColor: const Color(0xffffffff),
+    primaryColorLight: const Color(0xffffe0b2),
+    primaryColorDark: const Color(0xfff57c00),
+    canvasColor: const Color(0xff000000),
+    scaffoldBackgroundColor: const Color(0xff000000),
     cardColor: Colors.black,
-    dividerColor: Color(0xff444444),
-    highlightColor: Color(0xff222222),
-    splashColor: Color(0x66c8c8c8),
+    dividerColor: const Color(0xff444444),
+    highlightColor: const Color(0xff222222),
+    splashColor: const Color(0x66c8c8c8),
     unselectedWidgetColor: Colors.white,
-    disabledColor: Color(0x77ffffff),
-    secondaryHeaderColor: Color(0xff222222),
-    dialogBackgroundColor: Color(0xff222222),
+    disabledColor: const Color(0x77ffffff),
+    secondaryHeaderColor: const Color(0xff222222),
+    dialogBackgroundColor: const Color(0xff222222),
     indicatorColor: Colors.orange,
-    hintColor: Color(0x80ffffff),
+    hintColor: const Color(0x80ffffff),
     primaryTextTheme: Typography.material2021(platform: TargetPlatform.android).white,
     textTheme: Typography.material2021(platform: TargetPlatform.android).white,
-    primaryIconTheme: IconThemeData(color: Colors.white),
+    primaryIconTheme: const IconThemeData(color: Colors.white),
     iconTheme: base.iconTheme.copyWith(
       color: Colors.white,
     ),
     dividerTheme: base.dividerTheme.copyWith(
-      color: Color(0xff444444),
+      color: const Color(0xff444444),
     ),
-    sliderTheme: SliderThemeData().copyWith(
+    sliderTheme: const SliderThemeData().copyWith(
       valueIndicatorColor: Colors.white,
       trackHeight: 2.0,
-      thumbShape: RoundSliderThumbShape(
+      thumbShape: const RoundSliderThumbShape(
         enabledThumbRadius: 6.0,
         disabledThumbRadius: 6.0,
       ),
     ),
     appBarTheme: base.appBarTheme.copyWith(
-        backgroundColor: Color(0xff222222),
+        backgroundColor: const Color(0xff222222),
         foregroundColor: Colors.white,
-        shadowColor: Color(0xff222222),
+        shadowColor: const Color(0xff222222),
         elevation: 1.0,
         systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
           systemNavigationBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Color(0xff222222),
+          systemNavigationBarColor: const Color(0xff222222),
           statusBarIconBrightness: Brightness.light,
         )),
     snackBarTheme: base.snackBarTheme.copyWith(
@@ -146,8 +144,8 @@ ThemeData _buildDarkTheme() {
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        foregroundColor: Color(0xffffffff),
-        side: BorderSide(
+        foregroundColor: const Color(0xffffffff),
+        side: const BorderSide(
           color: Color(0xffffffff),
           style: BorderStyle.solid,
         ),

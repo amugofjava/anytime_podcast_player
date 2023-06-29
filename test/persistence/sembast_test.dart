@@ -527,10 +527,10 @@ void main() {
   group('Saving, updating and retrieving downloaded episodes', () {
     test('Episodes ordered by reverse publication-date', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -610,10 +610,10 @@ void main() {
 
     test('Fetch downloaded episodes', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -725,10 +725,10 @@ void main() {
 
     test('Delete downloaded episodes', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -795,10 +795,10 @@ void main() {
 
     test('Subscribe after downloading episodes', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -883,10 +883,10 @@ void main() {
 
     test('Fetch downloads for podcast', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -960,10 +960,10 @@ void main() {
 
     test('Fetch downloads by task ID', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       var tid1 = 'AAAA-BBBB-CCCC-DDDD-1000';
       var tid2 = 'AAAA-BBBB-CCCC-DDDD-2000';
@@ -1038,10 +1038,10 @@ void main() {
 
     test('Test episode state', () async {
       var pubDate5 = DateTime.now();
-      var pubDate4 = DateTime.now().subtract(Duration(days: 1));
-      var pubDate3 = DateTime.now().subtract(Duration(days: 2));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -1103,8 +1103,8 @@ void main() {
     });
 
     test('Test episode duration', () async {
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
 
       podcast1.episodes = <Episode>[
         Episode(
@@ -1153,15 +1153,15 @@ void main() {
       var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
-            start: Duration(seconds: 0),
+            start: const Duration(seconds: 0),
             data: 'This is line 1',
-            end: Duration(seconds: 10),
+            end: const Duration(seconds: 10),
             speaker: 'Speaker 1'),
         Subtitle(
             index: 1,
-            start: Duration(seconds: 10),
+            start: const Duration(seconds: 10),
             data: 'This is line 2',
-            end: Duration(seconds: 20),
+            end: const Duration(seconds: 20),
             speaker: 'Speaker 2'),
       ]);
 
@@ -1180,15 +1180,15 @@ void main() {
       var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
-            start: Duration(seconds: 0),
+            start: const Duration(seconds: 0),
             data: 'This is line 1',
-            end: Duration(seconds: 10),
+            end: const Duration(seconds: 10),
             speaker: 'Speaker 1'),
         Subtitle(
             index: 1,
-            start: Duration(seconds: 10),
+            start: const Duration(seconds: 10),
             data: 'This is line 2',
-            end: Duration(seconds: 20),
+            end: const Duration(seconds: 20),
             speaker: 'Speaker 2'),
       ]);
 
@@ -1208,30 +1208,30 @@ void main() {
       var transcript1 = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
-            start: Duration(seconds: 0),
+            start: const Duration(seconds: 0),
             data: 'This is line 1',
-            end: Duration(seconds: 10),
+            end: const Duration(seconds: 10),
             speaker: 'Speaker 1'),
         Subtitle(
             index: 1,
-            start: Duration(seconds: 10),
+            start: const Duration(seconds: 10),
             data: 'This is line 2',
-            end: Duration(seconds: 20),
+            end: const Duration(seconds: 20),
             speaker: 'Speaker 2'),
       ]);
 
       var transcript2 = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
-            start: Duration(seconds: 0),
+            start: const Duration(seconds: 0),
             data: 'This is line 1b',
-            end: Duration(seconds: 100),
+            end: const Duration(seconds: 100),
             speaker: 'Speaker 1b'),
         Subtitle(
             index: 1,
-            start: Duration(seconds: 100),
+            start: const Duration(seconds: 100),
             data: 'This is line 2b',
-            end: Duration(seconds: 200),
+            end: const Duration(seconds: 200),
             speaker: 'Speaker 2b'),
       ]);
 
@@ -1256,21 +1256,21 @@ void main() {
     });
 
     test('Test episode transcript data', () async {
-      var pubDate1 = DateTime.now().subtract(Duration(days: 4));
-      var pubDate2 = DateTime.now().subtract(Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
 
       var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
-            start: Duration(seconds: 0),
+            start: const Duration(seconds: 0),
             data: 'This is line 1',
-            end: Duration(seconds: 10),
+            end: const Duration(seconds: 10),
             speaker: 'Speaker 1'),
         Subtitle(
             index: 1,
-            start: Duration(seconds: 10),
+            start: const Duration(seconds: 10),
             data: 'This is line 2',
-            end: Duration(seconds: 20),
+            end: const Duration(seconds: 20),
             speaker: 'Speaker 2'),
       ]);
 

@@ -16,7 +16,10 @@ import 'package:provider/provider.dart';
 class Search extends StatefulWidget {
   final String? searchTerm;
 
-  Search({this.searchTerm});
+  const Search({
+    super.key,
+    this.searchTerm,
+  });
 
   @override
   State<Search> createState() => _SearchState();
@@ -63,7 +66,7 @@ class _SearchState extends State<Search> {
               tooltip: L.of(context)!.search_back_button_label,
               icon: Platform.isAndroid
                   ? Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor)
-                  : Icon(Icons.arrow_back_ios),
+                  : const Icon(Icons.arrow_back_ios),
               onPressed: () => Navigator.pop(context),
             ),
             title: TextField(
@@ -89,7 +92,7 @@ class _SearchState extends State<Search> {
             actions: <Widget>[
               IconButton(
                 tooltip: L.of(context)!.clear_search_button_label,
-                icon: Icon(Icons.clear),
+                icon: const Icon(Icons.clear),
                 onPressed: () {
                   _searchController.clear();
                   FocusScope.of(context).requestFocus(_searchFocusNode);
@@ -98,9 +101,7 @@ class _SearchState extends State<Search> {
               ),
             ],
           ),
-          Container(
-            child: SearchResults(data: bloc.results!),
-          ),
+          SearchResults(data: bloc.results!),
         ],
       ),
     );

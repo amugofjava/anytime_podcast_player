@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -42,7 +40,7 @@ class DownloadButton extends StatelessWidget {
           center: percent > 0
               ? Text(
                   '$percent%',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12.0,
                   ),
                 )

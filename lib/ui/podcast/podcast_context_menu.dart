@@ -14,7 +14,10 @@ import 'package:provider/provider.dart';
 class PodcastContextMenu extends StatelessWidget {
   final Podcast podcast;
 
-  PodcastContextMenu(this.podcast);
+  const PodcastContextMenu(
+    this.podcast, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class PodcastContextMenu extends StatelessWidget {
 class _MaterialPodcastMenu extends StatelessWidget {
   final Podcast podcast;
 
-  _MaterialPodcastMenu(this.podcast);
+  const _MaterialPodcastMenu(this.podcast);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
             onSelected: (event) {
               togglePlayed(value: event, bloc: bloc);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.more_vert,
             ),
             itemBuilder: (BuildContext context) {
@@ -89,7 +92,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
 class _CupertinoContextMenu extends StatelessWidget {
   final Podcast podcast;
 
-  _CupertinoContextMenu(this.podcast);
+  const _CupertinoContextMenu(this.podcast);
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +102,7 @@ class _CupertinoContextMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return IconButton(
-            icon: Icon(CupertinoIcons.ellipsis),
+            icon: const Icon(CupertinoIcons.ellipsis),
             onPressed: () => showCupertinoModalPopup<void>(
               context: context,
               builder: (BuildContext context) {

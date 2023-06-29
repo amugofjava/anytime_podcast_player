@@ -44,7 +44,7 @@ class _OPMLSelectState extends State<OPMLSelect> {
 
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(),
+      navigationBar: const CupertinoNavigationBar(),
       child: _buildBody(context),
     );
   }
@@ -59,21 +59,21 @@ class _OPMLSelectState extends State<OPMLSelect> {
           children: [
             ElevatedButton(
               onPressed: () async {
+                final navigator = Navigator.of(context);
                 var result = (await FilePicker.platform.pickFiles())!;
 
                 if (result.count > 0) {
                   var file = result.files.first;
 
-                  await Navigator.push(
-                    context,
+                  await navigator.push(
                     MaterialPageRoute<void>(
-                      settings: RouteSettings(name: 'opmlimport'),
+                      settings: const RouteSettings(name: 'opmlimport'),
                       builder: (context) => OPMLImport(file: file.path!),
                       fullscreenDialog: true,
                     ),
                   );
 
-                  Navigator.pop(context);
+                  navigator.pop();
                 }
               },
               child: Text(L.of(context)!.opml_import_button_label),

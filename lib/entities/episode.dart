@@ -370,7 +370,7 @@ class Episode {
       return Duration(seconds: tr);
     }
 
-    return Duration(seconds: 0);
+    return const Duration(seconds: 0);
   }
 
   double get percentagePlayed {
@@ -393,7 +393,7 @@ class Episode {
         _descriptionText = '';
       } else {
         // Replace break tags with space character for readability
-        var formattedDescription = description!.replaceAll(RegExp(r'(\<br\/?>)+'), ' ');
+        var formattedDescription = description!.replaceAll(RegExp(r'(<br/?>)+'), ' ');
         _descriptionText = parseFragment(formattedDescription).text;
       }
     }

@@ -59,14 +59,20 @@ android {
     }
 
     buildTypes {
-        release {
-//            signingConfig signingConfigs.release
+        debug {
             signingConfig signingConfigs.debug
+            shrinkResources false
+        }
+
+        release {
+            signingConfig signingConfigs.release
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
     }
+
     namespace 'uk.me.amugofjava.anytime'
+
     lint {
         abortOnError false
         disable 'InvalidPackage'

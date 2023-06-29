@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/widgets.dart';
 
 class DotDecoration extends Decoration {
@@ -42,7 +40,7 @@ class _DotDecorationPainter extends BoxPainter {
           newOffset.dy - pillHeight,
           newOffset.dx + pillWidth,
           newOffset.dy + pillHeight,
-          Radius.circular(12.0),
+          const Radius.circular(12.0),
         ),
         paint);
   }

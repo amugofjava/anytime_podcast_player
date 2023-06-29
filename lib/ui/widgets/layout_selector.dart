@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
@@ -12,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LayoutSelectorWidget extends StatefulWidget {
+  const LayoutSelectorWidget({
+    super.key,
+  });
+
   @override
   State<LayoutSelectorWidget> createState() => _LayoutSelectorWidgetState();
 }
@@ -43,7 +45,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SliderHandle(),
+              const SliderHandle(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8.0, 24.0, 8.0, 24.0),
                 child: Row(
@@ -53,8 +55,8 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                       Expanded(
                           child: Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8.0, right: 8.0),
                             child: Icon(
                               Icons.grid_view,
                               size: 18,
@@ -120,7 +122,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                       ),
                     ]),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 8.0,
               ),
             ],

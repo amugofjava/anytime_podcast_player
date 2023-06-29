@@ -29,10 +29,10 @@ import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as podcast_search;
 
 class MobilePodcastService extends PodcastService {
-  final descriptionRegExp1 = RegExp(r'(<\/p><br>|<\/p><\/br>|<p><br><\/p>|<p><\/br><\/p>)');
-  final descriptionRegExp2 = RegExp(r'(<p><br><\/p>|<p><\/br><\/p>)');
+  final descriptionRegExp1 = RegExp(r'(</p><br>|</p></br>|<p><br></p>|<p></br></p>)');
+  final descriptionRegExp2 = RegExp(r'(<p><br></p>|<p></br></p>)');
   final log = Logger('MobilePodcastService');
-  final _cache = _PodcastCache(maxItems: 10, expiration: Duration(minutes: 30));
+  final _cache = _PodcastCache(maxItems: 10, expiration: const Duration(minutes: 30));
   var _categories = <String>[];
   var _intlCategories = <String?>[];
   var _intlCategoriesSorted = <String>[];
@@ -217,123 +217,120 @@ class MobilePodcastService extends PodcastService {
         pc.id = follow.id;
       }
 
-      // Find all episodes from the feed.
-      if (loadedPodcast.episodes != null) {
-        // Usually, episodes are order by reverse publication date - but not always.
-        // Enforce that ordering. To prevent unnecessary sorting, we'll sample the
-        // first two episodes to see what order they are in.
-        if (loadedPodcast.episodes!.length > 1) {
-          if (loadedPodcast.episodes![0].publicationDate!.millisecondsSinceEpoch <
-              loadedPodcast.episodes![1].publicationDate!.millisecondsSinceEpoch) {
-            loadedPodcast.episodes!.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+      // Usually, episodes are order by reverse publication date - but not always.
+      // Enforce that ordering. To prevent unnecessary sorting, we'll sample the
+      // first two episodes to see what order they are in.
+      if (loadedPodcast.episodes.length > 1) {
+        if (loadedPodcast.episodes[0].publicationDate!.millisecondsSinceEpoch <
+            loadedPodcast.episodes[1].publicationDate!.millisecondsSinceEpoch) {
+          loadedPodcast.episodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+        }
+      }
+
+      // Loop through all episodes in the feed and check to see if we already have that episode
+      // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
+      for (final episode in loadedPodcast.episodes) {
+        final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep!.guid == episode.guid);
+        final author = episode.author?.replaceAll('\n', '').trim() ?? '';
+        final title = _format(episode.title);
+        final description = _format(episode.description);
+        final content = episode.content;
+
+        final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.imageUrl : episode.imageUrl;
+        final episodeThumbImage =
+            episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
+        final duration = episode.duration?.inSeconds ?? 0;
+        final transcriptUrls = <TranscriptUrl>[];
+        final episodePersons = <Person>[];
+
+        for (var t in episode.transcripts) {
+          late TranscriptFormat type;
+
+          switch (t.type) {
+            case podcast_search.TranscriptFormat.subrip:
+              type = TranscriptFormat.subrip;
+              break;
+            case podcast_search.TranscriptFormat.json:
+              type = TranscriptFormat.json;
+              break;
+            case podcast_search.TranscriptFormat.unsupported:
+              type = TranscriptFormat.unsupported;
+              break;
           }
+
+          transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
         }
 
-        // Loop through all episodes in the feed and check to see if we already have that episode
-        // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
-        for (final episode in loadedPodcast.episodes!) {
-          final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep!.guid == episode.guid);
-          final author = episode.author?.replaceAll('\n', '').trim() ?? '';
-          final title = _format(episode.title);
-          final description = _format(episode.description);
-          final content = episode.content;
-
-          final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.imageUrl : episode.imageUrl;
-          final episodeThumbImage =
-              episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
-          final duration = episode.duration?.inSeconds ?? 0;
-          final transcriptUrls = <TranscriptUrl>[];
-          final episodePersons = <Person>[];
-
-          for (var t in episode.transcripts) {
-            late TranscriptFormat type;
-
-            switch (t.type) {
-              case podcast_search.TranscriptFormat.subrip:
-                type = TranscriptFormat.subrip;
-                break;
-              case podcast_search.TranscriptFormat.json:
-                type = TranscriptFormat.json;
-                break;
-              case podcast_search.TranscriptFormat.unsupported:
-                type = TranscriptFormat.unsupported;
-                break;
-            }
-
-            transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
-          }
-
-          if (episode.persons.isNotEmpty) {
-            for (var p in episode.persons) {
-              episodePersons.add(Person(
-                name: p.name,
-                role: p.role!,
-                group: p.group!,
-                image: p.image,
-                link: p.link,
-              ));
-            }
-          } else if (persons.isNotEmpty) {
-            episodePersons.addAll(persons);
-          }
-
-          if (existingEpisode == null) {
-            pc.newEpisodes = highlightNewEpisodes && pc.id != null;
-
-            pc.episodes.add(Episode(
-              highlight: pc.newEpisodes,
-              pguid: pc.guid,
-              guid: episode.guid,
-              podcast: pc.title,
-              title: title,
-              description: description,
-              content: content,
-              author: author,
-              season: episode.season ?? 0,
-              episode: episode.episode ?? 0,
-              contentUrl: episode.contentUrl,
-              link: episode.link,
-              imageUrl: episodeImage,
-              thumbImageUrl: episodeThumbImage,
-              duration: duration,
-              publicationDate: episode.publicationDate,
-              chaptersUrl: episode.chapters?.url,
-              transcriptUrls: transcriptUrls,
-              persons: episodePersons,
-              chapters: <Chapter>[],
+        if (episode.persons.isNotEmpty) {
+          for (var p in episode.persons) {
+            episodePersons.add(Person(
+              name: p.name,
+              role: p.role!,
+              group: p.group!,
+              image: p.image,
+              link: p.link,
             ));
-          } else {
-            /// Check if the ancillary episode data has changed.
-            if (!listEquals(existingEpisode.persons, episodePersons) ||
-                !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
-              pc.updatedEpisodes = true;
-            }
-
-            existingEpisode.title = title;
-            existingEpisode.description = description;
-            existingEpisode.content = content;
-            existingEpisode.author = author;
-            existingEpisode.season = episode.season ?? 0;
-            existingEpisode.episode = episode.episode ?? 0;
-            existingEpisode.contentUrl = episode.contentUrl;
-            existingEpisode.link = episode.link;
-            existingEpisode.imageUrl = episodeImage;
-            existingEpisode.thumbImageUrl = episodeThumbImage;
-            existingEpisode.publicationDate = episode.publicationDate;
-            existingEpisode.chaptersUrl = episode.chapters?.url;
-            existingEpisode.transcriptUrls = transcriptUrls;
-            existingEpisode.persons = episodePersons;
-
-            // If the source duration is 0 do not update any saved, calculated duration.
-            if (duration > 0) {
-              existingEpisode.duration = duration;
-            }
-
-            pc.episodes.add(existingEpisode);
-
-            // Clear this episode from our existing list
-            existingEpisodes.remove(existingEpisode);
           }
+        } else if (persons.isNotEmpty) {
+          episodePersons.addAll(persons);
+        }
+
+        if (existingEpisode == null) {
+          pc.newEpisodes = highlightNewEpisodes && pc.id != null;
+
+          pc.episodes.add(Episode(
+            highlight: pc.newEpisodes,
+            pguid: pc.guid,
+            guid: episode.guid,
+            podcast: pc.title,
+            title: title,
+            description: description,
+            content: content,
+            author: author,
+            season: episode.season ?? 0,
+            episode: episode.episode ?? 0,
+            contentUrl: episode.contentUrl,
+            link: episode.link,
+            imageUrl: episodeImage,
+            thumbImageUrl: episodeThumbImage,
+            duration: duration,
+            publicationDate: episode.publicationDate,
+            chaptersUrl: episode.chapters?.url,
+            transcriptUrls: transcriptUrls,
+            persons: episodePersons,
+            chapters: <Chapter>[],
+          ));
+        } else {
+          /// Check if the ancillary episode data has changed.
+          if (!listEquals(existingEpisode.persons, episodePersons) ||
+              !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
+            pc.updatedEpisodes = true;
+          }
+
+          existingEpisode.title = title;
+          existingEpisode.description = description;
+          existingEpisode.content = content;
+          existingEpisode.author = author;
+          existingEpisode.season = episode.season ?? 0;
+          existingEpisode.episode = episode.episode ?? 0;
+          existingEpisode.contentUrl = episode.contentUrl;
+          existingEpisode.link = episode.link;
+          existingEpisode.imageUrl = episodeImage;
+          existingEpisode.thumbImageUrl = episodeThumbImage;
+          existingEpisode.publicationDate = episode.publicationDate;
+          existingEpisode.chaptersUrl = episode.chapters?.url;
+          existingEpisode.transcriptUrls = transcriptUrls;
+          existingEpisode.persons = episodePersons;
+
+          // If the source duration is 0 do not update any saved, calculated duration.
+          if (duration > 0) {
+            existingEpisode.duration = duration;
+          }
+
+          pc.episodes.add(existingEpisode);
+
+          // Clear this episode from our existing list
+          existingEpisodes.remove(existingEpisode);
         }
       }
 
@@ -342,7 +339,7 @@ class MobilePodcastService extends PodcastService {
       var expired = <Episode>[];
 
       for (final episode in existingEpisodes) {
-        var feedEpisode = loadedPodcast.episodes!.firstWhereOrNull((ep) => ep.guid == episode!.guid);
+        var feedEpisode = loadedPodcast.episodes.firstWhereOrNull((ep) => ep.guid == episode!.guid);
 
         if (feedEpisode == null && episode!.downloaded) {
           pc.episodes.add(episode);
@@ -398,7 +395,7 @@ class MobilePodcastService extends PodcastService {
   Future<Transcript> loadTranscriptByUrl({required TranscriptUrl transcriptUrl}) async {
     var subtitles = <Subtitle>[];
     var result = await _loadTranscriptByUrl(transcriptUrl);
-    var threshold = Duration(seconds: 5);
+    var threshold = const Duration(seconds: 5);
     Subtitle? groupSubtitle;
 
     if (result != null) {

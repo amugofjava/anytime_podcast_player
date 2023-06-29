@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -58,7 +56,7 @@ class PlayPauseBusyButton extends StatelessWidget {
     return Semantics(
         label: '$label $title',
         child: Container(
-          padding: EdgeInsets.all(0.0),
+          padding: const EdgeInsets.all(0.0),
           height: 40.0,
           width: 38.0,
           child: Stack(

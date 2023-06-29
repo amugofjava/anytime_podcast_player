@@ -42,7 +42,7 @@ class QueueBloc extends Bloc {
       }
     });
 
-    audioPlayerService.queueState!.debounceTime(Duration(seconds: 2)).listen((event) {
+    audioPlayerService.queueState!.debounceTime(const Duration(seconds: 2)).listen((event) {
       podcastService.saveQueue(event.queue).then((value) {
         /// Queue saved.
       });

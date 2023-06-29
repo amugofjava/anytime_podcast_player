@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:flutter/material.dart';
 
 class SliderHandle extends StatelessWidget {
@@ -20,7 +18,7 @@ class SliderHandle extends StatelessWidget {
         height: 4,
         decoration: BoxDecoration(
           color: Theme.of(context).hintColor,
-          borderRadius: BorderRadius.all(Radius.circular(4.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
         ),
       ),
     );

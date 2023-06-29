@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/opml_state.dart';
@@ -50,7 +48,7 @@ class _OPMLImportState extends State<OPMLImport> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Flexible(
+                  const Flexible(
                     child: CircularProgressIndicator.adaptive(),
                   ),
                   Flexible(
@@ -65,7 +63,7 @@ class _OPMLImportState extends State<OPMLImport> {
                             L.of(context)!.label_opml_importing,
                             maxLines: 1,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 0.0,
                             height: 2.0,
                           ),
@@ -73,7 +71,7 @@ class _OPMLImportState extends State<OPMLImport> {
                             t!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12.0,
                             ),
                           ),

@@ -37,7 +37,11 @@ class PodcastDetails extends StatefulWidget {
   final Podcast podcast;
   final PodcastBloc _podcastBloc;
 
-  PodcastDetails(this.podcast, this._podcastBloc);
+  const PodcastDetails(
+    this.podcast,
+    this._podcastBloc, {
+    super.key,
+  });
 
   @override
   State<PodcastDetails> createState() => _PodcastDetailsState();
@@ -98,11 +102,12 @@ class _PodcastDetailsState extends State<PodcastDetails> {
             action: SnackBarAction(
               label: L.of(context)!.new_episodes_view_now_label,
               onPressed: () {
-                _sliverScrollController.animateTo(100, duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+                _sliverScrollController.animateTo(100,
+                    duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
                 widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
               },
             ),
-            duration: Duration(seconds: 5),
+            duration: const Duration(seconds: 5),
           ));
         }
       }
@@ -175,13 +180,13 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                     systemOverlayStyle: _systemOverlayStyle,
                     title: AnimatedOpacity(
                         opacity: toolbarCollapsed ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         child: Text(widget.podcast.title)),
                     leading: PlatformBackButton(
                       iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
                           ? Theme.of(context).appBarTheme.foregroundColor!
                           : Colors.white,
-                      decorationColour: toolbarCollapsed ? Color(0x00000000) : Color(0x22FFFFFF),
+                      decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
                       onPressed: () {
                         _resetSystemOverlayStyle();
                         Navigator.pop(context);
@@ -226,9 +231,9 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                       final state = snapshot.data;
 
                       if (state is BlocLoadingState) {
-                        return SliverToBoxAdapter(
+                        return const SliverToBoxAdapter(
                           child: Padding(
-                            padding: const EdgeInsets.all(24.0),
+                            padding: EdgeInsets.all(24.0),
                             child: Column(
                               children: <Widget>[
                                 PlatformProgressIndicator(),
@@ -247,7 +252,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Icon(
+                                const Icon(
                                   Icons.error_outline,
                                   size: 50,
                                 ),
@@ -269,14 +274,14 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               PodcastTitle(state.results!),
-                              Divider(),
+                              const Divider(),
                             ],
                           ),
                         ));
                       }
 
-                      return SliverToBoxAdapter(
-                        child: const SizedBox(
+                      return const SliverToBoxAdapter(
+                        child: SizedBox(
                           width: 0.0,
                           height: 0.0,
                         ),
@@ -315,7 +320,7 @@ class PodcastHeaderImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (podcast.imageUrl == null || podcast.imageUrl!.isEmpty) {
-      return Container(
+      return const SizedBox(
         height: 560,
         width: 560,
       );
@@ -325,11 +330,12 @@ class PodcastHeaderImage extends StatelessWidget {
       key: Key('details${podcast.imageUrl}'),
       url: podcast.imageUrl!,
       fit: BoxFit.cover,
-      placeholder:
-          placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator(),
+      placeholder: placeholderBuilder != null
+          ? placeholderBuilder?.builder()(context)
+          : const DelayedCircularProgressIndicator(),
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
-          : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+          : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
     );
   }
 }
@@ -337,7 +343,7 @@ class PodcastHeaderImage extends StatelessWidget {
 class PodcastTitle extends StatefulWidget {
   final Podcast podcast;
 
-  PodcastTitle(this.podcast);
+  const PodcastTitle(this.podcast, {super.key});
 
   @override
   State<PodcastTitle> createState() => _PodcastTitleState();
@@ -390,17 +396,17 @@ class _PodcastTitleState extends State<PodcastTitle> {
                       visible: showOverflow,
                       child: expanded
                           ? TextButton(
-                              style: ButtonStyle(
+                              style: const ButtonStyle(
                                 visualDensity: VisualDensity.compact,
                               ),
-                              child: Icon(Icons.expand_less),
+                              child: const Icon(Icons.expand_less),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(false);
                               },
                             )
                           : TextButton(
-                              style: ButtonStyle(visualDensity: VisualDensity.compact),
-                              child: Icon(Icons.expand_more),
+                              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                              child: const Icon(Icons.expand_more),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(true);
                               },
@@ -427,10 +433,10 @@ class _PodcastTitleState extends State<PodcastTitle> {
                         width: 0.0,
                         height: 0.0,
                       ),
-                Expanded(
+                const Expanded(
                     child: Align(
                   alignment: Alignment.centerRight,
-                  child: const SyncSpinner(),
+                  child: SyncSpinner(),
                 )),
               ],
             ),
@@ -486,12 +492,13 @@ class PodcastDescription extends StatelessWidget {
           builder: (context, snapshot) {
             final expanded = snapshot.data!;
             return AnimatedSize(
-              duration: Duration(milliseconds: 150),
+              duration: const Duration(milliseconds: 150),
               curve: Curves.fastOutSlowIn,
               alignment: Alignment.topCenter,
               child: Container(
-                constraints:
-                    expanded ? BoxConstraints() : BoxConstraints.loose(Size(double.infinity, maxHeight - padding)),
+                constraints: expanded
+                    ? const BoxConstraints()
+                    : BoxConstraints.loose(const Size(double.infinity, maxHeight - padding)),
                 child: expanded
                     ? content
                     : ShaderMask(
@@ -499,7 +506,7 @@ class PodcastDescription extends StatelessWidget {
                           colors: [Colors.white, Colors.white.withAlpha(0)],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          stops: [0.9, 1],
+                          stops: const [0.9, 1],
                         ).createShader,
                         child: content),
               ),
@@ -512,7 +519,7 @@ class PodcastDescription extends StatelessWidget {
 class SubscriptionButton extends StatelessWidget {
   final Podcast podcast;
 
-  SubscriptionButton(this.podcast);
+  const SubscriptionButton(this.podcast, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -532,7 +539,7 @@ class SubscriptionButton extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.delete_outline,
                       ),
                       label: Text(L.of(context)!.unsubscribe_label),
@@ -574,7 +581,7 @@ class SubscriptionButton extends StatelessWidget {
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       ),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add,
                       ),
                       label: Text(L.of(context)!.subscribe_label),

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
 import 'package:anytime/l10n/L.dart';
@@ -20,7 +18,11 @@ class DiscoveryResults extends StatelessWidget {
   final Stream<DiscoveryState>? data;
   final bool inlineSearch;
 
-  DiscoveryResults({required this.data, this.inlineSearch = false});
+  const DiscoveryResults({
+    super.key,
+    required this.data,
+    this.inlineSearch = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class DiscoveryResults extends StatelessWidget {
           return PodcastList(results: state.results as search.SearchResult);
         } else {
           if (state is DiscoveryLoadingState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -82,7 +84,7 @@ class DiscoveryResults extends StatelessWidget {
 class DiscoveryHeader extends StatefulWidget {
   final search.SearchResult results;
 
-  DiscoveryHeader({
+  const DiscoveryHeader({
     Key? key,
     required this.results,
   }) : super(key: key);
@@ -103,7 +105,7 @@ class _DiscoveryHeaderState extends State<DiscoveryHeader> {
           SliverToBoxAdapter(
               child: StreamBuilder<List<String>>(
                   stream: discoveryBloc.genres,
-                  initialData: <String>[],
+                  initialData: const <String>[],
                   builder: (context, snapshot) {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),

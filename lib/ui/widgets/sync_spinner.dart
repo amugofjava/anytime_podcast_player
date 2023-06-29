@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/material.dart';
@@ -24,9 +22,9 @@ class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStat
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1500),
     )..repeat();
-    _child = Icon(Icons.refresh);
+    _child = const Icon(Icons.refresh);
 
     super.initState();
   }
@@ -52,7 +50,7 @@ class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStat
                   turns: _controller,
                   child: _child,
                 )
-              : SizedBox(
+              : const SizedBox(
                   width: 0.0,
                   height: 0.0,
                 );

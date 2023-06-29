@@ -12,6 +12,10 @@ import 'package:provider/provider.dart';
 /// This class handles the rendering of the positional controls: the current playback
 /// time, time remaining and the time [Slider].
 class PlayerPositionControls extends StatefulWidget {
+  const PlayerPositionControls({
+    super.key,
+  });
+
   @override
   State<PlayerPositionControls> createState() => _PlayerPositionControlsState();
 }
@@ -71,7 +75,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                 FittedBox(
                   child: Text(
                     _formatDuration(Duration(seconds: currentPosition)),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),
                   ),
@@ -118,7 +122,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                   child: Text(
                     _formatDuration(Duration(seconds: timeRemaining)),
                     textAlign: TextAlign.right,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),
                   ),

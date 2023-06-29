@@ -59,7 +59,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   /// Ticks whilst playing. Updates our current position within an episode.
   final _durationTicker = Stream<int>.periodic(
-    Duration(milliseconds: 500),
+    const Duration(milliseconds: 500),
     (count) => count,
   ).asBroadcastStream();
 
@@ -200,7 +200,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> seek({required int position}) async {
     var currentMediaItem = _audioHandler.mediaItem.value;
-    var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
+    var duration = currentMediaItem?.duration ?? const Duration(seconds: 1);
     var p = Duration(seconds: position);
     var complete = p.inSeconds > 0 ? (duration.inSeconds / p.inSeconds) * 100 : 0;
 
@@ -643,7 +643,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     var playbackState = _audioHandler.playbackState.value;
 
     var currentMediaItem = _audioHandler.mediaItem.value;
-    var duration = currentMediaItem?.duration ?? Duration(seconds: 1);
+    var duration = currentMediaItem?.duration ?? const Duration(seconds: 1);
     var position = playbackState.position;
     var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
     var buffering = playbackState.processingState == AudioProcessingState.buffering;
@@ -762,7 +762,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           //   userAgent: Environment.userAgent(),
           audioLoadConfiguration: AudioLoadConfiguration(
         androidLoadControl: AndroidLoadControl(
-          backBufferDuration: Duration(seconds: 45),
+          backBufferDuration: const Duration(seconds: 45),
         ),
         darwinLoadControl: DarwinLoadControl(),
       ));

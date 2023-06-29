@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
@@ -15,7 +13,7 @@ import 'package:flutter/material.dart';
 class EpisodeDetails extends StatefulWidget {
   final Episode episode;
 
-  EpisodeDetails({
+  const EpisodeDetails({
     Key? key,
     required this.episode,
   }) : super(key: key);
@@ -43,7 +41,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ExpansionTile(
-                    key: Key('episodemoreinfo'),
+                    key: const Key('episodemoreinfo'),
                     trailing: PlayControl(
                       episode: episode,
                     ),
@@ -73,7 +71,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
-                Divider(),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Align(
@@ -87,14 +85,12 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                 if (episode.persons.isNotEmpty)
                   SizedBox(
                     height: 120.0,
-                    child: Container(
-                      child: ListView.builder(
-                        itemCount: episode.persons.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return PersonAvatar(person: episode.persons[index]);
-                        },
-                      ),
+                    child: ListView.builder(
+                      itemCount: episode.persons.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return PersonAvatar(person: episode.persons[index]);
+                      },
                     ),
                   ),
                 Padding(

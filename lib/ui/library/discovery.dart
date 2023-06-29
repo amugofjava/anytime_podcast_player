@@ -17,7 +17,8 @@ class Discovery extends StatefulWidget {
   final bool categories;
   final bool inlineSearch;
 
-  Discovery({
+  const Discovery({
+    super.key,
     this.categories = false,
     this.inlineSearch = false,
   });
@@ -105,7 +106,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
       color: Theme.of(context).canvasColor,
       child: StreamBuilder<List<String>>(
           stream: widget.discoveryBloc.genres,
-          initialData: [],
+          initialData: const [],
           builder: (context, snapshot) {
             var i = widget.discoveryBloc.selectedGenre.index;
 
@@ -127,7 +128,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               : Theme.of(context).cardTheme.color,
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              foregroundColor: Color(0xffffffff),
+                              foregroundColor: const Color(0xffffffff),
                               visualDensity: VisualDensity.compact,
                             ),
                             onPressed: () {

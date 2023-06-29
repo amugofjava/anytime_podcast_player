@@ -16,6 +16,10 @@ import 'package:provider/provider.dart';
 /// the episode queue is expanded. At some point we should try to merge the common code between
 /// this and [MiniPlayer].
 class FloatingPlayer extends StatelessWidget {
+  const FloatingPlayer({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
@@ -48,7 +52,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
   void initState() {
     super.initState();
 
-    _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _playPauseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _playPauseController.value = 1;
 
     _audioStateListener();
@@ -78,25 +82,23 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: snapshot.hasData
-                        ? PodcastImage(
-                            key: Key('float${snapshot.data!.imageUrl}'),
-                            url: snapshot.data!.imageUrl!,
-                            width: 58.0,
-                            height: 58.0,
-                            borderRadius: 4.0,
-                            placeholder: placeholderBuilder != null
-                                ? placeholderBuilder.builder()(context)
-                                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                            errorPlaceholder: placeholderBuilder != null
-                                ? placeholderBuilder.errorBuilder()(context)
-                                : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                          )
-                        : Container(),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: snapshot.hasData
+                      ? PodcastImage(
+                          key: Key('float${snapshot.data!.imageUrl}'),
+                          url: snapshot.data!.imageUrl!,
+                          width: 58.0,
+                          height: 58.0,
+                          borderRadius: 4.0,
+                          placeholder: placeholderBuilder != null
+                              ? placeholderBuilder.builder()(context)
+                              : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                          errorPlaceholder: placeholderBuilder != null
+                              ? placeholderBuilder.errorBuilder()(context)
+                              : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                        )
+                      : Container(),
                 ),
                 Expanded(
                     flex: 1,

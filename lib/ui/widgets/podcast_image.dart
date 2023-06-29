@@ -27,7 +27,7 @@ class PodcastImage extends StatefulWidget {
   final Widget? placeholder;
   final Widget? errorPlaceholder;
 
-  PodcastImage({
+  const PodcastImage({
     Key? key,
     required this.url,
     this.height = double.infinity,
@@ -77,11 +77,11 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
             crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             firstChild: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.placeholder ??
-                  Container(
+                  SizedBox(
                     width: widget.width,
                     height: widget.height,
                   ),
@@ -167,7 +167,7 @@ class PodcastBannerImage extends StatefulWidget {
   final Widget? placeholder;
   final Widget? errorPlaceholder;
 
-  PodcastBannerImage({
+  const PodcastBannerImage({
     Key? key,
     required this.url,
     this.height = double.infinity,
@@ -221,7 +221,7 @@ class _PodcastBannerImageState extends State<PodcastBannerImage> with TickerProv
             crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             firstChild: widget.placeholder ??
                 SizedBox(
                   width: widget.width,

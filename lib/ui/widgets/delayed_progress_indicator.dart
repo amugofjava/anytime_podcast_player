@@ -15,7 +15,8 @@ import 'package:flutter/material.dart';
 class DelayedCircularProgressIndicator extends StatelessWidget {
   final int delayInMilliseconds;
 
-  DelayedCircularProgressIndicator({
+  const DelayedCircularProgressIndicator({
+    super.key,
     this.delayInMilliseconds = 1000,
   });
 
@@ -25,7 +26,7 @@ class DelayedCircularProgressIndicator extends StatelessWidget {
         future: Future.delayed(Duration(milliseconds: delayInMilliseconds), () => Container()),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Center(
+            return const Center(
               child: PlatformProgressIndicator(),
             );
           } else {

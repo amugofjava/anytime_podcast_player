@@ -1,5 +1,3 @@
-
-
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'search.dart';
 
 class SearchBar extends StatefulWidget {
+  const SearchBar({super.key});
+
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
@@ -37,7 +37,7 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.only(left: 16, right: 16),
+      contentPadding: const EdgeInsets.only(left: 16, right: 16),
       title: TextField(
         controller: _searchController,
         focusNode: _searchFocusNode,
@@ -53,7 +53,7 @@ class _SearchBarState extends State<SearchBar> {
               context,
               SlideRightRoute(
                 widget: Search(searchTerm: value),
-                settings: RouteSettings(name: 'search'),
+                settings: const RouteSettings(name: 'search'),
               ));
           _searchController.clear();
         },

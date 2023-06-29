@@ -1,7 +1,4 @@
-include: package:lints/recommended.yaml
-
-# TODO: Switch to the below lints once migration to Dart 3 complete.
-# include: package:flutter_lints/flutter.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude: [ build/**, lib/**/*.g.dart, lib/l10n/** ]

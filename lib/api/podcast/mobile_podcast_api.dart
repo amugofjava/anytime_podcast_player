@@ -56,7 +56,7 @@ class MobilePodcastApi extends PodcastApi {
   @override
   List<String> genres(String searchProvider) {
     var provider = searchProvider == 'itunes'
-        ? podcast_search.ITunesProvider()
+        ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
@@ -101,7 +101,7 @@ class MobilePodcastApi extends PodcastApi {
   static Future<podcast_search.SearchResult> _search(Map<String, String?> searchParams) {
     var term = searchParams['term']!;
     var provider = searchParams['searchProvider'] == 'itunes'
-        ? podcast_search.ITunesProvider()
+        ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
@@ -110,12 +110,12 @@ class MobilePodcastApi extends PodcastApi {
     return podcast_search.Search(
       userAgent: Environment.userAgent(),
       searchProvider: provider,
-    ).search(term).timeout(Duration(seconds: 30));
+    ).search(term).timeout(const Duration(seconds: 30));
   }
 
   static Future<podcast_search.SearchResult> _charts(Map<String, String?> searchParams) {
     var provider = searchParams['searchProvider'] == 'itunes'
-        ? podcast_search.ITunesProvider()
+        ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
@@ -130,7 +130,7 @@ class MobilePodcastApi extends PodcastApi {
 
     return podcast_search.Search(userAgent: Environment.userAgent(), searchProvider: provider)
         .charts(genre: searchParams['genre']!, country: country, limit: 50)
-        .timeout(Duration(seconds: 30));
+        .timeout(const Duration(seconds: 30));
   }
 
   Future<podcast_search.Podcast> _loadFeed(String url) {

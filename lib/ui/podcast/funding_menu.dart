@@ -23,7 +23,10 @@ import 'package:url_launcher/url_launcher.dart';
 class FundingMenu extends StatelessWidget {
   final List<Funding>? funding;
 
-  FundingMenu(this.funding);
+  const FundingMenu(
+    this.funding, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,7 @@ class FundingMenu extends StatelessWidget {
 class _MaterialFundingMenu extends StatelessWidget {
   final List<Funding>? funding;
 
-  _MaterialFundingMenu(this.funding);
+  const _MaterialFundingMenu(this.funding);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +75,7 @@ class _MaterialFundingMenu extends StatelessWidget {
                     settingsBloc.setExternalLinkConsent(value);
                   });
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.payment,
                 ),
                 itemBuilder: (BuildContext context) {
@@ -94,7 +97,7 @@ class _MaterialFundingMenu extends StatelessWidget {
 class _CupertinoFundingMenu extends StatelessWidget {
   final List<Funding>? funding;
 
-  _CupertinoFundingMenu(this.funding);
+  const _CupertinoFundingMenu(this.funding);
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +113,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
               return IconButton(
-                icon: Icon(Icons.payment),
+                icon: const Icon(Icons.payment),
                 onPressed: () => showCupertinoModalPopup<void>(
                   context: context,
                   builder: (BuildContext context) {

@@ -34,6 +34,10 @@ import 'package:provider/provider.dart';
 /// rest of the application is not prepared for iOS design; this
 /// is in preparation for the iOS version.
 class Settings extends StatefulWidget {
+  const Settings({
+    super.key,
+  });
+
   @override
   State<Settings> createState() => _SettingsState();
 }
@@ -54,7 +58,7 @@ class _SettingsState extends State<Settings> {
             children: [
               SettingsDividerLabel(label: L.of(context)!.settings_personalisation_divider_label),
               ListTile(
-                shape: RoundedRectangleBorder(side: BorderSide.none),
+                shape: const RoundedRectangleBorder(side: BorderSide.none),
                 title: Text(L.of(context)!.settings_theme_switch_label),
                 trailing: Switch.adaptive(
                     value: snapshot.data!.theme == 'dark',
@@ -88,7 +92,7 @@ class _SettingsState extends State<Settings> {
                             : null,
                       ),
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       height: 0,
                       width: 0,
                     ),
@@ -100,7 +104,7 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) => setState(() => settingsBloc.setAutoOpenNowPlaying(value)),
                 ),
               ),
-              EpisodeRefreshWidget(),
+              const EpisodeRefreshWidget(),
               SettingsDividerLabel(label: L.of(context)!.settings_data_divider_label),
               ListTile(
                 title: Text(L.of(context)!.settings_import_opml),
@@ -109,9 +113,9 @@ class _SettingsState extends State<Settings> {
                     type: FileType.custom,
                     // `podcast.opml` is a UTTypeDeclaration made in iOS setup.
                     allowedExtensions: ['opml', 'podcast.opml', 'xml'],
-                  ))!;
+                  ));
 
-                  if (result.count > 0) {
+                  if (result != null && result.count > 0) {
                     var file = result.files.first;
 
                     var e = await showPlatformDialog<bool>(
@@ -149,12 +153,12 @@ class _SettingsState extends State<Settings> {
                     context: context,
                     useRootNavigator: false,
                     builder: (_) => BasicDialogAlert(
-                      content: OPMLExport(),
+                      content: const OPMLExport(),
                     ),
                   );
                 },
               ),
-              SearchProviderWidget(),
+              const SearchProviderWidget(),
             ],
           );
         });

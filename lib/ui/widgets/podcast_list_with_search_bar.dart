@@ -15,7 +15,7 @@ class PodcastListWithSearchBar extends StatelessWidget {
       child: ShrinkWrappingViewport(
         offset: ViewportOffset.zero(),
         slivers: [
-          SliverToBoxAdapter(child: search.SearchBar()),
+          const SliverToBoxAdapter(child: search.SearchBar()),
           PodcastList(results: results),
         ],
       ),

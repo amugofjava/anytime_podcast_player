@@ -15,6 +15,10 @@ import 'package:provider/provider.dart';
 /// Builds a transport control bar for rewind, play and fast-forward.
 /// See [NowPlaying].
 class PlayerTransportControls extends StatefulWidget {
+  const PlayerTransportControls({
+    super.key,
+  });
+
   @override
   State<PlayerTransportControls> createState() => _PlayerTransportControlsState();
 }
@@ -35,7 +39,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   width: 36.0,
                   height: 36.0,
                 ),
@@ -45,7 +49,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   },
                   tooltip: L.of(context)!.rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.replay_10,
                     size: 48.0,
                   ),
@@ -56,12 +60,12 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                     return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
                   padding: const EdgeInsets.all(0.0),
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.forward_30,
                     size: 48.0,
                   ),
                 ),
-                SpeedSelectorWidget(),
+                const SpeedSelectorWidget(),
               ],
             );
           }),
@@ -84,7 +88,7 @@ class AnimatedPlayButton extends StatefulWidget {
   final PlayHandler onPlay;
   final PlayHandler onPause;
 
-  AnimatedPlayButton({
+  const AnimatedPlayButton({
     Key? key,
     required this.audioState,
     this.onPlay = _onPlay,
@@ -114,7 +118,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
-    _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _playPauseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
 
     /// Seems a little hacky, but when we load the form we want the play/pause
     /// button to be in the correct state. If we are building the first frame,
@@ -164,7 +168,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
             size: 84,
           ),
         if (!buffering)
-          SizedBox(
+          const SizedBox(
             height: 84,
             width: 84,
           ),

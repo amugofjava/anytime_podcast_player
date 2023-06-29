@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
@@ -28,7 +26,8 @@ import 'package:rxdart/rxdart.dart';
 class PlayControl extends StatelessWidget {
   final Episode episode;
 
-  PlayControl({
+  const PlayControl({
+    super.key,
     required this.episode,
   });
 
@@ -142,8 +141,8 @@ class PlayControl extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute<void>(
-          builder: (context) => NowPlaying(),
-          settings: RouteSettings(name: 'nowplaying'),
+          builder: (context) => const NowPlaying(),
+          settings: const RouteSettings(name: 'nowplaying'),
           fullscreenDialog: false,
         ),
       );
@@ -154,7 +153,8 @@ class PlayControl extends StatelessWidget {
 class DownloadControl extends StatelessWidget {
   final Episode episode;
 
-  DownloadControl({
+  const DownloadControl({
+    super.key,
     required this.episode,
   });
 

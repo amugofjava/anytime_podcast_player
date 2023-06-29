@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
@@ -14,7 +12,10 @@ import 'package:podcast_search/podcast_search.dart' as search;
 class SearchResults extends StatelessWidget {
   final Stream<BlocState> data;
 
-  SearchResults({required this.data});
+  const SearchResults({
+    super.key,
+    required this.data,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class SearchResults extends StatelessWidget {
           return PodcastList(results: state.results as search.SearchResult);
         } else {
           if (state is BlocLoadingState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

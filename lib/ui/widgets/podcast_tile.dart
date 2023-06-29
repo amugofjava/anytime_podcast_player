@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
@@ -15,6 +13,7 @@ class PodcastTile extends StatelessWidget {
   final Podcast podcast;
 
   const PodcastTile({
+    super.key,
     required this.podcast,
   });
 
@@ -27,7 +26,7 @@ class PodcastTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-              settings: RouteSettings(name: 'podcastdetails'),
+              settings: const RouteSettings(name: 'podcastdetails'),
               builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },

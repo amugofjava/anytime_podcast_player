@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
@@ -20,6 +18,10 @@ import 'package:provider/provider.dart';
 /// page for now, but will be updated to include filters and will, eventually, support both
 /// the episode & download views.
 class Episodes extends StatefulWidget {
+  const Episodes({
+    super.key,
+  });
+
   @override
   State<Episodes> createState() => _EpisodesState();
 }
@@ -54,7 +56,7 @@ class _EpisodesState extends State<Episodes> {
           );
         } else {
           if (state is BlocLoadingState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +67,7 @@ class _EpisodesState extends State<Episodes> {
               ),
             );
           } else if (state is BlocErrorState) {
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               hasScrollBody: false,
               child: Text('ERROR'),
             );

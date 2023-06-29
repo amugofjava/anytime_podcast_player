@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
@@ -16,6 +14,10 @@ import 'package:provider/provider.dart';
 /// effects. The two audio effects, trim silence and volume boost, are
 /// currently Android only.
 class SpeedSelectorWidget extends StatefulWidget {
+  const SpeedSelectorWidget({
+    super.key,
+  });
+
   @override
   State<SpeedSelectorWidget> createState() => _SpeedSelectorWidgetState();
 }
@@ -51,14 +53,14 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   showModalBottomSheet<void>(
                       context: context,
                       backgroundColor: theme.secondaryHeaderColor,
-                      shape: RoundedRectangleBorder(
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),
                           topRight: Radius.circular(16.0),
                         ),
                       ),
                       builder: (context) {
-                        return SpeedSlider();
+                        return const SpeedSlider();
                       });
                 },
                 child: SizedBox(
@@ -115,7 +117,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        SliderHandle(),
+        const SliderHandle(),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Text(
@@ -123,7 +125,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        Divider(),
+        const Divider(),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text(
@@ -138,7 +140,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             Expanded(
               child: IconButton(
                 iconSize: 28.0,
-                icon: Icon(Icons.remove_circle_outline),
+                icon: const Icon(Icons.remove_circle_outline),
                 onPressed: (speed <= 0.5)
                     ? null
                     : () {
@@ -171,7 +173,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             Expanded(
               child: IconButton(
                 iconSize: 28.0,
-                icon: Icon(Icons.add_circle_outline),
+                icon: const Icon(Icons.add_circle_outline),
                 onPressed: (speed >= 2.0)
                     ? null
                     : () {
@@ -185,10 +187,10 @@ class _SpeedSliderState extends State<SpeedSlider> {
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 8.0,
         ),
-        Divider(),
+        const Divider(),
         if (theme.platform == TargetPlatform.android) ...[
           /// Disable the trim silence option for now until the positioning bug
           /// in just_audio is resolved.
@@ -219,7 +221,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             ),
           ),
         ] else
-          SizedBox(
+          const SizedBox(
             width: 0.0,
             height: 0.0,
           ),

@@ -16,6 +16,10 @@ import 'package:provider/provider.dart';
 /// Displays a mini podcast player widget if a podcast is playing or paused.
 /// If stopped a zero height box is built instead.
 class MiniPlayer extends StatelessWidget {
+  const MiniPlayer({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
@@ -48,7 +52,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
   void initState() {
     super.initState();
 
-    _playPauseController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _playPauseController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _playPauseController.value = 1;
 
     _audioStateListener();
@@ -83,18 +87,18 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
         height: 64.0,
       ),
       child: GestureDetector(
-        key: Key('miniplayergesture'),
+        key: const Key('miniplayergesture'),
         onTap: () async {
           await _audioStateSubscription.cancel();
 
           showModalBottomSheet<void>(
             context: context,
-            routeSettings: RouteSettings(name: 'nowplaying'),
+            routeSettings: const RouteSettings(name: 'nowplaying'),
             isScrollControlled: true,
             builder: (BuildContext modalContext) {
               return Padding(
                 padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-                child: NowPlaying(),
+                child: const NowPlaying(),
               );
             },
           ).then((_) {
@@ -133,10 +137,10 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                     borderRadius: 4.0,
                                     placeholder: placeholderBuilder != null
                                         ? placeholderBuilder.builder()(context)
-                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                        : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                                     errorPlaceholder: placeholderBuilder != null
                                         ? placeholderBuilder.errorBuilder()(context)
-                                        : Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                        : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
                                   )
                                 : Container(),
                           ),
@@ -199,8 +203,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                   stream: audioBloc.playPosition,
                   builder: (context, snapshot) {
                     var cw = 0.0;
-                    var position = snapshot.hasData ? snapshot.data!.position : Duration(seconds: 0);
-                    var length = snapshot.hasData ? snapshot.data!.length : Duration(seconds: 0);
+                    var position = snapshot.hasData ? snapshot.data!.position : const Duration(seconds: 0);
+                    var length = snapshot.hasData ? snapshot.data!.length : const Duration(seconds: 0);
 
                     if (length.inSeconds > 0) {
                       final pc = length.inSeconds / position.inSeconds;
