@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 import 'dart:io';
 
+import 'package:anytime/l10n/L.dart';
 import 'package:flutter/material.dart';
 
 class PlatformBackButton extends StatelessWidget {
@@ -33,6 +34,7 @@ class PlatformBackButton extends StatelessWidget {
             icon: Icon(
               Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
               size: Platform.isIOS ? 18.0 : 32.0,
+              semanticLabel: L.of(context)?.go_back_button_label,
             ),
             padding: Platform.isIOS ? const EdgeInsets.only(left: 7.0) : const EdgeInsets.all(0.0),
             color: iconColour,

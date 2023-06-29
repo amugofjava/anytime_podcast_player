@@ -200,6 +200,8 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           Locale('de', ''),
         ],
         theme: theme,
+        // Uncomment builder below to enable accessibility checker tool.
+        // builder: (context, child) => AccessibilityTools(child: child),
         home: const AnytimeHomePage(title: 'Anytime Podcast Player'),
       ),
     );
