@@ -15,7 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   device_info_plus: ^4.0.0
   expand_widget: ^3.1.0
-  extended_image: ^7.0.2
+  extended_image: ^8.0.2
   file_picker: ^5.2.6
   flutter_dialogs: ^3.0.0
   flutter_downloader: 1.10.1+2
@@ -25,7 +25,7 @@ dependencies:
   flutter_launcher_icons: ^0.11.0
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
-  intl: ^0.17.0
+  intl: ^0.18.0
   just_audio: ^0.9.32
   logging: ^1.0.2
   meta: ^1.8.0
@@ -39,7 +39,7 @@ dependencies:
   podcast_search:
     git:
       url: https://github.com/amugofjava/podcast_search.git
-      ref: 2aacfcd5bd12a227c78481af26162749b5ec905f
+      ref: a860d8ff3473f86f954e86ef7b2b565fc1e72f15
   provider: ^6.0.3
   rxdart: ^0.27.4
   scrollable_positioned_list: ^0.3.7
@@ -49,7 +49,7 @@ dependencies:
   sliver_tools: ^0.2.9
   uni_links: ^0.5.1
   url_launcher: ^6.1.5
-  xml: 6.1.0
+  xml: 6.3.0
 
   flutter:
     sdk: flutter

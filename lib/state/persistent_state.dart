@@ -17,9 +17,6 @@ class PersistentState {
     var sink = file.openWrite();
     var json = jsonEncode(persistable.toMap());
 
-    print('Saving state:');
-    print(json);
-
     sink.write(json);
     await sink.flush();
     await sink.close();
@@ -31,7 +28,6 @@ class PersistentState {
     var file = File(join(d.path, 'state.json'));
     var p = Persistable.empty();
 
-    print('Loading state:');
     if (file.existsSync()) {
       var result = file.readAsStringSync();
 
@@ -39,7 +35,6 @@ class PersistentState {
         var data = jsonDecode(result) as Map<String, dynamic>;
 
         p = Persistable.fromMap(data);
-        print(p);
       }
     }
 

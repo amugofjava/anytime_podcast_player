@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 import 'dart:io';
 
 import 'package:anytime/api/podcast/podcast_api.dart';
@@ -131,7 +129,7 @@ class MobilePodcastApi extends PodcastApi {
     }
 
     return podcast_search.Search(userAgent: Environment.userAgent(), searchProvider: provider)
-        .charts(genre: searchParams['genre']!, country: country)
+        .charts(genre: searchParams['genre']!, country: country, limit: 50)
         .timeout(Duration(seconds: 30));
   }
 

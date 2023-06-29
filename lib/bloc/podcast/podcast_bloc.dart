@@ -57,7 +57,7 @@ class PodcastBloc extends Bloc {
   final BehaviorSubject<BlocState<void>> _backgroundLoadStream = BehaviorSubject<BlocState<void>>();
 
   Podcast? _podcast;
-  List<Episode?>? _episodes = [];
+  List<Episode> _episodes = <Episode>[];
   late Feed lastFeed;
   bool first = true;
 
@@ -161,11 +161,13 @@ class PodcastBloc extends Bloc {
 
     /// Only populate episodes if the ID we started the load with is the
     /// same as the one we have ended up with.
-    if (lastFeed.podcast.url == _podcast!.url) {
-      _episodes = _podcast?.episodes;
-      _episodesStream.add(_episodes);
+    if (_podcast != null && _podcast?.url != null) {
+      if (lastFeed.podcast.url == _podcast!.url) {
+        _episodes = _podcast!.episodes;
+        _episodesStream.add(_episodes);
 
-      _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+        _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+      }
     }
   }
 
@@ -182,8 +184,8 @@ class PodcastBloc extends Bloc {
 
     /// Only populate episodes if the ID we started the load with is the
     /// same as the one we have ended up with.
-    if (lastFeed.podcast.url == _podcast!.url) {
-      _episodes = _podcast?.episodes;
+    if (_podcast != null && lastFeed.podcast.url == _podcast!.url) {
+      _episodes = _podcast!.episodes;
 
       if (_podcast!.newEpisodes) {
         log.fine('We have new episodes to display');
@@ -201,54 +203,61 @@ class PodcastBloc extends Bloc {
   /// Sets up a listener to handle requests to download an episode.
   void _listenDownloadRequest() {
     _downloadEpisode.listen((Episode? e) async {
+      var dirty = false;
       log.fine('Received download request for ${e!.title}');
 
       // To prevent a pause between the user tapping the download icon and
       // the UI showing some sort of progress, set it to queued now.
-      var episode = _episodes!.firstWhere((ep) => ep!.guid == e.guid, orElse: () => null)!;
+      var episode = _episodes.firstWhereOrNull((ep) => ep.guid == e.guid);
 
-      episode.downloadState = DownloadState.queued;
+      if (episode != null) {
+        episode.downloadState = e.downloadState = DownloadState.queued;
 
-      // Update the stream.
-      _episodesStream.add(_episodes);
+        // Update the stream.
+        _episodesStream.add(_episodes);
 
-      /// TODO: Move this to the download service.
-      // If this episode contains chapter, fetch them first.
-      if (episode.hasChapters && episode.chaptersUrl != null) {
-        var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
+        /// TODO: Move this to the download service.
+        // If this episode contains chapter, fetch them first.
+        if (episode.hasChapters && episode.chaptersUrl != null) {
+          var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
 
-        e.chapters = chapters;
+          e.chapters = chapters;
 
-        await podcastService.saveEpisode(e);
-      }
+          dirty = true;
+        }
 
-      // Next, if the episode supports transcripts download that next
-      if (episode.hasTranscripts) {
-        var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
+        // Next, if the episode supports transcripts download that next
+        if (episode.hasTranscripts) {
+          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
 
-        sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
+          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
 
-        if (sub != null) {
-          var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+          if (sub != null) {
+            var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
 
-          transcript = await podcastService.saveTranscript(transcript);
+            transcript = await podcastService.saveTranscript(transcript);
 
-          episode.transcript = transcript;
-          episode.transcriptId = transcript.id;
+            e.transcript = transcript;
+            e.transcriptId = transcript.id;
 
+            dirty = true;
+          }
+        }
+
+        if (dirty) {
           await podcastService.saveEpisode(e);
         }
-      }
 
-      var result = await downloadService.downloadEpisode(e);
+        var result = await downloadService.downloadEpisode(e);
 
-      // If there was an error downloading the episode, push an error state
-      // and then restore to none.
-      if (!result) {
-        episode.downloadState = DownloadState.failed;
-        _episodesStream.add(_episodes);
-        episode.downloadState = DownloadState.none;
-        _episodesStream.add(_episodes);
+        // If there was an error downloading the episode, push an error state
+        // and then restore to none.
+        if (!result) {
+          episode.downloadState = e.downloadState = DownloadState.failed;
+          _episodesStream.add(_episodes);
+          episode.downloadState = e.downloadState = DownloadState.none;
+          _episodesStream.add(_episodes);
+        }
       }
     });
   }
@@ -263,7 +272,7 @@ class PodcastBloc extends Bloc {
       downloadService.findEpisodeByTaskId(downloadProgress.id).then((downloadable) {
         if (downloadable != null) {
           // If the download matches a current episode push the update back into the stream.
-          var episode = _episodes!.firstWhere((e) => e!.downloadTaskId == downloadProgress.id, orElse: () => null);
+          var episode = _episodes.firstWhereOrNull((e) => e.downloadTaskId == downloadProgress.id);
 
           if (episode != null) {
             // Update the stream.
@@ -280,10 +289,10 @@ class PodcastBloc extends Bloc {
   void _listenEpisodeRepositoryEvents() {
     podcastService.episodeListener!.listen((state) {
       // Do we have this episode?
-      var eidx = _episodes!.indexWhere((e) => e!.guid == state.episode.guid && e.pguid == state.episode.pguid);
+      var eidx = _episodes.indexWhere((e) => e.guid == state.episode.guid && e.pguid == state.episode.pguid);
 
       if (eidx != -1) {
-        _episodes![eidx] = state.episode;
+        _episodes[eidx] = state.episode;
         _episodesStream.add(_episodes);
       }
     });
@@ -293,10 +302,12 @@ class PodcastBloc extends Bloc {
     _podcastEvent.listen((event) async {
       switch (event) {
         case PodcastEvent.subscribe:
-          _podcast = await podcastService.subscribe(_podcast);
-          _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
-          _loadSubscriptions();
-          _episodesStream.add(_podcast!.episodes);
+          if (_podcast != null) {
+            _podcast = await podcastService.subscribe(_podcast!);
+            _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
+            _loadSubscriptions();
+            _episodesStream.add(_podcast?.episodes);
+          }
           break;
         case PodcastEvent.unsubscribe:
           if (_podcast != null) {
@@ -308,27 +319,27 @@ class PodcastBloc extends Bloc {
           }
           break;
         case PodcastEvent.markAllPlayed:
-          for (var e in _podcast!.episodes) {
-            if (!e!.played) {
-              e.played = true;
-              e.position = 0;
+          if (_podcast != null && _podcast?.episodes != null) {
+            for (var e in _podcast!.episodes) {
+              if (!e.played) {
+                e.played = true;
+                e.position = 0;
+              }
             }
-          }
 
-          if (_podcast != null) {
             await podcastService.save(_podcast!);
             _episodesStream.add(_podcast!.episodes);
           }
           break;
         case PodcastEvent.clearAllPlayed:
-          for (var e in _podcast!.episodes) {
-            if (e!.played) {
-              e.played = false;
-              e.position = 0;
+          if (_podcast != null && _podcast?.episodes != null) {
+            for (var e in _podcast!.episodes) {
+              if (e.played) {
+                e.played = false;
+                e.position = 0;
+              }
             }
-          }
 
-          if (_podcast != null) {
             await podcastService.save(_podcast!);
             _episodesStream.add(_podcast!.episodes);
           }

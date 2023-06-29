@@ -1,6 +1,4 @@
-
-
-import 'package:anytime/ui/search/search_bar.dart';
+import 'package:anytime/ui/search/search_bar.dart' as search;
 import 'package:anytime/ui/widgets/podcast_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -17,7 +15,7 @@ class PodcastListWithSearchBar extends StatelessWidget {
       child: ShrinkWrappingViewport(
         offset: ViewportOffset.zero(),
         slivers: [
-          SliverToBoxAdapter(child: SearchBar()),
+          SliverToBoxAdapter(child: search.SearchBar()),
           PodcastList(results: results),
         ],
       ),

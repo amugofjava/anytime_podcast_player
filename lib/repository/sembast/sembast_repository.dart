@@ -193,7 +193,7 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<List<Episode?>> findEpisodesByPodcastGuid(String? pguid) async {
+  Future<List<Episode>> findEpisodesByPodcastGuid(String? pguid) async {
     final finder = Finder(
       filter: Filter.equals('pguid', pguid),
       sortOrders: [SortOrder('publicationDate', false)],
@@ -508,7 +508,7 @@ class SembastRepository extends Repository {
     }
   }
 
-  Future<Episode?> _loadEpisodeSnapshot(int key, Map<String, Object?> snapshot) async {
+  Future<Episode> _loadEpisodeSnapshot(int key, Map<String, Object?> snapshot) async {
     var episode = Episode.fromMap(key, snapshot);
 
     if (episode.transcriptId! > 0) {

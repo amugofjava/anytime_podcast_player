@@ -61,7 +61,9 @@ class MobileOPMLService extends OPMLService {
             refresh: true,
           );
 
-          await podcastService.subscribe(result);
+          if (result != null) {
+            await podcastService.subscribe(result);
+          }
         } on Exception {
           log.fine('Failed to load podcast ${p.xmlUrl}');
         }

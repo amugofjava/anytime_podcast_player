@@ -50,7 +50,7 @@ class Podcast {
   DateTime? _lastUpdated;
 
   /// One or more episodes for this podcast.
-  List<Episode?> episodes;
+  List<Episode> episodes;
 
   final List<Person>? persons;
 

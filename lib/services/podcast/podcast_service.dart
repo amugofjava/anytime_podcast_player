@@ -204,7 +204,7 @@ abstract class PodcastService {
 
   Future<List<Podcast>> subscriptions();
 
-  Future<Podcast?> subscribe(Podcast? podcast);
+  Future<Podcast?> subscribe(Podcast podcast);
 
   Future<void> unsubscribe(Podcast podcast);
 

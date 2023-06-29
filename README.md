@@ -11,12 +11,9 @@ Android & iOS, built with Dart & Flutter.
 
 ## Getting Started
 
-Anytime is currently at v1.3.x and is built against Flutter 3.7.12+. View
+Anytime is currently at v1.3.x and is built against Flutter 3.10.5+. View
 the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
 see what is currently being worked on.
-
-*Please note that Anytime is not null safe nor Dart 3 ready. This is actively being worked on
-and will be available soon. For now, to build this project requires Flutter 3.7.12.*
 
 The official website can be found at [https://anytimeplayer.app](https://anytimeplayer.app)
 

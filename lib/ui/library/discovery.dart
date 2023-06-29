@@ -5,6 +5,7 @@
 import 'package:anytime/bloc/discovery/discovery_bloc.dart';
 import 'package:anytime/bloc/discovery/discovery_state_event.dart';
 import 'package:anytime/ui/library/discovery_results.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -35,7 +36,7 @@ class _DiscoveryState extends State<Discovery> {
     bloc.discover(DiscoveryChartEvent(
       count: 10,
       genre: bloc.selectedGenre.genre,
-      countryCode: WidgetsBinding.instance.window.locale.countryCode?.toLowerCase() ?? '',
+      countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
     ));
   }
 
@@ -137,7 +138,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               widget.discoveryBloc.discover(DiscoveryChartEvent(
                                 count: 10,
                                 genre: item,
-                                countryCode: WidgetsBinding.instance.window.locale.countryCode?.toLowerCase() ?? '',
+                                countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
                               ));
                             },
                             child: Text(item),

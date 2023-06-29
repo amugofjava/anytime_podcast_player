@@ -46,7 +46,7 @@ class MobilePodcastService extends PodcastService {
   }
 
   Future<void> _init() async {
-    final List<Locale> systemLocales = WidgetsBinding.instance.window.locales;
+    final List<Locale> systemLocales = PlatformDispatcher.instance.locales;
 
     var currentLocale = Platform.localeName;
     // Attempt to get current locale
@@ -553,9 +553,9 @@ class MobilePodcastService extends PodcastService {
 
       if (podcast.episodes.isNotEmpty) {
         for (var episode in podcast.episodes) {
-          episode = savedEpisodes.firstWhereOrNull((ep) => ep!.guid == episode!.guid);
+          var savedEpisode = savedEpisodes.firstWhereOrNull((ep) => ep!.guid == episode.guid);
 
-          if (episode != null) {
+          if (savedEpisode != null) {
             episode.pguid = podcast.guid;
           }
         }
