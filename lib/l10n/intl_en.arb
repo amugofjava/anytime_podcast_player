@@ -651,5 +651,12 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
- }
+ },
+  "semantics_podcast_details_header": "Podcast details and episodes page",
+  "@semantics_podcast_details_header": {
+    "description": "Describes podcast details page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
 }

@@ -347,14 +347,16 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   SliverVisibility(
                     visible: widget.topBarVisible,
                     sliver: SliverAppBar(
-                      title: TitleWidget(),
+                      title: ExcludeSemantics(
+                        child: TitleWidget(),
+                      ),
                       backgroundColor: backgroundColour,
                       floating: false,
                       pinned: true,
                       snap: false,
                       actions: <Widget>[
                         IconButton(
-                          tooltip: L.of(context)!.search_button_label,
+                          tooltip: L.of(context)!.search_for_podcasts_hint,
                           icon: const Icon(Icons.search),
                           onPressed: () async {
                             await Navigator.push(

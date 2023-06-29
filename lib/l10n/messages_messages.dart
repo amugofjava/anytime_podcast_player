@@ -90,6 +90,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search_for_podcasts_hint" : MessageLookupByLibrary.simpleMessage("Search for podcasts"),
     "search_provider_label" : MessageLookupByLibrary.simpleMessage("Search provider"),
     "search_transcript_label" : MessageLookupByLibrary.simpleMessage("Search transcript"),
+    "semantics_podcast_details_header" : MessageLookupByLibrary.simpleMessage("Podcast details and episode page"),
     "settings_auto_open_now_playing" : MessageLookupByLibrary.simpleMessage("Full screen player mode on episode start"),
     "settings_auto_update_episodes" : MessageLookupByLibrary.simpleMessage("Auto update episodes"),
     "settings_auto_update_episodes_10min" : MessageLookupByLibrary.simpleMessage("10 minutes since last update"),

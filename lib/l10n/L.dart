@@ -1096,6 +1096,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get semantics_podcast_details_header {
+    return message('semantics_podcast_details_header') ??
+        Intl.message(
+          'Podcast details and episode page',
+          name: 'semantics_podcast_details_header',
+          desc: 'Describes podcast details page',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

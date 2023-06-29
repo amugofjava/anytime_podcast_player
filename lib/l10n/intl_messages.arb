@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-05-26T14:17:07.347872",
+  "@@last_modified": "2023-06-29T17:16:30.884723",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -738,6 +738,13 @@
   "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
   "@transcript_why_not_url": {
     "description": "Language specific link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_podcast_details_header": "Podcast details and episodes page",
+  "@semantics_podcast_details_header": {
+    "description": "Describes podcast details page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
