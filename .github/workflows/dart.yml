@@ -18,5 +18,5 @@ jobs:
           flutter-version: '3.10.5'
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - run: flutter build apk --debug
+      - run: flutter build appbundle --debug
