@@ -69,6 +69,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   child: Center(
                     child: Text(
                       snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
+                      semanticsLabel: L.of(context)!.playback_speed_label,
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Theme.of(context).iconTheme.color,
@@ -139,6 +140,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           children: [
             Expanded(
               child: IconButton(
+                tooltip: L.of(context)!.semantics_decrease_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.remove_circle_outline),
                 onPressed: (speed <= 0.5)
@@ -172,6 +174,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             ),
             Expanded(
               child: IconButton(
+                tooltip: L.of(context)!.semantics_increase_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.add_circle_outline),
                 onPressed: (speed >= 2.0)

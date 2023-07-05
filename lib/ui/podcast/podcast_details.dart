@@ -538,61 +538,68 @@ class SubscriptionButton extends StatelessWidget {
             if (state is BlocPopulatedState<Podcast>) {
               var p = state.results!;
 
-              return p.subscribed
-                  ? OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                      icon: const Icon(
-                        Icons.delete_outline,
-                      ),
-                      label: Text(L.of(context)!.unsubscribe_label),
-                      onPressed: () {
-                        showPlatformDialog<void>(
-                          context: context,
-                          useRootNavigator: false,
-                          builder: (_) => BasicDialogAlert(
-                            title: Text(L.of(context)!.unsubscribe_label),
-                            content: Text(L.of(context)!.unsubscribe_message),
-                            actions: <Widget>[
-                              BasicDialogAction(
-                                title: ActionText(
-                                  L.of(context)!.cancel_button_label,
+              return Semantics(
+                liveRegion: true,
+                child: p.subscribed
+                    ? OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                        icon: const Icon(
+                          Icons.delete_outline,
+                        ),
+                        label: Text(L.of(context)!.unsubscribe_label),
+                        onPressed: () {
+                          showPlatformDialog<void>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: Text(L.of(context)!.unsubscribe_label),
+                              content: Text(L.of(context)!.unsubscribe_message),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: ExcludeSemantics(
+                                    child: ActionText(
+                                      L.of(context)!.cancel_button_label,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              BasicDialogAction(
-                                title: ActionText(
-                                  L.of(context)!.unsubscribe_button_label,
-                                ),
-                                iosIsDefaultAction: true,
-                                iosIsDestructiveAction: true,
-                                onPressed: () {
-                                  bloc.podcastEvent(PodcastEvent.unsubscribe);
+                                BasicDialogAction(
+                                  title: ExcludeSemantics(
+                                    child: ActionText(
+                                      L.of(context)!.unsubscribe_button_label,
+                                    ),
+                                  ),
+                                  iosIsDefaultAction: true,
+                                  iosIsDestructiveAction: true,
+                                  onPressed: () {
+                                    bloc.podcastEvent(PodcastEvent.unsubscribe);
 
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  : OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                        icon: const Icon(
+                          Icons.add,
+                        ),
+                        label: Text(L.of(context)!.subscribe_label),
+                        onPressed: () {
+                          bloc.podcastEvent(PodcastEvent.subscribe);
+                        },
                       ),
-                      icon: const Icon(
-                        Icons.add,
-                      ),
-                      label: Text(L.of(context)!.subscribe_label),
-                      onPressed: () {
-                        bloc.podcastEvent(PodcastEvent.subscribe);
-                      },
-                    );
+              );
             }
           }
           return Container();

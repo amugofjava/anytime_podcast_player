@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-07-05T07:38:57.510266",
+  "@@last_modified": "2023-07-05T17:38:27.484031",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -766,6 +766,41 @@
   "semantics_layout_option_grid": "Grid layout",
   "@semantics_layout_option_grid": {
     "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mini_player_header": "Mini player. Swipe right to play/pause button. Activate to open main player window",
+  "@semantics_mini_player_header": {
+    "description": "Describes the mini player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_main_player_header": "Main player window",
+  "@semantics_main_player_header": {
+    "description": "Describes the main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_play_pause_toggle": "Play/pause toggle",
+  "@semantics_play_pause_toggle": {
+    "description": "Describes play/pause toggle button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_decrease_playback_speed": "Decrease playback speed",
+  "@semantics_decrease_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_increase_playback_speed": "Increase playback speed",
+  "@semantics_increase_playback_speed": {
+    "description": "Describes speed adjustment control",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

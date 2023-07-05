@@ -79,116 +79,120 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final playerBuilder = PlayerControlsBuilder.of(context);
 
-    return StreamBuilder<Episode?>(
-        stream: audioBloc.nowPlaying,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
+    return Semantics(
+      header: true,
+      label: L.of(context)!.semantics_main_player_header,
+      child: StreamBuilder<Episode?>(
+          stream: audioBloc.nowPlaying,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Container();
+            }
 
-          var duration = snapshot.data == null ? 0 : snapshot.data!.duration;
-          final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
+            var duration = snapshot.data == null ? 0 : snapshot.data!.duration;
+            final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
 
-          return NotificationListener<DraggableScrollableNotification>(
-            onNotification: (notification) {
-              setState(() {
-                if (notification.extent > (notification.minExtent)) {
-                  opacity = 1 - (notification.maxExtent - notification.extent);
-                  scrollPos = 1.0;
-                } else {
-                  opacity = 0.0;
-                  scrollPos = 0.0;
-                }
-              });
+            return NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                setState(() {
+                  if (notification.extent > (notification.minExtent)) {
+                    opacity = 1 - (notification.maxExtent - notification.extent);
+                    scrollPos = 1.0;
+                  } else {
+                    opacity = 0.0;
+                    scrollPos = 0.0;
+                  }
+                });
 
-              return true;
-            },
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                DefaultTabController(
-                    length: snapshot.data!.hasChapters ? 3 : 2,
-                    initialIndex: snapshot.data!.hasChapters ? 1 : 0,
-                    child: AnnotatedRegion<SystemUiOverlayStyle>(
-                      value: Theme.of(context)
-                          .appBarTheme
-                          .systemOverlayStyle!
-                          .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
-                      child: Scaffold(
-                        appBar: AppBar(
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                          elevation: 0.0,
-                          leading: IconButton(
-                            tooltip: L.of(context)!.minimise_player_window_button_label,
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Theme.of(context).primaryIconTheme.color,
+                return true;
+              },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  DefaultTabController(
+                      length: snapshot.data!.hasChapters ? 3 : 2,
+                      initialIndex: snapshot.data!.hasChapters ? 1 : 0,
+                      child: AnnotatedRegion<SystemUiOverlayStyle>(
+                        value: Theme.of(context)
+                            .appBarTheme
+                            .systemOverlayStyle!
+                            .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
+                        child: Scaffold(
+                          appBar: AppBar(
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                            elevation: 0.0,
+                            leading: IconButton(
+                              tooltip: L.of(context)!.minimise_player_window_button_label,
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Theme.of(context).primaryIconTheme.color,
+                              ),
+                              onPressed: () => {
+                                Navigator.pop(context),
+                              },
                             ),
-                            onPressed: () => {
-                              Navigator.pop(context),
-                            },
-                          ),
-                          flexibleSpace: PlaybackErrorListener(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                EpisodeTabBar(
-                                  chapters: snapshot.data!.hasChapters,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        body: Column(
-                          children: [
-                            Expanded(
-                              flex: 5,
-                              child: EpisodeTabBarView(
-                                episode: snapshot.data,
-                                chapters: snapshot.data!.hasChapters,
+                            flexibleSpace: PlaybackErrorListener(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  EpisodeTabBar(
+                                    chapters: snapshot.data!.hasChapters,
+                                  ),
+                                ],
                               ),
                             ),
-                            transportBuilder != null
-                                ? transportBuilder(context)
-                                : const SizedBox(
-                                    height: 148.0,
-                                    child: NowPlayingTransport(),
-                                  ),
-                            const Expanded(
-                              flex: 1,
-                              child: NowPlayingOptionsScaffold(),
-                            ),
-                          ],
+                          ),
+                          body: Column(
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: EpisodeTabBarView(
+                                  episode: snapshot.data,
+                                  chapters: snapshot.data!.hasChapters,
+                                ),
+                              ),
+                              transportBuilder != null
+                                  ? transportBuilder(context)
+                                  : const SizedBox(
+                                      height: 148.0,
+                                      child: NowPlayingTransport(),
+                                    ),
+                              const Expanded(
+                                flex: 1,
+                                child: NowPlayingOptionsScaffold(),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )),
-                SizedBox.expand(
-                    child: SafeArea(
-                  child: Column(
-                    children: [
-                      /// Sized boxes without a child are 'invisible' so they do not prevent taps below
-                      /// the stack but are still present in the layout. We have a sized box here to stop
-                      /// the draggable panel from jumping as you start to pull it up. I am really looking
-                      /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
-                      SizedBox(
-                        height: 64.0,
-                        child: scrollPos == 1
-                            ? Opacity(
-                                opacity: opacity,
-                                child: const FloatingPlayer(),
-                              )
-                            : null,
-                      ),
-                      const Expanded(
-                        child: NowPlayingOptionsSelector(),
-                      ),
-                    ],
-                  ),
-                )),
-              ],
-            ),
-          );
-        });
+                      )),
+                  SizedBox.expand(
+                      child: SafeArea(
+                    child: Column(
+                      children: [
+                        /// Sized boxes without a child are 'invisible' so they do not prevent taps below
+                        /// the stack but are still present in the layout. We have a sized box here to stop
+                        /// the draggable panel from jumping as you start to pull it up. I am really looking
+                        /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
+                        SizedBox(
+                          height: 64.0,
+                          child: scrollPos == 1
+                              ? Opacity(
+                                  opacity: opacity,
+                                  child: const FloatingPlayer(),
+                                )
+                              : null,
+                        ),
+                        const Expanded(
+                          child: NowPlayingOptionsSelector(),
+                        ),
+                      ],
+                    ),
+                  )),
+                ],
+              ),
+            );
+          }),
+    );
   }
 }
 

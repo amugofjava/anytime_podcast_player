@@ -186,7 +186,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "rewind_button_label": "30 Sekunden zurückspulen",
+  "rewind_button_label": "10 Sekunden zurückspulen",
   "@rewind_button_label": {
     "description": "Rewind button tooltip",
     "type": "text",
@@ -679,5 +679,40 @@
      "type": "text",
      "placeholders_order": [],
      "placeholders": {}
+  },
+  "semantics_mini_player_header": "Mini-Player. Wischen Sie nach rechts, um die Schaltfläche „Wiedergabe/Pause“ anzuzeigen. Aktivieren, um das Hauptfenster des Players zu öffnen",
+  "@semantics_mini_player_header": {
+    "description": "Describes the mini player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_main_player_header": "Hauptfenster des Players",
+  "@semantics_main_player_header": {
+    "description": "Describes the main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_play_pause_toggle": "Umschalten zwischen Wiedergabe und Pause",
+  "@semantics_play_pause_toggle": {
+    "description": "Describes play/pause toggle button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_decrease_playback_speed": "Verringern Sie die Wiedergabegeschwindigkeit",
+  "@semantics_decrease_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_increase_playback_speed": "Erhöhen Sie die Wiedergabegeschwindigkeit",
+  "@semantics_increase_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
  }
 }

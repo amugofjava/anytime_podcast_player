@@ -1136,6 +1136,56 @@ class L {
           locale: localeName,
         );
   }
+
+  String get semantics_mini_player_header {
+    return message('semantics_mini_player_header') ??
+        Intl.message(
+          'Mini player. Swipe right to play/pause button. Activate to open main player window',
+          name: 'semantics_mini_player_header',
+          desc: 'Describes the mini player',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_main_player_header {
+    return message('semantics_main_player_header') ??
+        Intl.message(
+          'Main player window',
+          name: 'semantics_main_player_header',
+          desc: 'Describes the main player',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_play_pause_toggle {
+    return message('semantics_play_pause_toggle') ??
+        Intl.message(
+          'Play/pause toggle',
+          name: 'semantics_play_pause_toggle',
+          desc: 'Describes play/pause toggle button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_decrease_playback_speed {
+    return message('semantics_decrease_playback_speed') ??
+        Intl.message(
+          'Decrease playback speed',
+          name: 'semantics_decrease_playback_speed',
+          desc: 'Describes speed adjustment control',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_increase_playback_speed {
+    return message('semantics_increase_playback_speed') ??
+        Intl.message(
+          'Increase playback speed',
+          name: 'semantics_increase_playback_speed',
+          desc: 'Describes speed adjustment control',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
