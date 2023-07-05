@@ -658,5 +658,26 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-  }
+   },
+   "semantics_layout_option_list": "Listenlayout",
+   "@semantics_layout_option_list": {
+     "description": "Describes list layout button",
+     "type": "text",
+     "placeholders_order": [],
+     "placeholders": {}
+   },
+   "semantics_layout_option_compact_grid": "Kompaktes Rasterlayout",
+   "@semantics_layout_option_compact_grid": {
+     "description": "Describes compact grid layout button",
+     "type": "text",
+     "placeholders_order": [],
+     "placeholders": {}
+   },
+   "semantics_layout_option_grid": "Gitterstruktur",
+   "@semantics_layout_option_grid": {
+     "description": "Describes grid layout button",
+     "type": "text",
+     "placeholders_order": [],
+     "placeholders": {}
+ }
 }

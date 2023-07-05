@@ -1106,6 +1106,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get semantics_layout_option_list {
+    return message('semantics_layout_option_list') ??
+        Intl.message(
+          'List layout',
+          name: 'semantics_layout_option_list',
+          desc: 'Describes list layout button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_layout_option_compact_grid {
+    return message('semantics_layout_option_compact_grid') ??
+        Intl.message(
+          'Compact grid layout',
+          name: 'semantics_layout_option_compact_grid',
+          desc: 'Describes compact grid layout button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_layout_option_grid {
+    return message('semantics_layout_option_grid') ??
+        Intl.message(
+          'Grid layout',
+          name: 'semantics_layout_option_grid',
+          desc: 'Describes grid layout button',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
