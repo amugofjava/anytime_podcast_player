@@ -5,11 +5,12 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
-import 'package:anytime/entities/episode.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/person.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:extended_image/extended_image.dart';
@@ -22,11 +23,8 @@ import 'package:url_launcher/url_launcher.dart';
 /// This class handles the rendering of the podcast transcript (where available).
 // ignore: must_be_immutable
 class TranscriptView extends StatefulWidget {
-  final Episode episode;
-
   const TranscriptView({
     Key? key,
-    required this.episode,
   }) : super(key: key);
 
   @override
@@ -171,176 +169,186 @@ class _TranscriptViewState extends State<TranscriptView> {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
 
-    return StreamBuilder<TranscriptState>(
-        stream: audioBloc.nowPlayingTranscript,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data is TranscriptLoadingState) {
-              return const Align(
-                alignment: Alignment.center,
-                child: PlatformProgressIndicator(),
-              );
-            } else if (snapshot.data is TranscriptUnavailableState || !snapshot.data!.transcript!.transcriptAvailable) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        L.of(context)!.no_transcript_available_label,
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.center,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
-                        child: OutlinedButton(
-                            onPressed: () {
-                              final uri = Uri.parse(L.of(context)!.transcript_why_not_url);
-
-                              unawaited(
-                                canLaunchUrl(uri).then((value) => launchUrl(uri)),
-                              );
-                            },
-                            child: Text(
-                              L.of(context)!.transcript_why_not_label,
-                              style: Theme.of(context).textTheme.titleSmall,
+    return StreamBuilder<QueueState>(
+        initialData: QueueEmptyState(),
+        stream: queueBloc.queue,
+        builder: (context, queueSnapshot) {
+          return StreamBuilder<TranscriptState>(
+              stream: audioBloc.nowPlayingTranscript,
+              builder: (context, transcriptSnapshot) {
+                if (transcriptSnapshot.hasData) {
+                  if (transcriptSnapshot.data is TranscriptLoadingState) {
+                    return const Align(
+                      alignment: Alignment.center,
+                      child: PlatformProgressIndicator(),
+                    );
+                  } else if (transcriptSnapshot.data is TranscriptUnavailableState ||
+                      !transcriptSnapshot.data!.transcript!.transcriptAvailable) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              L.of(context)!.no_transcript_available_label,
+                              style: Theme.of(context).textTheme.titleLarge,
                               textAlign: TextAlign.center,
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              final items = snapshot.data!.transcript?.subtitles ?? <Subtitle>[];
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32.0, bottom: 32.0),
+                              child: OutlinedButton(
+                                  onPressed: () {
+                                    final uri = Uri.parse(L.of(context)!.transcript_why_not_url);
 
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-                    child: TextField(
-                      controller: _transcriptSearchController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            _transcriptSearchController.clear();
-                            audioBloc.filterTranscript(TranscriptClearEvent());
-                            setState(() {
-                              autoScrollEnabled = true;
-                            });
-                          },
+                                    unawaited(
+                                      canLaunchUrl(uri).then((value) => launchUrl(uri)),
+                                    );
+                                  },
+                                  child: Text(
+                                    L.of(context)!.transcript_why_not_label,
+                                    style: Theme.of(context).textTheme.titleSmall,
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ),
+                          ],
                         ),
-                        isDense: true,
-                        filled: true,
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                          gapPadding: 0.0,
-                        ),
-                        hintText: L.of(context)!.search_transcript_label,
                       ),
-                      onSubmitted: ((search) {
-                        if (search.isNotEmpty) {
-                          setState(() {
-                            autoScrollEnabled = false;
-                            autoScroll = false;
-                          });
-                          audioBloc.filterTranscript(TranscriptFilterEvent(search: search));
-                        }
-                      }),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    );
+                  } else {
+                    final items = transcriptSnapshot.data!.transcript?.subtitles ?? <Subtitle>[];
+
+                    return Column(
                       children: [
-                        Text(L.of(context)!.auto_scroll_transcript_label),
-                        Switch(
-                          value: autoScroll,
-                          onChanged: autoScrollEnabled
-                              ? (bool value) {
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                          child: TextField(
+                            controller: _transcriptSearchController,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.search),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _transcriptSearchController.clear();
+                                  audioBloc.filterTranscript(TranscriptClearEvent());
                                   setState(() {
-                                    autoScroll = value;
+                                    autoScrollEnabled = true;
                                   });
-                                }
-                              : null,
+                                },
+                              ),
+                              isDense: true,
+                              filled: true,
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                gapPadding: 0.0,
+                              ),
+                              hintText: L.of(context)!.search_transcript_label,
+                            ),
+                            onSubmitted: ((search) {
+                              if (search.isNotEmpty) {
+                                setState(() {
+                                  autoScrollEnabled = false;
+                                  autoScroll = false;
+                                });
+                                audioBloc.filterTranscript(TranscriptFilterEvent(search: search));
+                              }
+                            }),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(L.of(context)!.auto_scroll_transcript_label),
+                              Switch(
+                                value: autoScroll,
+                                onChanged: autoScrollEnabled
+                                    ? (bool value) {
+                                        setState(() {
+                                          autoScroll = value;
+                                        });
+                                      }
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (queueSnapshot.hasData &&
+                            queueSnapshot.data?.playing != null &&
+                            queueSnapshot.data!.playing.persons.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            width: double.infinity,
+                            height: 72.0,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: queueSnapshot.data!.playing.persons.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  var person = queueSnapshot.data!.playing.persons[index];
+                                  var selected = false;
+
+                                  if (speaker.isNotEmpty &&
+                                      person.name.toLowerCase().startsWith(speaker.toLowerCase())) {
+                                    selected = true;
+                                  }
+
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4.0),
+                                      decoration: BoxDecoration(
+                                          color: selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
+                                      child: CircleAvatar(
+                                        radius: 28,
+                                        backgroundImage: ExtendedImage.network(
+                                          person.image!,
+                                          cache: true,
+                                        ).image,
+                                        child: const Text(''),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                          ),
+                        Expanded(
+                          /// A simple way to ensure the builder is visible before attempting to use it.
+                          child: LayoutBuilder(builder: (context, constraints) {
+                            return constraints.minHeight > 60.0
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: ScrollablePositionedList.builder(
+                                        itemScrollController: _itemScrollController,
+                                        scrollOffsetListener: _scrollOffsetListener,
+                                        itemCount: items.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          var i = items[index];
+                                          return Wrap(
+                                            children: [
+                                              SubtitleWidget(
+                                                subtitle: i,
+                                                persons: queueSnapshot.data!.playing.persons,
+                                                highlight: i.start.inMilliseconds == position,
+                                              ),
+                                            ],
+                                          );
+                                        }),
+                                  )
+                                : Container();
+                          }),
                         ),
                       ],
-                    ),
-                  ),
-                  if (widget.episode.persons.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      width: double.infinity,
-                      height: 72.0,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: widget.episode.persons.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            var person = widget.episode.persons[index];
-                            var selected = false;
-
-                            if (speaker.isNotEmpty && person.name.toLowerCase().startsWith(speaker.toLowerCase())) {
-                              selected = true;
-                            }
-
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: Container(
-                                padding: const EdgeInsets.all(4.0),
-                                decoration: BoxDecoration(
-                                    color: selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
-                                child: CircleAvatar(
-                                  radius: 28,
-                                  backgroundImage: ExtendedImage.network(
-                                    person.image!,
-                                    cache: true,
-                                  ).image,
-                                  child: const Text(''),
-                                ),
-                              ),
-                            );
-                          }),
-                    ),
-                  Expanded(
-                    /// A simple way to ensure the builder is visible before attempting to use it.
-                    child: LayoutBuilder(builder: (context, constraints) {
-                      return constraints.minHeight > 60.0
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: ScrollablePositionedList.builder(
-                                  itemScrollController: _itemScrollController,
-                                  scrollOffsetListener: _scrollOffsetListener,
-                                  itemCount: items.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    var i = items[index];
-                                    return Wrap(
-                                      children: [
-                                        SubtitleWidget(
-                                          subtitle: i,
-                                          persons: widget.episode.persons,
-                                          highlight: i.start.inMilliseconds == position,
-                                        ),
-                                      ],
-                                    );
-                                  }),
-                            )
-                          : Container();
-                    }),
-                  ),
-                ],
-              );
-            }
-          } else {
-            return Container();
-          }
+                    );
+                  }
+                } else {
+                  return Container();
+                }
+              });
         });
   }
 }
