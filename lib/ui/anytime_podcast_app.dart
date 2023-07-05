@@ -61,11 +61,11 @@ class AnytimePodcastApp extends StatefulWidget {
   final Repository repository;
   late PodcastApi podcastApi;
   late DownloadService downloadService;
-  PodcastService? podcastService;
   late AudioPlayerService audioPlayerService;
+  late OPMLService opmlService;
+  PodcastService? podcastService;
   SettingsBloc? settingsBloc;
   MobileSettingsService mobileSettingsService;
-  late OPMLService opmlService;
   List<int> certificateAuthorityBytes;
 
   AnytimePodcastApp({
