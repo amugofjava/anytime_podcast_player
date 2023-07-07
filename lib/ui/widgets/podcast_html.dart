@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_html_svg/flutter_html_svg.dart';
+import 'package:flutter_html_table/flutter_html_table.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This class is a simple, common wrapper around the flutter_html Html
@@ -8,10 +10,9 @@ import 'package:url_launcher/url_launcher.dart';
 /// mobile device.
 class PodcastHtml extends StatelessWidget {
   final String content;
-  final tagList = Html.tags;
   final FontSize? fontSize;
 
-  PodcastHtml({
+  const PodcastHtml({
     Key? key,
     required this.content,
     this.fontSize,
@@ -23,14 +24,17 @@ class PodcastHtml extends StatelessWidget {
 
     return Html(
       data: content,
+      extensions: const [
+        SvgHtmlExtension(),
+        TableHtmlExtension(),
+      ],
       style: {
         'html': Style(
           fontWeight: textTheme.bodyLarge!.fontWeight,
           fontSize: fontSize ?? FontSize.large,
         )
       },
-      tagsList: tagList,
-      onLinkTap: (url, _, __, ___) => canLaunchUrl(Uri.parse(url!)).then((value) => launchUrl(
+      onLinkTap: (url, _, __) => canLaunchUrl(Uri.parse(url!)).then((value) => launchUrl(
             Uri.parse(url),
             mode: LaunchMode.externalApplication,
           )),
