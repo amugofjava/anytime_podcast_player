@@ -300,7 +300,7 @@ class L {
   String get delete_episode_button_label {
     return message('delete_episode_button_label') ??
         Intl.message(
-          'Delete episode',
+          'Delete downloaded episode',
           name: 'delete_episode_button_label',
           desc: 'Semantic label for the delete episode',
           locale: localeName,
@@ -1183,6 +1183,106 @@ class L {
           'Increase playback speed',
           name: 'semantics_increase_playback_speed',
           desc: 'Describes speed adjustment control',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_expand_podcast_description {
+    return message('semantics_expand_podcast_description') ??
+        Intl.message(
+          'Expand podcast description',
+          name: 'semantics_expand_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_collapse_podcast_description {
+    return message('semantics_collapse_podcast_description') ??
+        Intl.message(
+          'Collapse podcast description',
+          name: 'semantics_collapse_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_add_to_queue {
+    return message('semantics_add_to_queue') ??
+        Intl.message(
+          'Add episode to queue',
+          name: 'semantics_add_to_queue',
+          desc: 'Describes add to queue button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_remove_from_queue {
+    return message('semantics_remove_from_queue') ??
+        Intl.message(
+          'Remove episode from queue',
+          name: 'semantics_remove_from_queue',
+          desc: 'Describes add to queue button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_mark_episode_played {
+    return message('semantics_mark_episode_played') ??
+        Intl.message(
+          'Mark Episode as played',
+          name: 'semantics_mark_episode_played',
+          desc: 'Describes mark played button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_mark_episode_unplayed {
+    return message('semantics_mark_episode_unplayed') ??
+        Intl.message(
+          'Mark Episode as un-played',
+          name: 'semantics_mark_episode_unplayed',
+          desc: 'Describes mark unplayed button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_collapsed {
+    return message('semantics_episode_tile_collapsed') ??
+        Intl.message(
+          'Episode list item. Showing download and play controls.',
+          name: 'semantics_episode_tile_collapsed',
+          desc: 'Describes episode tile options when collapsed',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_expanded {
+    return message('semantics_episode_tile_expanded') ??
+        Intl.message(
+          'Episode list item. Showing description, download, play controls and additional controls.',
+          name: 'semantics_episode_tile_expanded',
+          desc: 'Describes episode tile options when expanded',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_collapsed_hint {
+    return message('semantics_episode_tile_collapsed_hint') ??
+        Intl.message(
+          'expand and show more details and additional options',
+          name: 'semantics_episode_tile_collapsed_hint',
+          desc: 'Describes episode tile options when collapsed',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_expanded_hint {
+    return message('semantics_episode_tile_expanded_hint') ??
+        Intl.message(
+          'collapse and hide more details and additional options',
+          name: 'semantics_episode_tile_expanded_hint',
+          desc: 'Describes episode tile options when expanded',
           locale: localeName,
         );
   }

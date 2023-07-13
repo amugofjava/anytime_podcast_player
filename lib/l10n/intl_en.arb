@@ -150,7 +150,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "delete_episode_button_label": "Delete episode",
+  "delete_episode_button_label": "Delete downloaded episode",
   "@delete_episode_button_label": {
     "description": "Semantic label for the delete episode",
     "type": "text",
@@ -711,6 +711,76 @@
   "semantics_increase_playback_speed": "Increase playback speed",
   "@semantics_increase_playback_speed": {
     "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_expand_podcast_description": "Expand podcast description",
+  "@semantics_expand_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_collapse_podcast_description": "Collapse podcast description",
+  "@semantics_collapse_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_add_to_queue": "Add episode to queue",
+  "@semantics_add_to_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_remove_from_queue": "Remove episode from queue",
+  "@semantics_remove_from_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_played": "Mark Episode as played",
+  "@semantics_mark_episode_played": {
+    "description": "Describes mark played button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_unplayed": "Mark Episode as un-played",
+  "@semantics_mark_episode_unplayed": {
+    "description": "Describes mark unplayed button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed": "Episode list item. Showing download and play controls.",
+  "@semantics_episode_tile_collapsed": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded": "Episode list item. Showing description, download, play controls and additional controls.",
+  "@semantics_episode_tile_expanded": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed_hint": "expand and show more details and additional options",
+  "@semantics_episode_tile_collapsed_hint": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded_hint": "collapse and show summary, download and play control",
+  "@semantics_episode_tile_expanded_hint": {
+    "description": "Describes episode tile options when expanded",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

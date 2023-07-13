@@ -145,7 +145,9 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                           },
                                           child: Padding(
                                             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                            child: snapshot.hasData && snapshot.data!.playing.hasTranscripts
+                                            child: snapshot.hasData &&
+                                                    snapshot.data?.playing != null &&
+                                                    snapshot.data!.playing!.hasTranscripts
                                                 ? Text(
                                                     L.of(context)!.transcript_label.toUpperCase(),
                                                     style: Theme.of(context).textTheme.labelLarge,

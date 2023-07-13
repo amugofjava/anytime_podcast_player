@@ -65,28 +65,31 @@ class _MaterialFundingMenu extends StatelessWidget {
             stream: settingsBloc.settings,
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
-              return PopupMenuButton<String>(
-                onSelected: (url) {
-                  FundingLink.fundingLink(
-                    url,
-                    snapshot.data!.externalLinkConsent,
-                    context,
-                  ).then((value) {
-                    settingsBloc.setExternalLinkConsent(value);
-                  });
-                },
-                icon: const Icon(
-                  Icons.payment,
+              return Semantics(
+                label: L.of(context)!.podcast_funding_dialog_header,
+                child: PopupMenuButton<String>(
+                  onSelected: (url) {
+                    FundingLink.fundingLink(
+                      url,
+                      snapshot.data!.externalLinkConsent,
+                      context,
+                    ).then((value) {
+                      settingsBloc.setExternalLinkConsent(value);
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.payment,
+                  ),
+                  itemBuilder: (BuildContext context) {
+                    return List<PopupMenuEntry<String>>.generate(funding!.length, (index) {
+                      return PopupMenuItem<String>(
+                        value: funding![index].url,
+                        enabled: true,
+                        child: Text(funding![index].value),
+                      );
+                    });
+                  },
                 ),
-                itemBuilder: (BuildContext context) {
-                  return List<PopupMenuEntry<String>>.generate(funding!.length, (index) {
-                    return PopupMenuItem<String>(
-                      value: funding![index].url,
-                      enabled: true,
-                      child: Text(funding![index].value),
-                    );
-                  });
-                },
               );
             });
   }

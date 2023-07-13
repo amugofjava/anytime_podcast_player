@@ -36,7 +36,7 @@ class QueueMoveEvent extends QueueEvent {
 class QueueClearEvent extends QueueEvent {}
 
 abstract class QueueState {
-  final Episode playing;
+  final Episode? playing;
   final List<Episode> queue;
 
   QueueState({
@@ -47,7 +47,7 @@ abstract class QueueState {
 
 class QueueListState extends QueueState {
   QueueListState({
-    required Episode playing,
+    required Episode? playing,
     required List<Episode> queue,
   }) : super(playing: playing, queue: queue);
 }

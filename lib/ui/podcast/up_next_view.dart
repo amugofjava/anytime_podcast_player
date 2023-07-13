@@ -47,7 +47,7 @@ class UpNextView extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                 child: DraggableEpisodeTile(
                   key: const Key('detileplaying'),
-                  episode: snapshot.data!.playing,
+                  episode: snapshot.data!.playing!,
                   draggable: false,
                 ),
               ),

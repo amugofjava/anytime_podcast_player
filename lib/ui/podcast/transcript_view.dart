@@ -281,16 +281,16 @@ class _TranscriptViewState extends State<TranscriptView> {
                         ),
                         if (queueSnapshot.hasData &&
                             queueSnapshot.data?.playing != null &&
-                            queueSnapshot.data!.playing.persons.isNotEmpty)
+                            queueSnapshot.data!.playing!.persons.isNotEmpty)
                           Container(
                             padding: const EdgeInsets.only(left: 16.0),
                             width: double.infinity,
                             height: 72.0,
                             child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: queueSnapshot.data!.playing.persons.length,
+                                itemCount: queueSnapshot.data!.playing!.persons.length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  var person = queueSnapshot.data!.playing.persons[index];
+                                  var person = queueSnapshot.data!.playing!.persons[index];
                                   var selected = false;
 
                                   if (speaker.isNotEmpty &&
@@ -332,7 +332,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                                             children: [
                                               SubtitleWidget(
                                                 subtitle: i,
-                                                persons: queueSnapshot.data!.playing.persons,
+                                                persons: queueSnapshot.data?.playing?.persons ?? <Person>[],
                                                 highlight: i.start.inMilliseconds == position,
                                               ),
                                             ],

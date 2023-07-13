@@ -356,7 +356,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   void _updateQueueState() {
-    _queueState.add(QueueListState(playing: _currentEpisode!, queue: _queue));
+    _queueState.add(QueueListState(playing: _currentEpisode, queue: _queue));
   }
 
   Future<String?> _generateEpisodeUri(Episode episode) async {

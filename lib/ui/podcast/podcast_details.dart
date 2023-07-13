@@ -403,14 +403,20 @@ class _PodcastTitleState extends State<PodcastTitle> {
                               style: const ButtonStyle(
                                 visualDensity: VisualDensity.compact,
                               ),
-                              child: const Icon(Icons.expand_less),
+                              child: Icon(
+                                Icons.expand_less,
+                                semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
+                              ),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(false);
                               },
                             )
                           : TextButton(
                               style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                              child: const Icon(Icons.expand_more),
+                              child: Icon(
+                                Icons.expand_more,
+                                semanticLabel: L.of(context)!.semantics_expand_podcast_description,
+                              ),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(true);
                               },

@@ -23,7 +23,7 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_html_svg: ^3.0.0-beta.2
   flutter_html_table: ^3.0.0-beta.2
-  flutter_launcher_icons: ^0.11.0
+  flutter_launcher_icons: ^0.13.1
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
   intl: ^0.18.0
@@ -34,9 +34,9 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.11
   path_provider_platform_interface: ^2.0.4
-  percent_indicator: 4.2.2
-  permission_handler: ^9.2.0
-  podcast_search: ^0.6.0
+  percent_indicator: 4.2.3
+  permission_handler: ^10.4.2
+  podcast_search: ^0.6.1
   provider: ^6.0.3
   rxdart: ^0.27.4
   scrollable_positioned_list: ^0.3.7
