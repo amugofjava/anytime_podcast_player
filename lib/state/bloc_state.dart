@@ -1,12 +1,11 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
-
 /// The BLoCs in this application share common states, such as loading, error
-/// or populated. Rather than having a separate selection of state classes, we
-/// create this generic one.
+/// or populated.
+///
+/// Rather than having a separate selection of state classes, we create this generic one.
 enum BlocErrorType { unknown, connectivity, timeout }
 
 abstract class BlocState<T> {}

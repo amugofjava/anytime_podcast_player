@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -9,8 +9,9 @@ import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// OPML (Outline Processor Markup Language) is an XML format for outlines, which is used in Podcast
-/// apps for transferring podcast subscriptions/follows to other podcast apps. Anytime supports
-/// both import and export of OPML.
+/// apps for transferring podcast subscriptions/follows from/to other podcast apps.
+///
+/// Anytime supports both import and export of OPML.
 class OPMLBloc extends Bloc {
   final log = Logger('OPMLBloc');
 

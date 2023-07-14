@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -9,8 +9,10 @@ import 'package:anytime/l10n/L.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Listens for errors on the audio BLoC. We receive a code which we then
-/// map to an error message. This needs to be placed below a [Scaffold].
+/// Listens for errors on the audio BLoC.
+///
+/// We receive a code which we then map to an error message. This needs to be placed
+/// below a [Scaffold].
 class PlaybackErrorListener extends StatefulWidget {
   final Widget child;
 

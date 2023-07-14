@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -30,13 +30,16 @@ class PodcastGridTile extends StatelessWidget {
               builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },
-      child: GridTile(
-        child: Hero(
-          key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
-          tag: '${podcast.imageUrl}:${podcast.link}',
-          child: TileImage(
-            url: podcast.imageUrl!,
-            size: 18.0,
+      child: Semantics(
+        label: podcast.title,
+        child: GridTile(
+          child: Hero(
+            key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
+            tag: '${podcast.imageUrl}:${podcast.link}',
+            child: TileImage(
+              url: podcast.imageUrl!,
+              size: 18.0,
+            ),
           ),
         ),
       ),

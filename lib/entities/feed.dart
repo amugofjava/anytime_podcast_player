@@ -1,13 +1,14 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:anytime/entities/podcast.dart';
 
-/// This class is used when loading a [Podcast] feed. The key information
-/// is contained within the [Podcast] instance, but as the iTunes API also
-/// returns large and thumbnail artwork within its search results this class
-/// also contains properties to represent those.
+/// This class is used when loading a [Podcast] feed.
+///
+/// The key information is contained within the [Podcast] instance, but as the
+/// iTunes API also returns large and thumbnail artwork within its search results
+/// this class also contains properties to represent those.
 class Feed {
   /// The podcast to load
   final Podcast podcast;

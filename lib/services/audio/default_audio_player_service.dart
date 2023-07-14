@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -26,10 +26,11 @@ import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// This is the default implementation of [AudioPlayerService]. This implementation uses
-/// the [audio_service](https://pub.dev/packages/audio_service) package to run the audio
-/// layer as a service to allow background play, and playback is handled by the
-/// [just_audio](https://pub.dev/packages/just_audio) package.
+/// This is the default implementation of [AudioPlayerService].
+///
+/// This implementation uses the [audio_service](https://pub.dev/packages/audio_service)
+/// package to run the audio layer as a service to allow background play, and playback
+/// is handled by the [just_audio](https://pub.dev/packages/just_audio) package.
 class DefaultAudioPlayerService extends AudioPlayerService {
   final zeroDuration = const Duration(seconds: 0);
   final log = Logger('DefaultAudioPlayerService');
@@ -118,6 +119,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   /// Called by the client (UI), or when we move to a different episode within the queue, to play an episode.
+  ///
   /// If we have a downloaded copy of the requested episode we will use that; otherwise we will stream the
   /// episode directly.
   @override
@@ -301,7 +303,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<Episode?> resume() async {
     /// If _episode is null, we must have stopped whilst still active or we were killed.
     if (_currentEpisode == null) {
-      if (_audioHandler.mediaItem.value != null) {
+      if (_initialised && _audioHandler.mediaItem.value != null) {
         final extras = _audioHandler.mediaItem.value?.extras;
 
         if (extras != null && extras['eid'] != null) {
@@ -356,7 +358,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   void _updateQueueState() {
-    _queueState.add(QueueListState(playing: _currentEpisode!, queue: _queue));
+    _queueState.add(QueueListState(playing: _currentEpisode, queue: _queue));
   }
 
   Future<String?> _generateEpisodeUri(Episode episode) async {

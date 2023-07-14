@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -8,6 +8,7 @@ import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// Handles interaction with the Queue via an [AudioPlayerService].
 class QueueBloc extends Bloc {
   final AudioPlayerService audioPlayerService;
   final PodcastService podcastService;

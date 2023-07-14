@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -9,8 +9,9 @@ import 'package:podcast_search/podcast_search.dart' as search;
 
 import 'episode.dart';
 
-/// A class that represents an instance of a podcast. When persisted to disk
-/// this represents a podcast that is being followed.
+/// A class that represents an instance of a podcast.
+///
+/// When persisted to disk this represents a podcast that is being followed.
 class Podcast {
   /// Database ID
   int? id;

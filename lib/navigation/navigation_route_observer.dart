@@ -1,16 +1,16 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-/// This class will observe the current route. This gives us an easy way to tell
-/// what screen we are on from elsewhere within the application. This is useful,
-/// for example, when responding to external links and determining if we need to
-/// display the podcast details or just update the current screen.
+/// This class will observe the current route.
+///
+/// This gives us an easy way to tell what screen we are on from elsewhere within
+/// the application. This is useful, for example, when responding to external links
+/// and determining if we need to display the podcast details or just update the
+/// current screen.
 class NavigationRouteObserver extends NavigatorObserver {
   final List<Route<dynamic>?> _routeStack = <Route<dynamic>?>[];
 

@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -186,8 +186,12 @@ class SembastRepository extends Repository {
   Future<Episode?> findEpisodeByGuid(String guid) async {
     final finder = Finder(filter: Filter.equals('guid', guid));
 
-    final RecordSnapshot<int, Map<String, Object?>> snapshot =
-        (await _episodeStore.findFirst(await _db, finder: finder))!;
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _episodeStore.findFirst(await _db, finder: finder);
+
+    if (snapshot == null) {
+      return null;
+    }
 
     return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }

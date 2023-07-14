@@ -1,8 +1,6 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-
 
 import 'package:rxdart/rxdart.dart';
 
@@ -12,6 +10,7 @@ class PagerBloc {
   final BehaviorSubject<int> page = BehaviorSubject<int>.seeded(0);
 
   Function(int) get changePage => page.add;
+
   Stream<int> get currentPage => page.stream;
 
   void dispose() {

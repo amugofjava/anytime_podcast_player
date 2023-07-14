@@ -1,14 +1,14 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-
 
 import 'package:anytime/entities/transcript.dart';
 import 'package:podcast_search/podcast_search.dart' as pslib;
 
 /// A simple wrapper class that interacts with the search API via
 /// the podcast_search package.
+///
+/// TODO: Make this more generic so it's not tied to podcast_search
 abstract class PodcastApi {
   /// Search for podcasts matching the search criteria. Returns a
   /// [SearchResult] instance.

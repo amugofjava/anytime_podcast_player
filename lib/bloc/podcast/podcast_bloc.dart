@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,10 +27,11 @@ enum PodcastEvent {
   refresh,
 }
 
-/// This BLoC provides access to the details of a given Podcast. It takes a feed
-/// URL and creates a [Podcast] instance. There are several listeners that handle
-/// actions on a podcast such as requesting an episode download, following/unfollowing
-/// a podcast and marking/unmarking all episodes as played.
+/// This BLoC provides access to the details of a given Podcast.
+///
+/// It takes a feed URL and creates a [Podcast] instance. There are several listeners that
+/// handle actions on a podcast such as requesting an episode download, following/unfollowing
+/// a podcast and marking/un-marking all episodes as played.
 class PodcastBloc extends Bloc {
   final log = Logger('PodcastBloc');
   final PodcastService podcastService;
@@ -132,9 +133,10 @@ class PodcastBloc extends Bloc {
     });
   }
 
-  /// Determines if the current feed should be updated in the background. If the
-  /// autoUpdatePeriod is -1 this means never; 0 means always and any other value
-  /// is the time in minutes.
+  /// Determines if the current feed should be updated in the background.
+  ///
+  /// If the autoUpdatePeriod is -1 this means never; 0 means always and any other
+  /// value is the time in minutes.
   bool _shouldAutoRefresh() {
     /// If we are currently following this podcast it will have an id. At
     /// this point we can compare the last updated time to the update
@@ -262,10 +264,10 @@ class PodcastBloc extends Bloc {
     });
   }
 
-  /// Sets up a listener to listen for status updates from any currently
-  /// downloading episode. If the ID of a current download matches that
-  /// of an episode currently in use, we update the status of the episode
-  /// and push it back into the episode stream.
+  /// Sets up a listener to listen for status updates from any currently downloading episode.
+  ///
+  /// If the ID of a current download matches that of an episode currently in
+  /// use, we update the status of the episode and push it back into the episode stream.
   void _listenDownloads() {
     // Listen to download progress
     MobileDownloadService.downloadProgress.listen((downloadProgress) {

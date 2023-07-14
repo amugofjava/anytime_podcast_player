@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -11,8 +11,9 @@ import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-/// This class is the root class for rendering the Discover tab. This UI can optionally show
-/// a list of genres provided by iTunes/PodcastIndex.
+/// This class is the root class for rendering the Discover tab.
+///
+/// This UI can optionally show a list of genres provided by iTunes/PodcastIndex.
 class Discovery extends StatefulWidget {
   final bool categories;
   final bool inlineSearch;

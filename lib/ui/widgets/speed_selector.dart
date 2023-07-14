@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,9 +10,9 @@ import 'package:anytime/ui/widgets/slider_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// This widget allows the user to change the playback speed and toggle audio
-/// effects. The two audio effects, trim silence and volume boost, are
-/// currently Android only.
+/// This widget allows the user to change the playback speed and toggle audio effects.
+///
+/// The two audio effects, trim silence and volume boost, are currently Android only.
 class SpeedSelectorWidget extends StatefulWidget {
   const SpeedSelectorWidget({
     super.key,
@@ -69,6 +69,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   child: Center(
                     child: Text(
                       snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
+                      semanticsLabel: L.of(context)!.playback_speed_label,
                       style: TextStyle(
                         fontSize: 14.0,
                         color: Theme.of(context).iconTheme.color,
@@ -139,6 +140,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           children: [
             Expanded(
               child: IconButton(
+                tooltip: L.of(context)!.semantics_decrease_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.remove_circle_outline),
                 onPressed: (speed <= 0.5)
@@ -172,6 +174,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             ),
             Expanded(
               child: IconButton(
+                tooltip: L.of(context)!.semantics_increase_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.add_circle_outline),
                 onPressed: (speed >= 2.0)

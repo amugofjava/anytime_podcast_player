@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,8 +10,9 @@ import 'package:podcast_search/podcast_search.dart' as podcast_search;
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC to interact with the Discovery UI page and the [PodcastService] to
-/// fetch the iTunes/PodcastIndex charts. As charts will not change very frequently
-/// the results are cached for [cacheMinutes].
+/// fetch the iTunes/PodcastIndex charts.
+///
+/// As charts will not change very frequently the results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
   static const cacheMinutes = 30;
 

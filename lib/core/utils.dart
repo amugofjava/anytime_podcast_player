@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -11,6 +11,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Returns the storage directory for the current platform.
+///
 /// On iOS, the directory that the app has available to it for storing episodes may
 /// change between updates, whereas on Android we are able to save the full path. To
 /// ensure we can handle the directory name change on iOS without breaking existing

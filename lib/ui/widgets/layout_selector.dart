@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -82,6 +82,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           ),
                           child: Icon(
                             Icons.list,
+                            semanticLabel: L.of(context)!.semantics_layout_option_list,
                             color: mode == 0 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
                           ),
                         ),
@@ -99,6 +100,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           ),
                           child: Icon(
                             Icons.grid_on,
+                            semanticLabel: L.of(context)!.semantics_layout_option_compact_grid,
                             color: mode == 1 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
                           ),
                         ),
@@ -116,6 +118,7 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           ),
                           child: Icon(
                             Icons.grid_view,
+                            semanticLabel: L.of(context)!.semantics_layout_option_grid,
                             color: mode == 2 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
                           ),
                         ),

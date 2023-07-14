@@ -4,11 +4,11 @@
 
 enum LastState { none, completed, stopped, paused }
 
-/// This class is used to persist information about the currently playing
-/// episode to disk. This allows the background audio service to persist
-/// state (whilst the UI is not visible) and for the episode play and
-/// position details to be restored when the UI becomes visible again -
-/// either when bringing it to the foreground or upon next start.
+/// This class is used to persist information about the currently playing episode to disk.
+///
+/// This allows the background audio service to persist state (whilst the UI is not visible)
+/// and for the episode play and position details to be restored when the UI becomes visible
+/// again - either when bringing it to the foreground or upon next start.
 class Persistable {
   /// The Podcast GUID.
   String pguid;

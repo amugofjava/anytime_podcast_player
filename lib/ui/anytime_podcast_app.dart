@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -61,11 +61,11 @@ class AnytimePodcastApp extends StatefulWidget {
   final Repository repository;
   late PodcastApi podcastApi;
   late DownloadService downloadService;
-  PodcastService? podcastService;
   late AudioPlayerService audioPlayerService;
+  late OPMLService opmlService;
+  PodcastService? podcastService;
   SettingsBloc? settingsBloc;
   MobileSettingsService mobileSettingsService;
-  late OPMLService opmlService;
   List<int> certificateAuthorityBytes;
 
   AnytimePodcastApp({
@@ -347,14 +347,16 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   SliverVisibility(
                     visible: widget.topBarVisible,
                     sliver: SliverAppBar(
-                      title: TitleWidget(),
+                      title: ExcludeSemantics(
+                        child: TitleWidget(),
+                      ),
                       backgroundColor: backgroundColour,
                       floating: false,
                       pinned: true,
                       snap: false,
                       actions: <Widget>[
                         IconButton(
-                          tooltip: L.of(context)!.search_button_label,
+                          tooltip: L.of(context)!.search_for_podcasts_hint,
                           icon: const Icon(Icons.search),
                           onPressed: () async {
                             await Navigator.push(

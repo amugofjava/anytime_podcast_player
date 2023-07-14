@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -24,11 +24,12 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 /// This is the settings page and allows the user to select various
-/// options for the app. This is a self contained page and so, unlike
-/// the other forms, talks directly to a settings service rather than
-/// a BLoC. Whilst this deviates slightly from the overall architecture,
-/// adding a BLoC to simply be consistent with the rest of the
-/// application would add unnecessary complexity.
+/// options for the app.
+///
+/// This is a self contained page and so, unlike the other forms, talks directly
+/// to a settings service rather than a BLoC. Whilst this deviates slightly from
+/// the overall architecture, adding a BLoC to simply be consistent with the rest
+/// of the application would add unnecessary complexity.
 ///
 /// This page is built with both Android & iOS in mind. However, the
 /// rest of the application is not prepared for iOS design; this

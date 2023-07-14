@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -30,9 +30,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-/// This Widget takes a search result and builds a list of currently available
-/// podcasts. From here a user can option to subscribe/unsubscribe or play a
-/// podcast directly from a search result.
+/// This Widget takes a search result and builds a list of currently available podcasts.
+///
+/// From here a user can option to subscribe/unsubscribe or play a podcast directly
+/// from a search result.
 class PodcastDetails extends StatefulWidget {
   final Podcast podcast;
   final PodcastBloc _podcastBloc;
@@ -160,145 +161,149 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
-    return WillPopScope(
-      onWillPop: () {
-        _resetSystemOverlayStyle();
-        return Future.value(true);
-      },
-      child: ScaffoldMessenger(
-        key: scaffoldMessengerKey,
-        child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: RefreshIndicator(
-            displacement: 60.0,
-            onRefresh: _handleRefresh,
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: _sliverScrollController,
-              slivers: <Widget>[
-                SliverAppBar(
-                    systemOverlayStyle: _systemOverlayStyle,
-                    title: AnimatedOpacity(
-                        opacity: toolbarCollapsed ? 1.0 : 0.0,
-                        duration: const Duration(milliseconds: 500),
-                        child: Text(widget.podcast.title)),
-                    leading: PlatformBackButton(
-                      iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
-                          ? Theme.of(context).appBarTheme.foregroundColor!
-                          : Colors.white,
-                      decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
-                      onPressed: () {
-                        _resetSystemOverlayStyle();
-                        Navigator.pop(context);
-                      },
-                    ),
-                    expandedHeight: 300.0,
-                    floating: false,
-                    pinned: true,
-                    snap: false,
-                    flexibleSpace: FlexibleSpaceBar(
-                      background: Hero(
-                        key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
-                        tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
-                        child: ExcludeSemantics(
-                          child: StreamBuilder<BlocState<Podcast>>(
-                              initialData: BlocEmptyState<Podcast>(),
-                              stream: podcastBloc.details,
-                              builder: (context, snapshot) {
-                                final state = snapshot.data;
-                                Podcast? podcast = widget.podcast;
-
-                                if (state is BlocLoadingState<Podcast>) {
-                                  podcast = state.data;
-                                }
-
-                                if (state is BlocPopulatedState<Podcast>) {
-                                  podcast = state.results;
-                                }
-
-                                return PodcastHeaderImage(
-                                  podcast: podcast!,
-                                  placeholderBuilder: placeholderBuilder,
-                                );
-                              }),
-                        ),
+    return Semantics(
+      header: true,
+      label: L.of(context)!.semantics_podcast_details_header,
+      child: WillPopScope(
+        onWillPop: () {
+          _resetSystemOverlayStyle();
+          return Future.value(true);
+        },
+        child: ScaffoldMessenger(
+          key: scaffoldMessengerKey,
+          child: Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: RefreshIndicator(
+              displacement: 60.0,
+              onRefresh: _handleRefresh,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: _sliverScrollController,
+                slivers: <Widget>[
+                  SliverAppBar(
+                      systemOverlayStyle: _systemOverlayStyle,
+                      title: AnimatedOpacity(
+                          opacity: toolbarCollapsed ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 500),
+                          child: Text(widget.podcast.title)),
+                      leading: PlatformBackButton(
+                        iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
+                            ? Theme.of(context).appBarTheme.foregroundColor!
+                            : Colors.white,
+                        decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
+                        onPressed: () {
+                          _resetSystemOverlayStyle();
+                          Navigator.pop(context);
+                        },
                       ),
-                    )),
-                StreamBuilder<BlocState<Podcast>>(
-                    initialData: BlocEmptyState<Podcast>(),
-                    stream: podcastBloc.details,
-                    builder: (context, snapshot) {
-                      final state = snapshot.data;
+                      expandedHeight: 300.0,
+                      floating: false,
+                      pinned: true,
+                      snap: false,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: Hero(
+                          key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
+                          tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
+                          child: ExcludeSemantics(
+                            child: StreamBuilder<BlocState<Podcast>>(
+                                initialData: BlocEmptyState<Podcast>(),
+                                stream: podcastBloc.details,
+                                builder: (context, snapshot) {
+                                  final state = snapshot.data;
+                                  Podcast? podcast = widget.podcast;
 
-                      if (state is BlocLoadingState) {
-                        return const SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.all(24.0),
-                            child: Column(
-                              children: <Widget>[
-                                PlatformProgressIndicator(),
-                              ],
-                            ),
+                                  if (state is BlocLoadingState<Podcast>) {
+                                    podcast = state.data;
+                                  }
+
+                                  if (state is BlocPopulatedState<Podcast>) {
+                                    podcast = state.results;
+                                  }
+
+                                  return PodcastHeaderImage(
+                                    podcast: podcast!,
+                                    placeholderBuilder: placeholderBuilder,
+                                  );
+                                }),
                           ),
-                        );
-                      }
-
-                      if (state is BlocErrorState) {
-                        return SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                const Icon(
-                                  Icons.error_outline,
-                                  size: 50,
-                                ),
-                                Text(
-                                  L.of(context)!.no_podcast_details_message,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-
-                      if (state is BlocPopulatedState<Podcast>) {
-                        return SliverToBoxAdapter(
-                            child: PlaybackErrorListener(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              PodcastTitle(state.results!),
-                              const Divider(),
-                            ],
-                          ),
-                        ));
-                      }
-
-                      return const SliverToBoxAdapter(
-                        child: SizedBox(
-                          width: 0.0,
-                          height: 0.0,
                         ),
-                      );
-                    }),
-                StreamBuilder<List<Episode?>?>(
-                    stream: podcastBloc.episodes,
-                    builder: (context, snapshot) {
-                      return snapshot.hasData && snapshot.data!.isNotEmpty
-                          ? PodcastEpisodeList(
-                              episodes: snapshot.data!,
-                              play: true,
-                              download: true,
-                            )
-                          : SliverToBoxAdapter(child: Container());
-                    }),
-              ],
+                      )),
+                  StreamBuilder<BlocState<Podcast>>(
+                      initialData: BlocEmptyState<Podcast>(),
+                      stream: podcastBloc.details,
+                      builder: (context, snapshot) {
+                        final state = snapshot.data;
+
+                        if (state is BlocLoadingState) {
+                          return const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.all(24.0),
+                              child: Column(
+                                children: <Widget>[
+                                  PlatformProgressIndicator(),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (state is BlocErrorState) {
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  const Icon(
+                                    Icons.error_outline,
+                                    size: 50,
+                                  ),
+                                  Text(
+                                    L.of(context)!.no_podcast_details_message,
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (state is BlocPopulatedState<Podcast>) {
+                          return SliverToBoxAdapter(
+                              child: PlaybackErrorListener(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                PodcastTitle(state.results!),
+                                const Divider(),
+                              ],
+                            ),
+                          ));
+                        }
+
+                        return const SliverToBoxAdapter(
+                          child: SizedBox(
+                            width: 0.0,
+                            height: 0.0,
+                          ),
+                        );
+                      }),
+                  StreamBuilder<List<Episode?>?>(
+                      stream: podcastBloc.episodes,
+                      builder: (context, snapshot) {
+                        return snapshot.hasData && snapshot.data!.isNotEmpty
+                            ? PodcastEpisodeList(
+                                episodes: snapshot.data!,
+                                play: true,
+                                download: true,
+                              )
+                            : SliverToBoxAdapter(child: Container());
+                      }),
+                ],
+              ),
             ),
           ),
         ),
@@ -399,14 +404,20 @@ class _PodcastTitleState extends State<PodcastTitle> {
                               style: const ButtonStyle(
                                 visualDensity: VisualDensity.compact,
                               ),
-                              child: const Icon(Icons.expand_less),
+                              child: Icon(
+                                Icons.expand_less,
+                                semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
+                              ),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(false);
                               },
                             )
                           : TextButton(
                               style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                              child: const Icon(Icons.expand_more),
+                              child: Icon(
+                                Icons.expand_more,
+                                semanticLabel: L.of(context)!.semantics_expand_podcast_description,
+                              ),
                               onPressed: () {
                                 isDescriptionExpandedStream.add(true);
                               },
@@ -465,9 +476,11 @@ class _PodcastTitleState extends State<PodcastTitle> {
   }
 }
 
-/// This class wraps the description in an expandable box. This handles the
-/// common case whereby the description is very long and, without this constraint,
-/// would require the use to always scroll before reaching the podcast episodes.
+/// This class wraps the description in an expandable box.
+///
+/// This handles the common case whereby the description is very long and, without
+/// this constraint, would require the use to always scroll before reaching the
+/// podcast episodes.
 ///
 /// TODO: Animate between the two states.
 class PodcastDescription extends StatelessWidget {
@@ -534,61 +547,68 @@ class SubscriptionButton extends StatelessWidget {
             if (state is BlocPopulatedState<Podcast>) {
               var p = state.results!;
 
-              return p.subscribed
-                  ? OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                      icon: const Icon(
-                        Icons.delete_outline,
-                      ),
-                      label: Text(L.of(context)!.unsubscribe_label),
-                      onPressed: () {
-                        showPlatformDialog<void>(
-                          context: context,
-                          useRootNavigator: false,
-                          builder: (_) => BasicDialogAlert(
-                            title: Text(L.of(context)!.unsubscribe_label),
-                            content: Text(L.of(context)!.unsubscribe_message),
-                            actions: <Widget>[
-                              BasicDialogAction(
-                                title: ActionText(
-                                  L.of(context)!.cancel_button_label,
+              return Semantics(
+                liveRegion: true,
+                child: p.subscribed
+                    ? OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                        icon: const Icon(
+                          Icons.delete_outline,
+                        ),
+                        label: Text(L.of(context)!.unsubscribe_label),
+                        onPressed: () {
+                          showPlatformDialog<void>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: Text(L.of(context)!.unsubscribe_label),
+                              content: Text(L.of(context)!.unsubscribe_message),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: ExcludeSemantics(
+                                    child: ActionText(
+                                      L.of(context)!.cancel_button_label,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              BasicDialogAction(
-                                title: ActionText(
-                                  L.of(context)!.unsubscribe_button_label,
-                                ),
-                                iosIsDefaultAction: true,
-                                iosIsDestructiveAction: true,
-                                onPressed: () {
-                                  bloc.podcastEvent(PodcastEvent.unsubscribe);
+                                BasicDialogAction(
+                                  title: ExcludeSemantics(
+                                    child: ActionText(
+                                      L.of(context)!.unsubscribe_button_label,
+                                    ),
+                                  ),
+                                  iosIsDefaultAction: true,
+                                  iosIsDestructiveAction: true,
+                                  onPressed: () {
+                                    bloc.podcastEvent(PodcastEvent.unsubscribe);
 
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    )
-                  : OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                        icon: const Icon(
+                          Icons.add,
+                        ),
+                        label: Text(L.of(context)!.subscribe_label),
+                        onPressed: () {
+                          bloc.podcastEvent(PodcastEvent.subscribe);
+                        },
                       ),
-                      icon: const Icon(
-                        Icons.add,
-                      ),
-                      label: Text(L.of(context)!.subscribe_label),
-                      onPressed: () {
-                        bloc.podcastEvent(PodcastEvent.subscribe);
-                      },
-                    );
+              );
             }
           }
           return Container();

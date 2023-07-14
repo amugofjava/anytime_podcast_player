@@ -1,11 +1,12 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
 
-/// A class that represents an individual chapter within an [Episode]. Chapters
-/// may, or may not, exist for an episode.
+/// A class that represents an individual chapter within an [Episode].
+///
+/// Chapters may, or may not, exist for an episode.
 ///
 /// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
 class Chapter {

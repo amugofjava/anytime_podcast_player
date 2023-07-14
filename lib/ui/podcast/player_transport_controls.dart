@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -59,6 +59,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
+                  tooltip: L.of(context)!.fast_forward_button_label,
                   padding: const EdgeInsets.all(0.0),
                   icon: const Icon(
                     Icons.forward_30,
@@ -184,14 +185,13 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
             onPressed: () {
               if (playing) {
                 widget.onPause(audioBloc);
-                // audioBloc.transitionState(TransitionState.pause);
               } else {
                 widget.onPlay(audioBloc);
-                // audioBloc.transitionState(TransitionState.play);
               }
             },
             child: AnimatedIcon(
               size: 60.0,
+              semanticLabel: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
               icon: AnimatedIcons.play_pause,
               color: Colors.white,
               progress: _playPauseController,

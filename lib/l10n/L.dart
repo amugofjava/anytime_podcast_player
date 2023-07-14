@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -300,7 +300,7 @@ class L {
   String get delete_episode_button_label {
     return message('delete_episode_button_label') ??
         Intl.message(
-          'Delete episode',
+          'Delete downloaded episode',
           name: 'delete_episode_button_label',
           desc: 'Semantic label for the delete episode',
           locale: localeName,
@@ -1093,6 +1093,196 @@ class L {
           'https://anytimeplayer.app/docs/anytime_transcript_support_en.html',
           name: 'transcript_why_not_url',
           desc: 'Language specific link',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_podcast_details_header {
+    return message('semantics_podcast_details_header') ??
+        Intl.message(
+          'Podcast details and episode page',
+          name: 'semantics_podcast_details_header',
+          desc: 'Describes podcast details page',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_layout_option_list {
+    return message('semantics_layout_option_list') ??
+        Intl.message(
+          'List layout',
+          name: 'semantics_layout_option_list',
+          desc: 'Describes list layout button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_layout_option_compact_grid {
+    return message('semantics_layout_option_compact_grid') ??
+        Intl.message(
+          'Compact grid layout',
+          name: 'semantics_layout_option_compact_grid',
+          desc: 'Describes compact grid layout button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_layout_option_grid {
+    return message('semantics_layout_option_grid') ??
+        Intl.message(
+          'Grid layout',
+          name: 'semantics_layout_option_grid',
+          desc: 'Describes grid layout button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_mini_player_header {
+    return message('semantics_mini_player_header') ??
+        Intl.message(
+          'Mini player. Swipe right to play/pause button. Activate to open main player window',
+          name: 'semantics_mini_player_header',
+          desc: 'Describes the mini player',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_main_player_header {
+    return message('semantics_main_player_header') ??
+        Intl.message(
+          'Main player window',
+          name: 'semantics_main_player_header',
+          desc: 'Describes the main player',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_play_pause_toggle {
+    return message('semantics_play_pause_toggle') ??
+        Intl.message(
+          'Play/pause toggle',
+          name: 'semantics_play_pause_toggle',
+          desc: 'Describes play/pause toggle button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_decrease_playback_speed {
+    return message('semantics_decrease_playback_speed') ??
+        Intl.message(
+          'Decrease playback speed',
+          name: 'semantics_decrease_playback_speed',
+          desc: 'Describes speed adjustment control',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_increase_playback_speed {
+    return message('semantics_increase_playback_speed') ??
+        Intl.message(
+          'Increase playback speed',
+          name: 'semantics_increase_playback_speed',
+          desc: 'Describes speed adjustment control',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_expand_podcast_description {
+    return message('semantics_expand_podcast_description') ??
+        Intl.message(
+          'Expand podcast description',
+          name: 'semantics_expand_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_collapse_podcast_description {
+    return message('semantics_collapse_podcast_description') ??
+        Intl.message(
+          'Collapse podcast description',
+          name: 'semantics_collapse_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_add_to_queue {
+    return message('semantics_add_to_queue') ??
+        Intl.message(
+          'Add episode to queue',
+          name: 'semantics_add_to_queue',
+          desc: 'Describes add to queue button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_remove_from_queue {
+    return message('semantics_remove_from_queue') ??
+        Intl.message(
+          'Remove episode from queue',
+          name: 'semantics_remove_from_queue',
+          desc: 'Describes add to queue button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_mark_episode_played {
+    return message('semantics_mark_episode_played') ??
+        Intl.message(
+          'Mark Episode as played',
+          name: 'semantics_mark_episode_played',
+          desc: 'Describes mark played button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_mark_episode_unplayed {
+    return message('semantics_mark_episode_unplayed') ??
+        Intl.message(
+          'Mark Episode as un-played',
+          name: 'semantics_mark_episode_unplayed',
+          desc: 'Describes mark unplayed button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_collapsed {
+    return message('semantics_episode_tile_collapsed') ??
+        Intl.message(
+          'Episode list item. Showing download and play controls.',
+          name: 'semantics_episode_tile_collapsed',
+          desc: 'Describes episode tile options when collapsed',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_expanded {
+    return message('semantics_episode_tile_expanded') ??
+        Intl.message(
+          'Episode list item. Showing description, download, play controls and additional controls.',
+          name: 'semantics_episode_tile_expanded',
+          desc: 'Describes episode tile options when expanded',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_collapsed_hint {
+    return message('semantics_episode_tile_collapsed_hint') ??
+        Intl.message(
+          'expand and show more details and additional options',
+          name: 'semantics_episode_tile_collapsed_hint',
+          desc: 'Describes episode tile options when collapsed',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_episode_tile_expanded_hint {
+    return message('semantics_episode_tile_expanded_hint') ??
+        Intl.message(
+          'collapse and hide more details and additional options',
+          name: 'semantics_episode_tile_expanded_hint',
+          desc: 'Describes episode tile options when expanded',
           locale: localeName,
         );
   }

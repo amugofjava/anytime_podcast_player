@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -16,20 +16,21 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-/// An EpisodeTitle is built with an [ExpandedTile] widget and displays the
-/// episode's basic details, thumbnail and play button. It can then be
-/// expanded to present addition information about the episode and further
+/// An EpisodeTitle is built with an [ExpandedTile] widget and displays the episode's
+/// basic details, thumbnail and play button.
+///
+/// It can then be expanded to present addition information about the episode and further
 /// controls.
 ///
 /// TODO: Replace [Opacity] with [Container] with a transparent colour.
-class EpisodeTile extends StatelessWidget {
+class EpisodeTile extends StatefulWidget {
   final Episode episode;
   final bool download;
   final bool play;
   final bool playing;
   final bool queued;
 
-  const EpisodeTile({
+  EpisodeTile({
     super.key,
     required this.episode,
     required this.download,
@@ -39,259 +40,288 @@ class EpisodeTile extends StatelessWidget {
   });
 
   @override
+  State<EpisodeTile> createState() => _EpisodeTileState();
+}
+
+class _EpisodeTileState extends State<EpisodeTile> {
+  bool expanded = false;
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = Theme.of(context).textTheme;
     final episodeBloc = Provider.of<EpisodeBloc>(context);
     final queueBloc = Provider.of<QueueBloc>(context);
 
-    return ExpansionTile(
-      key: Key('PT${episode.guid}'),
-      trailing: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: EpisodeTransportControls(
-          episode: episode,
-          download: download,
-          play: play,
+    return Semantics(
+      liveRegion: true,
+      label:
+          expanded ? L.of(context)!.semantics_episode_tile_expanded : L.of(context)!.semantics_episode_tile_collapsed,
+      onTapHint: expanded
+          ? L.of(context)!.semantics_episode_tile_expanded_hint
+          : L.of(context)!.semantics_episode_tile_collapsed_hint,
+      child: ExpansionTile(
+        key: Key('PT${widget.episode.guid}'),
+        onExpansionChanged: (isExpanded) {
+          setState(() {
+            print('$expanded - $isExpanded');
+            expanded = isExpanded;
+          });
+        },
+        trailing: Opacity(
+          opacity: widget.episode.played ? 0.5 : 1.0,
+          child: EpisodeTransportControls(
+            episode: widget.episode,
+            download: widget.download,
+            play: widget.play,
+          ),
         ),
-      ),
-      leading: Stack(
-        alignment: Alignment.bottomLeft,
-        fit: StackFit.passthrough,
+        leading: Stack(
+          alignment: Alignment.bottomLeft,
+          fit: StackFit.passthrough,
+          children: <Widget>[
+            Opacity(
+              opacity: widget.episode.played ? 0.5 : 1.0,
+              child: TileImage(
+                url: widget.episode.thumbImageUrl ?? widget.episode.imageUrl!,
+                size: 56.0,
+                highlight: widget.episode.highlight,
+              ),
+            ),
+            SizedBox(
+              height: 5.0,
+              width: 56.0 * (widget.episode.percentagePlayed / 100),
+              child: Container(
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+          ],
+        ),
+        subtitle: Opacity(
+          opacity: widget.episode.played ? 0.5 : 1.0,
+          child: EpisodeSubtitle(widget.episode),
+        ),
+        title: Opacity(
+          opacity: widget.episode.played ? 0.5 : 1.0,
+          child: Text(
+            widget.episode.title!,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            softWrap: false,
+            style: textTheme.bodyMedium,
+          ),
+        ),
         children: <Widget>[
-          Opacity(
-            opacity: episode.played ? 0.5 : 1.0,
-            child: TileImage(
-              url: episode.thumbImageUrl ?? episode.imageUrl!,
-              size: 56.0,
-              highlight: episode.highlight,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 4.0,
+              ),
+              child: Text(
+                widget.episode.descriptionText!,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                maxLines: 5,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    ),
+              ),
             ),
           ),
-          SizedBox(
-            height: 5.0,
-            width: 56.0 * (episode.percentagePlayed / 100),
-            child: Container(
-              color: Theme.of(context).primaryColor,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+                    ),
+                    onPressed: widget.episode.downloaded
+                        ? () {
+                            showPlatformDialog<void>(
+                              context: context,
+                              useRootNavigator: false,
+                              builder: (_) => BasicDialogAlert(
+                                title: Text(
+                                  L.of(context)!.delete_episode_title,
+                                ),
+                                content: Text(L.of(context)!.delete_episode_confirmation),
+                                actions: <Widget>[
+                                  BasicDialogAction(
+                                    title: ActionText(
+                                      L.of(context)!.cancel_button_label,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  BasicDialogAction(
+                                    title: ActionText(
+                                      L.of(context)!.delete_button_label,
+                                    ),
+                                    iosIsDefaultAction: true,
+                                    iosIsDestructiveAction: true,
+                                    onPressed: () {
+                                      episodeBloc.deleteDownload(widget.episode);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        : null,
+                    child: Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.delete_outline,
+                          semanticLabel: L.of(context)!.delete_episode_button_label,
+                          size: 22,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        ExcludeSemantics(
+                          child: Text(
+                            L.of(context)!.delete_label,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                    ),
+                    onPressed: widget.playing
+                        ? null
+                        : () {
+                            if (widget.queued) {
+                              queueBloc.queueEvent(QueueRemoveEvent(episode: widget.episode));
+                            } else {
+                              queueBloc.queueEvent(QueueAddEvent(episode: widget.episode));
+                            }
+                          },
+                    child: Column(
+                      children: <Widget>[
+                        Icon(
+                          widget.queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
+                          semanticLabel: widget.queued
+                              ? L.of(context)!.semantics_remove_from_queue
+                              : L.of(context)!.semantics_add_to_queue,
+                          size: 22,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        ExcludeSemantics(
+                          child: Text(
+                            widget.queued ? 'Remove' : 'Add',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                    ),
+                    onPressed: () {
+                      episodeBloc.togglePlayed(widget.episode);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          widget.episode.played ? Icons.unpublished_outlined : Icons.check_circle_outline,
+                          size: 22,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        Text(
+                          widget.episode.played ? L.of(context)!.mark_unplayed_label : L.of(context)!.mark_played_label,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+                    ),
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                          context: context,
+                          backgroundColor: theme.bottomAppBarTheme.color,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10.0),
+                              topRight: Radius.circular(10.0),
+                            ),
+                          ),
+                          builder: (context) {
+                            return EpisodeDetails(
+                              episode: widget.episode,
+                            );
+                          });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        const Icon(
+                          Icons.unfold_more_outlined,
+                          size: 22,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                        ),
+                        Text(
+                          L.of(context)!.more_label,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
-      subtitle: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: EpisodeSubtitle(episode),
-      ),
-      title: Opacity(
-        opacity: episode.played ? 0.5 : 1.0,
-        child: Text(
-          episode.title!,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          softWrap: false,
-          style: textTheme.bodyMedium,
-        ),
-      ),
-      children: <Widget>[
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 4.0,
-            ),
-            child: Text(
-              episode.descriptionText!,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              maxLines: 5,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                  ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 4.0, 0.0, 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-                  ),
-                  onPressed: episode.downloaded
-                      ? () {
-                          showPlatformDialog<void>(
-                            context: context,
-                            useRootNavigator: false,
-                            builder: (_) => BasicDialogAlert(
-                              title: Text(
-                                L.of(context)!.delete_episode_title,
-                              ),
-                              content: Text(L.of(context)!.delete_episode_confirmation),
-                              actions: <Widget>[
-                                BasicDialogAction(
-                                  title: ActionText(
-                                    L.of(context)!.cancel_button_label,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                BasicDialogAction(
-                                  title: ActionText(
-                                    L.of(context)!.delete_button_label,
-                                  ),
-                                  iosIsDefaultAction: true,
-                                  iosIsDestructiveAction: true,
-                                  onPressed: () {
-                                    episodeBloc.deleteDownload(episode);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      : null,
-                  child: Column(
-                    children: <Widget>[
-                      const Icon(
-                        Icons.delete_outline,
-                        size: 22,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.0),
-                      ),
-                      Text(
-                        L.of(context)!.delete_label,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-                  ),
-                  onPressed: playing
-                      ? null
-                      : () {
-                          if (queued) {
-                            queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
-                          } else {
-                            queueBloc.queueEvent(QueueAddEvent(episode: episode));
-                          }
-                        },
-                  child: Column(
-                    children: <Widget>[
-                      Icon(
-                        queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
-                        size: 22,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.0),
-                      ),
-                      Text(
-                        queued ? 'Remove' : 'Add',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-                  ),
-                  onPressed: () {
-                    episodeBloc.togglePlayed(episode);
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        episode.played ? Icons.unpublished_outlined : Icons.check_circle_outline,
-                        size: 22,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.0),
-                      ),
-                      Text(
-                        episode.played ? L.of(context)!.mark_unplayed_label : L.of(context)!.mark_played_label,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-                  ),
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                        context: context,
-                        backgroundColor: theme.bottomAppBarTheme.color,
-                        isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            topRight: Radius.circular(10.0),
-                          ),
-                        ),
-                        builder: (context) {
-                          return EpisodeDetails(
-                            episode: episode,
-                          );
-                        });
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      const Icon(
-                        Icons.unfold_more_outlined,
-                        size: 22,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.0),
-                      ),
-                      Text(
-                        L.of(context)!.more_label,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

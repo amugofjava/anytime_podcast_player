@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -15,8 +15,9 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This class is responsible for rendering the funding menu on the podcast details
-/// page. It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu]
+/// This class is responsible for rendering the funding menu on the podcast details page.
+///
+/// It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu]
 /// instance depending upon which platform we are running on.
 ///
 /// The target platform is based on the current [Theme]: [ThemeData.platform].
@@ -65,28 +66,31 @@ class _MaterialFundingMenu extends StatelessWidget {
             stream: settingsBloc.settings,
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
-              return PopupMenuButton<String>(
-                onSelected: (url) {
-                  FundingLink.fundingLink(
-                    url,
-                    snapshot.data!.externalLinkConsent,
-                    context,
-                  ).then((value) {
-                    settingsBloc.setExternalLinkConsent(value);
-                  });
-                },
-                icon: const Icon(
-                  Icons.payment,
+              return Semantics(
+                label: L.of(context)!.podcast_funding_dialog_header,
+                child: PopupMenuButton<String>(
+                  onSelected: (url) {
+                    FundingLink.fundingLink(
+                      url,
+                      snapshot.data!.externalLinkConsent,
+                      context,
+                    ).then((value) {
+                      settingsBloc.setExternalLinkConsent(value);
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.payment,
+                  ),
+                  itemBuilder: (BuildContext context) {
+                    return List<PopupMenuEntry<String>>.generate(funding!.length, (index) {
+                      return PopupMenuItem<String>(
+                        value: funding![index].url,
+                        enabled: true,
+                        child: Text(funding![index].value),
+                      );
+                    });
+                  },
                 ),
-                itemBuilder: (BuildContext context) {
-                  return List<PopupMenuEntry<String>>.generate(funding!.length, (index) {
-                    return PopupMenuItem<String>(
-                      value: funding![index].url,
-                      enabled: true,
-                      child: Text(funding![index].value),
-                    );
-                  });
-                },
               );
             });
   }

@@ -1,4 +1,4 @@
-// Copyright 2020-2022 Ben Hills. All rights reserved.
+// Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -42,9 +42,10 @@ class SearchBloc extends Bloc {
   }
 
   /// Takes the [SearchEvent] to perform either a search, chart fetch or clearing
-  /// of the current results cache. To improve resilience, when performing a search
-  /// the current network status is checked. a [BlocErrorState] is pushed if we
-  /// have no connectivity.
+  /// of the current results cache.
+  ///
+  /// To improve resilience, when performing a search the current network status is
+  /// checked. a [BlocErrorState] is pushed if we have no connectivity.
   Stream<BlocState<pcast.SearchResult>> _search(SearchEvent event) async* {
     if (event is SearchClearEvent) {
       yield BlocDefaultState();
