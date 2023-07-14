@@ -303,7 +303,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<Episode?> resume() async {
     /// If _episode is null, we must have stopped whilst still active or we were killed.
     if (_currentEpisode == null) {
-      if (_audioHandler.mediaItem.value != null) {
+      if (_initialised && _audioHandler.mediaItem.value != null) {
         final extras = _audioHandler.mediaItem.value?.extras;
 
         if (extras != null && extras['eid'] != null) {

@@ -30,7 +30,7 @@ class PodcastTile extends StatelessWidget {
               builder: (context) => PodcastDetails(podcast, podcastBloc)),
         );
       },
-      minVerticalPadding: 10,
+      minVerticalPadding: 9,
       leading: Hero(
         key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
         tag: '${podcast.imageUrl}:${podcast.link}',
