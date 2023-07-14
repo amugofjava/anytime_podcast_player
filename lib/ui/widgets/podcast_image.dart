@@ -6,16 +6,15 @@ import 'package:anytime/core/environment.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
-/// This class handles rendering of podcast images from a url. Images will be
-/// cached for quicker fetching on subsequent requests. An optional placeholder
-/// and error placeholder can be specified which will be rendered whilst the image
-/// is loading or has failed to load.
+/// This class handles rendering of podcast images from a url.
+/// Images will be cached for quicker fetching on subsequent requests. An optional placeholder
+/// and error placeholder can be specified which will be rendered whilst the image is loading
+/// or has failed to load.
 ///
-/// We cache the image at a fixed sized of [cacheHeight] and [cacheWidth] regardless
-/// of render size. By doing this, large podcast artwork will not slow the
-/// application down and the same image rendered at different sizes will return
-/// the same cache hit reducing the need for fetching the image several times for
-/// differing render sizes.
+/// We cache the image at a fixed sized of [cacheHeight] and [cacheWidth] regardlessof render
+/// size. By doing this, large podcast artwork will not slow the application down and the same
+/// image rendered at different sizes will return the same cache hit reducing the need for
+/// fetching the image several times for differing render sizes.
 // ignore: must_be_immutable
 class PodcastImage extends StatefulWidget {
   final String url;

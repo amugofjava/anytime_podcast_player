@@ -38,8 +38,9 @@ class PositionState {
         buffering = false;
 }
 
-/// This class defines the audio playback options supported by Anytime. The implementing
-/// classes will then handle the specifics for the platform we are running on.
+/// This class defines the audio playback options supported by Anytime.
+///
+/// The implementing classes will then handle the specifics for the platform we are running on.
 abstract class AudioPlayerService {
   /// Play a new episode, optionally resume at last save point.
   Future<void> playEpisode({required Episode episode, bool resume = true});

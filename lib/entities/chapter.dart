@@ -4,8 +4,9 @@
 
 import 'package:anytime/core/extensions.dart';
 
-/// A class that represents an individual chapter within an [Episode]. Chapters
-/// may, or may not, exist for an episode.
+/// A class that represents an individual chapter within an [Episode].
+///
+/// Chapters may, or may not, exist for an episode.
 ///
 /// Part of the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace)
 class Chapter {

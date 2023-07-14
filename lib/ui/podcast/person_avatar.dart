@@ -10,8 +10,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This Widget handles rendering of a person avatar. The data comes from the <person>
-/// tag in the Podcasting 2.0 namespace.
+/// This Widget handles rendering of a person avatar.
+///
+/// The data comes from the <person> tag in the Podcasting 2.0 namespace.
 ///
 /// https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person
 class PersonAvatar extends StatelessWidget {

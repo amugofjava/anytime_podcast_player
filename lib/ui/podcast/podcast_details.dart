@@ -30,9 +30,10 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-/// This Widget takes a search result and builds a list of currently available
-/// podcasts. From here a user can option to subscribe/unsubscribe or play a
-/// podcast directly from a search result.
+/// This Widget takes a search result and builds a list of currently available podcasts.
+///
+/// From here a user can option to subscribe/unsubscribe or play a podcast directly
+/// from a search result.
 class PodcastDetails extends StatefulWidget {
   final Podcast podcast;
   final PodcastBloc _podcastBloc;
@@ -475,9 +476,11 @@ class _PodcastTitleState extends State<PodcastTitle> {
   }
 }
 
-/// This class wraps the description in an expandable box. This handles the
-/// common case whereby the description is very long and, without this constraint,
-/// would require the use to always scroll before reaching the podcast episodes.
+/// This class wraps the description in an expandable box.
+///
+/// This handles the common case whereby the description is very long and, without
+/// this constraint, would require the use to always scroll before reaching the
+/// podcast episodes.
 ///
 /// TODO: Animate between the two states.
 class PodcastDescription extends StatelessWidget {

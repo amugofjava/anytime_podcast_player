@@ -26,10 +26,11 @@ import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// This is the default implementation of [AudioPlayerService]. This implementation uses
-/// the [audio_service](https://pub.dev/packages/audio_service) package to run the audio
-/// layer as a service to allow background play, and playback is handled by the
-/// [just_audio](https://pub.dev/packages/just_audio) package.
+/// This is the default implementation of [AudioPlayerService].
+///
+/// This implementation uses the [audio_service](https://pub.dev/packages/audio_service)
+/// package to run the audio layer as a service to allow background play, and playback
+/// is handled by the [just_audio](https://pub.dev/packages/just_audio) package.
 class DefaultAudioPlayerService extends AudioPlayerService {
   final zeroDuration = const Duration(seconds: 0);
   final log = Logger('DefaultAudioPlayerService');
@@ -118,6 +119,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   /// Called by the client (UI), or when we move to a different episode within the queue, to play an episode.
+  ///
   /// If we have a downloaded copy of the requested episode we will use that; otherwise we will stream the
   /// episode directly.
   @override

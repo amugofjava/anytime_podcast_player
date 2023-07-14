@@ -27,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This is the full-screen player Widget which is invoked by touching the mini player.
+///
 /// This displays the podcast image, episode notes and standard playback controls.
 ///
 /// TODO: The fade in/out transition applied when scrolling the queue is the first implementation.
@@ -196,8 +197,10 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   }
 }
 
-/// This class is responsible for rendering the tab selection at the top of the screen. It displays
-/// two or three tabs depending upon whether the current episode supports (and contains) chapters.
+/// This class is responsible for rendering the tab selection at the top of the screen.
+///
+/// It displays two or three tabs depending upon whether the current episode supports
+/// (and contains) chapters.
 class EpisodeTabBar extends StatelessWidget {
   final bool chapters;
 

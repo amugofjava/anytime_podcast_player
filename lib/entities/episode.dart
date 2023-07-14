@@ -12,9 +12,10 @@ import 'package:flutter/foundation.dart';
 import 'package:html/parser.dart' show parseFragment;
 import 'package:logging/logging.dart';
 
-/// An object that represents an individual episode of a Podcast. An Episode can
-/// be used in conjunction with a [Downloadable] to determine if the Episode
-/// is available on the local filesystem.
+/// An object that represents an individual episode of a Podcast.
+///
+/// An Episode can be used in conjunction with a [Downloadable] to
+/// determine if the Episode is available on the local filesystem.
 class Episode {
   final log = Logger('Episode');
 

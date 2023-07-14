@@ -4,6 +4,9 @@
 
 import 'package:anytime/core/extensions.dart';
 
+/// This class represents a person of interest to the podcast.
+///
+/// It is primarily intended to identify people like hosts, co-hosts and guests.
 class Person {
   final String name;
   final String role;

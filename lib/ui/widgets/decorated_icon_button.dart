@@ -4,8 +4,9 @@
 
 import 'package:flutter/material.dart';
 
-/// An [IconButton] cannot have a background or border. This class
-/// wraps an IconButton in a shape so that it can have a background.
+/// An [IconButton] cannot have a background or border.
+///
+/// This class wraps an IconButton in a shape so that it can have a background.
 class DecoratedIconButton extends StatelessWidget {
   final Color decorationColour;
   final Color iconColour;

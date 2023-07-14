@@ -8,6 +8,7 @@ import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// Handles interaction with the Queue via an [AudioPlayerService].
 class QueueBloc extends Bloc {
   final AudioPlayerService audioPlayerService;
   final PodcastService podcastService;

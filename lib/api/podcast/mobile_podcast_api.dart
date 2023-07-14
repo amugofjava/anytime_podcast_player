@@ -10,11 +10,15 @@ import 'package:anytime/entities/transcript.dart';
 import 'package:flutter/foundation.dart';
 import 'package:podcast_search/podcast_search.dart' as podcast_search;
 
-/// An implementation of the [PodcastApi]. A simple wrapper class that
-/// interacts with the iTunes/PodcastIndex search API via the
-/// podcast_search package.
+/// An implementation of the [PodcastApi].
+///
+/// A simple wrapper class that interacts with the iTunes/PodcastIndex search API
+/// via the podcast_search package.
 class MobilePodcastApi extends PodcastApi {
+  /// Set when using a custom certificate authority.
   SecurityContext? _defaultSecurityContext;
+
+  /// Bytes containing a custom certificate authority.
   List<int> _certificateAuthorityBytes = [];
 
   @override

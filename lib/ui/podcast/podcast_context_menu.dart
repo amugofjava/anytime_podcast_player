@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// This class is responsible for rendering the context menu on the podcast details
-/// page. It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu}
+/// page.
+///
+/// It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu}
 /// instance depending upon which platform we are running on.
 ///
 /// The target platform is based on the current [Theme]: [ThemeData.platform].

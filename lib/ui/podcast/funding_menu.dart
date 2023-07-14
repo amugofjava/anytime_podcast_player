@@ -15,8 +15,9 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// This class is responsible for rendering the funding menu on the podcast details
-/// page. It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu]
+/// This class is responsible for rendering the funding menu on the podcast details page.
+///
+/// It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu]
 /// instance depending upon which platform we are running on.
 ///
 /// The target platform is based on the current [Theme]: [ThemeData.platform].

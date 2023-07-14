@@ -11,9 +11,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
-/// This class is responsible for rendering the Up Next queue feature. The user can see the currently
-/// playing item and the current queue. The user can re-arrange items in the queue, remove individual
-/// items or completely clear the queue.
+/// This class is responsible for rendering the Up Next queue feature.
+///
+/// The user can see the currently playing item and the current queue. The user can
+/// re-arrange items in the queue, remove individual items or completely clear the queue.
 class UpNextView extends StatelessWidget {
   const UpNextView({
     super.key,

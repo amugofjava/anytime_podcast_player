@@ -10,8 +10,9 @@ import 'package:podcast_search/podcast_search.dart' as podcast_search;
 import 'package:rxdart/rxdart.dart';
 
 /// A BLoC to interact with the Discovery UI page and the [PodcastService] to
-/// fetch the iTunes/PodcastIndex charts. As charts will not change very frequently
-/// the results are cached for [cacheMinutes].
+/// fetch the iTunes/PodcastIndex charts.
+///
+/// As charts will not change very frequently the results are cached for [cacheMinutes].
 class DiscoveryBloc extends Bloc {
   static const cacheMinutes = 30;
 

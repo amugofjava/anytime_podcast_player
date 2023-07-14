@@ -14,9 +14,10 @@ import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Place holder for the upcoming Episodes view. This is essentially a copy of the Downloads
-/// page for now, but will be updated to include filters and will, eventually, support both
-/// the episode & download views.
+/// Place holder for the upcoming Episodes view.
+///
+/// This is essentially a copy of the Downloads page for now, but will be updated
+/// to include filters and will, eventually, support both the episode & download views.
 class Episodes extends StatefulWidget {
   const Episodes({
     super.key,

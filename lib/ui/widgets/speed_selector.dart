@@ -10,9 +10,9 @@ import 'package:anytime/ui/widgets/slider_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// This widget allows the user to change the playback speed and toggle audio
-/// effects. The two audio effects, trim silence and volume boost, are
-/// currently Android only.
+/// This widget allows the user to change the playback speed and toggle audio effects.
+///
+/// The two audio effects, trim silence and volume boost, are currently Android only.
 class SpeedSelectorWidget extends StatefulWidget {
   const SpeedSelectorWidget({
     super.key,

@@ -13,8 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// This widget is based upon [MiniPlayer] and provides an additional play/pause control when
-/// the episode queue is expanded. At some point we should try to merge the common code between
-/// this and [MiniPlayer].
+/// the episode queue is expanded.
+///
+/// At some point we should try to merge the common code between this and [MiniPlayer].
 class FloatingPlayer extends StatelessWidget {
   const FloatingPlayer({
     super.key,

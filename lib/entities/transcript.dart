@@ -12,6 +12,7 @@ enum TranscriptFormat {
 }
 
 /// This class represents a Podcasting 2.0 transcript URL.
+///
 /// [docs](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
 class TranscriptUrl {
   final String url;

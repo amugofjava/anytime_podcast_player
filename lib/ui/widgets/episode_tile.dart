@@ -16,9 +16,10 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-/// An EpisodeTitle is built with an [ExpandedTile] widget and displays the
-/// episode's basic details, thumbnail and play button. It can then be
-/// expanded to present addition information about the episode and further
+/// An EpisodeTitle is built with an [ExpandedTile] widget and displays the episode's
+/// basic details, thumbnail and play button.
+///
+/// It can then be expanded to present addition information about the episode and further
 /// controls.
 ///
 /// TODO: Replace [Opacity] with [Container] with a transparent colour.
@@ -28,7 +29,6 @@ class EpisodeTile extends StatefulWidget {
   final bool play;
   final bool playing;
   final bool queued;
-  bool expanded = false;
 
   EpisodeTile({
     super.key,
@@ -44,6 +44,8 @@ class EpisodeTile extends StatefulWidget {
 }
 
 class _EpisodeTileState extends State<EpisodeTile> {
+  bool expanded = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -53,17 +55,17 @@ class _EpisodeTileState extends State<EpisodeTile> {
 
     return Semantics(
       liveRegion: true,
-      label: widget.expanded
-          ? L.of(context)!.semantics_episode_tile_expanded
-          : L.of(context)!.semantics_episode_tile_collapsed,
-      onTapHint: widget.expanded
+      label:
+          expanded ? L.of(context)!.semantics_episode_tile_expanded : L.of(context)!.semantics_episode_tile_collapsed,
+      onTapHint: expanded
           ? L.of(context)!.semantics_episode_tile_expanded_hint
           : L.of(context)!.semantics_episode_tile_collapsed_hint,
       child: ExpansionTile(
         key: Key('PT${widget.episode.guid}'),
         onExpansionChanged: (isExpanded) {
           setState(() {
-            widget.expanded = isExpanded;
+            print('$expanded - $isExpanded');
+            expanded = isExpanded;
           });
         },
         trailing: Opacity(

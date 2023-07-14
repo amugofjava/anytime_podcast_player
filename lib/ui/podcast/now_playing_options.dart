@@ -1,6 +1,7 @@
 // Copyright 2020-2022 Ben Hills. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/queue_event_state.dart';
@@ -11,10 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// This class gives us options that can be dragged up from the bottom of the main player
-/// window. Currently these options are Up Next & Transcript. This class is an initial version
-/// and should by much simpler than it is; however, a [NestedScrollView] is the widget we
-/// need to implement this UI, there is a current issue whereby the scroll view and
-/// [DraggableScrollableSheet] clash and therefore cannot be used together.
+/// window. Currently these options are Up Next & Transcript.
+///
+/// This class is an initial version and should by much simpler than it is; however,
+/// a [NestedScrollView] is the widget we need to implement this UI, there is a current
+/// issue whereby the scroll view and [DraggableScrollableSheet] clash and therefore cannot
+/// be used together.
 ///
 /// See issues (64157)[https://github.com/flutter/flutter/issues/64157]
 ///            (67219)[https://github.com/flutter/flutter/issues/67219]

@@ -9,8 +9,10 @@ import 'package:anytime/l10n/L.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// Listens for errors on the audio BLoC. We receive a code which we then
-/// map to an error message. This needs to be placed below a [Scaffold].
+/// Listens for errors on the audio BLoC.
+///
+/// We receive a code which we then map to an error message. This needs to be placed
+/// below a [Scaffold].
 class PlaybackErrorListener extends StatefulWidget {
   final Widget child;
 

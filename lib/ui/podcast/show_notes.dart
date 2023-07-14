@@ -7,8 +7,10 @@ import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
-/// This class displays the show notes for the selected podcast. We make use of [Html]
-/// to render the notes and, if in HTML format, display the correct formatting, links etc.
+/// This class displays the show notes for the selected podcast.
+///
+/// We make use of [Html] to render the notes and, if in HTML format, display the
+/// correct formatting, links etc.
 class ShowNotes extends StatelessWidget {
   final ScrollController _sliverScrollController = ScrollController();
   final Episode episode;
