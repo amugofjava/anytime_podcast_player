@@ -103,6 +103,17 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                   stream: queueBloc.queue,
                                   builder: (context, snapshot) {
                                     return TabBar(
+                                      onTap: (index) {
+                                        DefaultTabController.of(ctx).animateTo(index);
+
+                                        if (draggableController != null && draggableController!.size <= 1.0) {
+                                          draggableController!.animateTo(
+                                            1.0,
+                                            duration: const Duration(milliseconds: 150),
+                                            curve: Curves.easeInOut,
+                                          );
+                                        }
+                                      },
                                       automaticIndicatorColorAdjustment: false,
                                       indicatorPadding: EdgeInsets.zero,
 
@@ -112,57 +123,29 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                           ? Theme.of(context).secondaryHeaderColor
                                           : null,
                                       tabs: [
-                                        GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          onTap: () {
-                                            DefaultTabController.of(ctx).animateTo(0);
-
-                                            if (draggableController != null && draggableController!.size <= 1.0) {
-                                              draggableController!.animateTo(
-                                                1.0,
-                                                duration: const Duration(milliseconds: 150),
-                                                curve: Curves.easeInOut,
-                                              );
-                                            }
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                            child: Text(
-                                              L.of(context)!.up_next_queue_label.toUpperCase(),
-                                              style: Theme.of(context).textTheme.labelLarge,
-                                            ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                          child: Text(
+                                            L.of(context)!.up_next_queue_label.toUpperCase(),
+                                            style: Theme.of(context).textTheme.labelLarge,
                                           ),
                                         ),
-                                        GestureDetector(
-                                          behavior: HitTestBehavior.opaque,
-                                          onTap: () {
-                                            DefaultTabController.of(ctx).animateTo(1);
-
-                                            if (draggableController!.size <= 1.0) {
-                                              draggableController!.animateTo(
-                                                1.0,
-                                                duration: const Duration(milliseconds: 150),
-                                                curve: Curves.easeInOut,
-                                              );
-                                            }
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                            child: snapshot.hasData &&
-                                                    snapshot.data?.playing != null &&
-                                                    snapshot.data!.playing!.hasTranscripts
-                                                ? Text(
-                                                    L.of(context)!.transcript_label.toUpperCase(),
-                                                    style: Theme.of(context).textTheme.labelLarge,
-                                                  )
-                                                : Text(
-                                                    L.of(context)!.transcript_label.toUpperCase(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelLarge!
-                                                        .copyWith(color: theme.disabledColor),
-                                                  ),
-                                          ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                          child: snapshot.hasData &&
+                                                  snapshot.data?.playing != null &&
+                                                  snapshot.data!.playing!.hasTranscripts
+                                              ? Text(
+                                                  L.of(context)!.transcript_label.toUpperCase(),
+                                                  style: Theme.of(context).textTheme.labelLarge,
+                                                )
+                                              : Text(
+                                                  L.of(context)!.transcript_label.toUpperCase(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelLarge!
+                                                      .copyWith(color: theme.disabledColor),
+                                                ),
                                         ),
                                       ],
                                     );

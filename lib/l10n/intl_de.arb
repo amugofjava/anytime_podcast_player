@@ -757,14 +757,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_collapsed": "Episodenlistenelement. Download- und Wiedergabesteuerung werden angezeigt.",
+  "semantics_episode_tile_collapsed": "Episodenlistenelement. Zeigt Bild, Zusammenfassung und Hauptsteuerelemente.",
   "@semantics_episode_tile_collapsed": {
     "description": "Describes episode tile options when collapsed",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_expanded": "Episodenlistenelement. Beschreibung, Download, Wiedergabesteuerung und zusätzliche Steuerungen werden angezeigt.",
+  "semantics_episode_tile_expanded": "Episodenlistenelement. Beschreibung, Hauptsteuerelemente und zusätzliche Steuerelemente werden angezeigt.",
   "@semantics_episode_tile_expanded": {
     "description": "Describes episode tile options when expanded",
     "type": "text",

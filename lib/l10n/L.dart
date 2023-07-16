@@ -1250,7 +1250,7 @@ class L {
   String get semantics_episode_tile_collapsed {
     return message('semantics_episode_tile_collapsed') ??
         Intl.message(
-          'Episode list item. Showing download and play controls.',
+          'Episode list item. Showing image, summary and main controls.',
           name: 'semantics_episode_tile_collapsed',
           desc: 'Describes episode tile options when collapsed',
           locale: localeName,
@@ -1260,7 +1260,7 @@ class L {
   String get semantics_episode_tile_expanded {
     return message('semantics_episode_tile_expanded') ??
         Intl.message(
-          'Episode list item. Showing description, download, play controls and additional controls.',
+          'Episode list item. Showing description, main controls and additional controls.',
           name: 'semantics_episode_tile_expanded',
           desc: 'Describes episode tile options when expanded',
           locale: localeName,

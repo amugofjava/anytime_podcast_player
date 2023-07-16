@@ -162,7 +162,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return Semantics(
-      header: true,
+      header: false,
       label: L.of(context)!.semantics_podcast_details_header,
       child: WillPopScope(
         onWillPop: () {

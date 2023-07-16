@@ -5,8 +5,8 @@
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// Base class for all BLoCs to give each one a dispose method
-/// which can then be hooked into the dispose() call from Provider.
+/// Base class for all BLoCs to give each a hook into the mobile
+/// lifecycle state of paused, resume or detached.
 abstract class Bloc {
   /// Handle lifecycle events
   final PublishSubject<LifecycleState> _lifecycleSubject = PublishSubject<LifecycleState>(sync: true);

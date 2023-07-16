@@ -847,14 +847,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_collapsed": "Episode list item. Showing download and play controls.",
+  "semantics_episode_tile_collapsed": "Episode list item. Showing image, summary and main controls.",
   "@semantics_episode_tile_collapsed": {
     "description": "Describes episode tile options when collapsed",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_expanded": "Episode list item. Showing description, download, play controls and additional controls.",
+  "semantics_episode_tile_expanded": "Episode list item. Showing description, main controls and additional controls.",
   "@semantics_episode_tile_expanded": {
     "description": "Describes episode tile options when expanded",
     "type": "text",

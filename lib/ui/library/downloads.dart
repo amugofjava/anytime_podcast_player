@@ -3,13 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
-import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
-import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/podcast_episode_list.dart';
-import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,60 +74,5 @@ class _DownloadsState extends State<Downloads> {
         }
       },
     );
-  }
-
-  ///TODO: Refactor out into a separate Widget class
-  Widget buildResults(BuildContext context, List<Episode> episodes) {
-    if (episodes.isNotEmpty) {
-      var queueBloc = Provider.of<QueueBloc>(context);
-
-      return StreamBuilder<QueueState>(
-          stream: queueBloc.queue,
-          builder: (context, snapshot) {
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                var queued = false;
-                var episode = episodes[index];
-
-                if (snapshot.hasData) {
-                  queued = snapshot.data!.queue.any((element) => element.guid == episode.guid);
-                }
-
-                return EpisodeTile(
-                  episode: episode,
-                  download: false,
-                  play: true,
-                  queued: queued,
-                );
-              },
-              childCount: episodes.length,
-              addAutomaticKeepAlives: false,
-            ));
-          });
-    } else {
-      return SliverFillRemaining(
-        hasScrollBody: false,
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                Icons.cloud_download,
-                size: 75,
-                color: Theme.of(context).primaryColor,
-              ),
-              Text(
-                L.of(context)!.no_downloads_message,
-                style: Theme.of(context).textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      );
-    }
   }
 }

@@ -30,7 +30,7 @@ class EpisodeTile extends StatefulWidget {
   final bool playing;
   final bool queued;
 
-  EpisodeTile({
+  const EpisodeTile({
     super.key,
     required this.episode,
     required this.download,
@@ -64,7 +64,6 @@ class _EpisodeTileState extends State<EpisodeTile> {
         key: Key('PT${widget.episode.guid}'),
         onExpansionChanged: (isExpanded) {
           setState(() {
-            print('$expanded - $isExpanded');
             expanded = isExpanded;
           });
         },
