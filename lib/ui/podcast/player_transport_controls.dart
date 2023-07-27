@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/widgets/sleep_selector.dart';
 import 'package:anytime/ui/widgets/speed_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -39,10 +40,7 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                const SizedBox(
-                  width: 36.0,
-                  height: 36.0,
-                ),
+                const SleepSelectorWidget(),
                 IconButton(
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);

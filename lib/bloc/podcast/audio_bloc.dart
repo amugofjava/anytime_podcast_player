@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:logging/logging.dart';
@@ -53,6 +54,8 @@ class AudioBloc extends Bloc {
   /// Listen for transcript filtering events.
   final PublishSubject<TranscriptEvent> _transcriptEvent = PublishSubject<TranscriptEvent>();
 
+  final BehaviorSubject<Sleep> _sleepEvent = BehaviorSubject<Sleep>();
+
   AudioBloc({
     required this.audioPlayerService,
   }) {
@@ -76,6 +79,9 @@ class AudioBloc extends Bloc {
 
     /// Listen to transcript filtering events
     _handleTranscriptEvents();
+
+    /// Listen to sleep timer events;
+    _handleSleepTimer();
   }
 
   /// Listens to events from the UI (or any client) to transition from one
@@ -153,6 +159,12 @@ class AudioBloc extends Bloc {
     });
   }
 
+  void _handleSleepTimer() {
+    _sleepEvent.listen((Sleep sleep) {
+      audioPlayerService.sleep(sleep);
+    });
+  }
+
   @override
   void pause() async {
     log.fine('Audio lifecycle pause');
@@ -195,6 +207,8 @@ class AudioBloc extends Bloc {
   /// Get position and percentage played of playing episode
   Stream<PositionState>? get playPosition => audioPlayerService.playPosition;
 
+  Stream<Sleep>? get sleepStream => audioPlayerService.sleepStream;
+
   /// Change playback speed
   void Function(double) get playbackSpeed => _playbackSpeedSubject.sink.add;
 
@@ -206,6 +220,8 @@ class AudioBloc extends Bloc {
 
   /// Handle filtering & searching of the current transcript.
   void Function(TranscriptEvent) get filterTranscript => _transcriptEvent.sink.add;
+
+  void Function(Sleep) get sleep => _sleepEvent.sink.add;
 
   @override
   void dispose() {

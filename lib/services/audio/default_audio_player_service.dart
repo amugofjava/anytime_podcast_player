@@ -11,6 +11,7 @@ import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/persistable.dart';
+import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -45,6 +46,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   var _trimSilence = false;
   var _volumeBoost = false;
   var _queue = <Episode>[];
+  var _sleep = Sleep(type: SleepType.none);
 
   /// The currently playing episode
   Episode? _currentEpisode;
@@ -55,11 +57,20 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// Subscription to the position ticker.
   StreamSubscription<int>? _positionSubscription;
 
+  /// Subscription to the sleep ticker.
+  StreamSubscription<int>? _sleepSubscription;
+
   /// Stream showing our current playing state.
   final BehaviorSubject<AudioState> _playingState = BehaviorSubject<AudioState>.seeded(AudioState.none);
 
   /// Ticks whilst playing. Updates our current position within an episode.
   final _durationTicker = Stream<int>.periodic(
+    const Duration(milliseconds: 500),
+    (count) => count,
+  ).asBroadcastStream();
+
+  /// Ticks twice every second if a time-based sleep has been started.
+  final _sleepTicker = Stream<int>.periodic(
     const Duration(milliseconds: 500),
     (count) => count,
   ).asBroadcastStream();
@@ -77,6 +88,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final _playbackError = PublishSubject<int>();
 
   final _queueState = BehaviorSubject<QueueListState>();
+
+  final _sleepState = BehaviorSubject<Sleep>();
 
   DefaultAudioPlayerService({
     required this.repository,
@@ -278,6 +291,22 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     return _audioHandler.stop();
   }
 
+  @override
+  void sleep(Sleep sleep) {
+    switch (sleep.type) {
+      case SleepType.none:
+      case SleepType.episode:
+        _stopSleepTicker();
+        break;
+      case SleepType.time:
+        _startSleepTicker();
+        break;
+    }
+
+    _sleep = sleep;
+    _sleepState.sink.add(_sleep);
+  }
+
   void updateCurrentPosition(Episode? e) {
     if (e != null) {
       var duration = Duration(seconds: e.duration);
@@ -295,7 +324,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Future<void> suspend() async {
-    _stopTicker();
+    _stopPositionTicker();
     _persistState();
   }
 
@@ -332,7 +361,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         /// We will have to assume we have stopped.
         _playingState.add(AudioState.stopped);
       } else if (basicState == AudioProcessingState.ready) {
-        _startTicker();
+        _startPositionTicker();
       }
     }
 
@@ -457,7 +486,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       switch (state.processingState) {
         case AudioProcessingState.idle:
           _playingState.add(AudioState.none);
-          _stopTicker();
+          _stopPositionTicker();
           break;
         case AudioProcessingState.loading:
           _playingState.add(AudioState.buffering);
@@ -467,10 +496,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
           break;
         case AudioProcessingState.ready:
           if (state.playing) {
-            _startTicker();
+            _startPositionTicker();
             _playingState.add(AudioState.playing);
           } else {
-            _stopTicker();
+            _stopPositionTicker();
             _playingState.add(AudioState.pausing);
           }
           break;
@@ -493,7 +522,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
-    _stopTicker();
+    _stopPositionTicker();
 
     if (_queue.isEmpty) {
       log.fine('Queue is empty so we will stop');
@@ -502,6 +531,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _playingState.add(AudioState.stopped);
 
       await _audioHandler.customAction('queueend');
+    } else if (_sleep.type == SleepType.episode) {
+      log.fine('Sleeping at end of episode');
+
+      await _audioHandler.customAction('sleep');
+      _playingState.add(AudioState.pausing);
+      _stopSleepTicker();
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
       _currentEpisode = null;
@@ -623,7 +658,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// we check the current position of the episode from the audio service
   /// and then push that information out via the [_playPosition] stream
   /// to inform our listeners.
-  void _startTicker() async {
+  void _startPositionTicker() async {
     if (_positionSubscription == null) {
       _positionSubscription = _durationTicker.listen((int period) async {
         await _onUpdatePosition();
@@ -633,11 +668,36 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
-  void _stopTicker() async {
+  void _stopPositionTicker() async {
     if (_positionSubscription != null) {
       await _positionSubscription!.cancel();
-
       _positionSubscription = null;
+    }
+  }
+
+  /// We only want to start the sleep timer ticker when the user has requested a sleep.
+  void _startSleepTicker() async {
+    _sleepSubscription ??= _sleepTicker.listen((int period) async {
+      if (_sleep.type == SleepType.time && DateTime.now().isAfter(_sleep.endTime)) {
+        await pause();
+        _sleep = Sleep(type: SleepType.none);
+        _sleepState.sink.add(_sleep);
+        _sleepSubscription?.cancel();
+        _sleepSubscription = null;
+      } else {
+        _sleepState.sink.add(_sleep);
+      }
+    });
+  }
+
+  /// Once we have stopped sleeping we call this method to tidy up the ticker subscription.
+  void _stopSleepTicker() async {
+    _sleep = Sleep(type: SleepType.none);
+    _sleepState.sink.add(_sleep);
+
+    if (_sleepSubscription != null) {
+      await _sleepSubscription!.cancel();
+      _sleepSubscription = null;
     }
   }
 
@@ -708,6 +768,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<QueueListState> get queueState => _queueState.stream;
+
+  @override
+  Stream<Sleep> get sleepStream => _sleepState.stream;
 }
 
 /// This is the default audio handler used by the [DefaultAudioPlayerService] service.
@@ -913,6 +976,10 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         log.fine('Received custom action: queue end');
         await _player.stop();
         break;
+      case 'sleep':
+        log.fine('Received custom action: sleep end of episode');
+        await _player.pause();
+        break;
     }
   }
 
@@ -936,7 +1003,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   PlaybackState _transformEvent(PlaybackEvent event) {
     log.fine('_transformEvent Sending state ${_player.processingState}');
 
-    if (_player.processingState == ProcessingState.completed) {
+    if (_player.processingState == ProcessingState.completed && _player.playing) {
       log.fine('Transform event has received a complete - calling complete();');
       complete();
     }

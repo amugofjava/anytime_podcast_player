@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 
@@ -21,7 +22,7 @@ class PositionState {
   late Duration length;
   late int percentage;
   Episode? episode;
-  late bool buffering;
+  final bool buffering;
 
   PositionState({
     required this.position,
@@ -95,6 +96,8 @@ abstract class AudioPlayerService {
 
   Future<void> clearTranscript();
 
+  void sleep(Sleep sleep);
+
   Episode? nowPlaying;
 
   /// Event listeners
@@ -104,4 +107,5 @@ abstract class AudioPlayerService {
   Stream<TranscriptState>? transcriptEvent;
   Stream<int>? playbackError;
   Stream<QueueListState>? queueState;
+  Stream<Sleep>? sleepStream;
 }

@@ -65,13 +65,13 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                 },
                 child: SizedBox(
                   height: 36.0,
-                  width: 36.0,
+                  width: 42.0,
                   child: Center(
                     child: Text(
                       snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
                       semanticsLabel: L.of(context)!.playback_speed_label,
                       style: TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 16.0,
                         color: Theme.of(context).iconTheme.color,
                       ),
                     ),
