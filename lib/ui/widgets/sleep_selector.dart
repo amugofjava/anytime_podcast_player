@@ -23,17 +23,6 @@ class SleepSelectorWidget extends StatefulWidget {
 }
 
 class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
-  var speed = 1.0;
-
-  @override
-  void initState() {
-    var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
-
-    speed = settingsBloc.currentSettings.playbackSpeed;
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     var settingsBloc = Provider.of<SettingsBloc>(context);
@@ -74,6 +63,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                       ),
                       onPressed: () {
                         showModalBottomSheet<void>(
+                          isScrollControlled: true,
                             context: context,
                             backgroundColor: theme.secondaryHeaderColor,
                             shape: const RoundedRectangleBorder(
@@ -104,21 +94,6 @@ class SleepSlider extends StatefulWidget {
 }
 
 class _SleepSliderState extends State<SleepSlider> {
-  var speed = 1.0;
-  var trimSilence = false;
-  var volumeBoost = false;
-
-  @override
-  void initState() {
-    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
-
-    speed = settingsBloc.currentSettings.playbackSpeed;
-    trimSilence = settingsBloc.currentSettings.trimSilence;
-    volumeBoost = settingsBloc.currentSettings.volumeBoost;
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
@@ -160,14 +135,6 @@ class _SleepSliderState extends State<SleepSlider> {
                     children: [
                       SleepSelectorEntry(
                         sleep: Sleep(type: SleepType.none),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 2),
-                        ),
                         current: s,
                       ),
                       const Divider(),
@@ -260,6 +227,7 @@ class SleepSelectorEntry extends StatelessWidget {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         audioBloc.sleep(Sleep(
           type: sleep.type,

@@ -978,6 +978,15 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         break;
       case 'sleep':
         log.fine('Received custom action: sleep end of episode');
+        // We need to wind back a several milliseconds to stop just_audio
+        // from sending more complete events on iOS when we pause.
+        var position = _player.position.inMilliseconds - 200;
+
+        if (position < 0) {
+          position = 0;
+        }
+
+        await _player.seek(Duration(milliseconds: position));
         await _player.pause();
         break;
     }
