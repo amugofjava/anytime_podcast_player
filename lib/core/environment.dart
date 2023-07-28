@@ -13,11 +13,14 @@ const podcastIndexSecret = String.fromEnvironment('PINDEX_SECRET', defaultValue:
 /// Allows a user to override the default user agent string.
 const userAgentAppString = String.fromEnvironment('USER_AGENT', defaultValue: '');
 
+/// Link to a feedback form. This will be shown in the main overflow menu if set
+const feedbackUrl = String.fromEnvironment('FEEDBACK_URL', defaultValue: '');
+
 class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
-  static const _projectVersion = '1.3.2';
-  static const _build = '93';
+  static const _projectVersion = '1.3.3';
+  static const _build = '94';
 
   static var _agentString = userAgentAppString;
 

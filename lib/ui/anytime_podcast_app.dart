@@ -375,6 +375,21 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           ),
                           itemBuilder: (BuildContext context) {
                             return <PopupMenuEntry<String>>[
+                              if (feedbackUrl.isNotEmpty)
+                                PopupMenuItem<String>(
+                                  textStyle: Theme.of(context).textTheme.titleMedium,
+                                  value: 'feedback',
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.feedback_outlined, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.feedback_menu_item_label),
+                                    ],
+                                  ),
+                                ),
                               PopupMenuItem<String>(
                                 textStyle: Theme.of(context).textTheme.titleMedium,
                                 value: 'layout',
@@ -543,6 +558,9 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           ),
         );
         break;
+      case 'feedback':
+        _launchFeedback();
+        break;
       case 'layout':
         await showModalBottomSheet<void>(
           context: context,
@@ -601,6 +619,17 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           ),
         );
         break;
+    }
+  }
+
+  void _launchFeedback() async {
+    final uri = Uri.parse(feedbackUrl);
+
+    if (!await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $uri');
     }
   }
 

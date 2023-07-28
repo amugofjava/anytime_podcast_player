@@ -166,9 +166,12 @@ class FundingLink {
       result = true;
       final uri = Uri.parse(url);
 
-      unawaited(
-        canLaunchUrl(uri).then((value) => launchUrl(uri)),
-      );
+      if (!await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      )) {
+        throw Exception('Could not launch $uri');
+      }
     } else {
       result = await showPlatformDialog<bool>(
         context: context,

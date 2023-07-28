@@ -1286,6 +1286,57 @@ class L {
           locale: localeName,
         );
   }
+
+  String get sleep_off_label {
+    return message('sleep_off_label') ??
+        Intl.message(
+          'Off',
+          name: 'sleep_off_label',
+          desc: 'Describes off sleep label',
+          locale: localeName,
+        );
+  }
+
+  String get sleep_episode_label {
+    return message('sleep_episode_label') ??
+        Intl.message(
+          'End of episode',
+          name: 'sleep_episode_label',
+          desc: 'Describes end of episode sleep label',
+          locale: localeName,
+        );
+  }
+
+  String sleep_minute_label(String minutes) {
+    return message('sleep_minute_label') ??
+        Intl.message(
+          '$minutes minutes',
+          args: [minutes],
+          name: 'sleep_minute_label',
+          desc: 'Describes the number of minutes to sleep',
+          locale: localeName,
+        );
+  }
+
+  String get sleep_timer_label {
+    return message('sleep_timer_label') ??
+        Intl.message(
+          'Sleep Timer',
+          name: 'sleep_timer_label',
+          desc: 'Describes sleep timer label',
+          locale: localeName,
+        );
+  }
+
+  String get feedback_menu_item_label {
+    return message('feedback_menu_item_label') ??
+        Intl.message(
+          'Feedback',
+          name: 'feedback_menu_item_label',
+          desc: 'Feedback option in main menu',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

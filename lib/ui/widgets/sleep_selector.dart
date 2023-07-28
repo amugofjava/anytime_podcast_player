@@ -6,6 +6,7 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/sleep.dart';
+import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/slider_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -58,12 +59,12 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                   child: Center(
                     child: IconButton(
                       icon: const Icon(
-                        Icons.access_time_sharp,
+                        Icons.bedtime_outlined,
                         size: 20.0,
                       ),
                       onPressed: () {
                         showModalBottomSheet<void>(
-                          isScrollControlled: true,
+                            isScrollControlled: true,
                             context: context,
                             backgroundColor: theme.secondaryHeaderColor,
                             shape: const RoundedRectangleBorder(
@@ -113,19 +114,23 @@ class _SleepSliderState extends State<SleepSlider> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                   child: Text(
-                    // L.of(context)!.audio_settings_playback_speed_label,
-                    'Sleep Timer',
+                    L.of(context)!.sleep_timer_label,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
                 if (s != null && s.type == SleepType.none)
                   Text(
-                    '(Off)',
+                    '(${L.of(context)!.sleep_off_label})',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.time)
                   Text(
                     '(${_formatDuration(s.timeRemaining)})',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                if (s != null && s.type == SleepType.episode)
+                  Text(
+                    '(${L.of(context)!.sleep_episode_label})',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 Padding(
@@ -245,9 +250,21 @@ class SleepSelectorEntry extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           children: [
-            if (sleep.type == SleepType.none) const Text("Off"),
-            if (sleep.type == SleepType.time) Text("${sleep.duration.inMinutes} minutes"),
-            if (sleep.type == SleepType.episode) const Text("End of episode"),
+            if (sleep.type == SleepType.none)
+              Text(
+                L.of(context)!.sleep_off_label,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            if (sleep.type == SleepType.time)
+              Text(
+                L.of(context)!.sleep_minute_label(sleep.duration.inMinutes.toString()),
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            if (sleep.type == SleepType.episode)
+              Text(
+                L.of(context)!.sleep_episode_label,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             if (sleep == current)
               const Icon(
                 Icons.check,

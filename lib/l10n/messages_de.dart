@@ -19,6 +19,8 @@ typedef String MessageIfAbsent(String? messageStr, List<Object>? args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'de';
 
+  static m0(minutes) => "${minutes} Minuten";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function> {
     "about_label" : MessageLookupByLibrary.simpleMessage("Über"),
@@ -133,6 +135,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "settings_playback_divider_label" : MessageLookupByLibrary.simpleMessage("WIEDERGABE"),
     "settings_theme_switch_label" : MessageLookupByLibrary.simpleMessage("Dark theme"),
     "show_notes_label" : MessageLookupByLibrary.simpleMessage("Notizen anzeigen"),
+    "sleep_episode_label" : MessageLookupByLibrary.simpleMessage("Ende der Folge"),
+    "sleep_minute_label" : m0,
+    "sleep_off_label" : MessageLookupByLibrary.simpleMessage("Aus"),
+    "sleep_timer_label" : MessageLookupByLibrary.simpleMessage("Sleep-Timer"),
     "stop_download_button_label" : MessageLookupByLibrary.simpleMessage("Halt"),
     "stop_download_confirmation" : MessageLookupByLibrary.simpleMessage("Möchten Sie diesen Download wirklich beenden und die Episode löschen?"),
     "stop_download_title" : MessageLookupByLibrary.simpleMessage("Stop Download"),

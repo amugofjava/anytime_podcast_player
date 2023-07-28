@@ -102,7 +102,7 @@ ThemeData _buildDarkTheme() {
     primaryColorDark: const Color(0xfff57c00),
     canvasColor: const Color(0xff000000),
     scaffoldBackgroundColor: const Color(0xff000000),
-    cardColor: Colors.black,
+    cardColor: const Color(0xff0F0F0F),
     dividerColor: const Color(0xff444444),
     highlightColor: const Color(0xff222222),
     splashColor: const Color(0x66c8c8c8),

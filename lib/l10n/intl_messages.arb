@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-07-13T16:00:37.230735",
+  "@@last_modified": "2023-07-28T11:42:13.321100",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -871,6 +871,45 @@
   "semantics_episode_tile_expanded_hint": "collapse and hide more details and additional options",
   "@semantics_episode_tile_expanded_hint": {
     "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_off_label": "Off",
+  "@sleep_off_label": {
+    "description": "Describes off sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_episode_label": "End of episode",
+  "@sleep_episode_label": {
+    "description": "Describes end of episode sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_minute_label": "{minutes} minutes",
+  "@sleep_minute_label": {
+    "description": "Describes the number of minutes to sleep",
+    "type": "text",
+    "placeholders_order": [
+      "minutes"
+    ],
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "sleep_timer_label": "Sleep Timer",
+  "@sleep_timer_label": {
+    "description": "Describes sleep timer label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "feedback_menu_item_label": "Feedback",
+  "@feedback_menu_item_label": {
+    "description": "Feedback option in main menu",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
