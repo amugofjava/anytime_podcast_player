@@ -8,12 +8,10 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
-import 'package:anytime/ui/podcast/chapter_selector.dart';
-import 'package:anytime/ui/podcast/dot_decoration.dart';
 import 'package:anytime/ui/podcast/now_playing_floating_player.dart';
 import 'package:anytime/ui/podcast/now_playing_options.dart';
+import 'package:anytime/ui/podcast/now_playing_tabs.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
-import 'package:anytime/ui/podcast/playback_error_listener.dart';
 import 'package:anytime/ui/podcast/player_position_controls.dart';
 import 'package:anytime/ui/podcast/player_transport_controls.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
@@ -22,7 +20,6 @@ import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -75,6 +72,11 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  bool isNarrow(BuildContext context) {
+    final query = MediaQuery.of(context);
+    return (query.orientation == Orientation.portrait || query.size.width <= 800);
+  }
+
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
@@ -93,7 +95,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
             var duration = snapshot.data == null ? 0 : snapshot.data!.duration;
             final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
 
-            return NotificationListener<DraggableScrollableNotification>(
+            return isNarrow(context) ? NotificationListener<DraggableScrollableNotification>(
               onNotification: (notification) {
                 setState(() {
                   if (notification.extent > (notification.minExtent)) {
@@ -110,62 +112,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  DefaultTabController(
-                      length: snapshot.data!.hasChapters ? 3 : 2,
-                      initialIndex: snapshot.data!.hasChapters ? 1 : 0,
-                      child: AnnotatedRegion<SystemUiOverlayStyle>(
-                        value: Theme.of(context)
-                            .appBarTheme
-                            .systemOverlayStyle!
-                            .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
-                        child: Scaffold(
-                          appBar: AppBar(
-                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                            elevation: 0.0,
-                            leading: IconButton(
-                              tooltip: L.of(context)!.minimise_player_window_button_label,
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Theme.of(context).primaryIconTheme.color,
-                              ),
-                              onPressed: () => {
-                                Navigator.pop(context),
-                              },
-                            ),
-                            flexibleSpace: PlaybackErrorListener(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  EpisodeTabBar(
-                                    chapters: snapshot.data!.hasChapters,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          body: Column(
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: EpisodeTabBarView(
-                                  episode: snapshot.data,
-                                  chapters: snapshot.data!.hasChapters,
-                                ),
-                              ),
-                              transportBuilder != null
-                                  ? transportBuilder(context)
-                                  : const SizedBox(
-                                      height: 148.0,
-                                      child: NowPlayingTransport(),
-                                    ),
-                              const Expanded(
-                                flex: 1,
-                                child: NowPlayingOptionsScaffold(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )),
+                  NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder),
                   SizedBox.expand(
                       child: SafeArea(
                     child: Column(
@@ -191,93 +138,14 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                   )),
                 ],
               ),
+            ) : Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(flex: 1, child: NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder)),
+                const Expanded(flex: 1, child: NowPlayingOptionsSelectorWide()),
+              ],
             );
           }),
-    );
-  }
-}
-
-/// This class is responsible for rendering the tab selection at the top of the screen.
-///
-/// It displays two or three tabs depending upon whether the current episode supports
-/// (and contains) chapters.
-class EpisodeTabBar extends StatelessWidget {
-  final bool chapters;
-
-  const EpisodeTabBar({
-    Key? key,
-    this.chapters = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TabBar(
-      isScrollable: true,
-      indicatorSize: TabBarIndicatorSize.tab,
-      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
-      tabs: [
-        if (chapters)
-          Tab(
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(L.of(context)!.chapters_label),
-            ),
-          ),
-        Tab(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(L.of(context)!.episode_label),
-          ),
-        ),
-        Tab(
-          child: Align(
-            alignment: Alignment.center,
-            child: Text(L.of(context)!.notes_label),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// This class is responsible for rendering the tab body containing the chapter selection view (if
-/// the episode supports chapters), the episode details (image and description) and the show
-/// notes view.
-class EpisodeTabBarView extends StatelessWidget {
-  final Episode? episode;
-  final AutoSizeGroup? textGroup;
-  final bool chapters;
-
-  const EpisodeTabBarView({
-    Key? key,
-    this.episode,
-    this.textGroup,
-    this.chapters = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final audioBloc = Provider.of<AudioBloc>(context);
-
-    return TabBarView(
-      children: [
-        if (chapters)
-          ChapterSelector(
-            episode: episode!,
-          ),
-        StreamBuilder<Episode?>(
-            stream: audioBloc.nowPlaying,
-            builder: (context, snapshot) {
-              final e = snapshot.hasData ? snapshot.data! : episode!;
-
-              return NowPlayingEpisode(
-                episode: e,
-                imageUrl: e.positionalImageUrl,
-                textGroup: textGroup,
-              );
-            }),
-        NowPlayingShowNotes(episode: episode),
-      ],
     );
   }
 }
@@ -302,7 +170,7 @@ class NowPlayingEpisode extends StatelessWidget {
       builder: (context, orientation) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MediaQuery.of(context).orientation == Orientation.portrait
+          child: MediaQuery.of(context).orientation == Orientation.portrait || MediaQuery.of(context).size.width >= 800
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

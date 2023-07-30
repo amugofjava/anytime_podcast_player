@@ -132,6 +132,8 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                          // If the episode does not support transcripts, grey out
+                                          // the option.
                                           child: snapshot.hasData &&
                                                   snapshot.data?.playing != null &&
                                                   snapshot.data!.playing!.hasTranscripts
@@ -190,5 +192,97 @@ class NowPlayingOptionsScaffold extends StatelessWidget {
     return const SizedBox(
       height: NowPlayingOptionsSelector.baseSize - 8.0,
     );
+  }
+}
+
+
+
+
+
+class NowPlayingOptionsSelectorWide extends StatefulWidget {
+  final double? scrollPos;
+  static const baseSize = 68.0;
+
+  const NowPlayingOptionsSelectorWide({Key? key, this.scrollPos}) : super(key: key);
+
+  @override
+  State<NowPlayingOptionsSelectorWide> createState() => _NowPlayingOptionsSelectorWideState();
+}
+
+class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelectorWide> {
+  DraggableScrollableController? draggableController;
+
+  @override
+  Widget build(BuildContext context) {
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+    final theme = Theme.of(context);
+    final scrollController = ScrollController();
+
+    return DefaultTabController(
+          length: 2,
+          child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: ConstrainedBox(
+                constraints: BoxConstraints.expand(
+                  height: constraints.maxHeight,
+                ),
+                child: Material(
+                  color: theme.secondaryHeaderColor,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      StreamBuilder<QueueState>(
+                          initialData: QueueEmptyState(),
+                          stream: queueBloc.queue,
+                          builder: (context, snapshot) {
+                            return TabBar(
+                              automaticIndicatorColorAdjustment: false,
+                              tabs: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  child: Text(
+                                    L.of(context)!.up_next_queue_label.toUpperCase(),
+                                    style: Theme.of(context).textTheme.labelLarge,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  child: snapshot.hasData &&
+                                      snapshot.data?.playing != null &&
+                                      snapshot.data!.playing!.hasTranscripts
+                                      ? Text(
+                                    L.of(context)!.transcript_label.toUpperCase(),
+                                    style: Theme.of(context).textTheme.labelLarge,
+                                  )
+                                      : Text(
+                                    L.of(context)!.transcript_label.toUpperCase(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelLarge!
+                                        .copyWith(color: theme.disabledColor),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                      //const Padding(padding: EdgeInsets.only(bottom: 12.0)),
+                      const Expanded(
+                        child: TabBarView(
+                          children: [
+                            UpNextView(),
+                            TranscriptView(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
+        );
   }
 }
