@@ -25,7 +25,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// This is the full-screen player Widget which is invoked by touching the mini player.
 ///
-/// This displays the podcast image, episode notes and standard playback controls.
+/// This is the parent widget of the now playing screen(s). If we are running on a mobile in
+/// portrait mode, we display the episode details, controls and additional options
+/// as a draggable view. For tablets in portrait or on desktop, we display a split
+/// screen. The main details and controls appear in one pane with the additional
+/// controls in another.
 ///
 /// TODO: The fade in/out transition applied when scrolling the queue is the first implementation.
 /// Using [Opacity] is a very inefficient way of achieving this effect, but will do as a place
@@ -72,7 +76,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  bool isNarrow(BuildContext context) {
+  bool isMobilePortrait(BuildContext context) {
     final query = MediaQuery.of(context);
     return (query.orientation == Orientation.portrait || query.size.width <= 800);
   }
@@ -95,61 +99,79 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
             var duration = snapshot.data == null ? 0 : snapshot.data!.duration;
             final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
 
-            return isNarrow(context) ? NotificationListener<DraggableScrollableNotification>(
-              onNotification: (notification) {
-                setState(() {
-                  if (notification.extent > (notification.minExtent)) {
-                    opacity = 1 - (notification.maxExtent - notification.extent);
-                    scrollPos = 1.0;
-                  } else {
-                    opacity = 0.0;
-                    scrollPos = 0.0;
-                  }
-                });
+            return isMobilePortrait(context)
+                ? NotificationListener<DraggableScrollableNotification>(
+                    onNotification: (notification) {
+                      setState(() {
+                        if (notification.extent > (notification.minExtent)) {
+                          opacity = 1 - (notification.maxExtent - notification.extent);
+                          scrollPos = 1.0;
+                        } else {
+                          opacity = 0.0;
+                          scrollPos = 0.0;
+                        }
+                      });
 
-                return true;
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder),
-                  SizedBox.expand(
-                      child: SafeArea(
-                    child: Column(
+                      return true;
+                    },
+                    child: Stack(
+                      fit: StackFit.expand,
                       children: [
-                        /// Sized boxes without a child are 'invisible' so they do not prevent taps below
-                        /// the stack but are still present in the layout. We have a sized box here to stop
-                        /// the draggable panel from jumping as you start to pull it up. I am really looking
-                        /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
-                        SizedBox(
-                          height: 64.0,
-                          child: scrollPos == 1
-                              ? Opacity(
-                                  opacity: opacity,
-                                  child: const FloatingPlayer(),
-                                )
-                              : null,
+                        NowPlayingTabs(
+                          episode: snapshot.data!,
+                          transportBuilder: transportBuilder,
                         ),
-                        const Expanded(
-                          child: NowPlayingOptionsSelector(),
-                        ),
+                        SizedBox.expand(
+                            child: SafeArea(
+                          child: Column(
+                            children: [
+                              /// Sized boxes without a child are 'invisible' so they do not prevent taps below
+                              /// the stack but are still present in the layout. We have a sized box here to stop
+                              /// the draggable panel from jumping as you start to pull it up. I am really looking
+                              /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
+                              SizedBox(
+                                height: 64.0,
+                                child: scrollPos == 1
+                                    ? Opacity(
+                                        opacity: opacity,
+                                        child: const FloatingPlayer(),
+                                      )
+                                    : null,
+                              ),
+                              if (MediaQuery.of(context).orientation == Orientation.portrait)
+                                const Expanded(
+                                  child: NowPlayingOptionsSelector(),
+                                ),
+                            ],
+                          ),
+                        )),
                       ],
                     ),
-                  )),
-                ],
-              ),
-            ) : Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(flex: 1, child: NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder)),
-                const Expanded(flex: 1, child: NowPlayingOptionsSelectorWide()),
-              ],
-            );
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder),
+                      ),
+                      const Expanded(
+                        flex: 1,
+                        child: NowPlayingOptionsSelectorWide(),
+                      ),
+                    ],
+                  );
           }),
     );
   }
 }
 
+/// This widget displays the episode logo, episode title and current
+/// chapter if available.
+///
+/// If running in portrait this will be in a vertical format; if in
+/// landscape this will be in a horizontal format. The actual displaying
+/// of the episode text is handed off to [NowPlayingEpisodeDetails].
 class NowPlayingEpisode extends StatelessWidget {
   final String? imageUrl;
   final Episode episode;
@@ -204,24 +226,30 @@ class NowPlayingEpisode extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      flex: 1,
-                      child: PodcastImage(
-                        key: Key('nowplaying$imageUrl'),
-                        url: imageUrl!,
-                        height: 280,
-                        width: 280,
-                        fit: BoxFit.contain,
-                        borderRadius: 8.0,
-                        placeholder: placeholderBuilder != null
-                            ? placeholderBuilder.builder()(context)
-                            : const DelayedCircularProgressIndicator(),
-                        errorPlaceholder: placeholderBuilder != null
-                            ? placeholderBuilder.errorBuilder()(context)
-                            : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          bottom: 8.0,
+                        ),
+                        child: PodcastImage(
+                          key: Key('nowplaying$imageUrl'),
+                          url: imageUrl!,
+                          height: 280,
+                          width: 280,
+                          fit: BoxFit.contain,
+                          borderRadius: 8.0,
+                          placeholder: placeholderBuilder != null
+                              ? placeholderBuilder.builder()(context)
+                              : const DelayedCircularProgressIndicator(),
+                          errorPlaceholder: placeholderBuilder != null
+                              ? placeholderBuilder.errorBuilder()(context)
+                              : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                        ),
                       ),
                     ),
                     Expanded(
-                      flex: 3,
+                      flex: 5,
                       child: NowPlayingEpisodeDetails(
                         episode: episode,
                         textGroup: textGroup,
@@ -235,6 +263,10 @@ class NowPlayingEpisode extends StatelessWidget {
   }
 }
 
+/// This widget is responsible for displaying the main episode details.
+///
+/// This displays the current episode title and, if available, the
+/// current chapter title and optional link.
 class NowPlayingEpisodeDetails extends StatelessWidget {
   final Episode? episode;
   final AutoSizeGroup? textGroup;
@@ -326,6 +358,10 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
   }
 }
 
+/// This widget handles the displaying of the episode details.
+///
+/// This consists of title, show notes and person details
+/// (where available).
 class NowPlayingShowNotes extends StatelessWidget {
   final Episode? episode;
 
@@ -383,6 +419,8 @@ class NowPlayingShowNotes extends StatelessWidget {
   }
 }
 
+/// This is the parent widget for the episode position and transport
+/// controls.
 class NowPlayingTransport extends StatelessWidget {
   const NowPlayingTransport({super.key});
 
@@ -400,6 +438,12 @@ class NowPlayingTransport extends StatelessWidget {
   }
 }
 
+/// This widget allows users to inject their own transport controls
+/// into the app.
+///
+/// When rendering the controls, Anytime will check if a PlayerControlsBuilder
+/// is in the tree. If so, it will use the builder rather than its own
+/// transport controls.
 class PlayerControlsBuilder extends InheritedWidget {
   final WidgetBuilder Function(int duration) builder;
 

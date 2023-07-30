@@ -11,6 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+/// Widget for rendering main episode tabs.
+///
+/// This will be episode details and show notes. If the episode
+/// supports chapters this will be included also. This is the
+/// parent widget. The tabs are rendered via [EpisodeTabBar] and
+/// the tab contents via. [EpisodeTabBarView].
 class NowPlayingTabs extends StatelessWidget {
   const NowPlayingTabs({
     super.key,
@@ -27,21 +33,30 @@ class NowPlayingTabs extends StatelessWidget {
         length: episode.hasChapters ? 3 : 2,
         initialIndex: episode.hasChapters ? 1 : 0,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: Theme.of(context)
+          value: Theme
+              .of(context)
               .appBarTheme
               .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
+              .copyWith(systemNavigationBarColor: Theme
+              .of(context)
+              .secondaryHeaderColor),
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: Theme
+                  .of(context)
+                  .scaffoldBackgroundColor,
               elevation: 0.0,
               leading: IconButton(
                 tooltip: L.of(context)!.minimise_player_window_button_label,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Theme.of(context).primaryIconTheme.color,
+                  color: Theme
+                      .of(context)
+                      .primaryIconTheme
+                      .color,
                 ),
-                onPressed: () => {
+                onPressed: () =>
+                {
                   Navigator.pop(context),
                 },
               ),
@@ -71,11 +86,13 @@ class NowPlayingTabs extends StatelessWidget {
                   height: 148.0,
                   child: NowPlayingTransport(),
                 ),
-                if (MediaQuery.of(context).orientation == Orientation.portrait)
-                const Expanded(
-                  flex: 1,
-                  child: NowPlayingOptionsScaffold(),
-                ),
+                if (MediaQuery
+                    .of(context)
+                    .orientation == Orientation.portrait)
+                  const Expanded(
+                    flex: 1,
+                    child: NowPlayingOptionsScaffold(),
+                  ),
               ],
             ),
           ),
@@ -100,7 +117,9 @@ class EpisodeTabBar extends StatelessWidget {
     return TabBar(
       isScrollable: true,
       indicatorSize: TabBarIndicatorSize.tab,
-      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
+      indicator: DotDecoration(colour: Theme
+          .of(context)
+          .primaryColor),
       tabs: [
         if (chapters)
           Tab(

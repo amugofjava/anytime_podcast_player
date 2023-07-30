@@ -119,29 +119,32 @@ class _SettingsState extends State<Settings> {
                   if (result != null && result.count > 0) {
                     var file = result.files.first;
 
-                    var e = await showPlatformDialog<bool>(
-                      androidBarrierDismissible: false,
-                      useRootNavigator: false,
-                      context: context,
-                      builder: (_) => WillPopScope(
-                        onWillPop: () async => false,
-                        child: BasicDialogAlert(
-                          title: Text(L.of(context)!.settings_import_opml),
-                          content: OPMLImport(file: file.path!),
-                          actions: <Widget>[
-                            BasicDialogAction(
-                              title: ActionText(L.of(context)!.cancel_button_label),
-                              onPressed: () {
-                                return Navigator.pop(context, true);
-                              },
+                    if (context.mounted) {
+                      var e = await showPlatformDialog<bool>(
+                        androidBarrierDismissible: false,
+                        useRootNavigator: false,
+                        context: context,
+                        builder: (_) =>
+                            WillPopScope(
+                              onWillPop: () async => false,
+                              child: BasicDialogAlert(
+                                title: Text(L.of(context)!.settings_import_opml),
+                                content: OPMLImport(file: file.path!),
+                                actions: <Widget>[
+                                  BasicDialogAction(
+                                    title: ActionText(L.of(context)!.cancel_button_label),
+                                    onPressed: () {
+                                      return Navigator.pop(context, true);
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    );
+                      );
 
-                    if (e != null && e) {
-                      opmlBloc.opmlEvent(OPMLCancelEvent());
+                      if (e != null && e) {
+                        opmlBloc.opmlEvent(OPMLCancelEvent());
+                      }
                     }
                     podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
                   }
