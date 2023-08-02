@@ -10,6 +10,12 @@ import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
 
+/// This class renders the more info widget that is accessed from the 'more'
+/// button on an episode.
+///
+/// The widget is displayed as a draggable, scrollable sheet. This contains
+/// episode icon and play/pause control, below which the episode title, show
+/// notes and person(s) details (if available).
 class EpisodeDetails extends StatefulWidget {
   final Episode episode;
 

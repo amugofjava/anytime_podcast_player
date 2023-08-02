@@ -14,6 +14,9 @@ import 'package:flutter/rendering.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
 import 'package:provider/provider.dart';
 
+/// Renders the podcasts returned from a charts/trending query.
+///
+/// Can optionally display a search bar similar to the main search bar.
 class DiscoveryResults extends StatelessWidget {
   final Stream<DiscoveryState>? data;
   final bool inlineSearch;

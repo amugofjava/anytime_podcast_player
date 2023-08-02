@@ -13,6 +13,7 @@ import 'package:anytime/ui/widgets/podcast_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// This class displays the list of podcasts the user is currently following.
 class Library extends StatefulWidget {
   const Library({
     super.key,

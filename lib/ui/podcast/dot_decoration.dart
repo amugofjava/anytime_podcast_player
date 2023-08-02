@@ -4,6 +4,8 @@
 
 import 'package:flutter/widgets.dart';
 
+/// Custom [Decoration] for the chapters, episode & notes tab selector
+/// shown in the [NowPlaying] page.
 class DotDecoration extends Decoration {
   final Color colour;
 

@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 
 /// Displays a mini podcast player widget if a podcast is playing or paused.
 ///
-/// If stopped a zero height box is built instead.
+/// If stopped a zero height box is built instead. Tapping on the mini player
+/// will open the main player window.
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({
     super.key,
@@ -99,10 +100,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
               isScrollControlled: true,
               builder: (BuildContext modalContext) {
                 return Padding(
-                  padding: EdgeInsets.only(top: MediaQuery
-                      .of(context)
-                      .padding
-                      .top),
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
                   child: const NowPlaying(),
                 );
               },

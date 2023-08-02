@@ -11,6 +11,7 @@ import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Displays a list of currently downloaded podcast episodes.
 class Downloads extends StatefulWidget {
   const Downloads({
     super.key,
@@ -20,7 +21,6 @@ class Downloads extends StatefulWidget {
   State<Downloads> createState() => _DownloadsState();
 }
 
-/// Displays a list of podcast episodes that the user has downloaded.
 class _DownloadsState extends State<Downloads> {
   @override
   void initState() {

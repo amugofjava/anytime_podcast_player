@@ -15,6 +15,7 @@ import 'package:sliver_tools/sliver_tools.dart';
 ///
 /// This UI can optionally show a list of genres provided by iTunes/PodcastIndex.
 class Discovery extends StatefulWidget {
+  static const fetchSize = 20;
   final bool categories;
   final bool inlineSearch;
 
@@ -36,7 +37,7 @@ class _DiscoveryState extends State<Discovery> {
     final bloc = Provider.of<DiscoveryBloc>(context, listen: false);
 
     bloc.discover(DiscoveryChartEvent(
-      count: 10,
+      count: Discovery.fetchSize,
       genre: bloc.selectedGenre.genre,
       countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
     ));
@@ -138,7 +139,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                               });
 
                               widget.discoveryBloc.discover(DiscoveryChartEvent(
-                                count: 10,
+                                count: Discovery.fetchSize,
                                 genre: item,
                                 countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
                               ));

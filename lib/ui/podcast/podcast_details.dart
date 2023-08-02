@@ -312,6 +312,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   }
 }
 
+/// Renders the podcast or episode image.
 class PodcastHeaderImage extends StatelessWidget {
   const PodcastHeaderImage({
     Key? key,
@@ -345,6 +346,15 @@ class PodcastHeaderImage extends StatelessWidget {
   }
 }
 
+/// Renders the podcast title, copyright, description, follow/unfollow and
+/// overflow button.
+///
+/// If the episode description is fairly long, an overflow icon is also shown
+/// and a portion of the episode description is shown. Tapping the overflow
+/// icons allows the user to expand and collapse the text.
+///
+/// Description is rendered by [PodcastDescription].
+/// Follow/Unfollow button rendered by [FollowButton].
 class PodcastTitle extends StatefulWidget {
   final Podcast podcast;
 
@@ -436,7 +446,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                SubscriptionButton(widget.podcast),
+                FollowButton(widget.podcast),
                 PodcastContextMenu(widget.podcast),
                 settings.showFunding
                     ? FundingMenu(widget.podcast.funding)
@@ -529,10 +539,10 @@ class PodcastDescription extends StatelessWidget {
   }
 }
 
-class SubscriptionButton extends StatelessWidget {
+class FollowButton extends StatelessWidget {
   final Podcast podcast;
 
-  const SubscriptionButton(this.podcast, {super.key});
+  const FollowButton(this.podcast, {super.key});
 
   @override
   Widget build(BuildContext context) {

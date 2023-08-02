@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 /// Defaults to 1 second. This can be used as a place holder for cached images. By
 /// delaying for several milliseconds it can reduce the occurrences of placeholders
 /// flashing on screen as the cached image is loaded. Images that take longer to fetch
-/// or process from the cache will result in a progress indicator being displayed.
+/// or process from the cache will result in a [PlatformProgressIndicator] indicator
+/// being displayed.
 class DelayedCircularProgressIndicator extends StatelessWidget {
   final int delayInMilliseconds;
 

@@ -27,8 +27,6 @@ import 'package:provider/provider.dart';
 /// If anyone can come up with a more elegant solution (and one that does not throw
 /// an overflow error in debug) please raise and issue/submit a PR.
 ///
-/// TODO: Extract contents of Up Next UI into separate widgets.
-/// TODO: Extract contents of Transcript UI into separate widgets.
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double? scrollPos;
   static const baseSize = 68.0;
@@ -191,6 +189,10 @@ class NowPlayingOptionsScaffold extends StatelessWidget {
   }
 }
 
+/// This implementation displays the additional options in a tab set outside of a
+/// draggable sheet.
+///
+/// Currently these options are Up Next & Transcript.
 class NowPlayingOptionsSelectorWide extends StatefulWidget {
   final double? scrollPos;
   static const baseSize = 68.0;
@@ -226,39 +228,48 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  StreamBuilder<QueueState>(
-                      initialData: QueueEmptyState(),
-                      stream: queueBloc.queue,
-                      builder: (context, snapshot) {
-                        return TabBar(
-                          automaticIndicatorColorAdjustment: false,
-                          tabs: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: Text(
-                                L.of(context)!.up_next_queue_label.toUpperCase(),
-                                style: Theme.of(context).textTheme.labelLarge,
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.0),
+                      border: Border(
+                        bottom: BorderSide(color: Colors.grey[800]!, width: 1.0),
+                      ),
+                    ),
+                    child: StreamBuilder<QueueState>(
+                        initialData: QueueEmptyState(),
+                        stream: queueBloc.queue,
+                        builder: (context, snapshot) {
+                          return TabBar(
+                            automaticIndicatorColorAdjustment: false,
+                            tabs: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                child: Text(
+                                  L.of(context)!.up_next_queue_label.toUpperCase(),
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                              child: snapshot.hasData &&
-                                      snapshot.data?.playing != null &&
-                                      snapshot.data!.playing!.hasTranscripts
-                                  ? Text(
-                                      L.of(context)!.transcript_label.toUpperCase(),
-                                      style: Theme.of(context).textTheme.labelLarge,
-                                    )
-                                  : Text(
-                                      L.of(context)!.transcript_label.toUpperCase(),
-                                      style:
-                                          Theme.of(context).textTheme.labelLarge!.copyWith(color: theme.disabledColor),
-                                    ),
-                            ),
-                          ],
-                        );
-                      }),
-                  //const Padding(padding: EdgeInsets.only(bottom: 12.0)),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                child: snapshot.hasData &&
+                                        snapshot.data?.playing != null &&
+                                        snapshot.data!.playing!.hasTranscripts
+                                    ? Text(
+                                        L.of(context)!.transcript_label.toUpperCase(),
+                                        style: Theme.of(context).textTheme.labelLarge,
+                                      )
+                                    : Text(
+                                        L.of(context)!.transcript_label.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge!
+                                            .copyWith(color: theme.disabledColor),
+                                      ),
+                              ),
+                            ],
+                          );
+                        }),
+                  ),
                   const Expanded(
                     child: TabBarView(
                       children: [

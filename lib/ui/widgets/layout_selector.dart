@@ -9,6 +9,8 @@ import 'package:anytime/ui/widgets/slider_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Allows the user to select the layout for the library and discovery panes.
+/// Can select from a list or different sized grids.
 class LayoutSelectorWidget extends StatefulWidget {
   const LayoutSelectorWidget({
     super.key,

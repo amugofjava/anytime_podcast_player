@@ -9,6 +9,7 @@ import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Renders an episode within the queue which can be dragged to re-order the queue.
 class DraggableEpisodeTile extends StatelessWidget {
   final Episode episode;
   final int index;

@@ -5,6 +5,10 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+/// Displays a download button for an episode.
+///
+/// Can be passed a percentage representing the download progress which
+/// the button will then animate to show progress.
 class DownloadButton extends StatelessWidget {
   final String label;
   final String title;

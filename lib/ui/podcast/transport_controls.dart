@@ -20,9 +20,10 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
-/// Handles the state of the episode transport controls. This currently
-/// consists of the [PlayControl] and [DownloadControl] to handle the
-/// play/pause and download control state respectively.
+/// Handles the state of the episode transport controls.
+///
+/// This currently consists of the [PlayControl] and [DownloadControl]
+/// to handle the play/pause and download control state respectively.
 class PlayControl extends StatelessWidget {
   final Episode episode;
 
