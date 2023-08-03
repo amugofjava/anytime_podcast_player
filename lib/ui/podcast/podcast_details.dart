@@ -409,29 +409,33 @@ class _PodcastTitleState extends State<PodcastTitle> {
                     final expanded = snapshot.data!;
                     return Visibility(
                       visible: showOverflow,
-                      child: expanded
-                          ? TextButton(
-                              style: const ButtonStyle(
-                                visualDensity: VisualDensity.compact,
+                      child: SizedBox(
+                        height: 48.0,
+                        width: 48.0,
+                        child: expanded
+                            ? TextButton(
+                                style: const ButtonStyle(
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                child: Icon(
+                                  Icons.expand_less,
+                                  semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
+                                ),
+                                onPressed: () {
+                                  isDescriptionExpandedStream.add(false);
+                                },
+                              )
+                            : TextButton(
+                                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                                child: Icon(
+                                  Icons.expand_more,
+                                  semanticLabel: L.of(context)!.semantics_expand_podcast_description,
+                                ),
+                                onPressed: () {
+                                  isDescriptionExpandedStream.add(true);
+                                },
                               ),
-                              child: Icon(
-                                Icons.expand_less,
-                                semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
-                              ),
-                              onPressed: () {
-                                isDescriptionExpandedStream.add(false);
-                              },
-                            )
-                          : TextButton(
-                              style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                              child: Icon(
-                                Icons.expand_more,
-                                semanticLabel: L.of(context)!.semantics_expand_podcast_description,
-                              ),
-                              onPressed: () {
-                                isDescriptionExpandedStream.add(true);
-                              },
-                            ),
+                      ),
                     );
                   })
             ],

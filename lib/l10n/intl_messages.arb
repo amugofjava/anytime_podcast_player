@@ -161,7 +161,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "play_button_label": "Play epsiode",
+  "play_button_label": "Play episode",
   "@play_button_label": {
     "description": "Semantic label for the play button",
     "type": "text",

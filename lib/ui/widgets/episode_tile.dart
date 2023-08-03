@@ -61,6 +61,7 @@ class _EpisodeTileState extends State<EpisodeTile> {
           ? L.of(context)!.semantics_episode_tile_expanded_hint
           : L.of(context)!.semantics_episode_tile_collapsed_hint,
       child: ExpansionTile(
+        tilePadding: const EdgeInsets.fromLTRB(16.0, 0.0, 8.0, 0.0),
         key: Key('PT${widget.episode.guid}'),
         onExpansionChanged: (isExpanded) {
           setState(() {
@@ -342,25 +343,19 @@ class EpisodeTransportControls extends StatelessWidget {
     final buttons = <Widget>[];
 
     if (download) {
-      buttons.add(Padding(
-        padding: const EdgeInsets.only(left: 0.0),
-        child: DownloadControl(
-          episode: episode,
-        ),
+      buttons.add(DownloadControl(
+        episode: episode,
       ));
     }
 
     if (play) {
-      buttons.add(Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: PlayControl(
-          episode: episode,
-        ),
+      buttons.add(PlayControl(
+        episode: episode,
       ));
     }
 
     return SizedBox(
-      width: (buttons.length * 38.0) + 8.0,
+      width: (buttons.length * 48.0),
       child: Row(
         children: <Widget>[...buttons],
       ),

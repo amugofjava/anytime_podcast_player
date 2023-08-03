@@ -39,6 +39,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
+                excludeFromSemantics: true,
                 onTap: () {
                   showModalBottomSheet<void>(
                       context: context,
@@ -54,12 +55,13 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                       });
                 },
                 child: SizedBox(
-                  height: 36.0,
-                  width: 42.0,
+                  height: 48.0,
+                  width: 48.0,
                   child: Center(
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.bedtime_outlined,
+                        semanticLabel: L.of(context)!.sleep_timer_label,
                         size: 20.0,
                       ),
                       onPressed: () {

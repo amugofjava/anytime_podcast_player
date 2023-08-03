@@ -36,7 +36,7 @@ dependencies:
   path_provider_platform_interface: ^2.0.4
   percent_indicator: 4.2.3
   permission_handler: ^10.4.2
-  podcast_search: ^0.6.2
+  podcast_search: ^0.6.3
   provider: ^6.0.3
   rxdart: ^0.27.4
   scrollable_positioned_list: ^0.3.7

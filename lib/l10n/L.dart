@@ -270,7 +270,7 @@ class L {
   String get play_button_label {
     return message('play_button_label') ??
         Intl.message(
-          'Play epsiode',
+          'Play episode',
           name: 'play_button_label',
           desc: 'Semantic label for the play button',
           locale: localeName,

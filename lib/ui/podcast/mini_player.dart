@@ -176,8 +176,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                 ],
                               )),
                           SizedBox(
-                            height: 64.0,
-                            width: 64.0,
+                            height: 52.0,
+                            width: 52.0,
                             child: StreamBuilder<AudioState>(
                                 stream: audioBloc.playingState,
                                 builder: (context, snapshot) {
@@ -198,6 +198,9 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       }
                                     },
                                     child: AnimatedIcon(
+                                      semanticLabel: playing
+                                          ? L.of(context)!.pause_button_label
+                                          : L.of(context)!.play_button_label,
                                       size: 48.0,
                                       icon: AnimatedIcons.play_pause,
                                       color: Theme.of(context).iconTheme.color,

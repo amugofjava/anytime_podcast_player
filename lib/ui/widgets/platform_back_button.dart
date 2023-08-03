@@ -26,8 +26,8 @@ class PlatformBackButton extends StatelessWidget {
       color: Colors.transparent,
       child: Center(
         child: Ink(
-          width: Platform.isIOS ? 28.0 : 42.0,
-          height: Platform.isIOS ? 28.0 : 42.0,
+          height: 48.0,
+          width: 48.0,
           decoration: ShapeDecoration(
             color: decorationColour,
             shape: const CircleBorder(),
@@ -35,7 +35,7 @@ class PlatformBackButton extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
-              size: Platform.isIOS ? 18.0 : 32.0,
+              size: Platform.isIOS ? 18.0 : 36.0,
               semanticLabel: L.of(context)?.go_back_button_label,
             ),
             padding: Platform.isIOS ? const EdgeInsets.only(left: 7.0) : const EdgeInsets.all(0.0),

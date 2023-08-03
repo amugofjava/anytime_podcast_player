@@ -64,8 +64,8 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                       });
                 },
                 child: SizedBox(
-                  height: 36.0,
-                  width: 42.0,
+                  height: 48.0,
+                  width: 48.0,
                   child: Center(
                     child: Text(
                       snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
