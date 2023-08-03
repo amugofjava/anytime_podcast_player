@@ -81,7 +81,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
   bool isMobilePortrait(BuildContext context) {
     final query = MediaQuery.of(context);
-    return (query.orientation == Orientation.portrait || query.size.width <= 800);
+    return (query.orientation == Orientation.portrait || query.size.width <= 1000);
   }
 
   @override
@@ -195,7 +195,7 @@ class NowPlayingEpisode extends StatelessWidget {
       builder: (context, orientation) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MediaQuery.of(context).orientation == Orientation.portrait || MediaQuery.of(context).size.width >= 800
+          child: MediaQuery.of(context).orientation == Orientation.portrait || MediaQuery.of(context).size.width >= 1000
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

@@ -55,30 +55,23 @@ class PlayPauseBusyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
         label: '$label $title',
-        child: Container(
-          padding: const EdgeInsets.all(0.0),
-          height: 40.0,
-          width: 38.0,
-          child: Stack(
-            children: <Widget>[
-              CircularPercentIndicator(
-                radius: 19.0,
-                lineWidth: 1.5,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                percent: 0.0,
-                center: Icon(
-                  icon,
-                  size: 22.0,
-                  color: Theme.of(context).primaryColor,
-                ),
-              ),
-              SpinKitRing(
-                lineWidth: 1.5,
+        child: Stack(
+          children: <Widget>[
+            SizedBox(
+              height: 48.0,
+              width: 48.0,
+              child: Icon(
+                icon,
+                size: 22.0,
                 color: Theme.of(context).primaryColor,
-                size: 38.0,
               ),
-            ],
-          ),
+            ),
+            SpinKitRing(
+              lineWidth: 1.5,
+              color: Theme.of(context).primaryColor,
+              size: 38.0,
+            ),
+          ],
         ));
   }
 }
