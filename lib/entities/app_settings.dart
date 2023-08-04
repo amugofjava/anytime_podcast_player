@@ -33,7 +33,7 @@ class AppSettings {
   final bool showFunding;
 
   /// If -1 never; 0 always; otherwise time in minutes.
-  final int? autoUpdateEpisodePeriod;
+  final int autoUpdateEpisodePeriod;
 
   /// If true, silence in audio playback is trimmed. Currently Android only.
   final bool trimSilence;
@@ -74,4 +74,35 @@ class AppSettings {
         trimSilence = false,
         volumeBoost = false,
         layout = 0;
+
+  AppSettings copyWith({
+    String? theme,
+    bool? markDeletedEpisodesAsPlayed,
+    bool? storeDownloadsSDCard,
+    double? playbackSpeed,
+    String? searchProvider,
+    List<SearchProvider>? searchProviders,
+    bool? externalLinkConsent,
+    bool? autoOpenNowPlaying,
+    bool? showFunding,
+    int? autoUpdateEpisodePeriod,
+    bool? trimSilence,
+    bool? volumeBoost,
+    int? layout,
+  }) =>
+      AppSettings(
+        theme: theme ?? this.theme,
+        markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
+        storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
+        playbackSpeed: playbackSpeed ?? this.playbackSpeed,
+        searchProvider: searchProvider ?? this.searchProvider,
+        searchProviders: searchProviders ?? this.searchProviders,
+        externalLinkConsent: externalLinkConsent ?? this.externalLinkConsent,
+        autoOpenNowPlaying: autoOpenNowPlaying ?? this.autoOpenNowPlaying,
+        showFunding: showFunding ?? this.showFunding,
+        autoUpdateEpisodePeriod: autoUpdateEpisodePeriod ?? this.autoUpdateEpisodePeriod,
+        trimSilence: trimSilence ?? this.trimSilence,
+        volumeBoost: volumeBoost ?? this.volumeBoost,
+        layout: layout ?? this.layout,
+      );
 }

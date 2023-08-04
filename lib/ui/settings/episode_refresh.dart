@@ -56,7 +56,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? -1);
 
                                       Navigator.pop(context);
                                     });
@@ -70,7 +70,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 0);
 
                                       Navigator.pop(context);
                                     });
@@ -84,7 +84,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 30);
 
                                       Navigator.pop(context);
                                     });
@@ -98,7 +98,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 60);
 
                                       Navigator.pop(context);
                                     });
@@ -112,7 +112,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 180);
 
                                       Navigator.pop(context);
                                     });
@@ -126,7 +126,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 360);
 
                                       Navigator.pop(context);
                                     });
@@ -140,7 +140,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
-                                      settingsBloc.autoUpdatePeriod(value);
+                                      settingsBloc.autoUpdatePeriod(value ?? 720);
 
                                       Navigator.pop(context);
                                     });

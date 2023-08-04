@@ -58,7 +58,7 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {
-                                            settingsBloc.setSearchProvider(value);
+                                            settingsBloc.setSearchProvider(value ?? 'itunes');
 
                                             if (widget.onChanged != null) {
                                               widget.onChanged!(value);
@@ -76,7 +76,7 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {
-                                            settingsBloc.setSearchProvider(value);
+                                            settingsBloc.setSearchProvider(value ?? 'podcastindex');
 
                                             if (widget.onChanged != null) {
                                               widget.onChanged!(value);

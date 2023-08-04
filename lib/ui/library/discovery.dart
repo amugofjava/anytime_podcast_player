@@ -75,10 +75,10 @@ class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 48.0;
+  double get maxExtent => 56.0;
 
   @override
-  double get minExtent => 48.0;
+  double get minExtent => 56.0;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
@@ -120,7 +120,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, i) {
                       final item = snapshot.data![i];
-                      final padding = i == 0 ? 14.0 : 0.0;
+                      final padding = i == 0 ? 14.0 : 2.0;
 
                       return Container(
                         margin: EdgeInsets.only(left: padding),
