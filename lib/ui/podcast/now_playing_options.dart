@@ -46,6 +46,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
     final theme = Theme.of(context);
     final windowHeight = MediaQuery.of(context).size.height;
     final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
+    final mediaQueryData = MediaQuery.of(context);
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,
@@ -85,7 +86,34 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      const SliderHandle(),
+                      if (mediaQueryData.accessibleNavigation)
+                        Semantics(
+                          liveRegion: true,
+                          label: optionsSliderOpen()
+                              ? L.of(context)!.semantic_playing_options_collapse_label
+                              : L.of(context)!.semantic_playing_options_expand_label,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (draggableController != null) {
+                                if (draggableController!.size < 1.0) {
+                                  draggableController!.animateTo(
+                                    1.0,
+                                    duration: const Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
+                                  );
+                                } else {
+                                  draggableController!.animateTo(
+                                    0.0,
+                                    duration: const Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              }
+                            },
+                            child: const SliderHandle(),
+                          ),
+                        ),
+                      if (!mediaQueryData.accessibleNavigation) const SliderHandle(),
                       DecoratedBox(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.0),
@@ -104,7 +132,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 onTap: (index) {
                                   DefaultTabController.of(ctx).animateTo(index);
 
-                                  if (draggableController != null && draggableController!.size <= 1.0) {
+                                  if (draggableController != null && draggableController!.size < 1.0) {
                                     draggableController!.animateTo(
                                       1.0,
                                       duration: const Duration(milliseconds: 150),
@@ -169,6 +197,10 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
         );
       },
     );
+  }
+
+  bool optionsSliderOpen() {
+    return (draggableController != null && draggableController!.isAttached && draggableController!.size == 1.0);
   }
 
   @override

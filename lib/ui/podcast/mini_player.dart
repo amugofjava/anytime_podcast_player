@@ -133,25 +133,27 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                           SizedBox(
                             height: 58.0,
                             width: 58.0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: snapshot.hasData
-                                  ? PodcastImage(
-                                      key: Key('mini${snapshot.data!.imageUrl}'),
-                                      url: snapshot.data!.imageUrl!,
-                                      width: 58.0,
-                                      height: 58.0,
-                                      borderRadius: 4.0,
-                                      placeholder: placeholderBuilder != null
-                                          ? placeholderBuilder.builder()(context)
-                                          : const Image(
-                                              image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                                      errorPlaceholder: placeholderBuilder != null
-                                          ? placeholderBuilder.errorBuilder()(context)
-                                          : const Image(
-                                              image: AssetImage('assets/images/anytime-placeholder-logo.png')),
-                                    )
-                                  : Container(),
+                            child: ExcludeSemantics(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: snapshot.hasData
+                                    ? PodcastImage(
+                                        key: Key('mini${snapshot.data!.imageUrl}'),
+                                        url: snapshot.data!.imageUrl!,
+                                        width: 58.0,
+                                        height: 58.0,
+                                        borderRadius: 4.0,
+                                        placeholder: placeholderBuilder != null
+                                            ? placeholderBuilder.builder()(context)
+                                            : const Image(
+                                                image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                        errorPlaceholder: placeholderBuilder != null
+                                            ? placeholderBuilder.errorBuilder()(context)
+                                            : const Image(
+                                                image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                                      )
+                                    : Container(),
+                              ),
                             ),
                           ),
                           Expanded(

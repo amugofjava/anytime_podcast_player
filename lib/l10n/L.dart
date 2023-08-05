@@ -1337,6 +1337,46 @@ class L {
           locale: localeName,
         );
   }
+
+  String get podcast_options_overflow_menu_semantic_label {
+    return message('podcast_options_overflow_menu_semantic_label') ??
+        Intl.message(
+          'Options menu',
+          name: 'podcast_options_overflow_menu_semantic_label',
+          desc: 'Podcast details overflow menu',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_announce_searching {
+    return message('semantic_announce_searching') ??
+        Intl.message(
+          'Searching, please wait.',
+          name: 'semantic_announce_searching',
+          desc: 'Spoken when search in progress.',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_playing_options_expand_label {
+    return message('semantic_playing_options_expand_label') ??
+        Intl.message(
+          'Open playing options slider',
+          name: 'semantic_playing_options_expand_label',
+          desc: 'Placed on options handle when screen reader enabled.',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_playing_options_collapse_label {
+    return message('semantic_playing_options_collapse_label') ??
+        Intl.message(
+          'Close playing options slider',
+          name: 'semantic_playing_options_collapse_label',
+          desc: 'Placed on options handle when screen reader enabled.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

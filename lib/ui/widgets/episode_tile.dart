@@ -13,7 +13,7 @@ import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
 /// An EpisodeTitle is built with an [ExpandedTile] widget and displays the episode's
@@ -343,14 +343,20 @@ class EpisodeTransportControls extends StatelessWidget {
     final buttons = <Widget>[];
 
     if (download) {
-      buttons.add(DownloadControl(
-        episode: episode,
+      buttons.add(Semantics(
+        container: true,
+        child: DownloadControl(
+          episode: episode,
+        ),
       ));
     }
 
     if (play) {
-      buttons.add(PlayControl(
-        episode: episode,
+      buttons.add(Semantics(
+        container: true,
+        child: PlayControl(
+          episode: episode,
+        ),
       ));
     }
 

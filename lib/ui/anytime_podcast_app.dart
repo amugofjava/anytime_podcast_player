@@ -187,6 +187,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
+        showSemanticsDebugger: false,
         title: 'Anytime Podcast Player',
         navigatorObservers: [NavigationRouteObserver()],
         localizationsDelegates: const <LocalizationsDelegate<Object>>[

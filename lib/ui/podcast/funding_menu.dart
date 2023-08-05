@@ -117,6 +117,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
             initialData: AppSettings.sensibleDefaults(),
             builder: (context, snapshot) {
               return IconButton(
+                tooltip: L.of(context)!.podcast_funding_dialog_header,
                 icon: const Icon(Icons.payment),
                 onPressed: () => showCupertinoModalPopup<void>(
                   context: context,

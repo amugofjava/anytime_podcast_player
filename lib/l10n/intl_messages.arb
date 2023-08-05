@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-07-28T11:42:13.321100",
+  "@@last_modified": "2023-08-05T17:41:32.428585",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -910,6 +910,34 @@
   "feedback_menu_item_label": "Feedback",
   "@feedback_menu_item_label": {
     "description": "Feedback option in main menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "podcast_options_overflow_menu_semantic_label": "Options menu",
+  "@podcast_options_overflow_menu_semantic_label": {
+    "description": "Podcast details overflow menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_announce_searching": "Searching, please wait.",
+  "@semantic_announce_searching": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_expand_label": "Open playing options slider",
+  "@semantic_playing_options_expand_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_collapse_label": "Close playing options slider",
+  "@semantic_playing_options_collapse_label": {
+    "description": "Placed on options handle when screen reader enabled.",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

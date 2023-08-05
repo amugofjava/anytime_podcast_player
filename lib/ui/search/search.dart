@@ -9,6 +9,7 @@ import 'package:anytime/bloc/search/search_state_event.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/search/search_results.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -69,26 +70,24 @@ class _SearchState extends State<Search> {
                   : const Icon(Icons.arrow_back_ios),
               onPressed: () => Navigator.pop(context),
             ),
-            title: Semantics(
-              label: L.of(context)!.search_for_podcasts_hint,
-              child: TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  autofocus: widget.searchTerm != null ? false : true,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    hintText: L.of(context)!.search_for_podcasts_hint,
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                      color: Theme.of(context).primaryIconTheme.color,
-                      fontSize: 18.0,
-                      decorationColor: Theme.of(context).scaffoldBackgroundColor),
-                  onSubmitted: ((value) {
-                    bloc.search(SearchTermEvent(value));
-                  })),
-            ),
+            title: TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                autofocus: widget.searchTerm != null ? false : true,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: L.of(context)!.search_for_podcasts_hint,
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                    color: Theme.of(context).primaryIconTheme.color,
+                    fontSize: 18.0,
+                    decorationColor: Theme.of(context).scaffoldBackgroundColor),
+                onSubmitted: ((value) {
+                  SemanticsService.announce(L.of(context)!.semantic_announce_searching, TextDirection.ltr);
+                  bloc.search(SearchTermEvent(value));
+                })),
             floating: false,
             pinned: true,
             snap: false,

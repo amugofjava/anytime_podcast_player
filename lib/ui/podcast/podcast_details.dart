@@ -387,19 +387,21 @@ class _PodcastTitleState extends State<PodcastTitle> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
-                      child: Text(widget.podcast.title, style: textTheme.titleLarge),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      child: Text(widget.podcast.copyright ?? '', style: textTheme.bodySmall),
-                    ),
-                  ],
+                child: MergeSemantics(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
+                        child: Text(widget.podcast.title, style: textTheme.titleLarge),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        child: Text(widget.podcast.copyright ?? '', style: textTheme.bodySmall),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               StreamBuilder<bool>(

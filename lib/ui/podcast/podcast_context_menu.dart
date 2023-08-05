@@ -107,6 +107,7 @@ class _CupertinoContextMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return IconButton(
+            tooltip: L.of(context)!.podcast_options_overflow_menu_semantic_label,
             icon: const Icon(CupertinoIcons.ellipsis),
             onPressed: () => showCupertinoModalPopup<void>(
               context: context,

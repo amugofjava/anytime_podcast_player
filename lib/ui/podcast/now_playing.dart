@@ -120,9 +120,14 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        NowPlayingTabs(
-                          episode: snapshot.data!,
-                          transportBuilder: transportBuilder,
+                        // We need to hide the main player when the floating player is visible to prevent
+                        // screen readers from reading both parts of the stack.
+                        Visibility(
+                          visible: opacity < 1,
+                          child: NowPlayingTabs(
+                            episode: snapshot.data!,
+                            transportBuilder: transportBuilder,
+                          ),
                         ),
                         SizedBox.expand(
                             child: SafeArea(
