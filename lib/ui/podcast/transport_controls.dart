@@ -258,7 +258,7 @@ class DownloadControl extends StatelessWidget {
         actions: <Widget>[
           BasicDialogAction(
             title: ActionText(
-              L.of(context)!.cancel_button_label,
+              L.of(context)!.continue_button_label,
             ),
             onPressed: () {
               Navigator.pop(context);

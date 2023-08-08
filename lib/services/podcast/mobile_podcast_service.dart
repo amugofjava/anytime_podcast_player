@@ -481,7 +481,11 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<void> deleteDownload(Episode episode) async {
     // If this episode is currently downloading, cancel the download first.
-    if (episode.downloadPercentage! < 100) {
+    if (episode.downloadState == DownloadState.downloaded) {
+      if (settingsService.markDeletedEpisodesAsPlayed) {
+        episode.played = true;
+      }
+    } else if (episode.downloadState == DownloadState.downloading && episode.downloadPercentage! < 100) {
       await FlutterDownloader.cancel(taskId: episode.downloadTaskId!);
     }
 
@@ -489,10 +493,6 @@ class MobilePodcastService extends PodcastService {
     episode.downloadPercentage = 0;
     episode.position = 0;
     episode.downloadState = DownloadState.none;
-
-    if (settingsService.markDeletedEpisodesAsPlayed) {
-      episode.played = true;
-    }
 
     if (episode.transcriptId != null && episode.transcriptId! > 0) {
       await repository.deleteTranscriptById(episode.transcriptId!);
