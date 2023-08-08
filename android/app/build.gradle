@@ -37,8 +37,7 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 33
-
+    compileSdk 33
 
     defaultConfig {
         applicationId "uk.me.amugofjava.anytime"
