@@ -851,5 +851,26 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "Podcast artwork",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "Chapter web link",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_current_chapter_label": "Current chapter",
+  "@semantic_current_chapter_label": {
+    "description": "Placed around chapter",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   }
 }

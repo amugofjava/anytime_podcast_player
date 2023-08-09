@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2023-08-05T17:41:32.428585",
+  "@@last_modified": "2023-08-09T07:12:07.703475",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -938,6 +938,27 @@
   "semantic_playing_options_collapse_label": "Close playing options slider",
   "@semantic_playing_options_collapse_label": {
     "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "Podcast artwork",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "Chapter web link",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_current_chapter_label": "Current chapter",
+  "@semantic_current_chapter_label": {
+    "description": "Placed around chapter",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}

@@ -1377,6 +1377,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get semantic_podcast_artwork_label {
+    return message('semantic_podcast_artwork_label') ??
+        Intl.message(
+          'Podcast artwork',
+          name: 'semantic_podcast_artwork_label',
+          desc: 'Placed around podcast image on main player',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_chapter_link_label {
+    return message('semantic_chapter_link_label') ??
+        Intl.message(
+          'Chapter web link',
+          name: 'semantic_chapter_link_label',
+          desc: 'Placed around chapter link',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_current_chapter_label {
+    return message('semantic_current_chapter_label') ??
+        Intl.message(
+          'Current chapter',
+          name: 'semantic_current_chapter_label',
+          desc: 'Placed around chapter',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

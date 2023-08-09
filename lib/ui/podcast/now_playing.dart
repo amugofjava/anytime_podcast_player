@@ -90,7 +90,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     final playerBuilder = PlayerControlsBuilder.of(context);
 
     return Semantics(
-      header: true,
+      header: false,
       label: L.of(context)!.semantics_main_player_header,
       child: StreamBuilder<Episode?>(
           stream: audioBloc.nowPlaying,
@@ -206,19 +206,22 @@ class NowPlayingEpisode extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 7,
-                      child: PodcastImage(
-                        key: Key('nowplaying$imageUrl'),
-                        url: imageUrl!,
-                        width: MediaQuery.of(context).size.width * .75,
-                        height: MediaQuery.of(context).size.height * .75,
-                        fit: BoxFit.contain,
-                        borderRadius: 6.0,
-                        placeholder: placeholderBuilder != null
-                            ? placeholderBuilder.builder()(context)
-                            : const DelayedCircularProgressIndicator(),
-                        errorPlaceholder: placeholderBuilder != null
-                            ? placeholderBuilder.errorBuilder()(context)
-                            : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                      child: Semantics(
+                        label: L.of(context)!.semantic_podcast_artwork_label,
+                        child: PodcastImage(
+                          key: Key('nowplaying$imageUrl'),
+                          url: imageUrl!,
+                          width: MediaQuery.of(context).size.width * .75,
+                          height: MediaQuery.of(context).size.height * .75,
+                          fit: BoxFit.contain,
+                          borderRadius: 6.0,
+                          placeholder: placeholderBuilder != null
+                              ? placeholderBuilder.builder()(context)
+                              : const DelayedCircularProgressIndicator(),
+                          errorPlaceholder: placeholderBuilder != null
+                              ? placeholderBuilder.errorBuilder()(context)
+                              : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -297,17 +300,20 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
           flex: 5,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
-            child: AutoSizeText(
-              episode?.title ?? '',
-              group: textGroup,
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              minFontSize: minFontSize,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24.0,
+            child: Semantics(
+              container: true,
+              child: AutoSizeText(
+                episode?.title ?? '',
+                group: textGroup,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                minFontSize: minFontSize,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24.0,
+                ),
+                maxLines: episode!.hasChapters ? 3 : 4,
               ),
-              maxLines: episode!.hasChapters ? 3 : 4,
             ),
           ),
         ),
@@ -321,18 +327,22 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Flexible(
-                    child: AutoSizeText(
-                      chapterTitle,
-                      group: textGroup,
-                      minFontSize: minFontSize,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey[300],
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16.0,
+                    child: Semantics(
+                      label: L.of(context)!.semantic_current_chapter_label,
+                      container: true,
+                      child: AutoSizeText(
+                        chapterTitle,
+                        group: textGroup,
+                        minFontSize: minFontSize,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.grey[300],
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16.0,
+                        ),
+                        maxLines: 2,
                       ),
-                      maxLines: 2,
                     ),
                   ),
                   chapterUrl.isEmpty
@@ -340,13 +350,19 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                           height: 0,
                           width: 0,
                         )
-                      : IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: const Icon(Icons.link),
-                          color: Theme.of(context).primaryIconTheme.color,
-                          onPressed: () {
-                            _chapterLink(chapterUrl);
-                          }),
+                      : Semantics(
+                          label: L.of(context)!.semantic_chapter_link_label,
+                          container: true,
+                          child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: const Icon(
+                                Icons.link,
+                              ),
+                              color: Theme.of(context).primaryIconTheme.color,
+                              onPressed: () {
+                                _chapterLink(chapterUrl);
+                              }),
+                        ),
                 ],
               ),
             ),
