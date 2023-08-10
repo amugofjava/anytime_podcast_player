@@ -38,10 +38,13 @@ class PlatformBackButton extends StatelessWidget {
                 color: decorationColour,
                 shape: const CircleBorder(),
               ),
-              child: Icon(
-                Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
-                size: Platform.isIOS ? 18.0 : 26.0,
-                semanticLabel: L.of(context)?.go_back_button_label,
+              child: Padding(
+                padding: EdgeInsets.only(left: Platform.isIOS ? 8.0 : 0.0),
+                child: Icon(
+                  Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
+                  size: Platform.isIOS ? 20.0 : 26.0,
+                  semanticLabel: L.of(context)?.go_back_button_label,
+                ),
               ),
             ),
           ),
