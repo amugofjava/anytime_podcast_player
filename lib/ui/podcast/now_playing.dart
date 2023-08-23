@@ -434,7 +434,7 @@ class NowPlayingShowNotes extends StatelessWidget {
                 left: 8.0,
                 right: 8.0,
               ),
-              child: PodcastHtml(content: episode!.description!),
+              child: PodcastHtml(content: episode?.content ?? episode?.description ?? ''),
             ),
           ],
         ),

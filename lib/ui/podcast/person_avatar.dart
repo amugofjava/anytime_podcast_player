@@ -17,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person
 class PersonAvatar extends StatelessWidget {
   final Person person;
-  String initial = '';
+  String initials = '';
   String role = '';
 
   PersonAvatar({
@@ -25,7 +25,13 @@ class PersonAvatar extends StatelessWidget {
     required this.person,
   }) : super(key: key) {
     if (person.name.isNotEmpty) {
-      initial = person.name.substring(0, 1).toUpperCase();
+      var parts = person.name.split(' ');
+
+      for (var i in parts) {
+        if (i.isNotEmpty) {
+          initials += i.substring(0, 1).toUpperCase();
+        }
+      }
     }
 
     if (person.role.isNotEmpty) {
@@ -59,7 +65,7 @@ class PersonAvatar extends StatelessWidget {
                   person.image!,
                   cache: true,
                 ).image,
-                child: Text(initial),
+                child: Text(initials),
               ),
               Text(
                 person.name,

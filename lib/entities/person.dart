@@ -56,4 +56,9 @@ class Person {
 
   @override
   int get hashCode => name.hashCode ^ role.hashCode ^ group.hashCode ^ image.hashCode ^ link.hashCode;
+
+  @override
+  String toString() {
+    return 'Person{name: $name, role: $role, group: $group, image: $image, link: $link}';
+  }
 }
