@@ -37,6 +37,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context);
+    final screenReader = MediaQuery.of(context).accessibleNavigation;
 
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,
@@ -44,6 +45,11 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
           var position = snapshot.hasData ? snapshot.data!.position.inSeconds : 0;
           episodeLength = snapshot.hasData ? snapshot.data!.length.inSeconds : 0;
           var divisions = episodeLength == 0 ? 1 : episodeLength;
+
+          // If a screen reader is enabled, will make divisions ten seconds each.
+          if (screenReader) {
+            divisions = episodeLength ~/ 10;
+          }
 
           if (!dragging) {
             currentPosition = position;
@@ -87,6 +93,13 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           onChanged: (value) {
                             setState(() {
                               _calculatePositions(value.toInt());
+
+                              // Normally, we only want to trigger a position change when the user has finished
+                              // sliding; however, with a screen reader enabled that will never trigger. Instead,
+                              // we'll use the 'normal' change event.
+                              if (screenReader) {
+                                return snapshot.data!.buffering ? null : audioBloc.transitionPosition(value);
+                              }
                             });
                           },
                           onChangeStart: (value) {
@@ -109,7 +122,9 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           max: episodeLength.toDouble(),
                           divisions: divisions,
                           activeColor: Theme.of(context).primaryColor,
-                        )
+                          semanticFormatterCallback: (double newValue) {
+                            return _formatDuration(Duration(seconds: currentPosition));
+                          })
                       : Slider(
                           onChanged: null,
                           value: 0,
