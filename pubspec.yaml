@@ -10,9 +10,9 @@ environment:
 dependencies:
   accessibility_tools: ^1.0.0
   auto_size_text: ^3.0.0
-  audio_service: ^0.18.9
+  audio_service: ^0.18.11
   audio_session: ^0.1.13
-  connectivity_plus: ^4.0.1
+  connectivity_plus: ^4.0.2
   cupertino_icons: ^1.0.5
   device_info_plus: ^4.0.0
   expand_widget: ^3.1.0
