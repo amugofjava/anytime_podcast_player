@@ -76,26 +76,28 @@ class _EpisodeTileState extends State<EpisodeTile> {
             play: widget.play,
           ),
         ),
-        leading: Stack(
-          alignment: Alignment.bottomLeft,
-          fit: StackFit.passthrough,
-          children: <Widget>[
-            Opacity(
-              opacity: widget.episode.played ? 0.5 : 1.0,
-              child: TileImage(
-                url: widget.episode.thumbImageUrl ?? widget.episode.imageUrl!,
-                size: 56.0,
-                highlight: widget.episode.highlight,
+        leading: ExcludeSemantics(
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            fit: StackFit.passthrough,
+            children: <Widget>[
+              Opacity(
+                opacity: widget.episode.played ? 0.5 : 1.0,
+                child: TileImage(
+                  url: widget.episode.thumbImageUrl ?? widget.episode.imageUrl!,
+                  size: 56.0,
+                  highlight: widget.episode.highlight,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 5.0,
-              width: 56.0 * (widget.episode.percentagePlayed / 100),
-              child: Container(
-                color: Theme.of(context).primaryColor,
+              SizedBox(
+                height: 5.0,
+                width: 56.0 * (widget.episode.percentagePlayed / 100),
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         subtitle: Opacity(
           opacity: widget.episode.played ? 0.5 : 1.0,
