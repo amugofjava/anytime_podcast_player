@@ -333,10 +333,12 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     /// If _episode is null, we must have stopped whilst still active or we were killed.
     if (_currentEpisode == null) {
       if (_initialised && _audioHandler.mediaItem.value != null) {
-        final extras = _audioHandler.mediaItem.value?.extras;
+        if (_audioHandler.playbackState.value.processingState != AudioProcessingState.idle) {
+          final extras = _audioHandler.mediaItem.value?.extras;
 
-        if (extras != null && extras['eid'] != null) {
-          _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
+          if (extras != null && extras['eid'] != null) {
+            _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
+          }
         }
       } else {
         // Let's see if we have a persisted state
@@ -931,11 +933,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     await _savePosition();
   }
 
-  Future<void> complete() async {
-    log.fine('complete() triggered - saving position');
-    await _savePosition(complete: true);
-  }
-
   @override
   Future<void> fastForward() async {
     var forwardPosition = _player.position.inMilliseconds;
@@ -1011,11 +1008,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   PlaybackState _transformEvent(PlaybackEvent event) {
     log.fine('_transformEvent Sending state ${_player.processingState}');
-
-    if (_player.processingState == ProcessingState.completed && _player.playing) {
-      log.fine('Transform event has received a complete - calling complete();');
-      complete();
-    }
 
     return PlaybackState(
       controls: [
