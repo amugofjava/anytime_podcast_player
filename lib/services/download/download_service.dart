@@ -6,6 +6,7 @@ import 'package:anytime/entities/episode.dart';
 
 abstract class DownloadService {
   Future<bool> downloadEpisode(Episode episode);
+  Future<void> deleteDownload(Episode episode);
 
   Future<Episode?> findEpisodeByTaskId(String taskId);
 
