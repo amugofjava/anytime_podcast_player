@@ -64,7 +64,7 @@ class AnytimePodcastApp extends StatefulWidget {
   late DownloadService downloadService;
   late AudioPlayerService audioPlayerService;
   late OPMLService opmlService;
-  PodcastService? podcastService;
+  late PodcastService podcastService;
   SettingsBloc? settingsBloc;
   MobileSettingsService mobileSettingsService;
   List<int> certificateAuthorityBytes;
@@ -82,24 +82,24 @@ class AnytimePodcastApp extends StatefulWidget {
       settingsService: mobileSettingsService,
     );
 
-    assert(podcastService != null);
-
     downloadService = MobileDownloadService(
       repository: repository,
       downloadManager: MobileDownloaderManager(),
-      podcastService: podcastService!,
+      settingsService: mobileSettingsService,
+      podcastService: podcastService,
     );
 
     audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
-      podcastService: podcastService!,
+      podcastService: podcastService,
+      downloadService: downloadService,
     );
 
     settingsBloc = SettingsBloc(mobileSettingsService);
 
     opmlService = MobileOPMLService(
-      podcastService: podcastService!,
+      podcastService: podcastService,
       repository: repository,
     );
 
@@ -142,24 +142,27 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
       providers: [
         Provider<SearchBloc>(
           create: (_) => SearchBloc(
-            podcastService: widget.podcastService!,
+            podcastService: widget.podcastService,
           ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<DiscoveryBloc>(
           create: (_) => DiscoveryBloc(
-            podcastService: widget.podcastService!,
+            podcastService: widget.podcastService,
           ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<EpisodeBloc>(
-          create: (_) =>
-              EpisodeBloc(podcastService: widget.podcastService!, audioPlayerService: widget.audioPlayerService),
+          create: (_) => EpisodeBloc(
+            podcastService: widget.podcastService,
+            audioPlayerService: widget.audioPlayerService,
+            downloadService: widget.downloadService,
+          ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PodcastBloc>(
           create: (_) => PodcastBloc(
-              podcastService: widget.podcastService!,
+              podcastService: widget.podcastService,
               audioPlayerService: widget.audioPlayerService,
               downloadService: widget.downloadService,
               settingsService: widget.mobileSettingsService),
@@ -184,7 +187,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         Provider<QueueBloc>(
           create: (_) => QueueBloc(
             audioPlayerService: widget.audioPlayerService,
-            podcastService: widget.podcastService!,
+            podcastService: widget.podcastService,
           ),
           dispose: (_, value) => value.dispose(),
         )
@@ -264,8 +267,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   /// This method handles the actual link supplied from [uni_links], either
   /// at app startup or during running.
   void _handleLinkEvent(Uri uri) async {
-    if ((uri.scheme == 'anytime-subscribe' || uri.scheme == 'https') &&
-        (uri.query.startsWith('uri=') || uri.query.startsWith('url='))) {
+    if ((uri.scheme == 'anytime-subscribe' || uri.scheme == 'https') && (uri.query.startsWith('uri=') || uri.query.startsWith('url='))) {
       var path = uri.query.substring(4);
       var loadPodcastBloc = Provider.of<PodcastBloc>(context, listen: false);
       var routeName = NavigationRouteObserver().top!.settings.name;
@@ -360,9 +362,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                               context,
                               defaultTargetPlatform == TargetPlatform.iOS
                                   ? MaterialPageRoute<void>(
-                                      fullscreenDialog: false,
-                                      settings: const RouteSettings(name: 'search'),
-                                      builder: (context) => const Search())
+                                      fullscreenDialog: false, settings: const RouteSettings(name: 'search'), builder: (context) => const Search())
                                   : SlideRightRoute(
                                       widget: const Search(),
                                       settings: const RouteSettings(name: 'search'),
@@ -476,8 +476,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 selectedItemColor: Theme.of(context).iconTheme.color,
                 selectedFontSize: 11.0,
                 unselectedFontSize: 11.0,
-                unselectedItemColor:
-                    HSLColor.fromColor(Theme.of(context).bottomAppBarTheme.color!).withLightness(0.8).toColor(),
+                unselectedItemColor: HSLColor.fromColor(Theme.of(context).bottomAppBarTheme.color!).withLightness(0.8).toColor(),
                 currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[

@@ -13,10 +13,13 @@ import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:synchronized/synchronized.dart';
 
 /// An implementation of a [DownloadService] that handles downloading
 /// of episodes on mobile.
@@ -25,19 +28,36 @@ class MobileDownloadService extends DownloadService {
 
   final log = Logger('MobileDownloadService');
   final Repository repository;
+  final SettingsService settingsService;
   final DownloadManager downloadManager;
   final PodcastService podcastService;
 
-  MobileDownloadService({required this.repository, required this.downloadManager, required this.podcastService}) {
-    downloadManager.downloadProgress.pipe(downloadProgress);
-    downloadProgress.listen((progress) {
-      _updateDownloadProgress(progress);
-    });
+  late final StreamSubscription _downloadProgressSubscription;
+
+  /// Lock ensures we wait for task creation and local save
+  /// before handling subsequent [Download update events].
+  final _downloadProgressLock = Lock();
+
+  MobileDownloadService({
+    required this.repository,
+    required this.downloadManager,
+    required this.settingsService,
+    required this.podcastService,
+  }) {
+    _downloadProgressSubscription = downloadManager.downloadProgress.listen(
+      (progress) async => await _downloadProgressLock.synchronized(
+        () {
+          downloadProgress.add(progress);
+          _updateDownloadProgress(progress);
+        },
+      ),
+    );
   }
 
   @override
   void dispose() {
     downloadManager.dispose();
+    _downloadProgressSubscription.cancel();
   }
 
   @override
@@ -121,16 +141,18 @@ class MobileDownloadService extends DownloadService {
           /// the URL before calling download and ensure it is https.
           var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
 
-          final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
+          await _downloadProgressLock.synchronized(() async {
+            final taskId = await downloadManager.enqueueTask(url, downloadPath, filename!);
 
-          // Update the episode with download data
-          episode.filepath = episodePath;
-          episode.filename = filename;
-          episode.downloadTaskId = taskId;
-          episode.downloadState = DownloadState.downloading;
-          episode.downloadPercentage = 0;
+            // Update the episode with download data
+            episode.filepath = episodePath;
+            episode.filename = filename;
+            episode.downloadTaskId = taskId;
+            episode.downloadState = DownloadState.downloading;
+            episode.downloadPercentage = 0;
 
-          await repository.saveEpisode(episode);
+            await repository.saveEpisode(episode);
+          });
 
           return true;
         }
@@ -142,6 +164,41 @@ class MobileDownloadService extends DownloadService {
       return false;
     }
   }
+
+  @override
+  Future<void> deleteDownload(Episode episode) async => _downloadProgressLock.synchronized(() async {
+        // If this episode is currently downloading, cancel the download first.
+        if (episode.downloadState == DownloadState.downloaded) {
+          if (settingsService.markDeletedEpisodesAsPlayed) {
+            episode.played = true;
+          }
+        } else if (episode.downloadState == DownloadState.downloading && episode.downloadPercentage! < 100) {
+          await FlutterDownloader.cancel(taskId: episode.downloadTaskId!);
+        }
+
+        episode.downloadTaskId = null;
+        episode.downloadPercentage = 0;
+        episode.position = 0;
+        episode.downloadState = DownloadState.none;
+
+        if (episode.transcriptId != null && episode.transcriptId! > 0) {
+          await repository.deleteTranscriptById(episode.transcriptId!);
+        }
+
+        await repository.saveEpisode(episode);
+
+        if (await hasStoragePermission()) {
+          final f = File.fromUri(Uri.file(await resolvePath(episode)));
+
+          log.fine('Deleting file ${f.path}');
+
+          if (await f.exists()) {
+            f.delete();
+          }
+        }
+
+        return;
+      });
 
   @override
   Future<Episode?> findEpisodeByTaskId(String taskId) {

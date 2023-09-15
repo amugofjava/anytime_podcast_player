@@ -15,6 +15,7 @@ import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
@@ -37,6 +38,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final log = Logger('DefaultAudioPlayerService');
   final Repository repository;
   final SettingsService settingsService;
+  final DownloadService downloadService;
   final PodcastService podcastService;
 
   late AudioHandler _audioHandler;
@@ -95,6 +97,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     required this.repository,
     required this.settingsService,
     required this.podcastService,
+    required this.downloadService,
   }) {
     AudioService.init(
       builder: () => _DefaultAudioPlayerHandler(
@@ -535,7 +538,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         settingsService.deleteDownloadedPlayedEpisodes &&
         _currentEpisode?.downloadState == DownloadState.downloaded && !sleepy
     ) {
-      await podcastService.deleteDownload(_currentEpisode!);
+      await downloadService.deleteDownload(_currentEpisode!);
     }
 
     _stopPositionTicker();
