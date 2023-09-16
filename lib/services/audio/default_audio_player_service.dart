@@ -98,7 +98,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }) {
     AudioService.init(
       builder: () => _DefaultAudioPlayerHandler(
-        repository: repository,
         settings: settingsService,
       ),
       config: const AudioServiceConfig(
@@ -207,10 +206,16 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> rewind() => _audioHandler.rewind();
+  Future<void> rewind() async {
+    await _audioHandler.rewind();
+    await _saveCurrentEpisodePosition();
+  }
 
   @override
-  Future<void> fastForward() => _audioHandler.fastForward();
+  Future<void> fastForward() async {
+    await _audioHandler.fastForward();
+    await _saveCurrentEpisodePosition();
+  }
 
   @override
   Future<void> seek({required int position}) async {
@@ -233,6 +238,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     ));
 
     await _audioHandler.seek(Duration(seconds: position));
+    await _saveCurrentEpisodePosition();
 
     _positionSubscription?.resume();
   }
@@ -721,6 +727,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       episode: _currentEpisode,
       buffering: buffering,
     ));
+    await _saveCurrentEpisodePosition();
   }
 
   /// Calculate our current chapter based on playback position, and if it's different to
@@ -780,7 +787,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 /// the underlying player.
 class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   final log = Logger('DefaultAudioPlayerHandler');
-  final Repository repository;
   final SettingsService settings;
 
   static const rewindMillis = 10001;
@@ -806,7 +812,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   );
 
   _DefaultAudioPlayerHandler({
-    required this.repository,
     required this.settings,
   }) {
     _initPlayer();
@@ -921,7 +926,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   @override
   Future<void> pause() async {
     log.fine('pause() triggered - saving position');
-    await _savePosition();
     await _player.pause();
   }
 
@@ -930,7 +934,6 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     log.fine('stop() triggered - saving position');
 
     await _player.stop();
-    await _savePosition();
   }
 
   @override
@@ -942,7 +945,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> seek(Duration position) async {
-    return _player.seek(position);
+    await _player.seek(position);
   }
 
   @override
@@ -1034,29 +1037,5 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       speed: _player.speed,
       queueIndex: event.currentIndex,
     );
-  }
-
-  Future<void> _savePosition({bool complete = false}) async {
-    if (_currentItem != null) {
-      // The episode may have been updated elsewhere - re-fetch it.
-      var currentPosition = playbackState.value.position.inMilliseconds;
-      var storedEpisode = (await repository.findEpisodeByGuid(_currentItem!.extras!['eid'] as String))!;
-
-      log.fine(
-          '_savePosition(): Current position is $currentPosition - stored position is ${storedEpisode.position} complete is $complete on episode ${storedEpisode.title}');
-
-      if (complete) {
-        storedEpisode.position = 0;
-        storedEpisode.played = true;
-
-        await repository.saveEpisode(storedEpisode);
-      } else if (currentPosition != storedEpisode.position) {
-        storedEpisode.position = currentPosition;
-
-        await repository.saveEpisode(storedEpisode);
-      }
-    } else {
-      log.fine(' - Cannot save position as episode is null');
-    }
   }
 }
