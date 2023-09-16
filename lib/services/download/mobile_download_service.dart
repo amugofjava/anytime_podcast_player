@@ -39,74 +39,79 @@ class MobileDownloadService extends DownloadService {
 
   @override
   Future<bool> downloadEpisode(Episode episode) async {
-    final season = episode.season > 0 ? episode.season.toString() : '';
-    final epno = episode.episode > 0 ? episode.episode.toString() : '';
+    try {
+      final season = episode.season > 0 ? episode.season.toString() : '';
+      final epno = episode.episode > 0 ? episode.episode.toString() : '';
 
-    if (await hasStoragePermission()) {
-      final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
+      if (await hasStoragePermission()) {
+        final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
 
-      if (savedEpisode != null) {
-        episode = savedEpisode;
-      }
+        if (savedEpisode != null) {
+          episode = savedEpisode;
+        }
 
-      final episodePath = await resolveDirectory(episode: episode);
-      final downloadPath = await resolveDirectory(episode: episode, full: true);
-      var uri = Uri.parse(episode.contentUrl!);
+        final episodePath = await resolveDirectory(episode: episode);
+        final downloadPath = await resolveDirectory(episode: episode, full: true);
+        var uri = Uri.parse(episode.contentUrl!);
 
-      // Ensure the download directory exists
-      await createDownloadDirectory(episode);
+        // Ensure the download directory exists
+        await createDownloadDirectory(episode);
 
-      // Filename should be last segment of URI.
-      var filename = safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.mp3')));
+        // Filename should be last segment of URI.
+        var filename = safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.mp3')));
 
-      filename ??= safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.m4a')));
+        filename ??= safeFile(uri.pathSegments.lastWhereOrNull((e) => e.toLowerCase().endsWith('.m4a')));
 
-      if (filename == null) {
-        //TODO: Handle unsupported format.
-      } else {
-        // The last segment could also be a full URL. Take a second pass.
-        if (filename.contains('/')) {
-          try {
-            uri = Uri.parse(filename);
-            filename = uri.pathSegments.last;
-          } on FormatException {
-            // It wasn't a URL...
+        if (filename == null) {
+          //TODO: Handle unsupported format.
+        } else {
+          // The last segment could also be a full URL. Take a second pass.
+          if (filename.contains('/')) {
+            try {
+              uri = Uri.parse(filename);
+              filename = uri.pathSegments.last;
+            } on FormatException {
+              // It wasn't a URL...
+            }
           }
+
+          // Some podcasts use the same file name for each episode. If we have a
+          // season and/or episode number provided by iTunes we can use that. We
+          // will also append the filename with the publication date if available.
+          var pubDate = '';
+
+          if (episode.publicationDate != null) {
+            pubDate = '${episode.publicationDate!.millisecondsSinceEpoch ~/ 1000}-';
+          }
+
+          filename = '$season$epno$pubDate$filename';
+
+          log.fine('Download episode (${episode.title}) $filename to $downloadPath/$filename');
+
+          /// If we get a redirect to an http endpoint the download will fail. Let's fully resolve
+          /// the URL before calling download and ensure it is https.
+          var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
+
+          final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
+
+          // Update the episode with download data
+          episode.filepath = episodePath;
+          episode.filename = filename;
+          episode.downloadTaskId = taskId;
+          episode.downloadState = DownloadState.downloading;
+          episode.downloadPercentage = 0;
+
+          await repository.saveEpisode(episode);
+
+          return true;
         }
-
-        // Some podcasts use the same file name for each episode. If we have a
-        // season and/or episode number provided by iTunes we can use that. We
-        // will also append the filename with the publication date if available.
-        var pubDate = '';
-
-        if (episode.publicationDate != null) {
-          pubDate = '${episode.publicationDate!.millisecondsSinceEpoch ~/ 1000}-';
-        }
-
-        filename = '$season$epno$pubDate$filename';
-
-        log.fine('Download episode (${episode.title}) $filename to $downloadPath/$filename');
-
-        /// If we get a redirect to an http endpoint the download will fail. Let's fully resolve
-        /// the URL before calling download and ensure it is https.
-        var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
-
-        final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
-
-        // Update the episode with download data
-        episode.filepath = episodePath;
-        episode.filename = filename;
-        episode.downloadTaskId = taskId;
-        episode.downloadState = DownloadState.downloading;
-        episode.downloadPercentage = 0;
-
-        await repository.saveEpisode(episode);
-
-        return Future.value(true);
       }
-    }
 
-    return Future.value(false);
+      return false;
+    } catch (e, stack) {
+      log.warning('Episode download failed (${episode.title})', e, stack);
+      return false;
+    }
   }
 
   @override
