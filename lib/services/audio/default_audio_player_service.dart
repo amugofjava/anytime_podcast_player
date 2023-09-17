@@ -727,7 +727,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       episode: _currentEpisode,
       buffering: buffering,
     ));
-    await _saveCurrentEpisodePosition();
   }
 
   /// Calculate our current chapter based on playback position, and if it's different to
