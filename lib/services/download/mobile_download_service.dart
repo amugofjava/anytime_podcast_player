@@ -36,7 +36,7 @@ class MobileDownloadService extends DownloadService {
 
   /// Lock ensures we wait for task creation and local save
   /// before handling subsequent [Download update events].
-  final _downloadProgressLock = Lock();
+  final _downloadLock = Lock();
 
   MobileDownloadService({
     required this.repository,
@@ -45,7 +45,7 @@ class MobileDownloadService extends DownloadService {
     required this.podcastService,
   }) {
     _downloadProgressSubscription = downloadManager.downloadProgress.listen(
-      (progress) async => await _downloadProgressLock.synchronized(
+      (progress) async => await _downloadLock.synchronized(
         () {
           downloadProgress.add(progress);
           _updateDownloadProgress(progress);
@@ -141,7 +141,7 @@ class MobileDownloadService extends DownloadService {
           /// the URL before calling download and ensure it is https.
           var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
 
-          await _downloadProgressLock.synchronized(() async {
+          await _downloadLock.synchronized(() async {
             final taskId = await downloadManager.enqueueTask(url, downloadPath, filename!);
 
             // Update the episode with download data
@@ -166,7 +166,7 @@ class MobileDownloadService extends DownloadService {
   }
 
   @override
-  Future<void> deleteDownload(Episode episode) async => _downloadProgressLock.synchronized(() async {
+  Future<void> deleteDownload(Episode episode) async => _downloadLock.synchronized(() async {
         // If this episode is currently downloading, cancel the download first.
         if (episode.downloadState == DownloadState.downloaded) {
           if (settingsService.markDeletedEpisodesAsPlayed) {
