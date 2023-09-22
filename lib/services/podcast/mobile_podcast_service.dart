@@ -156,14 +156,27 @@ class MobilePodcastService extends PodcastService {
 
       // If we didn't get a cache hit load the podcast feed.
       if (loadedPodcast == null) {
-        try {
-          log.fine('Loading podcast from feed ${podcast.url}');
-          loadedPodcast = await _loadPodcastFeed(url: podcast.url);
-        } on Exception {
-          rethrow;
+        var tries = 2;
+        var url = podcast.url;
+
+        while (tries-- > 0) {
+          try {
+            log.fine('Loading podcast from feed $url');
+            loadedPodcast = await _loadPodcastFeed(url: url);
+            tries = 0;
+          } on Exception {
+            if (tries > 0 && url.startsWith('https')) {
+              // Try the http only version - flesh out to setting later on
+              log.fine('Failed to load podcast. Fallback to http and try again');
+
+              url = url.replaceFirst('https', 'http');
+            } else {
+              rethrow;
+            }
+          }
         }
 
-        _cache.store(loadedPodcast);
+        _cache.store(loadedPodcast!);
       }
 
       final title = _format(loadedPodcast.title);
