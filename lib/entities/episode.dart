@@ -316,8 +316,6 @@ class Episode {
             season == other.season &&
             episode == other.episode &&
             duration == other.duration &&
-            position == other.position &&
-            downloadPercentage == other.downloadPercentage &&
             played == other.played &&
             chaptersUrl == other.chaptersUrl &&
             transcriptId == other.transcriptId &&
@@ -347,8 +345,6 @@ class Episode {
       season.hashCode ^
       episode.hashCode ^
       duration.hashCode ^
-      position.hashCode ^
-      downloadPercentage.hashCode ^
       played.hashCode ^
       chaptersUrl.hashCode ^
       chapters.hashCode ^
