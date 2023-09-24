@@ -286,9 +286,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   @override
-  Future<void> stop() {
+  Future<void> stop() async {
     _currentEpisode = null;
-    return _audioHandler.stop();
+    await _audioHandler.stop();
   }
 
   @override
@@ -837,11 +837,17 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
     /// List to events from the player itself, transform the player event to an audio service one
     /// and hand it off to the playback state stream to inform our client(s).
-    _player.playbackEventStream.map(_transformEvent).pipe(playbackState).catchError((Object o, StackTrace s) async {
+    _player.playbackEventStream.map((event) => _transformEvent(event)).listen((data) {
+      if (playbackState.isClosed) {
+        log.warning('WARN: Playback state is already closed.');
+      } else {
+        playbackState.add(data);
+      }
+    }).onError((error) {
       log.fine('Playback error received');
-      log.fine(o.toString());
+      log.fine(error.toString());
 
-      await _player.stop();
+      _player.stop();
     });
   }
 
@@ -972,6 +978,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       case 'queueend':
         log.fine('Received custom action: queue end');
         await _player.stop();
+        await super.stop();
         break;
       case 'sleep':
         log.fine('Received custom action: sleep end of episode');
