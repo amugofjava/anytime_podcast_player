@@ -42,7 +42,7 @@ Future<List<int>> setupCertificateAuthority() async {
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    var major = androidInfo.version.release!.split('.');
+    var major = androidInfo.version.release.split('.');
 
     if ((int.tryParse(major[0]) ?? 100.0) < 8.0) {
       ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');

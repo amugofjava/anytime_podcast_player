@@ -78,6 +78,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "no_subscriptions_message": "Tippen Sie unten auf die Schaltfläche „Entdecken“ oder verwenden Sie die Suchleiste oben, um Ihren ersten Podcast zu finden",
+  "@no_subscriptions_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
   "delete_label": "Löschen",
   "@delete_label": {
     "description": "Delete label",

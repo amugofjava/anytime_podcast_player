@@ -130,7 +130,7 @@ class L {
   String get subscribe_label {
     return message('subscribe_label') ??
         Intl.message(
-          'Subscribe',
+          'Follow',
           name: 'subscribe_label',
           desc: 'Subscribe label',
           locale: localeName,
@@ -140,7 +140,7 @@ class L {
   String get unsubscribe_label {
     return message('unsubscribe_label') ??
         Intl.message(
-          'Unsubscribe',
+          'Unfollow',
           name: 'unsubscribe_label',
           desc: 'Unsubscribe label',
           locale: localeName,
@@ -150,9 +150,9 @@ class L {
   String get unsubscribe_message {
     return message('unsubscribe_message') ??
         Intl.message(
-          'Unsubscribing will delete all downloaded episodes of this podcast.',
+          'Unfollowing will delete all downloaded episodes of this podcast.',
           name: 'unsubscribe_message',
-          desc: 'Displayed when the user unsubscribes from a podcast.',
+          desc: 'Displayed when the user unfollows a podcast.',
           locale: localeName,
         );
   }
@@ -200,7 +200,7 @@ class L {
   String get mark_played_label {
     return message('mark_played_label') ??
         Intl.message(
-          'Mark As Played',
+          'Mark Played',
           name: 'mark_played_label',
           desc: 'Mark as played',
           locale: localeName,
@@ -210,7 +210,7 @@ class L {
   String get mark_unplayed_label {
     return message('mark_unplayed_label') ??
         Intl.message(
-          'Mark As Unplayed',
+          'Mark Unplayed',
           name: 'mark_unplayed_label',
           desc: 'Mark as unplayed',
           locale: localeName,
@@ -400,7 +400,7 @@ class L {
   String get mark_episodes_not_played_label {
     return message('mark_episodes_not_played_label') ??
         Intl.message(
-          'Mark all episodes as not-played',
+          'Mark all episodes as not played',
           name: 'mark_episodes_not_played_label',
           desc: 'Mark all episodes not played menu item',
           locale: localeName,
@@ -570,7 +570,7 @@ class L {
   String get consent_message {
     return message('consent_message') ??
         Intl.message(
-          'The funding icon appears for Podcasts that support funding or donations. Clicking the icon will open a page to an external site that is provided by the Podcast owner and is not controlled by AnyTime',
+          'This funding link will take you to an external site where you will be able to directly support the show. Links are provided by the podcast authors and is not controlled by Anytime.',
           name: 'consent_message',
           desc: 'Display when first accessing external funding link',
           locale: localeName,
@@ -630,7 +630,7 @@ class L {
   String get error_no_connection {
     return message('error_no_connection') ??
         Intl.message(
-          'Unable to play episode. Please check your connection and try again',
+          'Unable to play episode. Please check your connection and try again.',
           name: 'error_no_connection',
           desc: 'Displayed when attempting to start streaming an episode with no data connection',
           locale: localeName,
@@ -640,7 +640,7 @@ class L {
   String get error_playback_fail {
     return message('error_playback_fail') ??
         Intl.message(
-          'An unexpected error occurred during playback. Please check your connection and try again',
+          'An unexpected error occurred during playback. Please check your connection and try again.',
           name: 'error_playback_fail',
           desc: 'Displayed when attempting to start streaming an episode with no data connection',
           locale: localeName,
@@ -1020,7 +1020,7 @@ class L {
   String get discovery_categories_itunes {
     return message('discovery_categories_itunes') ??
         Intl.message(
-          '',
+          '<All>,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime',
           name: 'discovery_categories_itunes',
           desc: 'Comma separated list of iTunes categories',
           locale: localeName,
@@ -1030,7 +1030,7 @@ class L {
   String get discovery_categories_pindex {
     return message('discovery_categories_pindex') ??
         Intl.message(
-          '',
+          '<All>,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling',
           name: 'discovery_categories_pindex',
           desc: 'Comma separated list of Podcast Index categories',
           locale: localeName,
@@ -1100,7 +1100,7 @@ class L {
   String get semantics_podcast_details_header {
     return message('semantics_podcast_details_header') ??
         Intl.message(
-          'Podcast details and episode page',
+          'Podcast details and episodes page',
           name: 'semantics_podcast_details_header',
           desc: 'Describes podcast details page',
           locale: localeName,
@@ -1280,7 +1280,7 @@ class L {
   String get semantics_episode_tile_expanded_hint {
     return message('semantics_episode_tile_expanded_hint') ??
         Intl.message(
-          'collapse and hide more details and additional options',
+          'collapse and show summary, download and play control',
           name: 'semantics_episode_tile_expanded_hint',
           desc: 'Describes episode tile options when expanded',
           locale: localeName,

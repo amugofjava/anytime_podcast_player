@@ -30,7 +30,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_button_label": "FOLLOW",
+  "subscribe_button_label": "Follow",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
     "type": "text",
@@ -78,13 +78,19 @@
     "type": "text",
     "placeholders": {}
   },
+  "no_subscriptions_message": "Tap the Discovery button below or use the search bar above to find your first podcast",
+  "@no_subscriptions_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
   "delete_label": "Delete",
   "@delete_label": {
     "description": "Delete label",
     "type": "text",
     "placeholders": {}
   },
-  "delete_button_label": "DELETE",
+  "delete_button_label": "Delete",
   "@delete_button_label": {
     "description": "Delete label",
     "type": "text",
