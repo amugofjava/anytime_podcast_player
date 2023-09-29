@@ -15,7 +15,7 @@ jobs:
           java-version: '11'
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.10.5'
+          flutter-version: '3.13.6'
       - run: flutter pub get
       - run: flutter test
       - run: flutter build apk --debug
