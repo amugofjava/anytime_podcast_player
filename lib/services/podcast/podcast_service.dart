@@ -198,8 +198,6 @@ abstract class PodcastService {
 
   Future<Transcript> loadTranscriptByUrl({required TranscriptUrl transcriptUrl});
 
-  Future<void> deleteDownload(Episode episode);
-
   Future<void> toggleEpisodePlayed(Episode episode);
 
   Future<List<Podcast>> subscriptions();

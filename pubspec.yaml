@@ -53,6 +53,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   collection: ^1.17.1
+  synchronized: ^3.1.0
 
 dev_dependencies:
   intl_generator: ^0.4.1

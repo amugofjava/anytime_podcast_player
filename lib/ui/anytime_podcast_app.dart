@@ -78,6 +78,7 @@ class AnytimePodcastApp extends StatefulWidget {
     downloadService = MobileDownloadService(
       repository: repository,
       downloadManager: MobileDownloaderManager(),
+      settingsService: mobileSettingsService,
     );
 
     podcastService = MobilePodcastService(
@@ -149,8 +150,11 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           dispose: (_, value) => value.dispose(),
         ),
         Provider<EpisodeBloc>(
-          create: (_) =>
-              EpisodeBloc(podcastService: widget.podcastService!, audioPlayerService: widget.audioPlayerService),
+          create: (_) => EpisodeBloc(
+            podcastService: widget.podcastService!,
+            audioPlayerService: widget.audioPlayerService,
+            downloadService: widget.downloadService,
+          ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PodcastBloc>(
