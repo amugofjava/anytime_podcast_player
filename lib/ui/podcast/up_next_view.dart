@@ -67,48 +67,58 @@ class UpNextView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                     child: TextButton(
-                      onPressed: () {
-                        showPlatformDialog<void>(
-                          context: context,
-                          useRootNavigator: false,
-                          builder: (_) => BasicDialogAlert(
-                            title: Text(
-                              L.of(context)!.queue_clear_label_title,
-                            ),
-                            content: Text(L.of(context)!.queue_clear_label),
-                            actions: <Widget>[
-                              BasicDialogAction(
-                                title: ActionText(
-                                  L.of(context)!.cancel_button_label,
+                      onPressed: snapshot.hasData && snapshot.data!.queue.isEmpty
+                          ? null
+                          : () {
+                              showPlatformDialog<void>(
+                                context: context,
+                                useRootNavigator: false,
+                                builder: (_) => BasicDialogAlert(
+                                  title: Text(
+                                    L.of(context)!.queue_clear_label_title,
+                                  ),
+                                  content: Text(L.of(context)!.queue_clear_label),
+                                  actions: <Widget>[
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        L.of(context)!.cancel_button_label,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        Theme.of(context).platform == TargetPlatform.iOS
+                                            ? L.of(context)!.queue_clear_button_label.toUpperCase()
+                                            : L.of(context)!.queue_clear_button_label,
+                                      ),
+                                      iosIsDefaultAction: true,
+                                      iosIsDestructiveAction: true,
+                                      onPressed: () {
+                                        queueBloc.queueEvent(QueueClearEvent());
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              BasicDialogAction(
-                                title: ActionText(
-                                  Theme.of(context).platform == TargetPlatform.iOS
-                                      ? L.of(context)!.queue_clear_button_label.toUpperCase()
-                                      : L.of(context)!.queue_clear_button_label,
-                                ),
-                                iosIsDefaultAction: true,
-                                iosIsDestructiveAction: true,
-                                onPressed: () {
-                                  queueBloc.queueEvent(QueueClearEvent());
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      child: Text(
-                        L.of(context)!.clear_queue_button_label,
-                        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                              fontSize: 12.0,
-                              color: Theme.of(context).primaryColor,
+                              );
+                            },
+                      child: snapshot.hasData && snapshot.data!.queue.isEmpty
+                          ? Text(
+                              L.of(context)!.clear_queue_button_label,
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontSize: 12.0,
+                                    color: Theme.of(context).disabledColor,
+                                  ),
+                            )
+                          : Text(
+                              L.of(context)!.clear_queue_button_label,
+                              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontSize: 12.0,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
                             ),
-                      ),
                     ),
                   ),
                 ],
