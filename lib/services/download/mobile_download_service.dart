@@ -8,9 +8,11 @@ import 'dart:io';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
+import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
@@ -24,8 +26,9 @@ class MobileDownloadService extends DownloadService {
   final log = Logger('MobileDownloadService');
   final Repository repository;
   final DownloadManager downloadManager;
+  final PodcastService podcastService;
 
-  MobileDownloadService({required this.repository, required this.downloadManager}) {
+  MobileDownloadService({required this.repository, required this.downloadManager, required this.podcastService}) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
       _updateDownloadProgress(progress);
@@ -42,12 +45,38 @@ class MobileDownloadService extends DownloadService {
     try {
       final season = episode.season > 0 ? episode.season.toString() : '';
       final epno = episode.episode > 0 ? episode.episode.toString() : '';
+      var dirty = false;
 
       if (await hasStoragePermission()) {
-        final savedEpisode = await repository.findEpisodeByGuid(episode.guid);
+        // If this episode contains chapter, fetch them first.
+        if (episode.hasChapters && episode.chaptersUrl != null) {
+          var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
 
-        if (savedEpisode != null) {
-          episode = savedEpisode;
+          episode.chapters = chapters;
+
+          dirty = true;
+        }
+
+        // Next, if the episode supports transcripts download that next
+        if (episode.hasTranscripts) {
+          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
+
+          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
+
+          if (sub != null) {
+            var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+
+            transcript = await podcastService.saveTranscript(transcript);
+
+            episode.transcript = transcript;
+            episode.transcriptId = transcript.id;
+
+            dirty = true;
+          }
+        }
+
+        if (dirty) {
+          await podcastService.saveEpisode(episode);
         }
 
         final episodePath = await resolveDirectory(episode: episode);

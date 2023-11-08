@@ -37,7 +37,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   final log = Logger('DefaultAudioPlayerService');
   final Repository repository;
   final SettingsService settingsService;
-  final PodcastService? podcastService;
+  final PodcastService podcastService;
 
   late AudioHandler _audioHandler;
   var _initialised = false;

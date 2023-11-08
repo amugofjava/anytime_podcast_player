@@ -48,7 +48,7 @@ class PlayControl extends StatelessWidget {
               final audioState = snapshot.data!.audioState;
               final nowPlaying = snapshot.data!.episode;
 
-              if (episode.downloadState != DownloadState.downloading) {
+              if (episode.downloadState != DownloadState.downloading && episode.downloadState != DownloadState.queued) {
                 // If this episode is the one we are playing, allow the user
                 // to toggle between play and pause.
                 if (snapshot.hasData && nowPlaying?.guid == episode.guid) {

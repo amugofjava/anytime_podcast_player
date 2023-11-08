@@ -7,7 +7,6 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
-import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
@@ -205,7 +204,6 @@ class PodcastBloc extends Bloc {
   /// Sets up a listener to handle requests to download an episode.
   void _listenDownloadRequest() {
     _downloadEpisode.listen((Episode? e) async {
-      var dirty = false;
       log.fine('Received download request for ${e!.title}');
 
       // To prevent a pause between the user tapping the download icon and
@@ -215,40 +213,7 @@ class PodcastBloc extends Bloc {
       if (episode != null) {
         episode.downloadState = e.downloadState = DownloadState.queued;
 
-        // Update the stream.
         _episodesStream.add(_episodes);
-
-        /// TODO: Move this to the download service.
-        // If this episode contains chapter, fetch them first.
-        if (episode.hasChapters && episode.chaptersUrl != null) {
-          var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
-
-          e.chapters = chapters;
-
-          dirty = true;
-        }
-
-        // Next, if the episode supports transcripts download that next
-        if (episode.hasTranscripts) {
-          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
-
-          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
-
-          if (sub != null) {
-            var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
-
-            transcript = await podcastService.saveTranscript(transcript);
-
-            e.transcript = transcript;
-            e.transcriptId = transcript.id;
-
-            dirty = true;
-          }
-        }
-
-        if (dirty) {
-          await podcastService.saveEpisode(e);
-        }
 
         var result = await downloadService.downloadEpisode(e);
 
