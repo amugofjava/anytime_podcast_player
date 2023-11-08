@@ -516,7 +516,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   }
 
   Future<void> _loadQueue() async {
-    _queue = await podcastService!.loadQueue();
+    _queue = await podcastService.loadQueue();
   }
 
   Future<void> _completed() async {
@@ -571,7 +571,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       log.fine('Loading chapters from ${_currentEpisode!.chaptersUrl}');
 
       if (_currentEpisode!.chaptersUrl != null) {
-        _currentEpisode!.chapters = await podcastService!.loadChaptersByUrl(url: _currentEpisode!.chaptersUrl!);
+        _currentEpisode!.chapters = await podcastService.loadChaptersByUrl(url: _currentEpisode!.chaptersUrl!);
         _currentEpisode!.chaptersLoading = false;
       }
 
@@ -594,7 +594,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
           log.fine('Loading transcript from ${sub.url}');
 
-          transcript = await podcastService!.loadTranscriptByUrl(transcriptUrl: sub);
+          transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
 
           log.fine('We have ${transcript.subtitles.length} transcript lines');
         }
