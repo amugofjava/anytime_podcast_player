@@ -729,12 +729,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (_currentEpisode == null) {
       log.fine('Warning. Attempting to update chapter information on a null _episode');
     } else if (_currentEpisode!.hasChapters && _currentEpisode!.chaptersAreLoaded) {
-      final chapters = _currentEpisode!.chapters;
+      final chapters = _currentEpisode!.chapters.where((element) => element.toc).toList(growable: false);
 
-      for (var chapterPtr = 0; chapterPtr < _currentEpisode!.chapters.length; chapterPtr++) {
+      for (var chapterPtr = 0; chapterPtr < chapters.length; chapterPtr++) {
         final startTime = chapters[chapterPtr].startTime;
-        final endTime =
-            chapterPtr == (_currentEpisode!.chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
+        final endTime = chapterPtr == (chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
 
         if (seconds >= startTime && seconds < endTime) {
           if (chapters[chapterPtr] != _currentEpisode!.currentChapter) {

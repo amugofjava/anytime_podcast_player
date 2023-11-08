@@ -46,6 +46,9 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
     }
 
     signingConfigs {
@@ -67,10 +70,6 @@ android {
             signingConfig signingConfigs.release
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
-            ndk {
-//                debugSymbolLevel 'SYMBOL_TABLE'
-                debugSymbolLevel 'FULL'
-            }
         }
     }
 

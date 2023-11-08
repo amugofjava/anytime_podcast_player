@@ -56,7 +56,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
           lastChapter = episode.currentChapter;
 
           if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
-            var index = widget.episode.chapters.indexWhere((element) => element == lastChapter);
+            var index = widget.chapters.indexWhere((element) => element == lastChapter);
 
             if (index >= 0) {
               if (first) {
@@ -90,10 +90,10 @@ class _ChapterSelectorState extends State<ChapterSelector> {
               : ScrollablePositionedList.builder(
                   initialScrollIndex: _initialIndex(snapshot.data),
                   itemScrollController: widget.itemScrollController,
-                  itemCount: snapshot.data!.chapters.length,
+                  itemCount: widget.chapters.length,
                   itemBuilder: (context, i) {
                     final index = i < 0 ? 0 : i;
-                    final chapter = snapshot.data!.chapters[index];
+                    final chapter = widget.chapters[index];
                     final chapterSelected = chapter == snapshot.data!.currentChapter;
                     final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
                           fontSize: 14,
@@ -121,14 +121,14 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                             ),
                           ),
                           title: Text(
-                            snapshot.data!.chapters[index].title.trim(),
+                            widget.chapters[index].title.trim(),
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             maxLines: 3,
                             style: textStyle,
                           ),
                           trailing: Text(
-                            _formatStartTime(snapshot.data!.chapters[index].startTime),
+                            _formatStartTime(widget.chapters[index].startTime),
                             style: textStyle,
                           ),
                         ),
