@@ -43,7 +43,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.7
   sembast: ^3.5.0+1
   share_plus: ^4.0.9
-  shared_preferences: ^2.0.12
+  shared_preferences: ^2.2.2
   sliver_tools: ^0.2.12
   uni_links: ^0.5.1
   url_launcher: ^6.1.12
