@@ -38,6 +38,8 @@ class _ChapterSelectorState extends State<ChapterSelector> {
   void initState() {
     super.initState();
 
+    print('Chapter initState');
+
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     Chapter? lastChapter;
     bool first = true;
@@ -57,6 +59,8 @@ class _ChapterSelectorState extends State<ChapterSelector> {
 
           if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
             var index = widget.chapters.indexWhere((element) => element == lastChapter);
+
+            print('Moving to chapter ${episode.currentChapter?.title} at index ${index}');
 
             if (index >= 0) {
               if (first) {
@@ -149,7 +153,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     var init = 0;
 
     if (e != null && e.currentChapter != null) {
-      init = e.chapters.indexWhere((c) => c == e.currentChapter);
+      init = widget.chapters.indexWhere((c) => c == e.currentChapter);
 
       if (init < 0) {
         init = 0;
