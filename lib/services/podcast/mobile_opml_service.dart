@@ -109,10 +109,9 @@ class MobileOPMLService extends OPMLService {
 
     file.writeAsStringSync(export.toXmlString(pretty: true));
 
-    await Share.shareFiles(
-      [outputFile],
-      mimeTypes: ['text/xml', 'application/xml'],
-      subject: 'Anytime OPML',
+    await Share.shareXFiles(
+      [XFile(outputFile)],
+      text: 'Anytime OPML',
     );
 
     yield OPMLCompletedState();
