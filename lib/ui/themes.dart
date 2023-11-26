@@ -9,7 +9,7 @@ final ThemeData _lightTheme = _buildLightTheme();
 final ThemeData _darkTheme = _buildDarkTheme();
 
 ThemeData _buildLightTheme() {
-  final base = ThemeData.light();
+  final base = ThemeData.light(useMaterial3: false);
 
   return base.copyWith(
     colorScheme: const ColorScheme.light(
@@ -79,7 +79,7 @@ ThemeData _buildLightTheme() {
 }
 
 ThemeData _buildDarkTheme() {
-  final base = ThemeData.dark();
+  final base = ThemeData.dark(useMaterial3: false);
 
   return base.copyWith(
     colorScheme: const ColorScheme.dark(
