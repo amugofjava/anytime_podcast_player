@@ -822,16 +822,14 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
       );
     } else {
       _player = AudioPlayer(
-
-          /// Temporarily disable custom user agent to get over proxy issue in just_audio on iOS.
-          /// https://github.com/ryanheise/audio_service/issues/915
-          //   userAgent: Environment.userAgent(),
-          audioLoadConfiguration: AudioLoadConfiguration(
-        androidLoadControl: AndroidLoadControl(
-          backBufferDuration: const Duration(seconds: 45),
-        ),
-        darwinLoadControl: DarwinLoadControl(),
-      ));
+          userAgent: Environment.userAgent(),
+          useProxyForRequestHeaders: false,
+          audioLoadConfiguration: const AudioLoadConfiguration(
+            androidLoadControl: AndroidLoadControl(
+              backBufferDuration: Duration(seconds: 45),
+            ),
+            darwinLoadControl: DarwinLoadControl(),
+          ));
     }
 
     /// List to events from the player itself, transform the player event to an audio service one
