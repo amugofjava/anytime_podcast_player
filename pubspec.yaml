@@ -28,7 +28,7 @@ dependencies:
   html: ^0.15.0
   intl: ^0.18.0
   intl_translation: ^0.18.2
-  just_audio: ^0.9.35
+  just_audio: ^0.9.36
   logging: ^1.0.2
   meta: ^1.9.1
   mp3_info: ^0.2.0
