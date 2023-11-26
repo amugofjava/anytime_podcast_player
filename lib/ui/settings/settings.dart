@@ -124,22 +124,22 @@ class _SettingsState extends State<Settings> {
                         androidBarrierDismissible: false,
                         useRootNavigator: false,
                         context: context,
-                        builder: (_) =>
-                            WillPopScope(
-                              onWillPop: () async => false,
-                              child: BasicDialogAlert(
-                                title: Text(L.of(context)!.settings_import_opml),
-                                content: OPMLImport(file: file.path!),
-                                actions: <Widget>[
-                                  BasicDialogAction(
-                                    title: ActionText(L.of(context)!.cancel_button_label),
-                                    onPressed: () {
-                                      return Navigator.pop(context, true);
-                                    },
-                                  ),
-                                ],
+                        builder: (_) => PopScope(
+                          canPop: true,
+                          onPopInvoked: (didPop) async => false,
+                          child: BasicDialogAlert(
+                            title: Text(L.of(context)!.settings_import_opml),
+                            content: OPMLImport(file: file.path!),
+                            actions: <Widget>[
+                              BasicDialogAction(
+                                title: ActionText(L.of(context)!.cancel_button_label),
+                                onPressed: () {
+                                  return Navigator.pop(context, true);
+                                },
                               ),
-                            ),
+                            ],
+                          ),
+                        ),
                       );
 
                       if (e != null && e) {

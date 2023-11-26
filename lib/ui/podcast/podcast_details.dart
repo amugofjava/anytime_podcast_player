@@ -164,10 +164,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     return Semantics(
       header: false,
       label: L.of(context)!.semantics_podcast_details_header,
-      child: WillPopScope(
-        onWillPop: () {
+      child: PopScope(
+        canPop: true,
+        onPopInvoked: (didPop) {
           _resetSystemOverlayStyle();
-          return Future.value(true);
         },
         child: ScaffoldMessenger(
           key: scaffoldMessengerKey,
