@@ -56,7 +56,7 @@ class Podcast {
   final List<Person>? persons;
 
   bool newEpisodes;
-  late bool updatedEpisodes;
+  bool updatedEpisodes = false;
 
   Podcast({
     required this.guid,

@@ -43,9 +43,3 @@ class BlocPopulatedState<T> extends BlocState<T> {
 
   BlocPopulatedState({this.results});
 }
-
-// class BlocNewEpisodesState<T> extends BlocState<T> {
-//   final T results;
-//
-//   BlocNewEpisodesState(this.results);
-// }

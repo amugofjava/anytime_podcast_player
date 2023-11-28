@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/material.dart';
@@ -16,22 +18,34 @@ class SyncSpinner extends StatefulWidget {
 
 class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  StreamSubscription<BlocState<void>>? subscription;
   Widget? _child;
 
   @override
   void initState() {
+    super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     )..repeat();
+
     _child = const Icon(Icons.refresh);
 
-    super.initState();
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+
+    subscription = podcastBloc.backgroundLoading.listen((event) {
+      if (event is BlocSuccessfulState<void> || event is BlocErrorState<void>) {
+        _controller.stop();
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    subscription?.cancel();
+
     super.dispose();
   }
 

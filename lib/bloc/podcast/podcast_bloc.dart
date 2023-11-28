@@ -119,6 +119,8 @@ class PodcastBloc extends Bloc {
 
           await _loadNewEpisodes(feed);
         }
+
+        _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
       } catch (e) {
         _backgroundLoadStream.sink.add(BlocDefaultState<void>());
 
@@ -196,9 +198,10 @@ class PodcastBloc extends Bloc {
         log.fine('We have updated episodes to re-display');
         _episodesStream.add(_episodes);
       }
-
-      _backgroundLoadStream.sink.add(BlocDefaultState<void>());
     }
+
+    log.fine('Background loading successful state');
+    _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
   }
 
   /// Sets up a listener to handle requests to download an episode.
