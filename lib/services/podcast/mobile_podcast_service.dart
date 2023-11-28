@@ -420,7 +420,7 @@ class MobilePodcastService extends PodcastService {
         if (groupSubtitle != null) {
           if (transcriptUrl.type == TranscriptFormat.json) {
             if (groupSubtitle.speaker == subtitle.speaker &&
-                subtitle.start.compareTo(groupSubtitle.start + threshold) < 0) {
+                (subtitle.start.compareTo(groupSubtitle.start + threshold) < 0 || subtitle.data.length == 1)) {
               /// We need to handle transcripts that have spaces between sentences, and those
               /// which do not.
               if (groupSubtitle.data != null &&
