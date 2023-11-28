@@ -336,9 +336,8 @@ class PodcastHeaderImage extends StatelessWidget {
       key: Key('details${podcast.imageUrl}'),
       url: podcast.imageUrl!,
       fit: BoxFit.cover,
-      placeholder: placeholderBuilder != null
-          ? placeholderBuilder?.builder()(context)
-          : const DelayedCircularProgressIndicator(),
+      placeholder:
+          placeholderBuilder != null ? placeholderBuilder?.builder()(context) : DelayedCircularProgressIndicator(),
       errorPlaceholder: placeholderBuilder != null
           ? placeholderBuilder?.errorBuilder()(context)
           : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
