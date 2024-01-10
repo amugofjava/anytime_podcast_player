@@ -12,9 +12,9 @@ class OPMLImport extends StatefulWidget {
   final String file;
 
   const OPMLImport({
-    Key? key,
+    super.key,
     required this.file,
-  }) : super(key: key);
+  });
 
   @override
   State<OPMLImport> createState() => _OPMLImportState();

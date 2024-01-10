@@ -14,9 +14,9 @@ import 'package:provider/provider.dart';
 
 class PodcastList extends StatelessWidget {
   const PodcastList({
-    Key? key,
+    super.key,
     required this.results,
-  }) : super(key: key);
+  });
 
   final search.SearchResult results;
 

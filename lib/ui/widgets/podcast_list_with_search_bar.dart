@@ -10,7 +10,7 @@ import 'package:podcast_search/podcast_search.dart' as search;
 class PodcastListWithSearchBar extends StatelessWidget {
   final search.SearchResult results;
 
-  const PodcastListWithSearchBar({Key? key, required this.results}) : super(key: key);
+  const PodcastListWithSearchBar({super.key, required this.results});
 
   @override
   Widget build(BuildContext context) {

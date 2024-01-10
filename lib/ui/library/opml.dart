@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class OPMLSelect extends StatefulWidget {
-  const OPMLSelect({Key? key}) : super(key: key);
+  const OPMLSelect({super.key});
 
   @override
   State<OPMLSelect> createState() => _OPMLSelectState();

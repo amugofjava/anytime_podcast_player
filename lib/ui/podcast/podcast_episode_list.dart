@@ -19,13 +19,13 @@ class PodcastEpisodeList extends StatelessWidget {
   static const _defaultIcon = Icons.add_alert;
 
   const PodcastEpisodeList({
-    Key? key,
+    super.key,
     required this.episodes,
     required this.play,
     required this.download,
     this.icon = _defaultIcon,
     this.emptyMessage = '',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -88,9 +88,9 @@ class CategorySelectorWidget extends StatefulWidget {
   final ItemScrollController itemScrollController = ItemScrollController();
 
   CategorySelectorWidget({
-    Key? key,
+    super.key,
     required this.discoveryBloc,
-  }) : super(key: key);
+  });
 
   final DiscoveryBloc discoveryBloc;
 

@@ -17,7 +17,7 @@ class ActionText extends StatelessWidget {
   /// The text to display which will be shifted to all upper-case on Android.
   final String text;
 
-  const ActionText(this.text, {Key? key}) : super(key: key);
+  const ActionText(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

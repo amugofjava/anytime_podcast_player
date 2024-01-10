@@ -10,7 +10,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
 class EpisodeRefreshWidget extends StatefulWidget {
-  const EpisodeRefreshWidget({Key? key}) : super(key: key);
+  const EpisodeRefreshWidget({super.key});
 
   @override
   State<EpisodeRefreshWidget> createState() => _EpisodeRefreshWidgetState();

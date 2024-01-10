@@ -88,9 +88,9 @@ class DiscoveryHeader extends StatefulWidget {
   final search.SearchResult results;
 
   const DiscoveryHeader({
-    Key? key,
+    super.key,
     required this.results,
-  }) : super(key: key);
+  });
 
   @override
   State<DiscoveryHeader> createState() => _DiscoveryHeaderState();

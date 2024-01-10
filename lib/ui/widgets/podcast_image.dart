@@ -27,7 +27,7 @@ class PodcastImage extends StatefulWidget {
   final Widget? errorPlaceholder;
 
   const PodcastImage({
-    Key? key,
+    super.key,
     required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
@@ -36,7 +36,7 @@ class PodcastImage extends StatefulWidget {
     this.errorPlaceholder,
     this.highlight = false,
     this.borderRadius = 0.0,
-  }) : super(key: key);
+  });
 
   @override
   State<PodcastImage> createState() => _PodcastImageState();
@@ -167,7 +167,7 @@ class PodcastBannerImage extends StatefulWidget {
   final Widget? errorPlaceholder;
 
   const PodcastBannerImage({
-    Key? key,
+    super.key,
     required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
@@ -175,7 +175,7 @@ class PodcastBannerImage extends StatefulWidget {
     this.placeholder,
     this.errorPlaceholder,
     this.borderRadius = 0.0,
-  }) : super(key: key);
+  });
 
   @override
   State<PodcastBannerImage> createState() => _PodcastBannerImageState();

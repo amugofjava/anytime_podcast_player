@@ -12,11 +12,11 @@ class PlayPauseButton extends StatelessWidget {
   final String title;
 
   const PlayPauseButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +45,11 @@ class PlayPauseBusyButton extends StatelessWidget {
   final String title;
 
   const PlayPauseBusyButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -315,10 +315,10 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 /// Renders the podcast or episode image.
 class PodcastHeaderImage extends StatelessWidget {
   const PodcastHeaderImage({
-    Key? key,
+    super.key,
     required this.podcast,
     required this.placeholderBuilder,
-  }) : super(key: key);
+  });
 
   final Podcast podcast;
   final PlaceholderBuilder? placeholderBuilder;
@@ -505,10 +505,10 @@ class PodcastDescription extends StatelessWidget {
   static const padding = 4.0;
 
   const PodcastDescription({
-    Key? key,
+    super.key,
     this.content,
     this.isDescriptionExpandedStream,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

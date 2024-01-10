@@ -16,10 +16,10 @@ class PodcastHtml extends StatelessWidget {
   final FontSize? fontSize;
 
   const PodcastHtml({
-    Key? key,
+    super.key,
     required this.content,
     this.fontSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

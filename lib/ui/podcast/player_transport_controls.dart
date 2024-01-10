@@ -88,11 +88,11 @@ class AnimatedPlayButton extends StatefulWidget {
   final PlayHandler onPause;
 
   const AnimatedPlayButton({
-    Key? key,
+    super.key,
     required this.audioState,
     this.onPlay = _onPlay,
     this.onPause = _onPause,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedPlayButton> createState() => _AnimatedPlayButtonState();

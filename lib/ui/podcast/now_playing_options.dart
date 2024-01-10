@@ -31,7 +31,7 @@ class NowPlayingOptionsSelector extends StatefulWidget {
   final double? scrollPos;
   static const baseSize = 68.0;
 
-  const NowPlayingOptionsSelector({Key? key, this.scrollPos}) : super(key: key);
+  const NowPlayingOptionsSelector({super.key, this.scrollPos});
 
   @override
   State<NowPlayingOptionsSelector> createState() => _NowPlayingOptionsSelectorState();
@@ -211,7 +211,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
 }
 
 class NowPlayingOptionsScaffold extends StatelessWidget {
-  const NowPlayingOptionsScaffold({Key? key}) : super(key: key);
+  const NowPlayingOptionsScaffold({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class NowPlayingOptionsSelectorWide extends StatefulWidget {
   final double? scrollPos;
   static const baseSize = 68.0;
 
-  const NowPlayingOptionsSelectorWide({Key? key, this.scrollPos}) : super(key: key);
+  const NowPlayingOptionsSelectorWide({super.key, this.scrollPos});
 
   @override
   State<NowPlayingOptionsSelectorWide> createState() => _NowPlayingOptionsSelectorWideState();

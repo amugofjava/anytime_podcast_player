@@ -24,8 +24,8 @@ import 'package:url_launcher/url_launcher.dart';
 // ignore: must_be_immutable
 class TranscriptView extends StatefulWidget {
   const TranscriptView({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<TranscriptView> createState() => _TranscriptViewState();
@@ -374,11 +374,11 @@ class SubtitleWidget extends StatelessWidget {
   static const margin = Duration(milliseconds: 1000);
 
   const SubtitleWidget({
-    Key? key,
+    super.key,
     required this.subtitle,
     this.persons,
     this.highlight = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

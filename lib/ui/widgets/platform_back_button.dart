@@ -14,11 +14,11 @@ class PlatformBackButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const PlatformBackButton({
-    Key? key,
+    super.key,
     required this.iconColour,
     required this.decorationColour,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

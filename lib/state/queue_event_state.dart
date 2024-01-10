@@ -15,7 +15,7 @@ abstract class QueueEvent {
 }
 
 class QueueAddEvent extends QueueEvent {
-  QueueAddEvent({required Episode episode, int? position}) : super(episode: episode, position: position);
+  QueueAddEvent({required Episode super.episode, super.position});
 }
 
 class QueueRemoveEvent extends QueueEvent {
@@ -47,9 +47,9 @@ abstract class QueueState {
 
 class QueueListState extends QueueState {
   QueueListState({
-    required Episode? playing,
-    required List<Episode> queue,
-  }) : super(playing: playing, queue: queue);
+    required super.playing,
+    required super.queue,
+  });
 }
 
 class QueueEmptyState extends QueueState {

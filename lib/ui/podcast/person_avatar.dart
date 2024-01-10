@@ -21,9 +21,9 @@ class PersonAvatar extends StatelessWidget {
   String role = '';
 
   PersonAvatar({
-    Key? key,
+    super.key,
     required this.person,
-  }) : super(key: key) {
+  }) {
     if (person.name.isNotEmpty) {
       var parts = person.name.split(' ');
 

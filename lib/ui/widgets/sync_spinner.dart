@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SyncSpinner extends StatefulWidget {
-  const SyncSpinner({Key? key}) : super(key: key);
+  const SyncSpinner({super.key});
 
   @override
   State<SyncSpinner> createState() => _SyncSpinnerState();

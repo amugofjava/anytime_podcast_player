@@ -284,10 +284,10 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
   static const minFontSize = 14.0;
 
   const NowPlayingEpisodeDetails({
-    Key? key,
+    super.key,
     this.episode,
     this.textGroup,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -528,9 +528,9 @@ class EpisodeTabBar extends StatelessWidget {
   final bool chapters;
 
   const EpisodeTabBar({
-    Key? key,
+    super.key,
     this.chapters = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -573,11 +573,11 @@ class EpisodeTabBarView extends StatelessWidget {
   final bool chapters;
 
   const EpisodeTabBarView({
-    Key? key,
+    super.key,
     this.episode,
     this.textGroup,
     this.chapters = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -635,10 +635,10 @@ class PlayerControlsBuilder extends InheritedWidget {
   final WidgetBuilder Function(int duration) builder;
 
   const PlayerControlsBuilder({
-    Key? key,
+    super.key,
     required this.builder,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   static PlayerControlsBuilder? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<PlayerControlsBuilder>();

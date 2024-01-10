@@ -11,9 +11,9 @@ abstract class EpisodeState {
 }
 
 class EpisodeUpdateState extends EpisodeState {
-  EpisodeUpdateState(Episode episode) : super(episode);
+  EpisodeUpdateState(super.episode);
 }
 
 class EpisodeDeleteState extends EpisodeState {
-  EpisodeDeleteState(Episode episode) : super(episode);
+  EpisodeDeleteState(super.episode);
 }

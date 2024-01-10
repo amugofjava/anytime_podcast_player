@@ -17,12 +17,12 @@ class DraggableEpisodeTile extends StatelessWidget {
   final bool playable;
 
   const DraggableEpisodeTile({
-    Key? key,
+    super.key,
     required this.episode,
     this.index = 0,
     this.draggable = true,
     this.playable = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

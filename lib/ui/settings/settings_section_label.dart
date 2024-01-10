@@ -9,10 +9,10 @@ class SettingsDividerLabel extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   const SettingsDividerLabel({
-    Key? key,
+    super.key,
     required this.label,
     this.padding = const EdgeInsets.fromLTRB(16.0, 24.0, 0.0, 0.0),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

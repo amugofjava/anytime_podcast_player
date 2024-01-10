@@ -20,9 +20,9 @@ class EpisodeDetails extends StatefulWidget {
   final Episode episode;
 
   const EpisodeDetails({
-    Key? key,
+    super.key,
     required this.episode,
-  }) : super(key: key);
+  });
 
   @override
   State<EpisodeDetails> createState() => _EpisodeDetailsState();

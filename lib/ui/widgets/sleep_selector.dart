@@ -90,7 +90,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
 }
 
 class SleepSlider extends StatefulWidget {
-  const SleepSlider({Key? key}) : super(key: key);
+  const SleepSlider({super.key});
 
   @override
   State<SleepSlider> createState() => _SleepSliderState();

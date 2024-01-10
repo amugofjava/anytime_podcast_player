@@ -8,11 +8,11 @@ class PlaceholderBuilder extends InheritedWidget {
   final WidgetBuilder Function() errorBuilder;
 
   const PlaceholderBuilder({
-    Key? key,
+    super.key,
     required this.builder,
     required this.errorBuilder,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   static PlaceholderBuilder? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<PlaceholderBuilder>();

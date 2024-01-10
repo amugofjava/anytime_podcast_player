@@ -85,7 +85,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
 }
 
 class SpeedSlider extends StatefulWidget {
-  const SpeedSlider({Key? key}) : super(key: key);
+  const SpeedSlider({super.key});
 
   @override
   State<SpeedSlider> createState() => _SpeedSliderState();

@@ -17,13 +17,13 @@ class DownloadButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const DownloadButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.title,
     required this.icon,
     required this.percent,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

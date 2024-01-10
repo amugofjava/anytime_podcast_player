@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 
 class TileImage extends StatelessWidget {
   const TileImage({
-    Key? key,
+    super.key,
     required this.url,
     required this.size,
     this.highlight = false,
-  }) : super(key: key);
+  });
 
   /// The URL of the image to display.
   final String url;
