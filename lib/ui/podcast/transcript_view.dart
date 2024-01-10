@@ -40,6 +40,7 @@ class _TranscriptViewState extends State<TranscriptView> {
   int position = 0;
   bool autoScroll = true;
   bool autoScrollEnabled = true;
+  bool forceTranscriptUpdate = false;
   bool first = true;
   bool scrolling = false;
   String speaker = '';
@@ -82,7 +83,9 @@ class _TranscriptViewState extends State<TranscriptView> {
 
           // Our we outside the range of our current transcript.
           if (event.position.inMilliseconds < subtitle!.start.inMilliseconds ||
-              event.position.inMilliseconds > subtitle!.end!.inMilliseconds) {
+              event.position.inMilliseconds > subtitle!.end!.inMilliseconds ||
+              forceTranscriptUpdate) {
+            forceTranscriptUpdate = false;
             // Will the next in the list do?
             if (transcript.subtitles.length > (index + 1) &&
                 event.position.inMilliseconds >= transcript.subtitles[index + 1].start.inMilliseconds &&
@@ -106,28 +109,30 @@ class _TranscriptViewState extends State<TranscriptView> {
                         event.position.inMilliseconds < a.end!.inMilliseconds))
                     .first;
 
-                if (subtitle != null) {
-                  index = transcript.subtitles.indexOf(subtitle!);
+                index = transcript.subtitles.indexOf(subtitle!);
 
-                  /// If we have had to jump more than one position within the transcript, we may
-                  /// need to back scan the conversation to find the current speaker.
-                  if (subtitle!.speaker.isNotEmpty) {
-                    speaker = subtitle!.speaker;
-                  } else {
-                    /// Scan backwards a maximum of 50 lines to see if we can find a speaker
-                    var speakFound = false;
-                    var count = 50;
-                    var countIndex = index;
+                /// If we have had to jump more than one position within the transcript, we may
+                /// need to back scan the conversation to find the current speaker.
+                if (subtitle!.speaker.isNotEmpty) {
+                  speaker = subtitle!.speaker;
+                } else {
+                  /// Scan backwards a maximum of 50 lines to see if we can find a speaker
+                  var speakFound = false;
+                  var count = 50;
+                  var countIndex = index;
 
-                    while (!speakFound && count-- > 0 && countIndex-- >= 0) {
-                      var match = exp.firstMatch(transcript.subtitles[countIndex].data!);
+                  while (!speakFound && count-- > 0 && countIndex >= 0) {
+                    var match = exp.firstMatch(transcript.subtitles[countIndex].data!);
 
-                      if (match != null) {
-                        speaker = match.namedGroup('speaker') ?? '';
+                    countIndex--;
 
-                        if (speaker.isNotEmpty) {
+                    if (match != null) {
+                      speaker = match.namedGroup('speaker') ?? '';
+
+                      if (speaker.isNotEmpty) {
+                        setState(() {
                           speakFound = true;
-                        }
+                        });
                       }
                     }
                   }
@@ -149,7 +154,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                 first = false;
               } else {
                 scrolling = true;
-                _itemScrollController.scrollTo(index: index, duration: const Duration(milliseconds: 100)).then((value) {
+                _itemScrollController.scrollTo(index: index, duration: const Duration(milliseconds: 50)).then((value) {
                   scrolling = false;
                 });
               }
@@ -269,9 +274,13 @@ class _TranscriptViewState extends State<TranscriptView> {
                               Switch(
                                 value: autoScroll,
                                 onChanged: autoScrollEnabled
-                                    ? (bool value) {
+                                    ? (bool enableAutoScroll) {
                                         setState(() {
-                                          autoScroll = value;
+                                          autoScroll = enableAutoScroll;
+
+                                          if (enableAutoScroll) {
+                                            forceTranscriptUpdate = true;
+                                          }
                                         });
                                       }
                                     : null,
@@ -292,6 +301,9 @@ class _TranscriptViewState extends State<TranscriptView> {
                                 itemBuilder: (BuildContext context, int index) {
                                   var person = queueSnapshot.data!.playing!.persons[index];
                                   var selected = false;
+
+                                  // Some speakers are - delimited so won't match
+                                  speaker = speaker.replaceAll('-', ' ');
 
                                   if (speaker.isNotEmpty &&
                                       person.name.toLowerCase().startsWith(speaker.toLowerCase())) {

@@ -1,3 +1,7 @@
+## 1.3.7
+
+- Improve transcript responsiveness & speaker matching.
+
 ## 1.3.0
 
 - Add support for PC2.0 Transcripts (where available).
