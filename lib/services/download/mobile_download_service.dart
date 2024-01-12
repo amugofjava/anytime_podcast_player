@@ -59,9 +59,9 @@ class MobileDownloadService extends DownloadService {
 
         // Next, if the episode supports transcripts download that next
         if (episode.hasTranscripts) {
-          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
+          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
 
-          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
+          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
 
           if (sub != null) {
             var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
