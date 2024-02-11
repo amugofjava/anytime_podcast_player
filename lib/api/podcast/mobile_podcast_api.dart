@@ -46,12 +46,14 @@ class MobilePodcastApi extends PodcastApi {
     String? genre,
     String? searchProvider,
     String? countryCode = '',
+    String? languageCode = '',
   }) async {
     var searchParams = {
       'size': size.toString(),
       'genre': genre,
       'searchProvider': searchProvider,
       'countryCode': countryCode,
+      'languageCode': languageCode,
     };
 
     return compute(_charts, searchParams);
@@ -126,6 +128,7 @@ class MobilePodcastApi extends PodcastApi {
           );
 
     var countryCode = searchParams['countryCode'];
+    var languageCode = searchParams['languageCode'] ?? '';
     var country = podcast_search.Country.none;
 
     if (countryCode != null && countryCode.isNotEmpty) {
@@ -133,7 +136,7 @@ class MobilePodcastApi extends PodcastApi {
     }
 
     return podcast_search.Search(userAgent: Environment.userAgent(), searchProvider: provider)
-        .charts(genre: searchParams['genre']!, country: country, limit: 50)
+        .charts(genre: searchParams['genre']!, country: country, language: languageCode, limit: 50)
         .timeout(const Duration(seconds: 30));
   }
 

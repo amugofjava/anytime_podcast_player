@@ -176,6 +176,7 @@ abstract class PodcastService {
     required int size,
     String? genre,
     String? countryCode,
+    String? languageCode,
   });
 
   List<String> genres();
@@ -208,7 +209,7 @@ abstract class PodcastService {
 
   Future<void> unsubscribe(Podcast podcast);
 
-  Future<Podcast?> save(Podcast podcast);
+  Future<Podcast?> save(Podcast podcast, {bool withEpisodes = true});
 
   Future<Episode> saveEpisode(Episode episode);
 

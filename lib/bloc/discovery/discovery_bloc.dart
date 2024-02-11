@@ -72,6 +72,7 @@ class DiscoveryBloc extends Bloc {
           size: event.count,
           genre: event.genre,
           countryCode: event.countryCode,
+          languageCode: event.languageCode,
         );
       }
 

@@ -1407,6 +1407,76 @@ class L {
           locale: localeName,
         );
   }
+
+  String get episode_filter_none_label {
+    return message('episode_filter_none_label') ??
+        Intl.message(
+          'None',
+          name: 'episode_filter_none_label',
+          desc: 'Episodes not filtered',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_started_label {
+    return message('episode_filter_started_label') ??
+        Intl.message(
+          'Started',
+          name: 'episode_filter_started_label',
+          desc: 'Only show episodes that have been started',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_played_label {
+    return message('episode_filter_played_label') ??
+        Intl.message(
+          'Played',
+          name: 'episode_filter_played_label',
+          desc: 'Only show episodes that have been played',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_unplayed_label {
+    return message('episode_filter_unplayed_label') ??
+        Intl.message(
+          'Unplayed',
+          name: 'episode_filter_unplayed_label',
+          desc: 'Only show episodes that have not been played',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_no_episodes_title_label {
+    return message('episode_filter_no_episodes_title_label') ??
+        Intl.message(
+          'No Episodes Found',
+          name: 'episode_filter_no_episodes_title_label',
+          desc: 'No Episodes title',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_no_episodes_title_description {
+    return message('episode_filter_no_episodes_title_description') ??
+        Intl.message(
+          'No Episodes Found',
+          name: 'episode_filter_no_episodes_title_description',
+          desc: 'There are no episodes available that match the selected filter',
+          locale: localeName,
+        );
+  }
+
+  String get episode_filter_clear_filters_button_label {
+    return message('episode_filter_clear_filters_button_label') ??
+        Intl.message(
+          'Clear Filters',
+          name: 'episode_filter_clear_filters_button_label',
+          desc: 'Clear filters button',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

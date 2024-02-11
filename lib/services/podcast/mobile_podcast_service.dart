@@ -118,11 +118,17 @@ class MobilePodcastService extends PodcastService {
     int size = 20,
     String? genre,
     String? countryCode = '',
+    String? languageCode = '',
   }) {
     var providerGenre = _decodeGenre(genre);
 
     return api.charts(
-        size: size, searchProvider: settingsService.searchProvider, genre: providerGenre, countryCode: countryCode);
+      size: size,
+      searchProvider: settingsService.searchProvider,
+      genre: providerGenre,
+      countryCode: countryCode,
+      languageCode: languageCode,
+    );
   }
 
   @override
@@ -576,8 +582,8 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
-  Future<Podcast?> save(Podcast podcast) async {
-    return repository.savePodcast(podcast);
+  Future<Podcast?> save(Podcast podcast, {bool withEpisodes = true}) async {
+    return repository.savePodcast(podcast, withEpisodes: withEpisodes);
   }
 
   @override

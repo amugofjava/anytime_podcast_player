@@ -9,11 +9,13 @@ class DiscoveryChartEvent extends DiscoveryEvent {
   final int count;
   String genre;
   String countryCode;
+  String languageCode;
 
   DiscoveryChartEvent({
     required this.count,
     this.genre = '',
     this.countryCode = '',
+    this.languageCode = '',
   });
 }
 

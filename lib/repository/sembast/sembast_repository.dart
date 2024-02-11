@@ -52,7 +52,7 @@ class SembastRepository extends Repository {
   /// new podcast we store the current [DateTime] to mark the
   /// subscription date.
   @override
-  Future<Podcast> savePodcast(Podcast podcast) async {
+  Future<Podcast> savePodcast(Podcast podcast, {bool withEpisodes = true}) async {
     log.fine('Saving podcast (${podcast.id ?? -1}) ${podcast.url}');
 
     final finder = podcast.id == null
@@ -70,7 +70,9 @@ class SembastRepository extends Repository {
       await _podcastStore.update(await _db, podcast.toMap(), finder: finder);
     }
 
-    await _saveEpisodes(podcast.episodes);
+    if (withEpisodes) {
+      await _saveEpisodes(podcast.episodes);
+    }
 
     _podcastSubject.add(podcast);
 
@@ -128,7 +130,7 @@ class SembastRepository extends Repository {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
-      p.episodes = await findEpisodesByPodcastGuid(p.guid);
+      p.episodes = await findEpisodesByPodcastGuid(p.guid, filter: p.filter);
 
       return p;
     }
@@ -196,10 +198,32 @@ class SembastRepository extends Repository {
     return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
 
+  // TODO: Remove nullable on pguid as this does not make sense.
   @override
-  Future<List<Episode>> findEpisodesByPodcastGuid(String? pguid) async {
+  Future<List<Episode>> findEpisodesByPodcastGuid(
+    String? pguid, {
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+  }) async {
+    late Filter episodeFilter;
+
+    // If we have an additional episode filter, apply it.
+    switch (filter) {
+      case PodcastEpisodeFilter.none:
+        episodeFilter = Filter.equals('pguid', pguid);
+        break;
+      case PodcastEpisodeFilter.started:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.notEquals('position', '0')]);
+        break;
+      case PodcastEpisodeFilter.played:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'true')]);
+        break;
+      case PodcastEpisodeFilter.notPlayed:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
+        break;
+    }
+
     final finder = Finder(
-      filter: Filter.equals('pguid', pguid),
+      filter: episodeFilter,
       sortOrders: [SortOrder('publicationDate', false)],
     );
 

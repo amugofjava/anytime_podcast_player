@@ -40,6 +40,7 @@ class _DiscoveryState extends State<Discovery> {
       count: Discovery.fetchSize,
       genre: bloc.selectedGenre.genre,
       countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
+      languageCode: PlatformDispatcher.instance.locale.languageCode,
     ));
   }
 
@@ -142,6 +143,7 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                                 count: Discovery.fetchSize,
                                 genre: item,
                                 countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
+                                languageCode: PlatformDispatcher.instance.locale.languageCode,
                               ));
                             },
                             child: Text(item),

@@ -9,6 +9,17 @@ import 'package:podcast_search/podcast_search.dart' as search;
 
 import 'episode.dart';
 
+enum PodcastEpisodeFilter {
+  none(id: 0),
+  started(id: 1),
+  played(id: 2),
+  notPlayed(id: 3);
+
+  const PodcastEpisodeFilter({required this.id});
+
+  final int id;
+}
+
 /// A class that represents an instance of a podcast.
 ///
 /// When persisted to disk this represents a podcast that is being followed.
@@ -44,6 +55,8 @@ class Podcast {
   /// Zero or more funding links.
   final List<Funding>? funding;
 
+  PodcastEpisodeFilter filter;
+
   /// Date and time user subscribed to the podcast.
   DateTime? subscribedDate;
 
@@ -70,6 +83,7 @@ class Podcast {
     this.copyright,
     this.subscribedDate,
     this.funding,
+    this.filter = PodcastEpisodeFilter.none,
     this.episodes = const <Episode>[],
     this.newEpisodes = false,
     this.persons,
@@ -115,6 +129,7 @@ class Podcast {
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
+      'filter': filter.id,
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
       'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
       'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
@@ -126,6 +141,7 @@ class Podcast {
     final lus = podcast['lastUpdated'] as int?;
     final funding = <Funding>[];
     final persons = <Person>[];
+    var filter = PodcastEpisodeFilter.none;
 
     var sd = DateTime.now();
     var lastUpdated = DateTime(1971, 1, 1);
@@ -154,6 +170,17 @@ class Podcast {
       }
     }
 
+    if (podcast['filter'] != null) {
+      var filterValue = (podcast['filter'] as int);
+
+      filter = switch (filterValue) {
+        1 => PodcastEpisodeFilter.started,
+        2 => PodcastEpisodeFilter.played,
+        3 => PodcastEpisodeFilter.notPlayed,
+        _ => PodcastEpisodeFilter.none,
+      };
+    }
+
     return Podcast(
       id: key,
       guid: podcast['guid'] as String,
@@ -164,6 +191,7 @@ class Podcast {
       url: podcast['url'] as String,
       imageUrl: podcast['imageUrl'] as String?,
       thumbImageUrl: podcast['thumbImageUrl'] as String?,
+      filter: filter,
       funding: funding,
       persons: persons,
       subscribedDate: sd,

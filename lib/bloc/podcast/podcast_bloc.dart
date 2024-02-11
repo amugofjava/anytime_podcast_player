@@ -24,6 +24,11 @@ enum PodcastEvent {
   clearAllPlayed,
   reloadSubscriptions,
   refresh,
+  // Testing
+  episodeFilterNone,
+  episodeFilterStarted,
+  episodeFilterNotFinished,
+  episodeFilterFinished,
 }
 
 /// This BLoC provides access to the details of a given Podcast.
@@ -204,6 +209,20 @@ class PodcastBloc extends Bloc {
     _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
   }
 
+  Future<void> _loadFilteredEpisodes() async {
+    if (_podcast != null) {
+      _podcast = await podcastService.loadPodcast(
+        podcast: _podcast!,
+        highlightNewEpisodes: false,
+        refresh: false,
+      );
+
+      _episodes = _podcast!.episodes;
+      _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
+      _refresh();
+    }
+  }
+
   /// Sets up a listener to handle requests to download an episode.
   void _listenDownloadRequest() {
     _downloadEpisode.listen((Episode? e) async {
@@ -319,6 +338,28 @@ class PodcastBloc extends Bloc {
           break;
         case PodcastEvent.refresh:
           _refresh();
+          break;
+        case PodcastEvent.episodeFilterNone:
+          if (_podcast != null) {
+            _podcast!.filter = PodcastEpisodeFilter.none;
+            _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+            await _loadFilteredEpisodes();
+          }
+          break;
+        case PodcastEvent.episodeFilterStarted:
+          _podcast!.filter = PodcastEpisodeFilter.started;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeFilterFinished:
+          _podcast!.filter = PodcastEpisodeFilter.played;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeFilterNotFinished:
+          _podcast!.filter = PodcastEpisodeFilter.notPlayed;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
           break;
       }
     });

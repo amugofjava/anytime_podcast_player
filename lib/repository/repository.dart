@@ -18,7 +18,7 @@ abstract class Repository {
 
   Future<Podcast?> findPodcastByGuid(String guid);
 
-  Future<Podcast> savePodcast(Podcast podcast);
+  Future<Podcast> savePodcast(Podcast podcast, {bool withEpisodes = true});
 
   Future<void> deletePodcast(Podcast podcast);
 

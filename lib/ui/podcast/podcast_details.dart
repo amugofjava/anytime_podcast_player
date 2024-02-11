@@ -17,6 +17,7 @@ import 'package:anytime/ui/podcast/podcast_context_menu.dart';
 import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
+import 'package:anytime/ui/widgets/episode_filter_selector.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_back_button.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
@@ -279,6 +280,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                               children: <Widget>[
                                 PodcastTitle(state.results!),
                                 const Divider(),
+                                NoEpisodesFound(state.results!),
                               ],
                             ),
                           ));
@@ -453,6 +455,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
               children: <Widget>[
                 FollowButton(widget.podcast),
                 PodcastContextMenu(widget.podcast),
+                FilterButton(widget.podcast),
                 settings.showFunding
                     ? FundingMenu(widget.podcast.funding)
                     : const SizedBox(
@@ -544,6 +547,71 @@ class PodcastDescription extends StatelessWidget {
   }
 }
 
+class NoEpisodesFound extends StatelessWidget {
+  final Podcast podcast;
+
+  const NoEpisodesFound(this.podcast, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final podcastBloc = Provider.of<PodcastBloc>(context);
+
+    if (podcast.episodes.isEmpty) {
+      if (podcast.filter == PodcastEpisodeFilter.none) {
+        return Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                L.of(context)!.episode_filter_no_episodes_title_label,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                L.of(context)!.episode_filter_no_episodes_title_label,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                child: Text(
+                  L.of(context)!.episode_filter_no_episodes_title_description,
+                  style: Theme.of(context).textTheme.titleSmall,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  podcastBloc.podcastEvent(PodcastEvent.episodeFilterNone);
+                },
+                child: Text(
+                  L.of(context)!.episode_filter_clear_filters_button_label,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      return const SizedBox(
+        height: 0,
+        width: 0,
+      );
+    }
+  }
+}
+
 class FollowButton extends StatelessWidget {
   final Podcast podcast;
 
@@ -623,6 +691,67 @@ class FollowButton extends StatelessWidget {
                           bloc.podcastEvent(PodcastEvent.subscribe);
                         },
                       ),
+              );
+            }
+          }
+          return Container();
+        });
+  }
+}
+
+class FilterButton extends StatelessWidget {
+  final Podcast podcast;
+
+  const FilterButton(this.podcast, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<PodcastBloc>(context);
+
+    return StreamBuilder<BlocState<Podcast>>(
+        stream: bloc.details,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final state = snapshot.data;
+
+            if (state is BlocPopulatedState<Podcast>) {
+              var p = state.results!;
+
+              return EpisodeFilterSelectorWidget(
+                podcast: p,
+              );
+            }
+          }
+          return Container();
+        });
+  }
+}
+
+class SortButton extends StatelessWidget {
+  final Podcast podcast;
+
+  const SortButton(this.podcast, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<PodcastBloc>(context);
+
+    return StreamBuilder<BlocState<Podcast>>(
+        stream: bloc.details,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final state = snapshot.data;
+
+            if (state is BlocPopulatedState<Podcast>) {
+              return Semantics(
+                liveRegion: true,
+                child: IconButton(
+                  visualDensity: VisualDensity.compact,
+                  icon: const Icon(
+                    Icons.sort,
+                  ),
+                  onPressed: () {},
+                ),
               );
             }
           }
