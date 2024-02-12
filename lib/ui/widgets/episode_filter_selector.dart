@@ -44,9 +44,10 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                 child: Center(
                   child: IconButton(
                     icon: Icon(
-                      widget.podcast.filter == PodcastEpisodeFilter.none ? Icons.filter_alt_outlined : Icons.filter_alt,
+                      widget.podcast.filter == PodcastEpisodeFilter.none
+                          ? Icons.filter_alt_outlined
+                          : Icons.filter_alt_off_outlined,
                       semanticLabel: L.of(context)!.sleep_timer_label,
-                      size: 20.0,
                     ),
                     onPressed: widget.podcast.subscribed
                         ? () {

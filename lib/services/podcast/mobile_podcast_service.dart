@@ -140,6 +140,7 @@ class MobilePodcastService extends PodcastService {
   /// it from storage. If not, we'll check the cache to see if we have seen it
   /// recently and return that if available. If not, we'll make a call to load
   /// it from the network.
+  /// TODO: The complexity of this method is now too high - needs to be refactored.
   @override
   Future<Podcast?> loadPodcast({
     required Podcast podcast,
@@ -232,6 +233,9 @@ class MobilePodcastService extends PodcastService {
       if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
         pc.id = follow.id;
+
+        // And preserve any filter applied
+        pc.filter = follow.filter;
       }
 
       // Usually, episodes are order by reverse publication date - but not always.
@@ -371,6 +375,10 @@ class MobilePodcastService extends PodcastService {
         await repository.deleteEpisodes(expired);
 
         pc = await repository.savePodcast(pc);
+
+        // Phew! Now, after all that, we have have a podcast filter in place. All episodes will have
+        // been saved, but we might not want to display them all. Let's filter.
+        pc.episodes = _filterEpisodes(pc);
       }
 
       return pc;
@@ -682,6 +690,27 @@ class MobilePodcastService extends PodcastService {
     }
 
     return decodedGenre;
+  }
+
+  List<Episode> _filterEpisodes(Podcast podcast) {
+    var filteredEpisodes = <Episode>[];
+
+    switch (podcast.filter) {
+      case PodcastEpisodeFilter.none:
+        filteredEpisodes = podcast.episodes;
+        break;
+      case PodcastEpisodeFilter.started:
+        filteredEpisodes = podcast.episodes.where((e) => e.highlight || e.position > 0).toList();
+        break;
+      case PodcastEpisodeFilter.played:
+        filteredEpisodes = podcast.episodes.where((e) => e.highlight || e.played).toList();
+        break;
+      case PodcastEpisodeFilter.notPlayed:
+        filteredEpisodes = podcast.episodes.where((e) => e.highlight || !e.played).toList();
+        break;
+    }
+
+    return filteredEpisodes;
   }
 
   @override
