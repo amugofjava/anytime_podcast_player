@@ -81,8 +81,13 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Podcast>> subscriptions() async {
+    // Custom sort order to ignore title case.
+    final titleSortOrder = SortOrder<String>.custom('title', (title1, title2) {
+      return title1.toLowerCase().compareTo(title2.toLowerCase());
+    });
+
     final finder = Finder(sortOrders: [
-      SortOrder('title'),
+      titleSortOrder,
     ]);
 
     final List<RecordSnapshot<int, Map<String, Object?>>> subscriptionSnapshot = await _podcastStore.find(
