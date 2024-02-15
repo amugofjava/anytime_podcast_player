@@ -248,7 +248,8 @@ class _TranscriptViewState extends State<TranscriptView> {
                               isDense: true,
                               filled: true,
                               border: const OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                                borderSide: BorderSide.none,
                                 gapPadding: 0.0,
                               ),
                               hintText: L.of(context)!.search_transcript_label,

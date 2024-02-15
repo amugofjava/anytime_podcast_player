@@ -379,7 +379,7 @@ class EpisodeSubtitle extends StatelessWidget {
   EpisodeSubtitle(this.episode, {super.key})
       : date = episode.publicationDate == null
             ? ''
-            : DateFormat(episode.publicationDate!.year == DateTime.now().year ? 'd MMM' : 'd MMM yy')
+            : DateFormat(episode.publicationDate!.year == DateTime.now().year ? 'd MMM' : 'd MMM yyyy')
                 .format(episode.publicationDate!),
         length = Duration(seconds: episode.duration);
 
@@ -392,9 +392,9 @@ class EpisodeSubtitle extends StatelessWidget {
 
     if (length.inSeconds > 0) {
       if (length.inSeconds < 60) {
-        title = '$date - ${length.inSeconds} sec';
+        title = '$date • ${length.inSeconds} sec';
       } else {
-        title = '$date - ${length.inMinutes} min';
+        title = '$date • ${length.inMinutes} min';
       }
     } else {
       title = date;
