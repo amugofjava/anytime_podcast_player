@@ -9,13 +9,13 @@ class OPMLNoneState extends OPMLState {}
 class OPMLParsingState extends OPMLState {}
 
 class OPMLLoadingState extends OPMLState {
-  final int? current;
-  final int? total;
+  final int current;
+  final int total;
   final String? podcast;
 
   OPMLLoadingState({
-    this.current,
-    this.total,
+    required this.current,
+    required this.total,
     this.podcast,
   });
 }

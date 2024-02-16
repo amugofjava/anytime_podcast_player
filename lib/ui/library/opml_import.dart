@@ -41,7 +41,8 @@ class _OPMLImportState extends State<OPMLImport> {
                   Navigator.pop(context);
                 });
               } else if (d is OPMLLoadingState) {
-                t = d.podcast;
+                double pct = ((d.current / d.total) * 100) ?? 0;
+                t = '${pct.toInt()}% - ${d.podcast}';
               }
 
               return Row(
@@ -68,7 +69,7 @@ class _OPMLImportState extends State<OPMLImport> {
                             height: 2.0,
                           ),
                           Text(
-                            t!,
+                            t,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
