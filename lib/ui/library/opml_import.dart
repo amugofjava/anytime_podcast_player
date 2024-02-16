@@ -41,7 +41,7 @@ class _OPMLImportState extends State<OPMLImport> {
                   Navigator.pop(context);
                 });
               } else if (d is OPMLLoadingState) {
-                double pct = ((d.current / d.total) * 100) ?? 0;
+                double pct = ((d.current / d.total) * 100);
                 t = '${pct.toInt()}% - ${d.podcast}';
               }
 
