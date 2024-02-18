@@ -524,6 +524,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
+    log.fine('delete? ${settingsService.deleteDownloadedPlayedEpisodes}');
+    if (settingsService.deleteDownloadedPlayedEpisodes) {
+      await repository.deleteEpisode(_currentEpisode!);
+    }
+
     _stopPositionTicker();
 
     if (_queue.isEmpty) {
@@ -1075,7 +1080,11 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         storedEpisode.position = 0;
         storedEpisode.played = true;
 
-        await repository.saveEpisode(storedEpisode);
+        if (settings.deleteDownloadedPlayedEpisodes) {
+          repository.deleteEpisode(storedEpisode);
+        } else {
+          await repository.saveEpisode(storedEpisode);
+        }
       } else if (currentPosition != storedEpisode.position) {
         storedEpisode.position = currentPosition;
 
