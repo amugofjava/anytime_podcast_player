@@ -447,6 +447,16 @@ class L {
         );
   }
 
+  String get settings_delete_played_label {
+    return message('settings_delete_played_label') ??
+        Intl.message(
+          'Delete downloaded played episodes',
+          name: 'settings_delete_played_label',
+          desc: 'Delete downloaded played episodes setting',
+          locale: localeName,
+        );
+  }
+
   String get settings_download_sd_card_label {
     return message('settings_download_sd_card_label') ??
         Intl.message(

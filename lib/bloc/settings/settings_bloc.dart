@@ -16,6 +16,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
   final BehaviorSubject<bool> _darkMode = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _deleteDownloadedPlayedEpisodes = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadOnSDCard = BehaviorSubject<bool>();
   final BehaviorSubject<double> _playbackSpeed = BehaviorSubject<double>();
   final BehaviorSubject<String> _searchProvider = BehaviorSubject<String>();
@@ -44,6 +45,7 @@ class SettingsBloc extends Bloc {
     _currentSettings = AppSettings(
       theme: _settingsService.themeDarkMode ? 'dark' : 'light',
       markDeletedEpisodesAsPlayed: _settingsService.markDeletedEpisodesAsPlayed,
+      deleteDownloadedPlayedEpisodes: _settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: _settingsService.storeDownloadsSDCard,
       playbackSpeed: _settingsService.playbackSpeed,
       searchProvider: _settingsService.searchProvider,
@@ -69,6 +71,12 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(markDeletedEpisodesAsPlayed: mark);
       _settings.add(_currentSettings);
       _settingsService.markDeletedEpisodesAsPlayed = mark;
+    });
+
+    _deleteDownloadedPlayedEpisodes.listen((bool delete) {
+      _currentSettings = _currentSettings.copyWith(deleteDownloadedPlayedEpisodes: delete);
+      _settings.add(_currentSettings);
+      _settingsService.deleteDownloadedPlayedEpisodes = delete;
     });
 
     _storeDownloadOnSDCard.listen((bool sdcard) {
@@ -148,6 +156,8 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
 
+  void Function(bool) get deleteDownloadedPlayedEpisodes => _deleteDownloadedPlayedEpisodes.add;
+
   void Function(double) get setPlaybackSpeed => _playbackSpeed.add;
 
   void Function(bool) get setAutoOpenNowPlaying => _autoOpenNowPlaying.add;
@@ -172,6 +182,7 @@ class SettingsBloc extends Bloc {
   void dispose() {
     _darkMode.close();
     _markDeletedAsPlayed.close();
+    _deleteDownloadedPlayedEpisodes.close();
     _storeDownloadOnSDCard.close();
     _playbackSpeed.close();
     _searchProvider.close();
