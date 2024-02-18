@@ -108,4 +108,11 @@ void main() {
     mobileSettingsService?.layoutMode = 1;
     expect(mobileSettingsService?.layoutMode, 1);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test delete played downloaded episodes', () async {
+    expect(mobileSettingsService?.deleteDownloadedPlayedEpisodes, false);
+    expectLater(settingsListener, emits('deleteDownloadedPlayedEpisodes'));
+    mobileSettingsService?.deleteDownloadedPlayedEpisodes = true;
+    expect(mobileSettingsService?.deleteDownloadedPlayedEpisodes, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }
