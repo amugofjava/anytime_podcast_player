@@ -11,6 +11,9 @@ class AppSettings {
   /// True if episodes are marked as played when deleted.
   final bool markDeletedEpisodesAsPlayed;
 
+  /// True if downloaded played episodes must be deleted automatically.
+  final bool deleteDownloadedPlayedEpisodes;
+
   /// True if downloads should be saved to the SD card.
   final bool storeDownloadsSDCard;
 
@@ -47,6 +50,7 @@ class AppSettings {
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
+    required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
     required this.playbackSpeed,
     required this.searchProvider,
@@ -63,6 +67,7 @@ class AppSettings {
   AppSettings.sensibleDefaults()
       : theme = 'dark',
         markDeletedEpisodesAsPlayed = false,
+        deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
         playbackSpeed = 1.0,
         searchProvider = 'itunes',
@@ -78,6 +83,7 @@ class AppSettings {
   AppSettings copyWith({
     String? theme,
     bool? markDeletedEpisodesAsPlayed,
+    bool? deleteDownloadedPlayedEpisodes,
     bool? storeDownloadsSDCard,
     double? playbackSpeed,
     String? searchProvider,
@@ -93,6 +99,7 @@ class AppSettings {
       AppSettings(
         theme: theme ?? this.theme,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
+        deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
         playbackSpeed: playbackSpeed ?? this.playbackSpeed,
         searchProvider: searchProvider ?? this.searchProvider,

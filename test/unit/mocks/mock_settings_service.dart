@@ -22,6 +22,9 @@ class MockSettingsService extends SettingsService {
   bool markDeletedEpisodesAsPlayed = false;
 
   @override
+  bool deleteDownloadedPlayedEpisodes = false;
+
+  @override
   double playbackSpeed = 1;
 
   @override

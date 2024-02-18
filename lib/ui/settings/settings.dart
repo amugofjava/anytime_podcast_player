@@ -103,6 +103,14 @@ class _SettingsState extends State<Settings> {
                       height: 0,
                       width: 0,
                     ),
+              ListTile(
+                shape: const RoundedRectangleBorder(side: BorderSide.none),
+                title: Text(L.of(context)!.settings_delete_played_label),
+                trailing: Switch.adaptive(
+                    value: snapshot.data!.deleteDownloadedPlayedEpisodes,
+                    onChanged: (value) => setState(() => settingsBloc.deleteDownloadedPlayedEpisodes(value)),
+                )
+              ),
               SettingsDividerLabel(label: L.of(context)!.settings_playback_divider_label),
               MergeSemantics(
                 child: ListTile(
