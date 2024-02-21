@@ -61,12 +61,18 @@ class _SettingsState extends State<Settings> {
               MergeSemantics(
                 child: ListTile(
                   shape: const RoundedRectangleBorder(side: BorderSide.none),
-                  title: Text(L.of(context)!.settings_theme_switch_label),
-                  trailing: Switch.adaptive(
-                      value: snapshot.data!.theme == 'dark',
-                      onChanged: (value) {
-                        settingsBloc.darkMode(value);
-                      }),
+                  title: Text(L.of(context)!.settings_theme_dropdown_label),
+                  trailing: DropdownMenu<String>(
+                      initialSelection: snapshot.data!.theme,
+                      onSelected: (value) {
+                        settingsBloc.themeMode(value!);
+                      },
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(value: ThemeMode.system.name, label: L.of(context)!.settings_theme_value_auto),
+                        DropdownMenuEntry(value: ThemeMode.light.name, label: L.of(context)!.settings_theme_value_light),
+                        DropdownMenuEntry(value: ThemeMode.dark.name, label: L.of(context)!.settings_theme_value_dark),
+                      ]
+                  ),
                 ),
               ),
               SettingsDividerLabel(label: L.of(context)!.settings_episodes_divider_label),

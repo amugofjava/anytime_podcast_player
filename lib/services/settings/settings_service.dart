@@ -9,9 +9,9 @@ abstract class SettingsService {
 
   set settings(AppSettings? settings);
 
-  bool get themeDarkMode;
+  String get themeMode;
 
-  set themeDarkMode(bool value);
+  set themeMode(String mode);
 
   bool get markDeletedEpisodesAsPlayed;
 

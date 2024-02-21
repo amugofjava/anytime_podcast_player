@@ -46,12 +46,15 @@ import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../services/settings/settings_service.dart';
 
 var theme = Themes.lightTheme().themeData;
 
@@ -128,12 +131,6 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         }
       });
     });
-
-    if (widget.mobileSettingsService.themeDarkMode) {
-      theme = Themes.darkTheme().themeData;
-    } else {
-      theme = Themes.lightTheme().themeData;
-    }
   }
 
   @override
@@ -317,6 +314,11 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecycleState.resume);
+        if (context.mounted) {
+          SettingsService? settings = await MobileSettingsService.instance();
+          var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+          settingsBloc.themeMode(settings!.themeMode);
+        }
         break;
       case AppLifecycleState.paused:
         audioBloc.transitionLifecycleState(LifecycleState.pause);

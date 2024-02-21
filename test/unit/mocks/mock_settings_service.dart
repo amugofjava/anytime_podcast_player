@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:anytime/ui/themes.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MockSettingsService extends SettingsService {
@@ -40,7 +42,7 @@ class MockSettingsService extends SettingsService {
   bool storeDownloadsSDCard = false;
 
   @override
-  bool themeDarkMode = true;
+  String themeMode = ThemeMode.dark.name;
 
   @override
   bool trimSilence = false;
