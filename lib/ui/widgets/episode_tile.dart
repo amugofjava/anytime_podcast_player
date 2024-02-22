@@ -16,7 +16,7 @@ import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:provider/provider.dart';
 
-/// An EpisodeTitle is built with an [ExpandedTile] widget and displays the episode's
+/// An EpisodeTitle is built with an [ExpansionTile] widget and displays the episode's
 /// basic details, thumbnail and play button.
 ///
 /// It can then be expanded to present addition information about the episode and further

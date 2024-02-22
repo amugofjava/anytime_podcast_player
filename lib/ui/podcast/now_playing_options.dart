@@ -21,8 +21,8 @@ import 'package:provider/provider.dart';
 /// issue whereby the scroll view and [DraggableScrollableSheet] clash and therefore cannot
 /// be used together.
 ///
-/// See issues (64157)[https://github.com/flutter/flutter/issues/64157]
-///            (67219)[https://github.com/flutter/flutter/issues/67219]
+/// See issues [64157](https://github.com/flutter/flutter/issues/64157)
+///            [67219](https://github.com/flutter/flutter/issues/67219)
 ///
 /// If anyone can come up with a more elegant solution (and one that does not throw
 /// an overflow error in debug) please raise and issue/submit a PR.

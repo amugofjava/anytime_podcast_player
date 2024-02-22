@@ -12,6 +12,9 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:podcast_search/podcast_search.dart' as pcast;
 
+/// The [PodcastService] handles interactions around podcasts including searching, fetching
+/// the trending/charts podcasts, loading the podcast RSS feed and anciallary items such as
+/// chapters and transcripts.
 abstract class PodcastService {
   final PodcastApi api;
   final Repository repository;

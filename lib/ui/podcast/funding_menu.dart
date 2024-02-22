@@ -17,8 +17,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// This class is responsible for rendering the funding menu on the podcast details page.
 ///
-/// It returns either a [_MaterialPodcastMenu] or a [_CupertinoContextMenu]
-/// instance depending upon which platform we are running on.
+/// It returns either a Material or Cupertino style menu instance depending upon which
+/// platform we are running on.
 ///
 /// The target platform is based on the current [Theme]: [ThemeData.platform].
 class FundingMenu extends StatelessWidget {

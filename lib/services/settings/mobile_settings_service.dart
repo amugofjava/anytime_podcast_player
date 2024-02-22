@@ -8,7 +8,7 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// An implementation [SettingService] for mobile devices backed by
+/// An implementation [SettingsService] for mobile devices backed by
 /// shared preferences.
 class MobileSettingsService extends SettingsService {
   static late SharedPreferences _sharedPreferences;
