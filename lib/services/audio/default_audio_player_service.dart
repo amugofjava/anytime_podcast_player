@@ -100,6 +100,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       builder: () => _DefaultAudioPlayerHandler(
         repository: repository,
         settings: settingsService,
+        podcastService: podcastService,
       ),
       config: const AudioServiceConfig(
         androidResumeOnClick: true,
@@ -785,6 +786,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   final log = Logger('DefaultAudioPlayerHandler');
   final Repository repository;
   final SettingsService settings;
+  final PodcastService podcastService;
 
   static const rewindMillis = 10001;
   static const fastForwardMillis = 30000;
@@ -811,6 +813,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   _DefaultAudioPlayerHandler({
     required this.repository,
     required this.settings,
+    required this.podcastService,
   }) {
     _initPlayer();
   }
@@ -1080,7 +1083,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         storedEpisode.played = true;
 
         if (settings.deleteDownloadedPlayedEpisodes) {
-          repository.deleteEpisode(storedEpisode);
+          podcastService.deleteDownload(storedEpisode);
         } else {
           await repository.saveEpisode(storedEpisode);
         }
