@@ -450,9 +450,9 @@ class L {
   String get settings_delete_played_label {
     return message('settings_delete_played_label') ??
         Intl.message(
-          'Delete downloaded played episodes',
+          'Delete downloaded episodes once played',
           name: 'settings_delete_played_label',
-          desc: 'Delete downloaded played episodes setting',
+          desc: 'Delete downloaded episodes once played setting',
           locale: localeName,
         );
   }
