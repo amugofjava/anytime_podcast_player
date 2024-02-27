@@ -1,5 +1,6 @@
 ## 1.3.7
 
+- Added episode filter.
 - Improve transcript responsiveness & speaker matching.
 
 ## 1.3.0
