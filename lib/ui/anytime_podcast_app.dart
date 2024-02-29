@@ -43,6 +43,7 @@ import 'package:anytime/ui/themes.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/layout_selector.dart';
 import 'package:anytime/ui/widgets/search_slide_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -365,10 +366,15 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           onPressed: () async {
                             await Navigator.push(
                               context,
-                              SlideRightRoute(
-                                widget: const Search(),
-                                settings: const RouteSettings(name: 'search'),
-                              ),
+                              defaultTargetPlatform == TargetPlatform.iOS
+                                  ? MaterialPageRoute<void>(
+                                      fullscreenDialog: false,
+                                      settings: const RouteSettings(name: 'search'),
+                                      builder: (context) => const Search())
+                                  : SlideRightRoute(
+                                      widget: const Search(),
+                                      settings: const RouteSettings(name: 'search'),
+                                    ),
                             );
                           },
                         ),
