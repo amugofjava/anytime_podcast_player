@@ -41,7 +41,7 @@ class MobileDownloaderManager implements DownloadManager {
     // AnyTime was close or in the background.
     if (tasks != null && tasks.isNotEmpty) {
       for (var t in tasks) {
-        _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status.value);
+        _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status);
 
         /// If we are not queued or running we can safely clean up this event
         if (t.status != DownloadTaskStatus.enqueued && t.status != DownloadTaskStatus.running) {
@@ -51,8 +51,8 @@ class MobileDownloaderManager implements DownloadManager {
     }
 
     _port.listen((dynamic data) {
-      final id = data[0] as String;
-      final status = data[1] as int;
+      final id = (data as List<dynamic>)[0] as String;
+      final status = DownloadTaskStatus.fromInt(data[1] as int);
       final progress = data[2] as int;
 
       _updateDownloadState(id: id, progress: progress, status: status);
@@ -81,29 +81,28 @@ class MobileDownloaderManager implements DownloadManager {
     downloadController.close();
   }
 
-  void _updateDownloadState({required String id, required int progress, required int status}) {
+  void _updateDownloadState({required String id, required int progress, required DownloadTaskStatus status}) {
     var state = DownloadState.none;
     var updateTime = DateTime.now().millisecondsSinceEpoch;
-    var downloadStatus = DownloadTaskStatus(status);
 
-    if (downloadStatus == DownloadTaskStatus.enqueued) {
+    if (status == DownloadTaskStatus.enqueued) {
       state = DownloadState.queued;
-    } else if (downloadStatus == DownloadTaskStatus.canceled) {
+    } else if (status == DownloadTaskStatus.canceled) {
       state = DownloadState.cancelled;
-    } else if (downloadStatus == DownloadTaskStatus.complete) {
+    } else if (status == DownloadTaskStatus.complete) {
       state = DownloadState.downloaded;
-    } else if (downloadStatus == DownloadTaskStatus.running) {
+    } else if (status == DownloadTaskStatus.running) {
       state = DownloadState.downloading;
-    } else if (downloadStatus == DownloadTaskStatus.failed) {
+    } else if (status == DownloadTaskStatus.failed) {
       state = DownloadState.failed;
-    } else if (downloadStatus == DownloadTaskStatus.paused) {
+    } else if (status == DownloadTaskStatus.paused) {
       state = DownloadState.paused;
     }
 
     /// If we are running, we want to limit notifications to 1 per second. Otherwise,
     /// small downloads can cause a flood of events. Any other status we always want
     /// to push through.
-    if (downloadStatus != DownloadTaskStatus.running ||
+    if (status != DownloadTaskStatus.running ||
         progress == 0 ||
         progress == 100 ||
         updateTime > _lastUpdateTime + 1000) {
@@ -113,7 +112,7 @@ class MobileDownloaderManager implements DownloadManager {
   }
 
   @pragma('vm:entry-point')
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    IsolateNameServer.lookupPortByName('downloader_send_port')?.send([id, status.value, progress]);
+  static void downloadCallback(String id, int status, int progress) {
+    IsolateNameServer.lookupPortByName('downloader_send_port')?.send([id, status, progress]);
   }
 }
