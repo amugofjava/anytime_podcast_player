@@ -24,11 +24,17 @@ enum PodcastEvent {
   clearAllPlayed,
   reloadSubscriptions,
   refresh,
-  // Testing
+  // Filter
   episodeFilterNone,
   episodeFilterStarted,
   episodeFilterNotFinished,
   episodeFilterFinished,
+  // Sort
+  episodeSortDefault,
+  episodeSortLatest,
+  episodeSortEarliest,
+  episodeSortAlphabeticalAscending,
+  episodeSortAlphabeticalDescending,
 }
 
 /// This BLoC provides access to the details of a given Podcast.
@@ -287,6 +293,7 @@ class PodcastBloc extends Bloc {
     });
   }
 
+  // TODO: This needs refactoring to simplify the long switch statement.
   void _listenPodcastStateEvents() async {
     _podcastEvent.listen((event) async {
       switch (event) {
@@ -358,6 +365,31 @@ class PodcastBloc extends Bloc {
           break;
         case PodcastEvent.episodeFilterNotFinished:
           _podcast!.filter = PodcastEpisodeFilter.notPlayed;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeSortDefault:
+          _podcast!.sort = PodcastEpisodeSort.none;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeSortLatest:
+          _podcast!.sort = PodcastEpisodeSort.latestFirst;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeSortEarliest:
+          _podcast!.sort = PodcastEpisodeSort.earliestFirst;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeSortAlphabeticalAscending:
+          _podcast!.sort = PodcastEpisodeSort.alphabeticalAscending;
+          _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+          await _loadFilteredEpisodes();
+          break;
+        case PodcastEvent.episodeSortAlphabeticalDescending:
+          _podcast!.sort = PodcastEpisodeSort.alphabeticalDescending;
           _podcast = await podcastService.save(_podcast!, withEpisodes: false);
           await _loadFilteredEpisodes();
           break;

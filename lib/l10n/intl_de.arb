@@ -920,5 +920,47 @@
     "description": "Clear filters button",
     "type": "text",
     "placeholders": {}
+  },
+  "episode_filter_semantic_label": "Episoden filtern",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "Episoden sortieren",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "Standard",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "Das Neueste zuerst",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "Früheste zuerst",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "Alphabetisch von A bis Z",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "Alphabetisch von Z bis A",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
   }
 }

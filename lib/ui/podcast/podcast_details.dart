@@ -18,6 +18,7 @@ import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/delayed_progress_indicator.dart';
 import 'package:anytime/ui/widgets/episode_filter_selector.dart';
+import 'package:anytime/ui/widgets/episode_sort_selector.dart';
 import 'package:anytime/ui/widgets/placeholder_builder.dart';
 import 'package:anytime/ui/widgets/platform_back_button.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
@@ -455,6 +456,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
               children: <Widget>[
                 FollowButton(widget.podcast),
                 PodcastContextMenu(widget.podcast),
+                SortButton(widget.podcast),
                 FilterButton(widget.podcast),
                 settings.showFunding
                     ? FundingMenu(widget.podcast.funding)
@@ -743,15 +745,10 @@ class SortButton extends StatelessWidget {
             final state = snapshot.data;
 
             if (state is BlocPopulatedState<Podcast>) {
-              return Semantics(
-                liveRegion: true,
-                child: IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: const Icon(
-                    Icons.sort,
-                  ),
-                  onPressed: () {},
-                ),
+              var p = state.results!;
+
+              return EpisodeSortSelectorWidget(
+                podcast: p,
               );
             }
           }

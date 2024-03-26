@@ -1477,6 +1477,76 @@ class L {
           locale: localeName,
         );
   }
+
+  String get episode_filter_semantic_label {
+    return message('episode_filter_semantic_label') ??
+        Intl.message(
+          'Episode filter',
+          name: 'episode_filter_semantic_label',
+          desc: 'Episode filter semantic label',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_semantic_label {
+    return message('episode_sort_semantic_label') ??
+        Intl.message(
+          'Episode sort',
+          name: 'episode_sort_semantic_label',
+          desc: 'Episode sort semantic label',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_none_label {
+    return message('episode_sort_none_label') ??
+        Intl.message(
+          'Default',
+          name: 'episode_sort_none_label',
+          desc: 'Episode default sort',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_latest_first_label {
+    return message('episode_sort_latest_first_label') ??
+        Intl.message(
+          'Latest first',
+          name: 'episode_sort_latest_first_label',
+          desc: 'Episode latest first sort',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_earliest_first_label {
+    return message('episode_sort_earliest_first_label') ??
+        Intl.message(
+          'Earliest first',
+          name: 'episode_sort_earliest_first_label',
+          desc: 'Episode earliest first sort',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_alphabetical_ascending_label {
+    return message('episode_sort_alphabetical_ascending_label') ??
+        Intl.message(
+          'Alphabetical A-Z',
+          name: 'episode_sort_alphabetical_ascending_label',
+          desc: 'Episode alphabetical ascending',
+          locale: localeName,
+        );
+  }
+
+  String get episode_sort_alphabetical_descending_label {
+    return message('episode_sort_alphabetical_descending_label') ??
+        Intl.message(
+          'Alphabetical Z-A',
+          name: 'episode_sort_alphabetical_descending_label',
+          desc: 'Episode alphabetical descending',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

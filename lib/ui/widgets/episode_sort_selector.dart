@@ -11,19 +11,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// This widget allows the user to filter the episodes.
-class EpisodeFilterSelectorWidget extends StatefulWidget {
+class EpisodeSortSelectorWidget extends StatefulWidget {
   final Podcast podcast;
 
-  const EpisodeFilterSelectorWidget({
+  const EpisodeSortSelectorWidget({
     required this.podcast,
     super.key,
   });
 
   @override
-  State<EpisodeFilterSelectorWidget> createState() => _EpisodeFilterSelectorWidgetState();
+  State<EpisodeSortSelectorWidget> createState() => _EpisodeSortSelectorWidgetState();
 }
 
-class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidget> {
+class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
   @override
   Widget build(BuildContext context) {
     var podcastBloc = Provider.of<PodcastBloc>(context);
@@ -44,10 +44,8 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                 child: Center(
                   child: IconButton(
                     icon: Icon(
-                      widget.podcast.filter == PodcastEpisodeFilter.none
-                          ? Icons.filter_alt_outlined
-                          : Icons.filter_alt_off_outlined,
-                      semanticLabel: L.of(context)!.episode_filter_semantic_label,
+                      Icons.sort,
+                      semanticLabel: L.of(context)!.episode_sort_semantic_label,
                     ),
                     onPressed: widget.podcast.subscribed
                         ? () {
@@ -62,7 +60,7 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                                   ),
                                 ),
                                 builder: (context) {
-                                  return EpisodeFilterSlider(
+                                  return EpisodeSortSlider(
                                     podcast: widget.podcast,
                                   );
                                 });
@@ -77,19 +75,19 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
   }
 }
 
-class EpisodeFilterSlider extends StatefulWidget {
+class EpisodeSortSlider extends StatefulWidget {
   final Podcast podcast;
 
-  const EpisodeFilterSlider({
+  const EpisodeSortSlider({
     required this.podcast,
     super.key,
   });
 
   @override
-  State<EpisodeFilterSlider> createState() => _EpisodeFilterSliderState();
+  State<EpisodeSortSlider> createState() => _EpisodeSortSliderState();
 }
 
-class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
+class _EpisodeSortSliderState extends State<EpisodeSortSlider> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -101,7 +99,7 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
             child: Text(
-              'Episode Filter',
+              L.of(context)!.episode_sort_semantic_label,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
@@ -111,28 +109,34 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
               shrinkWrap: true,
               children: [
                 const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_none_label,
-                  filter: PodcastEpisodeFilter.none,
-                  selectedFilter: widget.podcast.filter,
+                EpisodeSortSelectorEntry(
+                  label: L.of(context)!.episode_sort_none_label,
+                  sort: PodcastEpisodeSort.none,
+                  selectedSort: widget.podcast.sort,
                 ),
                 const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_started_label,
-                  filter: PodcastEpisodeFilter.started,
-                  selectedFilter: widget.podcast.filter,
+                EpisodeSortSelectorEntry(
+                  label: L.of(context)!.episode_sort_latest_first_label,
+                  sort: PodcastEpisodeSort.latestFirst,
+                  selectedSort: widget.podcast.sort,
                 ),
                 const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_played_label,
-                  filter: PodcastEpisodeFilter.played,
-                  selectedFilter: widget.podcast.filter,
+                EpisodeSortSelectorEntry(
+                  label: L.of(context)!.episode_sort_earliest_first_label,
+                  sort: PodcastEpisodeSort.earliestFirst,
+                  selectedSort: widget.podcast.sort,
                 ),
                 const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_unplayed_label,
-                  filter: PodcastEpisodeFilter.notPlayed,
-                  selectedFilter: widget.podcast.filter,
+                EpisodeSortSelectorEntry(
+                  label: L.of(context)!.episode_sort_alphabetical_ascending_label,
+                  sort: PodcastEpisodeSort.alphabeticalAscending,
+                  selectedSort: widget.podcast.sort,
+                ),
+                const Divider(),
+                EpisodeSortSelectorEntry(
+                  label: L.of(context)!.episode_sort_alphabetical_descending_label,
+                  sort: PodcastEpisodeSort.alphabeticalDescending,
+                  selectedSort: widget.podcast.sort,
                 ),
                 const Divider(),
               ],
@@ -142,17 +146,17 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
   }
 }
 
-class EpisodeFilterSelectorEntry extends StatelessWidget {
-  const EpisodeFilterSelectorEntry({
+class EpisodeSortSelectorEntry extends StatelessWidget {
+  const EpisodeSortSelectorEntry({
     super.key,
     required this.label,
-    required this.filter,
-    required this.selectedFilter,
+    required this.sort,
+    required this.selectedSort,
   });
 
   final String label;
-  final PodcastEpisodeFilter filter;
-  final PodcastEpisodeFilter selectedFilter;
+  final PodcastEpisodeSort sort;
+  final PodcastEpisodeSort selectedSort;
 
   @override
   Widget build(BuildContext context) {
@@ -161,18 +165,21 @@ class EpisodeFilterSelectorEntry extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        switch (filter) {
-          case PodcastEpisodeFilter.none:
-            podcastBloc.podcastEvent(PodcastEvent.episodeFilterNone);
+        switch (sort) {
+          case PodcastEpisodeSort.none:
+            podcastBloc.podcastEvent(PodcastEvent.episodeSortDefault);
             break;
-          case PodcastEpisodeFilter.started:
-            podcastBloc.podcastEvent(PodcastEvent.episodeFilterStarted);
+          case PodcastEpisodeSort.latestFirst:
+            podcastBloc.podcastEvent(PodcastEvent.episodeSortLatest);
             break;
-          case PodcastEpisodeFilter.played:
-            podcastBloc.podcastEvent(PodcastEvent.episodeFilterFinished);
+          case PodcastEpisodeSort.earliestFirst:
+            podcastBloc.podcastEvent(PodcastEvent.episodeSortEarliest);
             break;
-          case PodcastEpisodeFilter.notPlayed:
-            podcastBloc.podcastEvent(PodcastEvent.episodeFilterNotFinished);
+          case PodcastEpisodeSort.alphabeticalAscending:
+            podcastBloc.podcastEvent(PodcastEvent.episodeSortAlphabeticalAscending);
+            break;
+          case PodcastEpisodeSort.alphabeticalDescending:
+            podcastBloc.podcastEvent(PodcastEvent.episodeSortAlphabeticalDescending);
             break;
         }
 
@@ -191,7 +198,7 @@ class EpisodeFilterSelectorEntry extends StatelessWidget {
               label,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            if (filter == selectedFilter)
+            if (sort == selectedSort)
               const Icon(
                 Icons.check,
                 size: 18.0,

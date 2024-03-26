@@ -20,6 +20,18 @@ enum PodcastEpisodeFilter {
   final int id;
 }
 
+enum PodcastEpisodeSort {
+  none(id: 0),
+  latestFirst(id: 1),
+  earliestFirst(id: 2),
+  alphabeticalAscending(id: 2),
+  alphabeticalDescending(id: 4);
+
+  const PodcastEpisodeSort({required this.id});
+
+  final int id;
+}
+
 /// A class that represents an instance of a podcast.
 ///
 /// When persisted to disk this represents a podcast that is being followed.
@@ -57,6 +69,8 @@ class Podcast {
 
   PodcastEpisodeFilter filter;
 
+  PodcastEpisodeSort sort;
+
   /// Date and time user subscribed to the podcast.
   DateTime? subscribedDate;
 
@@ -84,6 +98,7 @@ class Podcast {
     this.subscribedDate,
     this.funding,
     this.filter = PodcastEpisodeFilter.none,
+    this.sort = PodcastEpisodeSort.none,
     this.episodes = const <Episode>[],
     this.newEpisodes = false,
     this.persons,
@@ -130,6 +145,7 @@ class Podcast {
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'filter': filter.id,
+      'sort': sort.id,
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
       'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
       'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
@@ -142,6 +158,7 @@ class Podcast {
     final funding = <Funding>[];
     final persons = <Person>[];
     var filter = PodcastEpisodeFilter.none;
+    var sort = PodcastEpisodeSort.none;
 
     var sd = DateTime.now();
     var lastUpdated = DateTime(1971, 1, 1);
@@ -181,6 +198,18 @@ class Podcast {
       };
     }
 
+    if (podcast['sort'] != null) {
+      var sortValue = (podcast['sort'] as int);
+
+      sort = switch (sortValue) {
+        1 => PodcastEpisodeSort.latestFirst,
+        2 => PodcastEpisodeSort.earliestFirst,
+        3 => PodcastEpisodeSort.alphabeticalDescending,
+        4 => PodcastEpisodeSort.alphabeticalDescending,
+        _ => PodcastEpisodeSort.none,
+      };
+    }
+
     return Podcast(
       id: key,
       guid: podcast['guid'] as String,
@@ -192,6 +221,7 @@ class Podcast {
       imageUrl: podcast['imageUrl'] as String?,
       thumbImageUrl: podcast['thumbImageUrl'] as String?,
       filter: filter,
+      sort: sort,
       funding: funding,
       persons: persons,
       subscribedDate: sd,

@@ -135,7 +135,7 @@ class SembastRepository extends Repository {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
-      p.episodes = await findEpisodesByPodcastGuid(p.guid, filter: p.filter);
+      p.episodes = await findEpisodesByPodcastGuid(p.guid, filter: p.filter, sort: p.sort);
 
       return p;
     }
@@ -208,8 +208,10 @@ class SembastRepository extends Repository {
   Future<List<Episode>> findEpisodesByPodcastGuid(
     String? pguid, {
     PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+    PodcastEpisodeSort sort = PodcastEpisodeSort.none,
   }) async {
-    late Filter episodeFilter;
+    var episodeFilter = Filter.equals('pguid', pguid);
+    var sortOrder = SortOrder('publicationDate', false);
 
     // If we have an additional episode filter, apply it.
     switch (filter) {
@@ -227,9 +229,25 @@ class SembastRepository extends Repository {
         break;
     }
 
+    switch (sort) {
+      case PodcastEpisodeSort.none:
+      case PodcastEpisodeSort.latestFirst:
+        sortOrder = SortOrder('publicationDate', false);
+        break;
+      case PodcastEpisodeSort.earliestFirst:
+        sortOrder = SortOrder('publicationDate', true);
+        break;
+      case PodcastEpisodeSort.alphabeticalDescending:
+        sortOrder = SortOrder('title', false);
+        break;
+      case PodcastEpisodeSort.alphabeticalAscending:
+        sortOrder = SortOrder('title', true);
+        break;
+    }
+
     final finder = Finder(
       filter: episodeFilter,
-      sortOrders: [SortOrder('publicationDate', false)],
+      sortOrders: [sortOrder],
     );
 
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
