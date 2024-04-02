@@ -349,6 +349,21 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<List<Episode>> saveEpisodes(List<Episode> episodes, [bool updateIfSame = false]) async {
+    final updatedEpisodes = <Episode>[];
+
+    for (var es in episodes) {
+      var e = await _saveEpisode(es, updateIfSame);
+
+      updatedEpisodes.add(e);
+
+      _episodeSubject.add(EpisodeUpdateState(e));
+    }
+
+    return updatedEpisodes;
+  }
+
+  @override
   Future<List<Episode>> loadQueue() async {
     var episodes = <Episode>[];
 

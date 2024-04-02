@@ -316,27 +316,35 @@ class PodcastBloc extends Bloc {
           break;
         case PodcastEvent.markAllPlayed:
           if (_podcast != null && _podcast?.episodes != null) {
+            final changedEpisodes = <Episode>[];
+
             for (var e in _podcast!.episodes) {
               if (!e.played) {
                 e.played = true;
                 e.position = 0;
+
+                changedEpisodes.add(e);
               }
             }
 
-            await podcastService.save(_podcast!);
+            await podcastService.saveEpisodes(changedEpisodes);
             _episodesStream.add(_podcast!.episodes);
           }
           break;
         case PodcastEvent.clearAllPlayed:
           if (_podcast != null && _podcast?.episodes != null) {
+            final changedEpisodes = <Episode>[];
+
             for (var e in _podcast!.episodes) {
               if (e.played) {
                 e.played = false;
                 e.position = 0;
+
+                changedEpisodes.add(e);
               }
             }
 
-            await podcastService.save(_podcast!);
+            await podcastService.saveEpisodes(changedEpisodes);
             _episodesStream.add(_podcast!.episodes);
           }
           break;

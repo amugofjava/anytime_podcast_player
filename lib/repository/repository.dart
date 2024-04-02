@@ -37,6 +37,8 @@ abstract class Repository {
 
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]);
 
+  Future<List<Episode>> saveEpisodes(List<Episode> episodes, [bool updateIfSame = false]);
+
   Future<void> deleteEpisode(Episode episode);
 
   Future<void> deleteEpisodes(List<Episode> episodes);

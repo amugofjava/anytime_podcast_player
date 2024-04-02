@@ -600,6 +600,11 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<List<Episode>> saveEpisodes(List<Episode> episodes) async {
+    return repository.saveEpisodes(episodes);
+  }
+
+  @override
   Future<Transcript> saveTranscript(Transcript transcript) async {
     return repository.saveTranscript(transcript);
   }

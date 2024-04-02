@@ -216,6 +216,8 @@ abstract class PodcastService {
 
   Future<Episode> saveEpisode(Episode episode);
 
+  Future<List<Episode>> saveEpisodes(List<Episode> episodes);
+
   Future<Transcript> saveTranscript(Transcript transcript);
 
   Future<void> saveQueue(List<Episode> episodes);
