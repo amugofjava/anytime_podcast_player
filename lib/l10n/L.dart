@@ -1547,6 +1547,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get open_show_website_label {
+    return message('open_show_website_label') ??
+        Intl.message(
+          'Open show website',
+          name: 'open_show_website_label',
+          desc: 'Open show website in browser',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

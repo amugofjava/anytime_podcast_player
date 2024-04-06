@@ -93,6 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'notes_label': MessageLookupByLibrary.simpleMessage('Notizen'),
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('Jetzt Spielen'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('OK'),
+    'open_show_website_label': MessageLookupByLibrary.simpleMessage('Show-Website öffnen'),
     'opml_export_button_label': MessageLookupByLibrary.simpleMessage('Export'),
     'opml_import_button_label': MessageLookupByLibrary.simpleMessage('Importieren'),
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Importieren/Export'),

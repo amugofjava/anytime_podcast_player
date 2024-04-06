@@ -8,6 +8,7 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// This class is responsible for rendering the context menu on the podcast details
 /// page.
@@ -74,6 +75,12 @@ class _MaterialPodcastMenu extends StatelessWidget {
                   enabled: podcast.subscribed,
                   child: Text(L.of(context)!.mark_episodes_not_played_label),
                 ),
+                const PopupMenuDivider(),
+                PopupMenuItem<String>(
+                  value: 'web',
+                  enabled: podcast.link?.isNotEmpty ?? false,
+                  child: Text(L.of(context)!.open_show_website_label),
+                ),
               ];
             },
           );
@@ -83,11 +90,20 @@ class _MaterialPodcastMenu extends StatelessWidget {
   void togglePlayed({
     required String value,
     required PodcastBloc bloc,
-  }) {
+  }) async {
     if (value == 'ma') {
       bloc.podcastEvent(PodcastEvent.markAllPlayed);
     } else if (value == 'ua') {
       bloc.podcastEvent(PodcastEvent.clearAllPlayed);
+    } else if (value == 'web') {
+      final uri = Uri.parse(podcast.link!);
+
+      if (!await launchUrl(
+        uri,
+        mode: LaunchMode.externalApplication,
+      )) {
+        throw Exception('Could not launch $uri');
+      }
     }
   }
 }
@@ -129,6 +145,24 @@ class _CupertinoContextMenu extends StatelessWidget {
                         Navigator.pop(context, 'Cancel');
                       },
                       child: Text(L.of(context)!.mark_episodes_not_played_label),
+                    ),
+                    CupertinoActionSheetAction(
+                      isDefaultAction: true,
+                      onPressed: () async {
+                        final uri = Uri.parse(podcast.link!);
+
+                        if (!await launchUrl(
+                          uri,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          throw Exception('Could not launch $uri');
+                        }
+
+                        if (context.mounted) {
+                          Navigator.pop(context, 'Cancel');
+                        }
+                      },
+                      child: Text(L.of(context)!.open_show_website_label),
                     ),
                   ],
                   cancelButton: CupertinoActionSheetAction(

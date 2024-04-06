@@ -962,5 +962,11 @@
     "description": "Episode alphabetical descending",
     "type": "text",
     "placeholders": {}
+  },
+  "open_show_website_label": "Open show website",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
   }
 }

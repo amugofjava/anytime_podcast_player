@@ -141,6 +141,7 @@ class Podcast {
       'copyright': copyright ?? '',
       'description': description ?? '',
       'url': url,
+      'link': link ?? '',
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',

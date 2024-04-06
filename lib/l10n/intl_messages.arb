@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-03-26T13:16:56.837934",
+  "@@last_modified": "2024-04-04T16:54:01.419283",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -866,13 +866,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "episode_filter_semantic_label": "Filter episodes",
+  "episode_filter_semantic_label": "Episode filter",
   "@episode_filter_semantic_label": {
     "description": "Episode filter semantic label",
     "type": "text",
     "placeholders": {}
   },
-  "episode_sort_semantic_label": "Sort episodes",
+  "episode_sort_semantic_label": "Episode sort",
   "@episode_sort_semantic_label": {
     "description": "Episode sort semantic label",
     "type": "text",
@@ -905,6 +905,12 @@
   "episode_sort_alphabetical_descending_label": "Alphabetical Z-A",
   "@episode_sort_alphabetical_descending_label": {
     "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "Open show website",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
     "type": "text",
     "placeholders": {}
   }
