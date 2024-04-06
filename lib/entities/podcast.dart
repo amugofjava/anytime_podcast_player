@@ -24,7 +24,7 @@ enum PodcastEpisodeSort {
   none(id: 0),
   latestFirst(id: 1),
   earliestFirst(id: 2),
-  alphabeticalAscending(id: 2),
+  alphabeticalAscending(id: 3),
   alphabeticalDescending(id: 4);
 
   const PodcastEpisodeSort({required this.id});
@@ -205,7 +205,7 @@ class Podcast {
       sort = switch (sortValue) {
         1 => PodcastEpisodeSort.latestFirst,
         2 => PodcastEpisodeSort.earliestFirst,
-        3 => PodcastEpisodeSort.alphabeticalDescending,
+        3 => PodcastEpisodeSort.alphabeticalAscending,
         4 => PodcastEpisodeSort.alphabeticalDescending,
         _ => PodcastEpisodeSort.none,
       };
