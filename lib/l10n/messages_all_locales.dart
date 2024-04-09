@@ -22,6 +22,7 @@ Map<String, LibraryLoader> _deferredLibraries = {
   'de': () => Future.value(null),
   'en': () => Future.value(null),
   'it': () => Future.value(null),
+  'messages': () => Future.value(null),
 };
 
 MessageLookupByLibrary? _findExact(String localeName) {
@@ -32,6 +33,8 @@ MessageLookupByLibrary? _findExact(String localeName) {
       return messages_en.messages;
     case 'it':
       return messages_it.messages;
+    case 'messages':
+      return messages_messages.messages;
     default:
       return null;
   }
