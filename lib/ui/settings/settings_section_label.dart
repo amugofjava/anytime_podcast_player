@@ -18,12 +18,15 @@ class SettingsDividerLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: padding,
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              fontSize: 12.0,
-              color: Theme.of(context).primaryColor,
-            ),
+      child: Semantics(
+        header: true,
+        child: Text(
+          label,
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                fontSize: 12.0,
+                color: Theme.of(context).primaryColor,
+              ),
+        ),
       ),
     );
   }
