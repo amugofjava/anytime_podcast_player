@@ -54,13 +54,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "subscribe_label": "Ssegui",
+  "subscribe_label": "Segui",
   "@subscribe_label": {
     "description": "Subscribe label",
     "type": "text",
     "placeholders": {}
   },
-  "unsubscribe_label": "Non Seguire",
+  "unsubscribe_label": "Smetti di seguire",
   "@unsubscribe_label": {
     "description": "Unsubscribe label",
     "type": "text",
@@ -96,13 +96,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_played_label": "Marca come riprodotto",
+  "mark_played_label": "Marca Riprodotto",
   "@mark_played_label": {
     "description": "Mark as played",
     "type": "text",
     "placeholders": {}
   },
-  "mark_unplayed_label": "Marca come da riprodurre",
+  "mark_unplayed_label": "Marca da Riprodurre",
   "@mark_unplayed_label": {
     "description": "Mark as unplayed",
     "type": "text",
@@ -366,7 +366,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "add_rss_feed_option": "Aggiungi un feed RSS",
+  "add_rss_feed_option": "Aggiungi un Feed RSS",
   "@add_rss_feed_option": {
     "description": "Option label for adding manual RSS feed url",
     "type": "text",
@@ -525,14 +525,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "up_next_queue_label": "Avanti il prossimo",
+  "up_next_queue_label": "Vai al Prossimo",
   "@up_next_queue_label": {
     "description": "Up next label on queue",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "more_label": "Di più",
+  "more_label": "Di Più",
   "@more_label": {
     "description": "More label",
     "type": "text",
@@ -581,14 +581,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "queue_clear_button_label": "Pulisci",
+  "queue_clear_button_label": "Svuota",
   "@queue_clear_button_label": {
     "description": "Shown on dialog box when clearing queue",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "queue_clear_label_title": "Pulisci Coda",
+  "queue_clear_label_title": "Svuota la Coda",
   "@queue_clear_label_title": {
     "description": "Shown on dialog box when clearing queue",
     "type": "text",
@@ -602,14 +602,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "discovery_categories_itunes": "<Tutti>,Arte,Business,Commedia,Educazione,Fiction,Politica,Benessere e Sport,Storia,Bambini e Famiglia,Tempo Libero,Musica,Notizie,Religione e Spiritualità,Scienza,Società e Cultura,Sport,TV e Film,Tecnologia,True Crime",
+  "discovery_categories_itunes": "<Tutti>,Arte,Business,Commedia,Educazione,Fiction,Governativi,Salute e Benessere,Storia,Bambini e Famiglia,Tempo Libero,Musica,Notizie,Religione e Spiritualità,Scienza,Società e Cultura,Sport,TV e Film,Tecnologia,True Crime",
   "@discovery_categories_itunes": {
     "description": "Comma separated list of iTunes categories",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "discovery_categories_pindex": "<Tutti>,Alternativa,Animali,Animazione,Arte,Astronomia,Automotive,Aviazione,Baseball,Basket,Bellezza,Libri,Buddismo,Affari,Carriera,Chimica,Cristianesimo,Clima,Commedia,Commenti,Corsi,Artigianato,Cricket,Criptovalute,Cultura,Quotidiano,Design, Documentario, Dramma, Terra, Educazione, Intrattenimento, Imprenditorialità, Famiglia, Fantasia, Moda, Narrativa, Film, Fitness, Cibo, Calcio, Giochi, Giardino, Golf, Governo, Salute, Induismo, Storia, Hobby, Hockey, Casa, Come fare, Improv, Interviste, Investire, Islam, Riviste, Ebraismo, Bambini, Lingua, Apprendimento, Tempo libero, Vita, Gestione, Manga, Marketing, Matematica, Medicina, Mentale, Musica, Naturale, Natura, Notizie, Nonprofit, Nutrizione, Genitorialità, Spettacolo, Personale, Animali domestici, Filosofia, Fisica, Luoghi, Politica, Relazioni, Religione, Recensioni, giochi di ruolo, rugby, corsa, scienza, auto-miglioramento, sessualità, calcio, sociale, società, spiritualità, sport, Stand-Up, storie, nuoto, TV, tabletop, tecnologia, tennis, viaggi, true crime, videogiochi, visual, pallavolo, tempo, wilderness, wrestling",
+  "discovery_categories_pindex": "<Tutti>,Dopo-Spettacolo,Alternativi,Animali,Animazione,Arte,Astronomia,Automotive,Aviazione,Baseball,Pallacanestro,Bellezza,Libri,Buddismo,Business,Carriera,Chimica,Cristianità,Clima,Commedia,Commenti,Corsi,Artigianato,Cricket,Cryptocurrency,Cultura,Giornalieri,Design,Documentari,Dramma,Terra,Educazione,Intrattenimento,Imprenditoria,Famiglia,Fantasy,Fashion,Fiction,Film,Fitness,Cibo,Football,Giochi,Giardinaggio,Golf,Governativi,Salute,Induismo,Storia,Hobbies,Hockey,Casa,Come Fare,Improvvisazione,Interviste,Investimenti,Islam,Giornalismo,Giudaismo,Bambini,Lingue,Apprendimento,Tempo-Libero,Stili di Vita,Gestione,Manga,Marketing,Matematica,Medicina,Mentale,Musica,Naturale,Natura,Notizie,NonProfit,Nutrizione,Genitorialità,Esecuzione,Personale,Animali-Domestici,Filosofia,Fisica,Posti,Politica,Relazioni,Religione,Recensioni,Giochi-di-Ruolo,Rugby,Corsa,Scienza,Miglioramento-Personale,Sessualità,Calcio,Social,Società,Spiritualità,Sports,Stand-Up,Storie,Nuoto,TV,Tabletop,Tecnologia,Tennis,Viaggi,True Crime,Video-Giochi,Visivo,Pallavolo,Meteo,Natura-Selvaggia,Wrestling",
   "@discovery_categories_pindex": {
     "description": "Comma separated list of Podcast Index categories",
     "type": "text",
@@ -918,6 +918,54 @@
   "episode_filter_clear_filters_button_label": "Pulisci i Filtri",
   "@episode_filter_clear_filters_button_label": {
     "description": "Clear filters button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_semantic_label": "Filtra gli episodi",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "Ordina gli episodi",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "Default",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "Gli ultimi",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "I più vecchi",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "Ordine Alfabetico A-Z",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "Ordine Alfabetico Z-A",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "Vai al sito web dello show",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
     "type": "text",
     "placeholders": {}
   }
