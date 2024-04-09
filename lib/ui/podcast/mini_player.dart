@@ -201,8 +201,9 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                           audioBloc.transitionState(TransitionState.fastforward);
                                         }
                                       },
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.forward_30,
+                                        semanticLabel: L.of(context)!.fast_forward_button_label,
                                         size: 36.0,
                                       ),
                                     ),
