@@ -81,7 +81,7 @@ class EpisodeBloc extends Bloc {
 
   void _listenEpisodeEvents() {
     // Listen for episode updates. If the episode is downloaded, we need to update.
-    podcastService.episodeListener!.where((event) => event.episode.downloaded).listen((event) => fetchDownloads(true));
+    podcastService.episodeListener!.where((event) => event.episode.downloaded || event.episode.played).listen((event) => fetchDownloads(true));
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {
