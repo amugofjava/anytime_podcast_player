@@ -17,7 +17,7 @@ dependencies:
   device_info_plus: ^9.0.3
   expand_widget: ^3.1.0
   extended_image: ^8.2.0
-  file_picker: ^6.1.1
+  file_picker: ^8.0.0+1
   flutter_dialogs: ^3.0.0
   flutter_downloader: ^1.11.7
   flutter_html: ^3.0.0-beta.2
