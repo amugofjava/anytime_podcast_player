@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -26,6 +27,7 @@ import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
 import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -368,10 +370,9 @@ class PodcastTitle extends StatefulWidget {
 
 class _PodcastTitleState extends State<PodcastTitle> {
   final GlobalKey descriptionKey = GlobalKey();
-  final maxHeight = 100.0;
+  final _maxCollapsedHeight = 100.0;
   PodcastHtml? description;
   bool showOverflow = false;
-  final StreamController<bool> isDescriptionExpandedStream = StreamController<bool>.broadcast();
 
   @override
   Widget build(BuildContext context) {
@@ -406,48 +407,11 @@ class _PodcastTitleState extends State<PodcastTitle> {
                   ),
                 ),
               ),
-              StreamBuilder<bool>(
-                  stream: isDescriptionExpandedStream.stream,
-                  initialData: false,
-                  builder: (context, snapshot) {
-                    final expanded = snapshot.data!;
-                    return Visibility(
-                      visible: showOverflow,
-                      child: SizedBox(
-                        height: 48.0,
-                        width: 48.0,
-                        child: expanded
-                            ? TextButton(
-                                style: const ButtonStyle(
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                child: Icon(
-                                  Icons.expand_less,
-                                  semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
-                                ),
-                                onPressed: () {
-                                  isDescriptionExpandedStream.add(false);
-                                },
-                              )
-                            : TextButton(
-                                style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                                child: Icon(
-                                  Icons.expand_more,
-                                  semanticLabel: L.of(context)!.semantics_expand_podcast_description,
-                                ),
-                                onPressed: () {
-                                  isDescriptionExpandedStream.add(true);
-                                },
-                              ),
-                      ),
-                    );
-                  })
             ],
           ),
           PodcastDescription(
             key: descriptionKey,
             content: description,
-            isDescriptionExpandedStream: isDescriptionExpandedStream,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -487,7 +451,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (descriptionKey.currentContext!.size!.height == maxHeight) {
+      if (descriptionKey.currentContext!.size!.height == _maxCollapsedHeight) {
         setState(() {
           showOverflow = true;
         });
@@ -501,50 +465,98 @@ class _PodcastTitleState extends State<PodcastTitle> {
 /// This handles the common case whereby the description is very long and, without
 /// this constraint, would require the use to always scroll before reaching the
 /// podcast episodes.
-///
-/// TODO: Animate between the two states.
-class PodcastDescription extends StatelessWidget {
+class PodcastDescription extends StatefulWidget {
   final PodcastHtml? content;
-  final StreamController<bool>? isDescriptionExpandedStream;
-  static const maxHeight = 100.0;
-  static const padding = 4.0;
 
-  const PodcastDescription({
+  PodcastDescription({
     super.key,
     this.content,
-    this.isDescriptionExpandedStream,
   });
 
   @override
+  State<PodcastDescription> createState() => _PodcastDescriptionState();
+}
+
+class _PodcastDescriptionState extends State<PodcastDescription> {
+  static const padding = 8.0;
+
+  final GlobalKey _key = GlobalKey();
+
+  static const _maxCollapsedHeight = 100.0;
+  double _uncollapsedHeight = 0;
+  double _collapsedHeight = 0;
+  bool _isExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // determine the height of the content, runs after rendering
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      double? height = _key.currentContext?.size?.height;
+      // collapsed height will remain at 0
+      if (height == null) return;
+
+      setState(() {
+        // true height of the content
+        _uncollapsedHeight = height.toDouble();
+
+        // collapsed height
+        _collapsedHeight = min(height, _maxCollapsedHeight);
+      });
+    });
+  }
+
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: PodcastDescription.padding),
-      child: StreamBuilder<bool>(
-          stream: isDescriptionExpandedStream!.stream,
-          initialData: false,
-          builder: (context, snapshot) {
-            final expanded = snapshot.data!;
-            return AnimatedSize(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.fastOutSlowIn,
-              alignment: Alignment.topCenter,
-              child: Container(
-                constraints: expanded
-                    ? const BoxConstraints()
-                    : BoxConstraints.loose(const Size(double.infinity, maxHeight - padding)),
-                child: expanded
-                    ? content
-                    : ShaderMask(
-                        shaderCallback: LinearGradient(
-                          colors: [Colors.white, Colors.white.withAlpha(0)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: const [0.9, 1],
-                        ).createShader,
-                        child: content),
-              ),
-            );
-          }),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.fastOutSlowIn,
+          height: _isExpanded ? _uncollapsedHeight : _collapsedHeight,
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) => LinearGradient(
+              colors: [Colors.white, Colors.white.withAlpha(0)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              // "show more" gradient only visible when the description was cut off
+              stops: _isExpanded || _uncollapsedHeight == _collapsedHeight
+                  ? [1.0, 1.0]
+                  : [0.7, 1.0],
+            ).createShader(bounds),
+            child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                // toggle if the user hasn't tapped on url
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: _toggleExpanded,
+                  child: Container(key: _key, child: widget.content),
+                )),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: padding, bottom: 10),
+          child: InkWell(
+            onTap: _toggleExpanded,
+            child: _uncollapsedHeight == _collapsedHeight
+                ? Container()
+                : Text(
+                    _isExpanded
+                        ? L.of(context)!.show_less_podcast_description_label
+                        : L.of(context)!.show_more_podcast_description_label,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+          ),
+        ),
+      ],
     );
   }
 }

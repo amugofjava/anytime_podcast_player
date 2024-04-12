@@ -1187,26 +1187,6 @@ class L {
         );
   }
 
-  String get semantics_expand_podcast_description {
-    return message('semantics_expand_podcast_description') ??
-        Intl.message(
-          'Expand podcast description',
-          name: 'semantics_expand_podcast_description',
-          desc: 'Describes podcast collapse/expand button',
-          locale: localeName,
-        );
-  }
-
-  String get semantics_collapse_podcast_description {
-    return message('semantics_collapse_podcast_description') ??
-        Intl.message(
-          'Collapse podcast description',
-          name: 'semantics_collapse_podcast_description',
-          desc: 'Describes podcast collapse/expand button',
-          locale: localeName,
-        );
-  }
-
   String get semantics_add_to_queue {
     return message('semantics_add_to_queue') ??
         Intl.message(
@@ -1554,6 +1534,26 @@ class L {
           'Open show website',
           name: 'open_show_website_label',
           desc: 'Open show website in browser',
+          locale: localeName,
+        );
+  }
+
+  String get show_more_podcast_description_label {
+    return message('show_more_podcast_description_label') ??
+        Intl.message(
+          'Show more',
+          name: 'show_more_podcast_description_label',
+          desc: 'Show more podcast description',
+          locale: localeName,
+        );
+  }
+
+  String get show_less_podcast_description_label {
+    return message('show_less_podcast_description_label') ??
+        Intl.message(
+          'Show less',
+          name: 'show_less_podcast_description_label',
+          desc: 'Show less podcast description',
           locale: localeName,
         );
   }
