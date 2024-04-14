@@ -468,7 +468,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
 class PodcastDescription extends StatefulWidget {
   final PodcastHtml? content;
 
-  PodcastDescription({
+  const PodcastDescription({
     super.key,
     this.content,
   });
@@ -487,12 +487,15 @@ class _PodcastDescriptionState extends State<PodcastDescription> {
   double _collapsedHeight = 0;
   bool _isExpanded = false;
 
+  // initial load without animation
+  Duration _animationDuration = const Duration(milliseconds: 0);
+
   @override
   void initState() {
     super.initState();
 
     // determine the height of the content, runs after rendering
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       double? height = _key.currentContext?.size?.height;
       // collapsed height will remain at 0
       if (height == null) return;
@@ -503,6 +506,13 @@ class _PodcastDescriptionState extends State<PodcastDescription> {
 
         // collapsed height
         _collapsedHeight = min(height, _maxCollapsedHeight);
+      });
+
+      // wait for initial render to complete before animating
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      setState(() {
+        _animationDuration = const Duration(milliseconds: 300);
       });
     });
   }
@@ -519,7 +529,7 @@ class _PodcastDescriptionState extends State<PodcastDescription> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
+          duration: _animationDuration,
           curve: Curves.fastOutSlowIn,
           height: _isExpanded ? _uncollapsedHeight : _collapsedHeight,
           child: ShaderMask(
@@ -533,7 +543,7 @@ class _PodcastDescriptionState extends State<PodcastDescription> {
                   : [0.7, 1.0],
             ).createShader(bounds),
             child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 // toggle if the user hasn't tapped on url
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
@@ -544,16 +554,18 @@ class _PodcastDescriptionState extends State<PodcastDescription> {
         ),
         Padding(
           padding: const EdgeInsets.only(left: padding, bottom: 10),
-          child: InkWell(
-            onTap: _toggleExpanded,
-            child: _uncollapsedHeight == _collapsedHeight
-                ? Container()
-                : Text(
-                    _isExpanded
-                        ? L.of(context)!.show_less_podcast_description_label
-                        : L.of(context)!.show_more_podcast_description_label,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+          child: MergeSemantics(
+            child: InkWell(
+              onTap: _toggleExpanded,
+              child: _uncollapsedHeight == _collapsedHeight
+                  ? Container()
+                  : Text(
+                      _isExpanded
+                          ? L.of(context)!.show_less_podcast_description_label
+                          : L.of(context)!.show_more_podcast_description_label,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+            ),
           ),
         ),
       ],

@@ -968,5 +968,17 @@
     "description": "Open show website in browser",
     "type": "text",
     "placeholders": {}
+  },
+   "show_more_podcast_description_label": "Mehr anzeigen",
+  "@show_more_podcast_description_label": {
+    "description": "Zeig die gesamte Podcast Beschreibung an.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_less_podcast_description_label": "Weniger anzeigen",
+  "@show_less_podcast_description_label": {
+    "description": "Zeig weniger von der Podcast Beschreibung.",
+    "type": "text",
+    "placeholders": {}
   }
 }

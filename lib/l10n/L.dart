@@ -1187,6 +1187,26 @@ class L {
         );
   }
 
+  String get semantics_expand_podcast_description {
+    return message('semantics_expand_podcast_description') ??
+        Intl.message(
+          'Expand podcast description',
+          name: 'semantics_expand_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
+  String get semantics_collapse_podcast_description {
+    return message('semantics_collapse_podcast_description') ??
+        Intl.message(
+          'Collapse podcast description',
+          name: 'semantics_collapse_podcast_description',
+          desc: 'Describes podcast collapse/expand button',
+          locale: localeName,
+        );
+  }
+
   String get semantics_add_to_queue {
     return message('semantics_add_to_queue') ??
         Intl.message(

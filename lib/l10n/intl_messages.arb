@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-04-04T16:54:01.419283",
+  "@@last_modified": "2024-04-14T21:25:00.843669",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -911,6 +911,18 @@
   "open_show_website_label": "Open show website",
   "@open_show_website_label": {
     "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_more_podcast_description_label": "Show more",
+  "@show_more_podcast_description_label": {
+    "description": "Show more podcast description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_less_podcast_description_label": "Show less",
+  "@show_less_podcast_description_label": {
+    "description": "Show less podcast description",
     "type": "text",
     "placeholders": {}
   }

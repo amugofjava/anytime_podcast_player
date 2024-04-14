@@ -162,6 +162,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('PERSONALISATION'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('PLAYBACK'),
     'settings_theme_switch_label': MessageLookupByLibrary.simpleMessage('Dark theme'),
+    'show_less_podcast_description_label': MessageLookupByLibrary.simpleMessage('Show less'),
+    'show_more_podcast_description_label': MessageLookupByLibrary.simpleMessage('Show more'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Show notes'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('End of episode'),
     'sleep_minute_label': m0,
