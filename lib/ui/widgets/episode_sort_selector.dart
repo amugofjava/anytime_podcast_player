@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 /// This widget allows the user to filter the episodes.
 class EpisodeSortSelectorWidget extends StatefulWidget {
-  final Podcast podcast;
+  final Podcast? podcast;
 
   const EpisodeSortSelectorWidget({
     required this.podcast,
@@ -47,7 +47,7 @@ class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
                       Icons.sort,
                       semanticLabel: L.of(context)!.episode_sort_semantic_label,
                     ),
-                    onPressed: widget.podcast.subscribed
+                    onPressed: widget.podcast != null && widget.podcast!.subscribed
                         ? () {
                             showModalBottomSheet<void>(
                                 isScrollControlled: true,
@@ -61,7 +61,7 @@ class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
                                 ),
                                 builder: (context) {
                                   return EpisodeSortSlider(
-                                    podcast: widget.podcast,
+                                    podcast: widget.podcast!,
                                   );
                                 });
                           }

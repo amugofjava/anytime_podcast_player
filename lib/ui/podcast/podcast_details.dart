@@ -626,77 +626,85 @@ class FollowButton extends StatelessWidget {
     return StreamBuilder<BlocState<Podcast>>(
         stream: bloc.details,
         builder: (context, snapshot) {
+          var ready = false;
+          var subscribed = false;
+
+          // To prevent jumpy UI, we always need to display the follow/unfollow button.
+          // Display a disabled follow button until the full state it loaded.
           if (snapshot.hasData) {
             final state = snapshot.data;
 
             if (state is BlocPopulatedState<Podcast>) {
-              var p = state.results!;
-
-              return Semantics(
-                liveRegion: true,
-                child: p.subscribed
-                    ? OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        ),
-                        icon: const Icon(
-                          Icons.delete_outline,
-                        ),
-                        label: Text(L.of(context)!.unsubscribe_label),
-                        onPressed: () {
-                          showPlatformDialog<void>(
-                            context: context,
-                            useRootNavigator: false,
-                            builder: (_) => BasicDialogAlert(
-                              title: Text(L.of(context)!.unsubscribe_label),
-                              content: Text(L.of(context)!.unsubscribe_message),
-                              actions: <Widget>[
-                                BasicDialogAction(
-                                  title: ExcludeSemantics(
-                                    child: ActionText(
-                                      L.of(context)!.cancel_button_label,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                BasicDialogAction(
-                                  title: ExcludeSemantics(
-                                    child: ActionText(
-                                      L.of(context)!.unsubscribe_button_label,
-                                    ),
-                                  ),
-                                  iosIsDefaultAction: true,
-                                  iosIsDestructiveAction: true,
-                                  onPressed: () {
-                                    bloc.podcastEvent(PodcastEvent.unsubscribe);
-
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      )
-                    : OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        ),
-                        icon: const Icon(
-                          Icons.add,
-                        ),
-                        label: Text(L.of(context)!.subscribe_label),
-                        onPressed: () {
-                          bloc.podcastEvent(PodcastEvent.subscribe);
-                        },
-                      ),
-              );
+              ready = true;
+              subscribed = state.results!.subscribed;
             }
           }
-          return Container();
+          return Semantics(
+            liveRegion: true,
+            child: subscribed
+                ? OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                    ),
+                    label: Text(L.of(context)!.unsubscribe_label),
+                    onPressed: ready
+                        ? () {
+                            showPlatformDialog<void>(
+                              context: context,
+                              useRootNavigator: false,
+                              builder: (_) => BasicDialogAlert(
+                                title: Text(L.of(context)!.unsubscribe_label),
+                                content: Text(L.of(context)!.unsubscribe_message),
+                                actions: <Widget>[
+                                  BasicDialogAction(
+                                    title: ExcludeSemantics(
+                                      child: ActionText(
+                                        L.of(context)!.cancel_button_label,
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  BasicDialogAction(
+                                    title: ExcludeSemantics(
+                                      child: ActionText(
+                                        L.of(context)!.unsubscribe_button_label,
+                                      ),
+                                    ),
+                                    iosIsDefaultAction: true,
+                                    iosIsDestructiveAction: true,
+                                    onPressed: () {
+                                      bloc.podcastEvent(PodcastEvent.unsubscribe);
+
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        : null,
+                  )
+                : OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                    icon: const Icon(
+                      Icons.add,
+                    ),
+                    label: Text(L.of(context)!.subscribe_label),
+                    onPressed: ready
+                        ? () {
+                            bloc.podcastEvent(PodcastEvent.subscribe);
+                          }
+                        : null,
+                  ),
+          );
         });
   }
 }
@@ -713,18 +721,19 @@ class FilterButton extends StatelessWidget {
     return StreamBuilder<BlocState<Podcast>>(
         stream: bloc.details,
         builder: (context, snapshot) {
+          Podcast? podcast;
+
           if (snapshot.hasData) {
             final state = snapshot.data;
 
             if (state is BlocPopulatedState<Podcast>) {
-              var p = state.results!;
-
-              return EpisodeFilterSelectorWidget(
-                podcast: p,
-              );
+              podcast = state.results!;
             }
           }
-          return Container();
+
+          return EpisodeFilterSelectorWidget(
+            podcast: podcast,
+          );
         });
   }
 }
@@ -741,18 +750,19 @@ class SortButton extends StatelessWidget {
     return StreamBuilder<BlocState<Podcast>>(
         stream: bloc.details,
         builder: (context, snapshot) {
+          Podcast? podcast;
+
           if (snapshot.hasData) {
             final state = snapshot.data;
 
             if (state is BlocPopulatedState<Podcast>) {
-              var p = state.results!;
-
-              return EpisodeSortSelectorWidget(
-                podcast: p,
-              );
+              podcast = state.results!;
             }
           }
-          return Container();
+
+          return EpisodeSortSelectorWidget(
+            podcast: podcast,
+          );
         });
   }
 }

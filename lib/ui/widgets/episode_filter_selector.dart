@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 /// This widget allows the user to filter the episodes.
 class EpisodeFilterSelectorWidget extends StatefulWidget {
-  final Podcast podcast;
+  final Podcast? podcast;
 
   const EpisodeFilterSelectorWidget({
     required this.podcast,
@@ -44,12 +44,12 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                 child: Center(
                   child: IconButton(
                     icon: Icon(
-                      widget.podcast.filter == PodcastEpisodeFilter.none
+                      widget.podcast == null || widget.podcast!.filter == PodcastEpisodeFilter.none
                           ? Icons.filter_alt_outlined
                           : Icons.filter_alt_off_outlined,
                       semanticLabel: L.of(context)!.episode_filter_semantic_label,
                     ),
-                    onPressed: widget.podcast.subscribed
+                    onPressed: widget.podcast != null && widget.podcast!.subscribed
                         ? () {
                             showModalBottomSheet<void>(
                                 isScrollControlled: true,
@@ -63,7 +63,7 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                                 ),
                                 builder: (context) {
                                   return EpisodeFilterSlider(
-                                    podcast: widget.podcast,
+                                    podcast: widget.podcast!,
                                   );
                                 });
                           }
