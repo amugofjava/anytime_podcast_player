@@ -107,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_clear_label': MessageLookupByLibrary.simpleMessage('Möchten Sie die Warteschlange wirklich löschen?'),
     'queue_clear_label_title': MessageLookupByLibrary.simpleMessage('Warteschlange löschen'),
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Entfernen'),
+    'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Holen Sie sich neue Episoden'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('10 Sekunden zurückspulen'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Zurück'),
     'search_button_label': MessageLookupByLibrary.simpleMessage('Suche'),

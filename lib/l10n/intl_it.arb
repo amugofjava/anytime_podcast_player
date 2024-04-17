@@ -968,5 +968,11 @@
     "description": "Open show website in browser",
     "type": "text",
     "placeholders": {}
+  },
+  "refresh_feed_label": "Recupera nuovi episodi",
+  "@refresh_feed_label": {
+    "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
   }
 }

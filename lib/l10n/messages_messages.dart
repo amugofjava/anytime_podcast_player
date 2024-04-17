@@ -107,6 +107,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_clear_label': MessageLookupByLibrary.simpleMessage('Are you sure you wish to clear the queue?'),
     'queue_clear_label_title': MessageLookupByLibrary.simpleMessage('Clear Queue'),
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Remove'),
+    'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Refresh episodes'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('Rewind episode 10 seconds'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Back'),
     'search_button_label': MessageLookupByLibrary.simpleMessage('Search'),

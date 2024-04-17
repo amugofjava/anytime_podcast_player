@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/bloc_state.dart';
@@ -77,6 +78,12 @@ class _MaterialPodcastMenu extends StatelessWidget {
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem<String>(
+                  value: 'refresh',
+                  enabled: podcast.link?.isNotEmpty ?? false,
+                  child: Text(L.of(context)!.refresh_feed_label),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem<String>(
                   value: 'web',
                   enabled: podcast.link?.isNotEmpty ?? false,
                   child: Text(L.of(context)!.open_show_website_label),
@@ -95,6 +102,11 @@ class _MaterialPodcastMenu extends StatelessWidget {
       bloc.podcastEvent(PodcastEvent.markAllPlayed);
     } else if (value == 'ua') {
       bloc.podcastEvent(PodcastEvent.clearAllPlayed);
+    } else if (value == 'refresh') {
+      bloc.load(Feed(
+        podcast: podcast,
+        refresh: true,
+      ));
     } else if (value == 'web') {
       final uri = Uri.parse(podcast.link!);
 
@@ -141,10 +153,15 @@ class _CupertinoContextMenu extends StatelessWidget {
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
                       onPressed: () {
-                        bloc.podcastEvent(PodcastEvent.clearAllPlayed);
-                        Navigator.pop(context, 'Cancel');
+                        bloc.load(Feed(
+                          podcast: podcast,
+                          refresh: true,
+                        ));
+                        if (context.mounted) {
+                          Navigator.pop(context, 'Cancel');
+                        }
                       },
-                      child: Text(L.of(context)!.mark_episodes_not_played_label),
+                      child: Text(L.of(context)!.refresh_feed_label),
                     ),
                     CupertinoActionSheetAction(
                       isDefaultAction: true,

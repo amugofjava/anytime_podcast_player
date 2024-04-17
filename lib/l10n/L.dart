@@ -1557,6 +1557,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get refresh_feed_label {
+    return message('refresh_feed_label') ??
+        Intl.message(
+          'Refresh episodes',
+          name: 'refresh_feed_label',
+          desc: 'Menu item to refresh episodes',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
