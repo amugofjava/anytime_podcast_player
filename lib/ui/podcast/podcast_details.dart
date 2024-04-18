@@ -399,7 +399,7 @@ class _PodcastTitleState extends State<PodcastTitle> {
                         child: Text(widget.podcast.title, style: textTheme.titleLarge),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
                         child: Text(widget.podcast.copyright ?? '', style: textTheme.bodySmall),
                       ),
                     ],
