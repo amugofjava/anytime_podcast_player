@@ -64,9 +64,11 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                               size: 18,
                             ),
                           ),
-                          Text(
-                            L.of(context)!.layout_label,
-                            style: Theme.of(context).textTheme.titleMedium,
+                          ExcludeSemantics(
+                            child: Text(
+                              L.of(context)!.layout_label,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
                           ),
                         ],
                       )),
@@ -82,10 +84,13 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           style: OutlinedButton.styleFrom(
                             backgroundColor: mode == 0 ? Theme.of(context).primaryColor : null,
                           ),
-                          child: Icon(
-                            Icons.list,
-                            semanticLabel: L.of(context)!.semantics_layout_option_list,
-                            color: mode == 0 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                          child: Semantics(
+                            selected: mode == 0,
+                            label: L.of(context)!.semantics_layout_option_list,
+                            child: Icon(
+                              Icons.list,
+                              color: mode == 0 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ),
@@ -100,10 +105,13 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           style: OutlinedButton.styleFrom(
                             backgroundColor: mode == 1 ? Theme.of(context).primaryColor : null,
                           ),
-                          child: Icon(
-                            Icons.grid_on,
-                            semanticLabel: L.of(context)!.semantics_layout_option_compact_grid,
-                            color: mode == 1 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                          child: Semantics(
+                            selected: mode == 1,
+                            label: L.of(context)!.semantics_layout_option_compact_grid,
+                            child: Icon(
+                              Icons.grid_on,
+                              color: mode == 1 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ),
@@ -118,10 +126,13 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                           style: OutlinedButton.styleFrom(
                             backgroundColor: mode == 2 ? Theme.of(context).primaryColor : null,
                           ),
-                          child: Icon(
-                            Icons.grid_view,
-                            semanticLabel: L.of(context)!.semantics_layout_option_grid,
-                            color: mode == 2 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                          child: Semantics(
+                            selected: mode == 2,
+                            label: L.of(context)!.semantics_layout_option_grid,
+                            child: Icon(
+                              Icons.grid_view,
+                              color: mode == 2 ? Theme.of(context).canvasColor : Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                       ),
