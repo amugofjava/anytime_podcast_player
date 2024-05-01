@@ -66,7 +66,9 @@ class SearchBloc extends Bloc {
         // Check we have network
         var connectivityResult = await Connectivity().checkConnectivity();
 
-        if (connectivityResult == ConnectivityResult.none) {
+        // TODO: Docs do not recommend this approach as a reliable way to
+        //       determine if network is available.
+        if (connectivityResult.contains(ConnectivityResult.none)) {
           yield BlocErrorState(error: BlocErrorType.connectivity);
         } else {
           final results = await podcastService.search(term: term);
