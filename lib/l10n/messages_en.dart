@@ -109,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Remove'),
     'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Refresh episodes'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('Rewind episode 10 seconds'),
+    'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Dismiss layout selector'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Back'),
     'search_button_label': MessageLookupByLibrary.simpleMessage('Search'),
     'search_for_podcasts_hint': MessageLookupByLibrary.simpleMessage('Search for podcasts'),

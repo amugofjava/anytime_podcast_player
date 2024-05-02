@@ -576,6 +576,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         await showModalBottomSheet<void>(
           context: context,
           backgroundColor: theme.secondaryHeaderColor,
+          barrierLabel: L.of(context)!.scrim_layout_selector,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16.0),

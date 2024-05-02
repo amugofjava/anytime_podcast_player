@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-04-17T14:09:22.222143",
+  "@@last_modified": "2024-05-02T13:47:46.879269",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -917,6 +917,12 @@
   "refresh_feed_label": "Refresh episodes",
   "@refresh_feed_label": {
     "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_layout_selector": "Dismiss layout selector",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
     "type": "text",
     "placeholders": {}
   }

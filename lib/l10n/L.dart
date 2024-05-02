@@ -1567,6 +1567,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get scrim_layout_selector {
+    return message('scrim_layout_selector') ??
+        Intl.message(
+          'Dismiss layout selector',
+          name: 'scrim_layout_selector',
+          desc: 'Replaces default scrim label for layout selector bottom sheet.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

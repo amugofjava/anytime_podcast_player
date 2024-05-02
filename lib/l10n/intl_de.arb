@@ -974,5 +974,11 @@
     "description": "Menu item to refresh episodes",
     "type": "text",
     "placeholders": {}
+  },
+  "scrim_layout_selector": "Layout-Auswahl schließen",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
   }
 }
