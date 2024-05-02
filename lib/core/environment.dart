@@ -16,15 +16,19 @@ const userAgentAppString = String.fromEnvironment('USER_AGENT', defaultValue: ''
 /// Link to a feedback form. This will be shown in the main overflow menu if set
 const feedbackUrl = String.fromEnvironment('FEEDBACK_URL', defaultValue: '');
 
+/// This class stores version information for Anytime, including project version and
+/// build number. This is then used for user agent strings when interacting with
+/// APIs and RSS feeds.
+///
+/// The user agent string can be overridden by passing in the USER_AGENT variable
+/// using dart-define.
 class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
   static const _projectVersion = '1.3.8';
-  static const _build = '129';
+  static const _build = '131';
 
   static var _agentString = userAgentAppString;
-
-  static Future<void> loadEnvironment() async {}
 
   static String userAgent() {
     if (_agentString.isEmpty) {
