@@ -92,6 +92,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
     return Semantics(
       header: false,
       label: L.of(context)!.semantics_main_player_header,
+      explicitChildNodes: true,
       child: StreamBuilder<Episode?>(
           stream: audioBloc.nowPlaying,
           builder: (context, snapshot) {
