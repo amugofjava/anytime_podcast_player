@@ -1,3 +1,14 @@
+## 1.3.8
+
+- Added episode sort option.
+- Added link to podcast website in episodes page.
+- Added manual podcast refresh option in episodes page.
+- Translated into Italian (thank you [@mrkrash](https://github.com/mrkrash)).
+- Added TRANSLATION.md guide.
+- Fixed iOS swipe to go back transition.
+- Improved speed of 'mark all episodes played' option.
+- Fixed accessibility issues with settings page and layout selector.
+
 ## 1.3.7
 
 - Added episode filter.
