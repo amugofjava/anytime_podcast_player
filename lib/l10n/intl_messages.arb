@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-05-02T13:47:46.879269",
+  "@@last_modified": "2024-05-03T19:41:44.619882",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -923,6 +923,18 @@
   "scrim_layout_selector": "Dismiss layout selector",
   "@scrim_layout_selector": {
     "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_position": "Episode position",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "Time remaining",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
     "type": "text",
     "placeholders": {}
   }

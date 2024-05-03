@@ -91,6 +91,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'no_subscriptions_message': MessageLookupByLibrary.simpleMessage('Tippen Sie unten auf die Schaltfläche „Entdecken“ oder verwenden Sie die Suchleiste oben, um Ihren ersten Podcast zu finden'),
     'no_transcript_available_label': MessageLookupByLibrary.simpleMessage('Für diesen Podcast ist kein Transkript verfügbar'),
     'notes_label': MessageLookupByLibrary.simpleMessage('Notizen'),
+    'now_playing_episode_position': MessageLookupByLibrary.simpleMessage('Episodenposition'),
+    'now_playing_episode_time_remaining': MessageLookupByLibrary.simpleMessage('Verbleibende Zeit'),
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('Jetzt Spielen'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('OK'),
     'open_show_website_label': MessageLookupByLibrary.simpleMessage('Show-Website öffnen'),

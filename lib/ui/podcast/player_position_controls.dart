@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -79,6 +80,8 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                 FittedBox(
                   child: Text(
                     _formatDuration(Duration(seconds: currentPosition)),
+                    semanticsLabel:
+                        '${L.of(context)!.now_playing_episode_position} ${_formatDuration(Duration(seconds: currentPosition))}',
                     style: const TextStyle(
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),
@@ -135,6 +138,8 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                   child: Text(
                     _formatDuration(Duration(seconds: timeRemaining)),
                     textAlign: TextAlign.right,
+                    semanticsLabel:
+                        '${L.of(context)!.now_playing_episode_time_remaining} ${_formatDuration(Duration(seconds: timeRemaining))}',
                     style: const TextStyle(
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),

@@ -1577,6 +1577,26 @@ class L {
           locale: localeName,
         );
   }
+
+  String get now_playing_episode_position {
+    return message('now_playing_episode_position') ??
+        Intl.message(
+          'Episode position',
+          name: 'now_playing_episode_position',
+          desc: 'Episode position slider control label',
+          locale: localeName,
+        );
+  }
+
+  String get now_playing_episode_time_remaining {
+    return message('now_playing_episode_time_remaining') ??
+        Intl.message(
+          'Time remaining',
+          name: 'now_playing_episode_time_remaining',
+          desc: 'Episode time remaining slider control label',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

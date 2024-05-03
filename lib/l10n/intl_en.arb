@@ -980,5 +980,17 @@
     "description": "Replaces default scrim label for layout selector bottom sheet.",
     "type": "text",
     "placeholders": {}
+  },
+  "now_playing_episode_position": "Episode position",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "Time remaining",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
   }
 }
