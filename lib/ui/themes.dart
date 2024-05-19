@@ -15,9 +15,9 @@ ThemeData _buildLightTheme() {
     colorScheme: const ColorScheme.light(
       primary: Color(0xffff9800),
       secondary: Color(0xfffb8c00),
-      background: Color(0xffffffff),
+      surface: Color(0xffffffff),
       error: Color(0xffd32f2f),
-      onBackground: Color(0xffff9800),
+      onSurface: Color(0xffff9800),
     ),
     bottomAppBarTheme: const BottomAppBarTheme().copyWith(
       color: const Color(0xffffffff),
@@ -85,9 +85,9 @@ ThemeData _buildDarkTheme() {
     colorScheme: const ColorScheme.dark(
       primary: Color(0xffffffff),
       secondary: Color(0xfffb8c00),
-      background: Color(0xff222222),
+      surface: Color(0xff222222),
       error: Color(0xffd32f2f),
-      onBackground: Color(0xff656565),
+      onSurface: Color(0xff656565),
     ),
     bottomAppBarTheme: const BottomAppBarTheme().copyWith(
       color: const Color(0xff222222),

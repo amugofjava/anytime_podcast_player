@@ -192,7 +192,7 @@ class _SettingsState extends State<Settings> {
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       child: Material(child: _buildList(context)),
     );

@@ -395,7 +395,7 @@ class SubtitleWidget extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-        color: highlight ? Theme.of(context).colorScheme.onBackground : Colors.transparent,
+        color: highlight ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

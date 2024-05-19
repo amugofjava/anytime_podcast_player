@@ -85,7 +85,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
       },
       direction: DismissDirection.startToEnd,
       background: Container(
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).colorScheme.surface,
         height: 64.0,
       ),
       child: GestureDetector(
@@ -115,7 +115,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
           child: Container(
             height: 66,
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
+                color: Theme.of(context).colorScheme.surface,
                 border: Border(
                   top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
                   bottom: Divider.createBorderSide(context, width: 0.0, color: Theme.of(context).dividerColor),
@@ -193,8 +193,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         shape: CircleBorder(
-                                            side: BorderSide(
-                                                color: Theme.of(context).colorScheme.background, width: 0.0)),
+                                            side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
                                       ),
                                       onPressed: () {
                                         if (playing) {
@@ -215,8 +214,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         shape: CircleBorder(
-                                            side: BorderSide(
-                                                color: Theme.of(context).colorScheme.background, width: 0.0)),
+                                            side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
                                       ),
                                       onPressed: () {
                                         if (playing) {

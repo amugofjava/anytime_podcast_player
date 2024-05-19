@@ -105,7 +105,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     /// still visible behind the transport control. This is a little hack, but fixes
                     /// the issue until I can get ListTile to work correctly.
                     return Container(
-                      color: chapterSelected ? Theme.of(context).colorScheme.onBackground : Colors.transparent,
+                      color: chapterSelected ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
                         child: ListTile(
