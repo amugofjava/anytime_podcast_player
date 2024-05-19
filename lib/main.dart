@@ -32,12 +32,12 @@ void main() async {
   ));
 }
 
-/// The Let's Encrypt certificate authority expired at the end of September 2021. Android devices
-/// running v7.1.1 or earlier will no longer trust their root certificate which will cause issues
-/// when trying to fetch feeds and images from sites secured with LE. This routine is called to
-/// add the new CA to the trusted list at app start.
+/// When certificate authorities certificates expire, older devices may not be able to handle
+/// the re-issued certificate resulting in SSL errors being thrown. This routine is called to
+/// manually install the newer certificates on older devices so they continue to work.
 Future<List<int>> setupCertificateAuthority() async {
   List<int> ca = [];
+  var loadedCerts = false;
 
   if (Platform.isAndroid) {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -46,7 +46,17 @@ Future<List<int>> setupCertificateAuthority() async {
 
     if ((int.tryParse(major[0]) ?? 100.0) < 8.0) {
       ByteData data = await PlatformAssetBundle().load('assets/ca/lets-encrypt-r3.pem');
-      ca = data.buffer.asUint8List();
+      ca.addAll(data.buffer.asUint8List());
+      loadedCerts = true;
+    }
+
+    if ((int.tryParse(major[0]) ?? 100.0) < 10.0) {
+      ByteData data = await PlatformAssetBundle().load('assets/ca/globalsign-gcc-r6-alphassl-ca-2023.pem');
+      ca.addAll(data.buffer.asUint8List());
+      loadedCerts = true;
+    }
+
+    if (loadedCerts) {
       SecurityContext.defaultContext.setTrustedCertificatesBytes(ca);
     }
   }

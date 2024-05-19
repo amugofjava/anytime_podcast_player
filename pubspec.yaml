@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.3.8+131
+version: 1.3.8+132
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -82,6 +82,7 @@ flutter:
 
     # Certificate authorities
     - assets/ca/lets-encrypt-r3.pem
+    - assets/ca/globalsign-gcc-r6-alphassl-ca-2023.pem
 
   fonts:
     - family: SpaceMonoRegular
