@@ -17,7 +17,7 @@ ThemeData _buildLightTheme() {
       secondary: Color(0xfffb8c00),
       surface: Color(0xffffffff),
       error: Color(0xffd32f2f),
-      onSurface: Color(0xffff9800),
+      onSurface: Color(0xfffb8c00),
     ),
     bottomAppBarTheme: const BottomAppBarTheme().copyWith(
       color: const Color(0xffffffff),
@@ -40,7 +40,7 @@ ThemeData _buildLightTheme() {
     disabledColor: const Color(0x61000000),
     secondaryHeaderColor: const Color(0xffffffff),
     dialogBackgroundColor: const Color(0xffffffff),
-    indicatorColor: Colors.orange,
+    indicatorColor: Colors.blueAccent,
     hintColor: const Color(0x8a000000),
     primaryTextTheme: Typography.material2021(platform: TargetPlatform.android).black,
     textTheme: Typography.material2021(
@@ -70,7 +70,7 @@ ThemeData _buildLightTheme() {
           statusBarIconBrightness: Brightness.dark,
         )),
     snackBarTheme: base.snackBarTheme.copyWith(
-      actionTextColor: Colors.orange,
+      actionTextColor: Colors.white,
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(foregroundColor: Colors.grey[800]),
@@ -87,7 +87,7 @@ ThemeData _buildDarkTheme() {
       secondary: Color(0xfffb8c00),
       surface: Color(0xff222222),
       error: Color(0xffd32f2f),
-      onSurface: Color(0xff656565),
+      onSurface: Color(0xffffffff),
     ),
     bottomAppBarTheme: const BottomAppBarTheme().copyWith(
       color: const Color(0xff222222),
