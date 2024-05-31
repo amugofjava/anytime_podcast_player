@@ -525,7 +525,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
-    if (settingsService.deleteDownloadedPlayedEpisodes) {
+    if (
+        !settingsService.deleteDownloadedPlayedEpisodes &&
+        _currentEpisode?.downloadState == DownloadState.downloaded
+    ) {
       await podcastService.deleteDownload(_currentEpisode!);
     }
 
