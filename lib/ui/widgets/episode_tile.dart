@@ -424,175 +424,178 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
           final currentlyPlaying = nowPlaying?.guid == widget.episode.guid && audioState == AudioState.playing;
           final currentlyPaused = nowPlaying?.guid == widget.episode.guid && audioState == AudioState.pausing;
 
-          return ListTile(
-            key: Key('PT${widget.episode.guid}'),
-            leading: ExcludeSemantics(
-              child: Stack(
-                alignment: Alignment.bottomLeft,
-                fit: StackFit.passthrough,
-                children: <Widget>[
-                  Opacity(
-                    opacity: widget.episode.played ? 0.5 : 1.0,
-                    child: TileImage(
-                      url: widget.episode.thumbImageUrl ?? widget.episode.imageUrl!,
-                      size: 56.0,
-                      highlight: widget.episode.highlight,
+          return Semantics(
+            button: true,
+            child: ListTile(
+              key: Key('PT${widget.episode.guid}'),
+              leading: ExcludeSemantics(
+                child: Stack(
+                  alignment: Alignment.bottomLeft,
+                  fit: StackFit.passthrough,
+                  children: <Widget>[
+                    Opacity(
+                      opacity: widget.episode.played ? 0.5 : 1.0,
+                      child: TileImage(
+                        url: widget.episode.thumbImageUrl ?? widget.episode.imageUrl!,
+                        size: 56.0,
+                        highlight: widget.episode.highlight,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                    width: 56.0 * (widget.episode.percentagePlayed / 100),
-                    child: Container(
-                      color: Theme.of(context).primaryColor,
+                    SizedBox(
+                      height: 5.0,
+                      width: 56.0 * (widget.episode.percentagePlayed / 100),
+                      child: Container(
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            subtitle: Opacity(
-              opacity: widget.episode.played ? 0.5 : 1.0,
-              child: EpisodeSubtitle(widget.episode),
-            ),
-            title: Opacity(
-              opacity: widget.episode.played ? 0.5 : 1.0,
-              child: Text(
-                widget.episode.title!,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                softWrap: false,
-                style: textTheme.bodyMedium,
+              subtitle: Opacity(
+                opacity: widget.episode.played ? 0.5 : 1.0,
+                child: EpisodeSubtitle(widget.episode),
               ),
-            ),
-            onTap: () {
-              showCupertinoModalPopup<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return CupertinoActionSheet(
-                    actions: <Widget>[
-                      if (currentlyPlaying)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: true,
-                          onPressed: () {
-                            audioBloc.transitionState(TransitionState.pause);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.pause_button_label),
-                        ),
-                      if (currentlyPaused)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: true,
-                          onPressed: () {
-                            audioBloc.transitionState(TransitionState.play);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.resume_button_label),
-                        ),
-                      if (!currentlyPlaying && !currentlyPaused)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: true,
-                          onPressed: () {
-                            audioBloc.play(widget.episode);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: widget.episode.downloaded
-                              ? Text(L.of(context)!.play_download_button_label)
-                              : Text(L.of(context)!.play_button_label),
-                        ),
-                      if (widget.episode.downloadState == DownloadState.downloading)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: false,
-                          onPressed: () {
-                            episodeBloc.deleteDownload(widget.episode);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.cancel_download_button_label),
-                        ),
-                      if (widget.episode.downloadState != DownloadState.downloading)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: false,
-                          onPressed: () {
-                            if (widget.episode.downloaded) {
+              title: Opacity(
+                opacity: widget.episode.played ? 0.5 : 1.0,
+                child: Text(
+                  widget.episode.title!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  softWrap: false,
+                  style: textTheme.bodyMedium,
+                ),
+              ),
+              onTap: () {
+                showCupertinoModalPopup<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CupertinoActionSheet(
+                      actions: <Widget>[
+                        if (currentlyPlaying)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: true,
+                            onPressed: () {
+                              audioBloc.transitionState(TransitionState.pause);
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: Text(L.of(context)!.pause_button_label),
+                          ),
+                        if (currentlyPaused)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: true,
+                            onPressed: () {
+                              audioBloc.transitionState(TransitionState.play);
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: Text(L.of(context)!.resume_button_label),
+                          ),
+                        if (!currentlyPlaying && !currentlyPaused)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: true,
+                            onPressed: () {
+                              audioBloc.play(widget.episode);
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: widget.episode.downloaded
+                                ? Text(L.of(context)!.play_download_button_label)
+                                : Text(L.of(context)!.play_button_label),
+                          ),
+                        if (widget.episode.downloadState == DownloadState.downloading)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
                               episodeBloc.deleteDownload(widget.episode);
                               Navigator.pop(context, 'Cancel');
-                            } else {
-                              podcastBloc.downloadEpisode(widget.episode);
+                            },
+                            child: Text(L.of(context)!.cancel_download_button_label),
+                          ),
+                        if (widget.episode.downloadState != DownloadState.downloading)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
+                              if (widget.episode.downloaded) {
+                                episodeBloc.deleteDownload(widget.episode);
+                                Navigator.pop(context, 'Cancel');
+                              } else {
+                                podcastBloc.downloadEpisode(widget.episode);
+                                Navigator.pop(context, 'Cancel');
+                              }
+                            },
+                            child: widget.episode.downloaded
+                                ? Text(L.of(context)!.delete_episode_button_label)
+                                : Text(L.of(context)!.download_episode_button_label),
+                          ),
+                        if (!currentlyPlaying && !widget.queued)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
+                              queueBloc.queueEvent(QueueAddEvent(episode: widget.episode));
                               Navigator.pop(context, 'Cancel');
-                            }
-                          },
-                          child: widget.episode.downloaded
-                              ? Text(L.of(context)!.delete_episode_button_label)
-                              : Text(L.of(context)!.download_episode_button_label),
-                        ),
-                      if (!currentlyPlaying && !widget.queued)
+                            },
+                            child: Text(L.of(context)!.semantics_add_to_queue),
+                          ),
+                        if (!currentlyPlaying && widget.queued)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
+                              queueBloc.queueEvent(QueueRemoveEvent(episode: widget.episode));
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: Text(L.of(context)!.semantics_remove_from_queue),
+                          ),
+                        if (widget.episode.played)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
+                              episodeBloc.togglePlayed(widget.episode);
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: Text(L.of(context)!.semantics_mark_episode_unplayed),
+                          ),
+                        if (!widget.episode.played)
+                          CupertinoActionSheetAction(
+                            isDefaultAction: false,
+                            onPressed: () {
+                              episodeBloc.togglePlayed(widget.episode);
+                              Navigator.pop(context, 'Cancel');
+                            },
+                            child: Text(L.of(context)!.semantics_mark_episode_played),
+                          ),
                         CupertinoActionSheetAction(
                           isDefaultAction: false,
                           onPressed: () {
-                            queueBloc.queueEvent(QueueAddEvent(episode: widget.episode));
                             Navigator.pop(context, 'Cancel');
+                            showModalBottomSheet<void>(
+                                context: context,
+                                backgroundColor: theme.bottomAppBarTheme.color,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                  ),
+                                ),
+                                builder: (context) {
+                                  return EpisodeDetails(
+                                    episode: widget.episode,
+                                  );
+                                });
                           },
-                          child: Text(L.of(context)!.semantics_add_to_queue),
+                          child: Text(L.of(context)!.episode_details_button_label),
                         ),
-                      if (!currentlyPlaying && widget.queued)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: false,
-                          onPressed: () {
-                            queueBloc.queueEvent(QueueRemoveEvent(episode: widget.episode));
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.semantics_remove_from_queue),
-                        ),
-                      if (widget.episode.played)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: false,
-                          onPressed: () {
-                            episodeBloc.togglePlayed(widget.episode);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.semantics_mark_episode_unplayed),
-                        ),
-                      if (!widget.episode.played)
-                        CupertinoActionSheetAction(
-                          isDefaultAction: false,
-                          onPressed: () {
-                            episodeBloc.togglePlayed(widget.episode);
-                            Navigator.pop(context, 'Cancel');
-                          },
-                          child: Text(L.of(context)!.semantics_mark_episode_played),
-                        ),
-                      CupertinoActionSheetAction(
+                      ],
+                      cancelButton: CupertinoActionSheetAction(
                         isDefaultAction: false,
                         onPressed: () {
-                          Navigator.pop(context, 'Cancel');
-                          showModalBottomSheet<void>(
-                              context: context,
-                              backgroundColor: theme.bottomAppBarTheme.color,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0),
-                                ),
-                              ),
-                              builder: (context) {
-                                return EpisodeDetails(
-                                  episode: widget.episode,
-                                );
-                              });
+                          Navigator.pop(context, 'Close');
                         },
-                        child: Text(L.of(context)!.episode_details_button_label),
+                        child: Text(L.of(context)!.close_button_label),
                       ),
-                    ],
-                    cancelButton: CupertinoActionSheetAction(
-                      isDefaultAction: false,
-                      onPressed: () {
-                        Navigator.pop(context, 'Close');
-                      },
-                      child: Text(L.of(context)!.close_button_label),
-                    ),
-                  );
-                },
-              );
-            },
+                    );
+                  },
+                );
+              },
+            ),
           );
         });
   }
