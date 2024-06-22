@@ -2,7 +2,7 @@
 // This is a library that provides messages for a en locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
-
+// @dart=2.12
 // Ignore issues from commonly used lints in this file.
 // ignore_for_file:unnecessary_brace_in_string_interps
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'audio_settings_playback_speed_label': MessageLookupByLibrary.simpleMessage('Playback Speed'),
     'auto_scroll_transcript_label': MessageLookupByLibrary.simpleMessage('Follow transcript'),
     'cancel_button_label': MessageLookupByLibrary.simpleMessage('Cancel'),
+    'cancel_download_button_label': MessageLookupByLibrary.simpleMessage('Cancel download'),
     'cancel_option_label': MessageLookupByLibrary.simpleMessage('Cancel'),
     'chapters_label': MessageLookupByLibrary.simpleMessage('Chapters'),
     'clear_queue_button_label': MessageLookupByLibrary.simpleMessage('CLEAR QUEUE'),
@@ -54,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Download episode'),
     'downloads': MessageLookupByLibrary.simpleMessage('Downloads'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Your queue is empty'),
+    'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Show episode information'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Clear Filters'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('There are no episodes available that match the selected filter'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('No Episodes Found'),
@@ -101,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Import/Export'),
     'pause_button_label': MessageLookupByLibrary.simpleMessage('Pause episode'),
     'play_button_label': MessageLookupByLibrary.simpleMessage('Play episode'),
+    'play_download_button_label': MessageLookupByLibrary.simpleMessage('Play downloaded episode'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Playback speed'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Podcast Funding'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Options menu'),
@@ -110,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_clear_label_title': MessageLookupByLibrary.simpleMessage('Clear Queue'),
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Remove'),
     'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Refresh episodes'),
+    'resume_button_label': MessageLookupByLibrary.simpleMessage('Resume episode'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('Rewind episode 10 seconds'),
     'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Dismiss layout selector'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Back'),

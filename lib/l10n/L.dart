@@ -1597,6 +1597,46 @@ class L {
           locale: localeName,
         );
   }
+
+  String get resume_button_label {
+    return message('resume_button_label') ??
+        Intl.message(
+          'Resume episode',
+          name: 'resume_button_label',
+          desc: 'Semantic label for the resume button',
+          locale: localeName,
+        );
+  }
+
+  String get play_download_button_label {
+    return message('play_download_button_label') ??
+        Intl.message(
+          'Play downloaded episode',
+          name: 'play_download_button_label',
+          desc: 'Semantic label for the play downloaded episode button',
+          locale: localeName,
+        );
+  }
+
+  String get cancel_download_button_label {
+    return message('cancel_download_button_label') ??
+        Intl.message(
+          'Cancel download',
+          name: 'cancel_download_button_label',
+          desc: 'Semantic label for the play cancel download button',
+          locale: localeName,
+        );
+  }
+
+  String get episode_details_button_label {
+    return message('episode_details_button_label') ??
+        Intl.message(
+          'Show episode information',
+          name: 'episode_details_button_label',
+          desc: 'Semantic label for the show info button.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

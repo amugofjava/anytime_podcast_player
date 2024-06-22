@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-05-03T19:41:44.619882",
+  "@@last_modified": "2024-06-22T14:56:03.944141",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -935,6 +935,30 @@
   "now_playing_episode_time_remaining": "Time remaining",
   "@now_playing_episode_time_remaining": {
     "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resume_button_label": "Resume episode",
+  "@resume_button_label": {
+    "description": "Semantic label for the resume button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_download_button_label": "Play downloaded episode",
+  "@play_download_button_label": {
+    "description": "Semantic label for the play downloaded episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_download_button_label": "Cancel download",
+  "@cancel_download_button_label": {
+    "description": "Semantic label for the play cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_details_button_label": "Show episode information",
+  "@episode_details_button_label": {
+    "description": "Semantic label for the show info button.",
     "type": "text",
     "placeholders": {}
   }

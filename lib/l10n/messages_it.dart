@@ -2,7 +2,7 @@
 // This is a library that provides messages for a it locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
-
+// @dart=2.12
 // Ignore issues from commonly used lints in this file.
 // ignore_for_file:unnecessary_brace_in_string_interps
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'audio_settings_playback_speed_label': MessageLookupByLibrary.simpleMessage('Velocità Riproduzione'),
     'auto_scroll_transcript_label': MessageLookupByLibrary.simpleMessage('Trascrizione sincronizzata'),
     'cancel_button_label': MessageLookupByLibrary.simpleMessage('Annulla'),
+    'cancel_download_button_label': MessageLookupByLibrary.simpleMessage('Annulla il download'),
     'cancel_option_label': MessageLookupByLibrary.simpleMessage('Annulla'),
     'chapters_label': MessageLookupByLibrary.simpleMessage('Capitoli'),
     'clear_queue_button_label': MessageLookupByLibrary.simpleMessage('PULISCI CODA'),
@@ -54,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Scarica episodio'),
     'downloads': MessageLookupByLibrary.simpleMessage('Scaricati'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('La tua coda è vuota'),
+    'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Mostra le informazioni sull\'episodio'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Pulisci i Filtri'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Non ci sono episodi disponibili che corrispondo ai filtri selezionati'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Nessun episodio trovato'),
@@ -101,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Importa/Esporta'),
     'pause_button_label': MessageLookupByLibrary.simpleMessage('Sospendi episodio'),
     'play_button_label': MessageLookupByLibrary.simpleMessage('Riproduci episodio'),
+    'play_download_button_label': MessageLookupByLibrary.simpleMessage('Riproduci l\'episodio scaricato'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Velocità di riproduzione'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Podcast Fondi'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Menu opzioni'),
@@ -110,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_clear_label_title': MessageLookupByLibrary.simpleMessage('Svuota la Coda'),
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Rimuovi'),
     'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Recupera nuovi episodi'),
+    'resume_button_label': MessageLookupByLibrary.simpleMessage('Riprendi episodio'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('Riavvolgi di 10 secondi'),
     'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Chiudi il selettore del layout'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Indietro'),

@@ -40,9 +40,9 @@ class PlayControl extends StatelessWidget {
     return SizedBox(
       height: 48.0,
       width: 48.0,
-      child: StreamBuilder<PlayerControlState>(
+      child: StreamBuilder<_PlayerControlState>(
           stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
-              (AudioState audioState, Episode? episode) => PlayerControlState(audioState, episode)),
+              (AudioState audioState, Episode? episode) => _PlayerControlState(audioState, episode)),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final audioState = snapshot.data!.audioState;
@@ -171,9 +171,9 @@ class DownloadControl extends StatelessWidget {
     return SizedBox(
       height: 48.0,
       width: 48.0,
-      child: StreamBuilder<PlayerControlState>(
+      child: StreamBuilder<_PlayerControlState>(
           stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
-              (AudioState audioState, Episode? episode) => PlayerControlState(audioState, episode)),
+              (AudioState audioState, Episode? episode) => _PlayerControlState(audioState, episode)),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final audioState = snapshot.data!.audioState;
@@ -282,9 +282,9 @@ class DownloadControl extends StatelessWidget {
 
 /// This class acts as a wrapper between the current audio state and
 /// downloadables. Saves all that nesting of StreamBuilders.
-class PlayerControlState {
+class _PlayerControlState {
   final AudioState audioState;
   final Episode? episode;
 
-  PlayerControlState(this.audioState, this.episode);
+  _PlayerControlState(this.audioState, this.episode);
 }

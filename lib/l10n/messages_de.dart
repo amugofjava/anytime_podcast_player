@@ -2,7 +2,7 @@
 // This is a library that provides messages for a de locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
-
+// @dart=2.12
 // Ignore issues from commonly used lints in this file.
 // ignore_for_file:unnecessary_brace_in_string_interps
 // ignore_for_file:prefer_single_quotes,comment_references, directives_ordering
@@ -36,6 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'audio_settings_playback_speed_label': MessageLookupByLibrary.simpleMessage('Wiedergabe Schnelligkeit'),
     'auto_scroll_transcript_label': MessageLookupByLibrary.simpleMessage('Follow the transcript'),
     'cancel_button_label': MessageLookupByLibrary.simpleMessage('Stornieren'),
+    'cancel_download_button_label': MessageLookupByLibrary.simpleMessage('Download abbrechen'),
     'cancel_option_label': MessageLookupByLibrary.simpleMessage('Stirbuereb'),
     'chapters_label': MessageLookupByLibrary.simpleMessage('Kapitel'),
     'clear_queue_button_label': MessageLookupByLibrary.simpleMessage('WARTESCHLANGE LÖSCHEN'),
@@ -54,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Folge herunterladen'),
     'downloads': MessageLookupByLibrary.simpleMessage('Herunterladen'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Ihre Warteschlange ist leer'),
+    'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Episodeninformationen anzeigen'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Filter zurücksetzen'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Es sind keine Episoden verfügbar, die dem ausgewählten Filter entsprechen'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Keine Episoden Gefunden'),
@@ -101,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Importieren/Export'),
     'pause_button_label': MessageLookupByLibrary.simpleMessage('Folge pausieren'),
     'play_button_label': MessageLookupByLibrary.simpleMessage('Folge abspielen'),
+    'play_download_button_label': MessageLookupByLibrary.simpleMessage('Heruntergeladene Episode abspielen'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Stellen Sie die Wiedergabegeschwindigkeit ein'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Podcast-Finanzierung'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Optionsmenü'),
@@ -110,6 +113,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'queue_clear_label_title': MessageLookupByLibrary.simpleMessage('Warteschlange löschen'),
     'queue_remove_label': MessageLookupByLibrary.simpleMessage('Entfernen'),
     'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Holen Sie sich neue Episoden'),
+    'resume_button_label': MessageLookupByLibrary.simpleMessage('Folge fortsetzen'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('10 Sekunden zurückspulen'),
     'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Layout-Auswahl schließen'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Zurück'),
