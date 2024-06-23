@@ -104,33 +104,31 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     /// we scroll the currently selected item out of view, the selected colour is
                     /// still visible behind the transport control. This is a little hack, but fixes
                     /// the issue until I can get ListTile to work correctly.
-                    return Container(
-                      color: chapterSelected ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                        child: ListTile(
-                          onTap: () {
-                            audioBloc.transitionPosition(chapter.startTime);
-                          },
-                          selected: chapterSelected,
-                          leading: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '${index + 1}.',
-                              style: textStyle,
-                            ),
-                          ),
-                          title: Text(
-                            widget.chapters[index].title.trim(),
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                            maxLines: 3,
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
+                      child: ListTile(
+                        selectedTileColor: Theme.of(context).cardTheme.color,
+                        onTap: () {
+                          audioBloc.transitionPosition(chapter.startTime);
+                        },
+                        selected: chapterSelected,
+                        leading: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            '${index + 1}.',
                             style: textStyle,
                           ),
-                          trailing: Text(
-                            _formatStartTime(widget.chapters[index].startTime),
-                            style: textStyle,
-                          ),
+                        ),
+                        title: Text(
+                          widget.chapters[index].title.trim(),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          maxLines: 3,
+                          style: textStyle,
+                        ),
+                        trailing: Text(
+                          _formatStartTime(widget.chapters[index].startTime),
+                          style: textStyle,
                         ),
                       ),
                     );
