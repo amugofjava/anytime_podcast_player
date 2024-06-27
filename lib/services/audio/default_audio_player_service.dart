@@ -944,6 +944,12 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   }
 
   @override
+  Future<void> skipToNext() => fastForward();
+
+  @override
+  Future<void> skipToPrevious() => rewind();
+
+  @override
   Future<void> seek(Duration position) async {
     return _player.seek(position);
   }
