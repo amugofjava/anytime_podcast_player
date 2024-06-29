@@ -1019,17 +1019,31 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   PlaybackState _transformEvent(PlaybackEvent event) {
     log.fine('_transformEvent Sending state ${_player.processingState}');
 
+    // To enable skip next and previous for headphones on iOS we need the
+    // add the skipToNext & skipToPrevious controls; however, on Android
+    // we don't need to specify them and doing so adds the next and previous
+    // buttons to the notification shade which we do not want.
+    final systemActions = Platform.isIOS
+        ? const {
+            MediaAction.seek,
+            MediaAction.seekForward,
+            MediaAction.seekBackward,
+            MediaAction.skipToNext,
+            MediaAction.skipToPrevious,
+          }
+        : const {
+            MediaAction.seek,
+            MediaAction.seekForward,
+            MediaAction.seekBackward,
+          };
+
     return PlaybackState(
       controls: [
         rewindControl,
         if (_player.playing) MediaControl.pause else MediaControl.play,
         fastforwardControl,
       ],
-      systemActions: const {
-        MediaAction.seek,
-        MediaAction.seekForward,
-        MediaAction.seekBackward,
-      },
+      systemActions: systemActions,
       androidCompactActionIndices: const [0, 1, 2],
       processingState: {
         ProcessingState.idle: _player.playing ? AudioProcessingState.ready : AudioProcessingState.idle,
