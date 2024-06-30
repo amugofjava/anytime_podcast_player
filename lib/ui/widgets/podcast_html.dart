@@ -23,8 +23,6 @@ class PodcastHtml extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Html(
       data: content,
       extensions: const [
@@ -33,12 +31,15 @@ class PodcastHtml extends StatelessWidget {
       ],
       style: {
         'html': Style(
-          fontWeight: textTheme.bodyLarge!.fontWeight,
-          fontSize: fontSize ?? FontSize.large,
+          fontSize: FontSize(16.25),
+          lineHeight: LineHeight.percent(110),
         ),
         'p': Style(
-          margin: Margins.only(top: 0, bottom: 12),
-        )
+          margin: Margins.only(
+            top: 0,
+            bottom: 12,
+          ),
+        ),
       },
       onLinkTap: (url, _, __) => canLaunchUrl(Uri.parse(url!)).then((value) => launchUrl(
             Uri.parse(url),
