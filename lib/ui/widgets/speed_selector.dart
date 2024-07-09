@@ -53,6 +53,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   showModalBottomSheet<void>(
                       context: context,
                       backgroundColor: theme.secondaryHeaderColor,
+                      barrierLabel: L.of(context)!.scrim_speed_selector,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),

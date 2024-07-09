@@ -39,11 +39,11 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               InkWell(
-                excludeFromSemantics: true,
                 onTap: () {
                   showModalBottomSheet<void>(
                       context: context,
                       backgroundColor: theme.secondaryHeaderColor,
+                      barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(16.0),
@@ -69,6 +69,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                             isScrollControlled: true,
                             context: context,
                             backgroundColor: theme.secondaryHeaderColor,
+                            barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(16.0),
@@ -115,24 +116,32 @@ class _SleepSliderState extends State<SleepSlider> {
                 const SliderHandle(),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Text(
-                    L.of(context)!.sleep_timer_label,
-                    style: Theme.of(context).textTheme.titleLarge,
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      L.of(context)!.sleep_timer_label,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
                 ),
                 if (s != null && s.type == SleepType.none)
                   Text(
                     '(${L.of(context)!.sleep_off_label})',
+                    semanticsLabel: '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_off_label}',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.time)
                   Text(
                     '(${_formatDuration(s.timeRemaining)})',
+                    semanticsLabel:
+                        '${L.of(context)!.semantic_current_value_label} ${_formatDuration(s.timeRemaining)}',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.episode)
                   Text(
                     '(${L.of(context)!.sleep_episode_label})',
+                    semanticsLabel:
+                        '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 Padding(

@@ -1016,5 +1016,23 @@
     "description": "Semantic label for the show info button.",
     "type": "text",
     "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "Auswahl des Sleep-Timers schließen",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "Auswahl der Wiedergabegeschwindigkeit schließen",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "Aktueller Wert",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
   }
 }

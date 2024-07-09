@@ -1637,6 +1637,36 @@ class L {
           locale: localeName,
         );
   }
+
+  String get scrim_sleep_timer_selector {
+    return message('scrim_sleep_timer_selector') ??
+        Intl.message(
+          'Dismiss sleep timer selector',
+          name: 'scrim_sleep_timer_selector',
+          desc: 'Replaces default scrim label for custom.',
+          locale: localeName,
+        );
+  }
+
+  String get scrim_speed_selector {
+    return message('scrim_speed_selector') ??
+        Intl.message(
+          'Dismiss playback speed selector',
+          name: 'scrim_speed_selector',
+          desc: 'Replaces default scrim label for custom.',
+          locale: localeName,
+        );
+  }
+
+  String get semantic_current_value_label {
+    return message('semantic_current_value_label') ??
+        Intl.message(
+          'Current value',
+          name: 'semantic_current_value_label',
+          desc: 'For current sleep setting',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

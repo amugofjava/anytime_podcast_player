@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-06-22T14:56:03.944141",
+  "@@last_modified": "2024-07-09T13:49:10.589718",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -959,6 +959,24 @@
   "episode_details_button_label": "Show episode information",
   "@episode_details_button_label": {
     "description": "Semantic label for the show info button.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "Dismiss sleep timer selector",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "Dismiss playback speed selector",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "Current value",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
   }
