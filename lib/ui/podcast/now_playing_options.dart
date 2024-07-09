@@ -46,7 +46,6 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
     final theme = Theme.of(context);
     final windowHeight = MediaQuery.of(context).size.height;
     final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
-    final mediaQueryData = MediaQuery.of(context);
 
     return DraggableScrollableSheet(
       initialChildSize: minSize,

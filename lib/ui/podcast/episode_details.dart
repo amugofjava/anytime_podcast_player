@@ -51,23 +51,10 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                     trailing: PlayControl(
                       episode: episode,
                     ),
-                    leading: Stack(
-                      alignment: Alignment.bottomLeft,
-                      fit: StackFit.passthrough,
-                      children: <Widget>[
-                        TileImage(
-                          url: episode.thumbImageUrl ?? episode.imageUrl!,
-                          size: 56.0,
-                          highlight: episode.highlight,
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                          width: 56.0 * (episode.percentagePlayed / 100),
-                          child: Container(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                      ],
+                    leading: TileImage(
+                      url: episode.thumbImageUrl ?? episode.imageUrl!,
+                      size: 56.0,
+                      highlight: episode.highlight,
                     ),
                     subtitle: EpisodeSubtitle(episode),
                     title: Text(

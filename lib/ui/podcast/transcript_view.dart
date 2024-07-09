@@ -234,6 +234,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                           child: TextField(
                             controller: _transcriptSearchController,
                             decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.all(0.0),
                               prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.close),
