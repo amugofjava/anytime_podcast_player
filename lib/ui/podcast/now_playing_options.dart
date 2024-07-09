@@ -86,34 +86,28 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      if (mediaQueryData.accessibleNavigation)
-                        Semantics(
-                          liveRegion: true,
-                          label: optionsSliderOpen()
-                              ? L.of(context)!.semantic_playing_options_collapse_label
-                              : L.of(context)!.semantic_playing_options_expand_label,
-                          child: GestureDetector(
-                            onTap: () {
-                              if (draggableController != null) {
-                                if (draggableController!.size < 1.0) {
-                                  draggableController!.animateTo(
-                                    1.0,
-                                    duration: const Duration(milliseconds: 150),
-                                    curve: Curves.easeInOut,
-                                  );
-                                } else {
-                                  draggableController!.animateTo(
-                                    0.0,
-                                    duration: const Duration(milliseconds: 150),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
-                              }
-                            },
-                            child: const SliderHandle(),
-                          ),
-                        ),
-                      if (!mediaQueryData.accessibleNavigation) const SliderHandle(),
+                      SliderHandle(
+                        label: optionsSliderOpen()
+                            ? L.of(context)!.semantic_playing_options_collapse_label
+                            : L.of(context)!.semantic_playing_options_expand_label,
+                        onTap: () {
+                          if (draggableController != null) {
+                            if (draggableController!.size < 1.0) {
+                              draggableController!.animateTo(
+                                1.0,
+                                duration: const Duration(milliseconds: 150),
+                                curve: Curves.easeInOut,
+                              );
+                            } else {
+                              draggableController!.animateTo(
+                                0.0,
+                                duration: const Duration(milliseconds: 150),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          }
+                        },
+                      ),
                       DecoratedBox(
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.0),
