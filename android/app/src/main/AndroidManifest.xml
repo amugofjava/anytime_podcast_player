@@ -40,9 +40,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                        android:pathPrefix="/subscribe"
-                        android:scheme="anytime-subscribe" />
+                <data android:pathPrefix="/subscribe" />
+                <data android:scheme="anytime-subscribe" />
+            </intent-filter>
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:host="anytimeplayer.app" />
+                <data android:pathPrefix="/subscribe" />
+                <data android:scheme="https" />
+                <data android:scheme="http" />
             </intent-filter>
         </activity>
 
