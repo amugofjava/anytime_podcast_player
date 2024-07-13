@@ -500,7 +500,8 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
                                 ? Text(L.of(context)!.play_download_button_label)
                                 : Text(L.of(context)!.play_button_label),
                           ),
-                        if (widget.episode.downloadState == DownloadState.downloading)
+                        if (widget.episode.downloadState == DownloadState.queued ||
+                            widget.episode.downloadState == DownloadState.downloading)
                           CupertinoActionSheetAction(
                             isDefaultAction: false,
                             onPressed: () {
@@ -695,7 +696,8 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
                             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                             child: Text(L.of(context)!.play_button_label),
                           ),
-                        if (widget.episode.downloadState == DownloadState.downloading)
+                        if (widget.episode.downloadState == DownloadState.queued ||
+                            widget.episode.downloadState == DownloadState.downloading)
                           SimpleDialogOption(
                             onPressed: () {
                               episodeBloc.deleteDownload(widget.episode);
