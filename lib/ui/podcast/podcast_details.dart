@@ -660,20 +660,16 @@ class FollowButton extends StatelessWidget {
                                 content: Text(L.of(context)!.unsubscribe_message),
                                 actions: <Widget>[
                                   BasicDialogAction(
-                                    title: ExcludeSemantics(
-                                      child: ActionText(
-                                        L.of(context)!.cancel_button_label,
-                                      ),
+                                    title: ActionText(
+                                      L.of(context)!.cancel_button_label,
                                     ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
                                   ),
                                   BasicDialogAction(
-                                    title: ExcludeSemantics(
-                                      child: ActionText(
-                                        L.of(context)!.unsubscribe_button_label,
-                                      ),
+                                    title: ActionText(
+                                      L.of(context)!.unsubscribe_button_label,
                                     ),
                                     iosIsDefaultAction: true,
                                     iosIsDestructiveAction: true,
