@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-07-09T13:49:10.589718",
+  "@@last_modified": "2024-07-21T11:44:34.370505",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -977,6 +977,12 @@
   "semantic_current_value_label": "Current value",
   "@semantic_current_value_label": {
     "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Dismiss episode details",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
     "type": "text",
     "placeholders": {}
   }

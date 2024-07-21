@@ -333,6 +333,7 @@ class _ExpandableEpisodeTileState extends State<ExpandableEpisodeTile> {
                   ),
                   onPressed: () {
                     showModalBottomSheet<void>(
+                        barrierLabel: L.of(context)!.scrim_episode_details_selector,
                         context: context,
                         backgroundColor: theme.bottomAppBarTheme.color,
                         isScrollControlled: true,
@@ -568,6 +569,7 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
                             Navigator.pop(context, 'Cancel');
                             showModalBottomSheet<void>(
                                 context: context,
+                                barrierLabel: L.of(context)!.scrim_episode_details_selector,
                                 backgroundColor: theme.bottomAppBarTheme.color,
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(
@@ -765,6 +767,7 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
                             Navigator.pop(context, '');
                             showModalBottomSheet<void>(
                                 context: context,
+                                barrierLabel: L.of(context)!.scrim_episode_details_selector,
                                 backgroundColor: theme.bottomAppBarTheme.color,
                                 isScrollControlled: true,
                                 shape: const RoundedRectangleBorder(

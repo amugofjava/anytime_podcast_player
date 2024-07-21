@@ -1034,5 +1034,11 @@
     "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
-  }
+   },
+   "scrim_episode_details_selector": "Episodendetails schließen",
+   "@scrim_episode_details_selector": {
+     "description": "Replaces default scrim label for episode details bottom sheet.",
+     "type": "text",
+     "placeholders": {}
+ }
 }

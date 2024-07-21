@@ -1667,6 +1667,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get scrim_episode_details_selector {
+    return message('scrim_episode_details_selector') ??
+        Intl.message(
+          'Dismiss episode details',
+          name: 'scrim_episode_details_selector',
+          desc: 'Replaces default scrim label for episode details bottom sheet.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

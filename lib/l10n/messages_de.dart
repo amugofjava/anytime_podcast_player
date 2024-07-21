@@ -115,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'refresh_feed_label': MessageLookupByLibrary.simpleMessage('Holen Sie sich neue Episoden'),
     'resume_button_label': MessageLookupByLibrary.simpleMessage('Folge fortsetzen'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('10 Sekunden zurückspulen'),
+    'scrim_episode_details_selector': MessageLookupByLibrary.simpleMessage('Episodendetails schließen'),
     'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Layout-Auswahl schließen'),
     'scrim_sleep_timer_selector': MessageLookupByLibrary.simpleMessage('Auswahl des Sleep-Timers schließen'),
     'scrim_speed_selector': MessageLookupByLibrary.simpleMessage('Auswahl der Wiedergabegeschwindigkeit schließen'),
