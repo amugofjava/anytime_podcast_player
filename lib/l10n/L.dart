@@ -1677,6 +1677,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get scrim_episode_sort_selector {
+    return message('scrim_episode_sort_selector') ??
+        Intl.message(
+          'Dismiss episode sort',
+          name: 'scrim_episode_sort_selector',
+          desc: 'Replaces default scrim label for episode sort bottom sheet.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

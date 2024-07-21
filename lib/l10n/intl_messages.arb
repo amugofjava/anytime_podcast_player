@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-07-21T11:44:34.370505",
+  "@@last_modified": "2024-07-21T17:11:18.590482",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -983,6 +983,12 @@
   "scrim_episode_details_selector": "Dismiss episode details",
   "@scrim_episode_details_selector": {
     "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_sort_selector": "Dismiss episode sort",
+  "@scrim_episode_sort_selector": {
+    "description": "Replaces default scrim label for episode sort bottom sheet.",
     "type": "text",
     "placeholders": {}
   }

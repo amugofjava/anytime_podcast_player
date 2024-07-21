@@ -48,8 +48,8 @@ void main() {
   test('Test playback speed', () async {
     expect(mobileSettingsService?.playbackSpeed, 1.0);
     expectLater(settingsListener, emits('speed'));
-    mobileSettingsService?.playbackSpeed = 1.25;
-    expect(mobileSettingsService?.playbackSpeed, 1.25);
+    mobileSettingsService?.playbackSpeed = 1.2;
+    expect(mobileSettingsService?.playbackSpeed, 1.2);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
   test('Test search provider', () async {
