@@ -786,11 +786,17 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
                           child: Text(L.of(context)!.episode_details_button_label),
                         ),
                         SimpleDialogOption(
-                          onPressed: () {
-                            Navigator.pop(context, '');
-                          },
                           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                          child: Text(L.of(context)!.close_button_label),
+                          // child: Text(L.of(context)!.close_button_label),
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              child: ActionText(L.of(context)!.close_button_label),
+                              onPressed: () {
+                                Navigator.pop(context, '');
+                              },
+                            ),
+                          ),
                         ),
                       ],
                     ),
