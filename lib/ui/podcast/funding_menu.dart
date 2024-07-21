@@ -179,7 +179,10 @@ class FundingLink {
         context: context,
         useRootNavigator: false,
         builder: (_) => BasicDialogAlert(
-          title: Text(L.of(context)!.podcast_funding_dialog_header),
+          title: Semantics(
+            header: true,
+            child: Text(L.of(context)!.podcast_funding_dialog_header),
+          ),
           content: Text(L.of(context)!.consent_message),
           actions: <Widget>[
             BasicDialogAction(
