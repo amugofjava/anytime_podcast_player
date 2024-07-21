@@ -1046,5 +1046,11 @@
     "description": "Replaces default scrim label for episode sort bottom sheet.",
     "type": "text",
     "placeholders": {}
+  },
+  "scrim_episode_filter_selector": "Dismiss episode filter",
+  "@scrim_episode_filter_selector": {
+    "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
  }
 }

@@ -116,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'resume_button_label': MessageLookupByLibrary.simpleMessage('Folge fortsetzen'),
     'rewind_button_label': MessageLookupByLibrary.simpleMessage('10 Sekunden zurückspulen'),
     'scrim_episode_details_selector': MessageLookupByLibrary.simpleMessage('Episodendetails schließen'),
+    'scrim_episode_filter_selector': MessageLookupByLibrary.simpleMessage('Episodenfilter schließen'),
     'scrim_episode_sort_selector': MessageLookupByLibrary.simpleMessage('Episodensortierung schließen'),
     'scrim_layout_selector': MessageLookupByLibrary.simpleMessage('Layout-Auswahl schließen'),
     'scrim_sleep_timer_selector': MessageLookupByLibrary.simpleMessage('Auswahl des Sleep-Timers schließen'),
