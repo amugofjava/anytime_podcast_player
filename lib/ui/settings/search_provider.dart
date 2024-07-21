@@ -5,6 +5,7 @@
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +46,11 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                           useRootNavigator: false,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                                title: Text(L.of(context)!.search_provider_label,
-                                    style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+                                title: Semantics(
+                                  header: true,
+                                  child: Text(L.of(context)!.search_provider_label,
+                                      style: Theme.of(context).textTheme.titleMedium, textAlign: TextAlign.center),
+                                ),
                                 content: StatefulBuilder(
                                   builder: (BuildContext context, StateSetter setState) {
                                     return Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
@@ -85,6 +89,19 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                             Navigator.pop(context);
                                           });
                                         },
+                                      ),
+                                      SimpleDialogOption(
+                                        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                                        // child: Text(L.of(context)!.close_button_label),
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: TextButton(
+                                            child: ActionText(L.of(context)!.close_button_label),
+                                            onPressed: () {
+                                              Navigator.pop(context, '');
+                                            },
+                                          ),
+                                        ),
                                       ),
                                     ]);
                                   },
