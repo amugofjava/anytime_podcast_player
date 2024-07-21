@@ -4,6 +4,7 @@
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/ui/widgets/slider_handle.dart';
@@ -69,7 +70,7 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   width: 48.0,
                   child: Center(
                     child: Text(
-                      snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed}',
+                      snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
                       semanticsLabel: L.of(context)!.playback_speed_label,
                       style: TextStyle(
                         fontSize: 16.0,
@@ -131,7 +132,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Text(
-            '${speed.toString()}x',
+            '${speed.toStringAsFixed(1)}x',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
         ),
@@ -148,7 +149,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
                     ? null
                     : () {
                         setState(() {
-                          speed -= 0.25;
+                          (speed -= 0.1).toTenth;
                           audioBloc.playbackSpeed(speed);
                           settingsBloc.setPlaybackSpeed(speed);
                         });
@@ -158,10 +159,10 @@ class _SpeedSliderState extends State<SpeedSlider> {
             Expanded(
               flex: 4,
               child: Slider(
-                value: speed,
+                value: speed.toTenth,
                 min: 0.5,
-                max: 2.0,
-                divisions: 6,
+                max: 3.0,
+                divisions: 26,
                 onChanged: (value) {
                   setState(() {
                     speed = value;
@@ -178,11 +179,11 @@ class _SpeedSliderState extends State<SpeedSlider> {
                 tooltip: L.of(context)!.semantics_increase_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.add_circle_outline),
-                onPressed: (speed >= 2.0)
+                onPressed: (speed >= 3.0)
                     ? null
                     : () {
                         setState(() {
-                          speed += 0.25;
+                          (speed += 0.1).toTenth;
                           audioBloc.playbackSpeed(speed);
                           settingsBloc.setPlaybackSpeed(speed);
                         });

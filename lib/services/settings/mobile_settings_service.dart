@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:math';
+
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
@@ -67,7 +69,12 @@ class MobileSettingsService extends SettingsService {
 
   @override
   double get playbackSpeed {
-    return _sharedPreferences.getDouble('speed') ?? 1.0;
+    var speed = _sharedPreferences.getDouble('speed') ?? 1.0;
+
+    // We used to use 0.25 increments and now we use 0.1. Round
+    // any setting that uses the old 0.25.
+    var mod = pow(10.0, 1).toDouble();
+    return ((speed * mod).round().toDouble() / mod);
   }
 
   @override

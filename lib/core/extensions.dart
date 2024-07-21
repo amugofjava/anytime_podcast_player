@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:math';
+
 extension IterableExtensions<E> on Iterable<E> {
   Iterable<List<E>> chunk(int size) sync* {
     if (length <= 0) {
@@ -36,5 +38,12 @@ extension ExtString on String? {
     }
 
     return this ?? '';
+  }
+}
+
+extension ExtDouble on double {
+  double get toTenth {
+    var mod = pow(10.0, 1).toDouble();
+    return ((this * mod).round().toDouble() / mod);
   }
 }

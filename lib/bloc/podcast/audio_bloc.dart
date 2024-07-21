@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/bloc.dart';
+import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -130,7 +131,7 @@ class AudioBloc extends Bloc {
   /// Listen for requests to adjust the playback speed.
   void _handlePlaybackSpeedTransitions() {
     _playbackSpeedSubject.listen((double speed) async {
-      await audioPlayerService.setPlaybackSpeed(speed);
+      await audioPlayerService.setPlaybackSpeed(speed.toTenth);
     });
   }
 
