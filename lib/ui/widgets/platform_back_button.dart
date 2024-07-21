@@ -24,26 +24,29 @@ class PlatformBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Center(
-        child: SizedBox(
-          height: 48.0,
-          width: 48.0,
-          child: InkWell(
-            onTap: onPressed,
-            child: Container(
-              margin: const EdgeInsets.all(6.0),
-              height: 48.0,
-              width: 48.0,
-              decoration: ShapeDecoration(
-                color: decorationColour,
-                shape: const CircleBorder(),
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(left: Platform.isIOS ? 8.0 : 0.0),
-                child: Icon(
-                  Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
-                  size: Platform.isIOS ? 20.0 : 26.0,
-                  semanticLabel: L.of(context)?.go_back_button_label,
+      child: Semantics(
+        button: true,
+        child: Center(
+          child: SizedBox(
+            height: 48.0,
+            width: 48.0,
+            child: InkWell(
+              onTap: onPressed,
+              child: Container(
+                margin: const EdgeInsets.all(6.0),
+                height: 48.0,
+                width: 48.0,
+                decoration: ShapeDecoration(
+                  color: decorationColour,
+                  shape: const CircleBorder(),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(left: Platform.isIOS ? 8.0 : 0.0),
+                  child: Icon(
+                    Platform.isIOS ? Icons.arrow_back_ios : Icons.close,
+                    size: Platform.isIOS ? 20.0 : 26.0,
+                    semanticLabel: L.of(context)?.go_back_button_label,
+                  ),
                 ),
               ),
             ),
