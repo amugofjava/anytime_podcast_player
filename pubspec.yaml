@@ -11,8 +11,8 @@ dependencies:
   accessibility_tools: ^1.0.1
   app_links: ^6.1.4
   auto_size_text: ^3.0.0
-  audio_service: ^0.18.14
-  audio_session: ^0.1.20
+  audio_service: ^0.18.15
+  audio_session: ^0.1.21
   collection: ^1.18.0
   connectivity_plus: ^6.0.3
   cupertino_icons: ^1.0.6
