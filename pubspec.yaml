@@ -16,7 +16,7 @@ dependencies:
   collection: ^1.18.0
   connectivity_plus: ^6.0.5
   cupertino_icons: ^1.0.6
-  device_info_plus: ^9.0.3
+  device_info_plus: ^10.1.2
   expand_widget: ^3.1.0
   extended_image: ^8.2.0
   file_picker: ^8.0.0+1
