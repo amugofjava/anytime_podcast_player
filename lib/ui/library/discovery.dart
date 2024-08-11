@@ -17,12 +17,10 @@ import 'package:sliver_tools/sliver_tools.dart';
 class Discovery extends StatefulWidget {
   static const fetchSize = 20;
   final bool categories;
-  final bool inlineSearch;
 
   const Discovery({
     super.key,
     this.categories = false,
-    this.inlineSearch = false,
   });
 
   @override
@@ -56,10 +54,10 @@ class _DiscoveryState extends State<Discovery> {
                 pinned: true,
                 floating: false,
               ),
-              DiscoveryResults(data: bloc.results, inlineSearch: widget.inlineSearch),
+              DiscoveryResults(data: bloc.results),
             ],
           )
-        : DiscoveryResults(data: bloc.results, inlineSearch: widget.inlineSearch);
+        : DiscoveryResults(data: bloc.results);
   }
 }
 

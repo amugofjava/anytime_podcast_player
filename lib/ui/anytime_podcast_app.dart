@@ -217,13 +217,11 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
 class AnytimeHomePage extends StatefulWidget {
   final String? title;
   final bool topBarVisible;
-  final bool inlineSearch;
 
   const AnytimeHomePage({
     super.key,
     this.title,
     this.topBarVisible = true,
-    this.inlineSearch = false,
   });
 
   @override
@@ -511,9 +509,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     if (index == 0) {
       return const Library();
     } else if (index == 1) {
-      return Discovery(
+      return const Discovery(
         categories: true,
-        inlineSearch: widget.inlineSearch,
       );
     } else {
       return const Downloads();
