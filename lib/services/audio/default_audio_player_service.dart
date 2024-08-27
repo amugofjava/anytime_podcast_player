@@ -872,9 +872,9 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     try {
       var duration = await _player.setAudioSource(source, initialPosition: start);
 
-      /// If we don't already have a duration and we have been able to calculate it from
-      /// beginning to fetch the media, update the current media item with the duration.
-      if (duration != null && (_currentItem!.duration == null || _currentItem!.duration!.inSeconds == 0)) {
+      /// As duration returned from the player library can be different from the duration in the feed - usually
+      /// because of DAI - if we have a duration from the player, use that.
+      if (duration != null) {
         _currentItem = _currentItem!.copyWith(duration: duration);
       }
 
