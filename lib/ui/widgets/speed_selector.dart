@@ -149,7 +149,8 @@ class _SpeedSliderState extends State<SpeedSlider> {
                     ? null
                     : () {
                         setState(() {
-                          (speed -= 0.1).toTenth;
+                          speed -= 0.1;
+                          speed = speed.toTenth;
                           audioBloc.playbackSpeed(speed);
                           settingsBloc.setPlaybackSpeed(speed);
                         });
@@ -161,8 +162,8 @@ class _SpeedSliderState extends State<SpeedSlider> {
               child: Slider(
                 value: speed.toTenth,
                 min: 0.5,
-                max: 3.0,
-                divisions: 26,
+                max: 2.0,
+                divisions: 15,
                 onChanged: (value) {
                   setState(() {
                     speed = value;
@@ -179,11 +180,12 @@ class _SpeedSliderState extends State<SpeedSlider> {
                 tooltip: L.of(context)!.semantics_increase_playback_speed,
                 iconSize: 28.0,
                 icon: const Icon(Icons.add_circle_outline),
-                onPressed: (speed >= 3.0)
+                onPressed: (speed > 1.9)
                     ? null
                     : () {
                         setState(() {
-                          (speed += 0.1).toTenth;
+                          speed += 0.1;
+                          speed = speed.toTenth;
                           audioBloc.playbackSpeed(speed);
                           settingsBloc.setPlaybackSpeed(speed);
                         });
