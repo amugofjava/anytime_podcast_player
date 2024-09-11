@@ -934,6 +934,8 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
     await _player.stop();
     await _savePosition();
+
+    await super.stop();
   }
 
   @override
