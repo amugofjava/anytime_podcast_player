@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.3.8+138
+version: 1.3.9+151
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -85,18 +85,6 @@ flutter:
     - assets/ca/globalsign-gcc-r6-alphassl-ca-2023.pem
 
   fonts:
-    - family: SpaceMonoRegular
-      fonts:
-        - asset: assets/fonts/SpaceMono-Regular.ttf
-    - family: SpaceMonoBold
-      fonts:
-        - asset: assets/fonts/SpaceMono-Bold.ttf
-    - family: RobotoCondensedBold
-      fonts:
-        - asset: assets/fonts/RobotoCondensed-Bold.ttf
-    - family: RobotoRegular
-      fonts:
-        - asset: assets/fonts/Roboto-Regular.ttf
     - family: MontserratMedium
       fonts:
         - asset: assets/fonts/Montserrat-Medium.otf
@@ -106,3 +94,4 @@ flutter:
     - family: MontserratBold
       fonts:
         - asset: assets/fonts/Montserrat-Bold.otf
+
