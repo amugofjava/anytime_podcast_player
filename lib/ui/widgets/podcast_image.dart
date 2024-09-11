@@ -76,7 +76,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
             crossFadeState: state.wasSynchronouslyLoaded || state.extendedImageLoadState == LoadState.completed
                 ? CrossFadeState.showSecond
                 : CrossFadeState.showFirst,
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 200),
             firstChild: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(widget.borderRadius)),
               child: widget.placeholder ??
