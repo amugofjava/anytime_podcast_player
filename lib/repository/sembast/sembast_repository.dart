@@ -135,7 +135,11 @@ class SembastRepository extends Repository {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
-      p.episodes = await findEpisodesByPodcastGuid(p.guid, filter: p.filter, sort: p.sort);
+      p.episodes = await findEpisodesByPodcastGuid(
+        p.guid,
+        filter: p.filter,
+        sort: p.sort,
+      );
 
       return p;
     }
@@ -154,7 +158,11 @@ class SembastRepository extends Repository {
       var p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
-      p.episodes = await findEpisodesByPodcastGuid(p.guid);
+      p.episodes = await findEpisodesByPodcastGuid(
+        p.guid,
+        filter: p.filter,
+        sort: p.sort,
+      );
 
       return p;
     }
@@ -213,37 +221,9 @@ class SembastRepository extends Repository {
     var episodeFilter = Filter.equals('pguid', pguid);
     var sortOrder = SortOrder('publicationDate', false);
 
-    // If we have an additional episode filter, apply it.
-    switch (filter) {
-      case PodcastEpisodeFilter.none:
-        episodeFilter = Filter.equals('pguid', pguid);
-        break;
-      case PodcastEpisodeFilter.started:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.notEquals('position', '0')]);
-        break;
-      case PodcastEpisodeFilter.played:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'true')]);
-        break;
-      case PodcastEpisodeFilter.notPlayed:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
-        break;
-    }
-
-    switch (sort) {
-      case PodcastEpisodeSort.none:
-      case PodcastEpisodeSort.latestFirst:
-        sortOrder = SortOrder('publicationDate', false);
-        break;
-      case PodcastEpisodeSort.earliestFirst:
-        sortOrder = SortOrder('publicationDate', true);
-        break;
-      case PodcastEpisodeSort.alphabeticalDescending:
-        sortOrder = SortOrder('title', false);
-        break;
-      case PodcastEpisodeSort.alphabeticalAscending:
-        sortOrder = SortOrder('title', true);
-        break;
-    }
+    // If we have an additional episode filter and/or sort, apply it.
+    episodeFilter = _applyEpisodeFilter(filter, episodeFilter, pguid);
+    sortOrder = _applyEpisodeSort(sort, sortOrder);
 
     final finder = Finder(
       filter: episodeFilter,
@@ -502,6 +482,44 @@ class SembastRepository extends Repository {
     }
 
     await deleteEpisodes(orphaned);
+  }
+
+  SortOrder<Object?> _applyEpisodeSort(PodcastEpisodeSort sort, SortOrder<Object?> sortOrder) {
+    switch (sort) {
+      case PodcastEpisodeSort.none:
+      case PodcastEpisodeSort.latestFirst:
+        sortOrder = SortOrder('publicationDate', false);
+        break;
+      case PodcastEpisodeSort.earliestFirst:
+        sortOrder = SortOrder('publicationDate', true);
+        break;
+      case PodcastEpisodeSort.alphabeticalDescending:
+        sortOrder = SortOrder('title', false);
+        break;
+      case PodcastEpisodeSort.alphabeticalAscending:
+        sortOrder = SortOrder('title', true);
+        break;
+    }
+    return sortOrder;
+  }
+
+  Filter _applyEpisodeFilter(PodcastEpisodeFilter filter, Filter episodeFilter, String? pguid) {
+    // If we have an additional episode filter, apply it.
+    switch (filter) {
+      case PodcastEpisodeFilter.none:
+        episodeFilter = Filter.equals('pguid', pguid);
+        break;
+      case PodcastEpisodeFilter.started:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.notEquals('position', '0')]);
+        break;
+      case PodcastEpisodeFilter.played:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'true')]);
+        break;
+      case PodcastEpisodeFilter.notPlayed:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
+        break;
+    }
+    return episodeFilter;
   }
 
   /// Saves a list of episodes to the repository. To improve performance we

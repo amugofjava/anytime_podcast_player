@@ -31,7 +31,11 @@ abstract class Repository {
 
   Future<Episode?> findEpisodeByGuid(String guid);
 
-  Future<List<Episode?>> findEpisodesByPodcastGuid(String pguid);
+  Future<List<Episode?>> findEpisodesByPodcastGuid(
+    String pguid, {
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+    PodcastEpisodeSort sort = PodcastEpisodeSort.none,
+  });
 
   Future<Episode?> findEpisodeByTaskId(String taskId);
 

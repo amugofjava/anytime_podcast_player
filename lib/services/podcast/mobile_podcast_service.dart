@@ -234,8 +234,9 @@ class MobilePodcastService extends PodcastService {
         // We are, so swap in the stored ID so we update the saved version later.
         pc.id = follow.id;
 
-        // And preserve any filter applied
+        // And preserve any filter & sort applied
         pc.filter = follow.filter;
+        pc.sort = follow.sort;
       }
 
       // Usually, episodes are order by reverse publication date - but not always.
@@ -378,7 +379,7 @@ class MobilePodcastService extends PodcastService {
 
         // Phew! Now, after all that, we have have a podcast filter in place. All episodes will have
         // been saved, but we might not want to display them all. Let's filter.
-        pc.episodes = _filterEpisodes(pc);
+        pc.episodes = _sortAndFilterEpisodes(pc);
       }
 
       return pc;
@@ -697,7 +698,7 @@ class MobilePodcastService extends PodcastService {
     return decodedGenre;
   }
 
-  List<Episode> _filterEpisodes(Podcast podcast) {
+  List<Episode> _sortAndFilterEpisodes(Podcast podcast) {
     var filteredEpisodes = <Episode>[];
 
     switch (podcast.filter) {
@@ -713,6 +714,18 @@ class MobilePodcastService extends PodcastService {
       case PodcastEpisodeFilter.notPlayed:
         filteredEpisodes = podcast.episodes.where((e) => e.highlight || !e.played).toList();
         break;
+    }
+
+    switch (podcast.sort) {
+      case PodcastEpisodeSort.none:
+      case PodcastEpisodeSort.latestFirst:
+        filteredEpisodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+      case PodcastEpisodeSort.earliestFirst:
+        filteredEpisodes.sort((e1, e2) => e1.publicationDate!.compareTo(e2.publicationDate!));
+      case PodcastEpisodeSort.alphabeticalAscending:
+        filteredEpisodes.sort((e1, e2) => e1.title!.toLowerCase().compareTo(e2.title!.toLowerCase()));
+      case PodcastEpisodeSort.alphabeticalDescending:
+        filteredEpisodes.sort((e1, e2) => e2.title!.toLowerCase().compareTo(e1.title!.toLowerCase()));
     }
 
     return filteredEpisodes;
