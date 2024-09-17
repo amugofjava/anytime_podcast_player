@@ -494,10 +494,14 @@ class SembastRepository extends Repository {
         sortOrder = SortOrder('publicationDate', true);
         break;
       case PodcastEpisodeSort.alphabeticalDescending:
-        sortOrder = SortOrder('title', false);
+        sortOrder = SortOrder<String>.custom('title', (title1, title2) {
+          return title2.toLowerCase().compareTo(title1.toLowerCase());
+        });
         break;
       case PodcastEpisodeSort.alphabeticalAscending:
-        sortOrder = SortOrder('title', true);
+        sortOrder = SortOrder<String>.custom('title', (title1, title2) {
+          return title1.toLowerCase().compareTo(title2.toLowerCase());
+        });
         break;
     }
     return sortOrder;
