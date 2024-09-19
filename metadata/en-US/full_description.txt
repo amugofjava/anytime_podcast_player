@@ -1,0 +1,20 @@
+Anytime Podcast Player is a free and open-source podcast player that's designed to be simple and easy to use. Anytime is Podcasting 2.0 ready and will support more features as the app is developed.
+
+<b>Discover podcasts:</b>
+- Search from over 4 million free podcasts.
+- Discover something new in the podcast charts.
+- Follow your favourite podcasts so you never miss an episode.
+- Stream episodes or download for offline playback later.
+
+<b>Features:</b>
+- View episode chapters and skip to the part of an episode you're interested in*
+- Directly support the show via funding links*
+- Read, search or follow along with transcripts (where available)*
+- Listen at faster or slower speeds.
+- Sort & filter episodes.
+- Pause a streamed or downloaded episode and pickup where you left off later on.
+- Playback controllable from notification shade.
+- Playback controllable from WearOS device.
+- OPML import & export.
+
+* Chapters, funding links and transcripts appear for podcasts that support Podcasting 2.0.
