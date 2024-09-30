@@ -43,6 +43,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = true
+    }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
