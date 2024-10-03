@@ -40,6 +40,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  bool get deleteDownloadedPlayedEpisodes => _sharedPreferences.getBool('deleteDownloadedPlayedEpisodes') ?? false;
+
+  @override
+  set deleteDownloadedPlayedEpisodes(bool value) {
+    _sharedPreferences.setBool('deleteDownloadedPlayedEpisodes', value);
+    settingsNotifier.sink.add('deleteDownloadedPlayedEpisodes');
+  }
+
+  @override
   bool get storeDownloadsSDCard => _sharedPreferences.getBool('savesdcard') ?? false;
 
   @override
