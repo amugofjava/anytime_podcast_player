@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2024-07-21T17:23:18.605385",
+  "@@last_modified": "2024-10-09T11:23:16.222844",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -856,7 +856,7 @@
   },
   "episode_filter_no_episodes_title_description": "No Episodes Found",
   "@episode_filter_no_episodes_title_description": {
-    "description": "There are no episodes available that match the selected filter",
+    "description": "This podcast has no episodes matching your search criteria and filter",
     "type": "text",
     "placeholders": {}
   },
@@ -995,6 +995,12 @@
   "scrim_episode_filter_selector": "Dismiss episode filter",
   "@scrim_episode_filter_selector": {
     "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "Search episodes",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
     "type": "text",
     "placeholders": {}
   }

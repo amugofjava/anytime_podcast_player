@@ -132,7 +132,7 @@ class _SettingsState extends State<Settings> {
                         context: context,
                         builder: (_) => PopScope(
                           canPop: true,
-                          onPopInvoked: (didPop) async => false,
+                          onPopInvokedWithResult: (didPop, result) async => false,
                           child: BasicDialogAlert(
                             title: Text(L.of(context)!.settings_import_opml),
                             content: OPMLImport(file: file.path!),

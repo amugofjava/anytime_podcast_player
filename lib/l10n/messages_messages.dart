@@ -123,6 +123,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'scrim_speed_selector': MessageLookupByLibrary.simpleMessage('Dismiss playback speed selector'),
     'search_back_button_label': MessageLookupByLibrary.simpleMessage('Back'),
     'search_button_label': MessageLookupByLibrary.simpleMessage('Search'),
+    'search_episodes_label': MessageLookupByLibrary.simpleMessage('Search episodes'),
     'search_for_podcasts_hint': MessageLookupByLibrary.simpleMessage('Search for podcasts'),
     'search_provider_label': MessageLookupByLibrary.simpleMessage('Search provider'),
     'search_transcript_label': MessageLookupByLibrary.simpleMessage('Search transcript'),

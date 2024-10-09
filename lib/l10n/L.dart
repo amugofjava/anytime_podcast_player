@@ -1463,7 +1463,7 @@ class L {
         Intl.message(
           'No Episodes Found',
           name: 'episode_filter_no_episodes_title_description',
-          desc: 'There are no episodes available that match the selected filter',
+          desc: 'This podcast has no episodes matching your search criteria and filter',
           locale: localeName,
         );
   }
@@ -1694,6 +1694,16 @@ class L {
           'Dismiss episode filter',
           name: 'scrim_episode_filter_selector',
           desc: 'Replaces default scrim label for episode filter bottom sheet.',
+          locale: localeName,
+        );
+  }
+
+  String get search_episodes_label {
+    return message('search_episodes_label') ??
+        Intl.message(
+          'Search episodes',
+          name: 'search_episodes_label',
+          desc: 'Hint text for episode search box',
           locale: localeName,
         );
   }

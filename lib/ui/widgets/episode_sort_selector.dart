@@ -47,6 +47,7 @@ class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
                       Icons.sort,
                       semanticLabel: L.of(context)!.episode_sort_semantic_label,
                     ),
+                    visualDensity: VisualDensity.compact,
                     onPressed: widget.podcast != null && widget.podcast!.subscribed
                         ? () {
                             showModalBottomSheet<void>(

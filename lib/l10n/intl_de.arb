@@ -909,7 +909,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "episode_filter_no_episodes_title_description": "Es sind keine Episoden verfügbar, die dem ausgewählten Filter entsprechen",
+  "episode_filter_no_episodes_title_description": "Dieser Podcast hat keine Episoden, die Ihren Suchkriterien und Filtern entsprechen",
   "@episode_filter_no_episodes_title_description": {
     "description": "No episodes found description",
     "type": "text",
@@ -1050,6 +1050,12 @@
   "scrim_episode_filter_selector": "Episodenfilter schließen",
   "@scrim_episode_filter_selector": {
     "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "Folgen suchen",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
     "type": "text",
     "placeholders": {}
  }

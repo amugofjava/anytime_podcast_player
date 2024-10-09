@@ -49,6 +49,7 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                           : Icons.filter_alt_off_outlined,
                       semanticLabel: L.of(context)!.episode_filter_semantic_label,
                     ),
+                    visualDensity: VisualDensity.compact,
                     onPressed: widget.podcast != null && widget.podcast!.subscribed
                         ? () {
                             showModalBottomSheet<void>(
