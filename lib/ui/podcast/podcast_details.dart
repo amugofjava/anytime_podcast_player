@@ -506,8 +506,9 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                       showEpisodeSearch = !showEpisodeSearch;
                     });
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.search,
+                    semanticLabel: L.of(context)!.search_episodes_label,
                   ),
                   visualDensity: VisualDensity.compact,
                 ),
@@ -538,7 +539,10 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                       contentPadding: const EdgeInsets.all(0.0),
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: IconButton(
-                        icon: const Icon(Icons.close),
+                        icon: Icon(
+                          Icons.close,
+                          semanticLabel: L.of(context)!.clear_search_button_label,
+                        ),
                         onPressed: () {
                           _episodeSearchController.clear();
                           podcastBloc.podcastSearchEvent('');
