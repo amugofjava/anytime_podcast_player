@@ -530,37 +530,36 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
           SizeTransition(
             sizeFactor: _animation,
             child: Padding(
-              padding: const EdgeInsets.all(7.0),
-              child: TextField(
-                focusNode: _searchFocus,
-                controller: _episodeSearchController,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.all(0.0),
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      _episodeSearchController.clear();
-                      podcastBloc.podcastSearchEvent('');
-                    },
-                  ),
-                  isDense: true,
-                  filled: true,
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide.none,
-                    gapPadding: 0.0,
-                  ),
-                  hintText: L.of(context)!.search_episodes_label,
-                ),
-                onChanged: ((search) {
-                  podcastBloc.podcastSearchEvent(search);
-                }),
-                onSubmitted: ((search) {
-                  podcastBloc.podcastSearchEvent(search);
-                }),
-              ),
-            ),
+                padding: const EdgeInsets.all(7.0),
+                child: TextField(
+                    focusNode: _searchFocus,
+                    controller: _episodeSearchController,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.all(0.0),
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          _episodeSearchController.clear();
+                          podcastBloc.podcastSearchEvent('');
+                        },
+                      ),
+                      isDense: true,
+                      filled: true,
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide.none,
+                        gapPadding: 0.0,
+                      ),
+                      hintText: L.of(context)!.search_episodes_label,
+                    ),
+                    onChanged: ((search) {
+                      podcastBloc.podcastSearchEvent(search);
+                    }),
+                    onSubmitted: ((search) {
+                      podcastBloc.podcastSearchEvent(search);
+                    }),
+                    onTapOutside: (event) => _searchFocus.unfocus())),
           ),
         ],
       ),
