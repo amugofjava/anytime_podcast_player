@@ -709,6 +709,7 @@ class FollowButton extends StatelessWidget {
             child: subscribed
                 ? OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(10.0, 4.0, 10.0, 4.0),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                     ),
                     icon: const Icon(
@@ -753,6 +754,7 @@ class FollowButton extends StatelessWidget {
                   )
                 : OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(10.0, 4.0, 10.0, 4.0),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                     ),
                     icon: const Icon(
