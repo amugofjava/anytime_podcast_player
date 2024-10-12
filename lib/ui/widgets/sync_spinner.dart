@@ -30,7 +30,10 @@ class _SyncSpinnerState extends State<SyncSpinner> with SingleTickerProviderStat
       duration: const Duration(milliseconds: 1500),
     )..repeat();
 
-    _child = const Icon(Icons.refresh);
+    _child = const Icon(
+      Icons.refresh,
+      size: 16.0,
+    );
 
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 

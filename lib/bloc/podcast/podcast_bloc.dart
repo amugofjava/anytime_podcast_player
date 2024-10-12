@@ -103,6 +103,7 @@ class PodcastBloc extends Bloc {
     /// Listen to Podcast subscription, mark/cleared played events
     _listenPodcastStateEvents();
 
+    /// Listen for episode search requests
     _listenPodcastSearchEvents();
   }
 
@@ -422,7 +423,7 @@ class PodcastBloc extends Bloc {
       _episodesStream.add(_episodes);
     } else {
       var searchFilteredEpisodes =
-          _episodes.where((e) => e.title!.toLowerCase().contains(_searchTerm.toLowerCase())).toList();
+          _episodes.where((e) => e.title!.toLowerCase().contains(_searchTerm.trim().toLowerCase())).toList();
       _episodesStream.add(searchFilteredEpisodes);
     }
   }
