@@ -1,3 +1,15 @@
+## 1.3.10
+
+- Episode search
+
+## 1.3.9
+
+- Improved accessibility
+- Better support for AirPods and Bluetooth earphones/headphones
+- Speed selector max speed now uses 0.1 increments
+- Bug Fixes
+- Fixed episode sort issue
+
 ## 1.3.8
 
 - Added episode sort option.
