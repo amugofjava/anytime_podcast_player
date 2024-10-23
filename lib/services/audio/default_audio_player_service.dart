@@ -100,6 +100,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       builder: () => _DefaultAudioPlayerHandler(
         repository: repository,
         settings: settingsService,
+        podcastService: podcastService,
       ),
       config: const AudioServiceConfig(
         androidResumeOnClick: true,
@@ -524,6 +525,13 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
+    if (
+        settingsService.deleteDownloadedPlayedEpisodes &&
+        _currentEpisode?.downloadState == DownloadState.downloaded
+    ) {
+      await podcastService.deleteDownload(_currentEpisode!);
+    }
+
     _stopPositionTicker();
 
     if (_queue.isEmpty) {
@@ -781,6 +789,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   final log = Logger('DefaultAudioPlayerHandler');
   final Repository repository;
   final SettingsService settings;
+  final PodcastService podcastService;
 
   static const rewindMillis = 10001;
   static const fastForwardMillis = 30000;
@@ -807,6 +816,7 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   _DefaultAudioPlayerHandler({
     required this.repository,
     required this.settings,
+    required this.podcastService,
   }) {
     _initPlayer();
   }
@@ -1075,7 +1085,11 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         storedEpisode.position = 0;
         storedEpisode.played = true;
 
-        await repository.saveEpisode(storedEpisode);
+        if (settings.deleteDownloadedPlayedEpisodes) {
+          podcastService.deleteDownload(storedEpisode);
+        } else {
+          await repository.saveEpisode(storedEpisode);
+        }
       } else if (currentPosition != storedEpisode.position) {
         storedEpisode.position = currentPosition;
 
