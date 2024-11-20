@@ -246,6 +246,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_delete_played_label": "Delete downloaded episodes once played",
+  "@settings_delete_played_label": {
+    "description": "Delete downloaded episodes once played setting",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_download_sd_card_label": "Download episodes to SD card",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",

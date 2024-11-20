@@ -165,6 +165,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Folgen in der Detailansicht aktualisieren, nachdem'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Noch nie'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATEN'),
+    'settings_delete_played_label': MessageLookupByLibrary.simpleMessage('Heruntergeladene Episoden nach dem Abspielen löschen'),
     'settings_download_sd_card_label': MessageLookupByLibrary.simpleMessage('Episoden auf SD-Karte herunterladen'),
     'settings_download_switch_card': MessageLookupByLibrary.simpleMessage('Neue Downloads werden auf der SD-Karte gespeichert. Bestehende Downloads bleiben im internen Speicher.'),
     'settings_download_switch_internal': MessageLookupByLibrary.simpleMessage('Neue Downloads werden im internen Speicher gespeichert. Bestehende Downloads verbleiben auf der SD-Karte.'),
