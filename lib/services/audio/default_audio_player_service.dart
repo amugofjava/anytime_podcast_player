@@ -525,9 +525,15 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
     log.fine('We have completed episode ${_currentEpisode?.title}');
 
+    /// If we have sleep at end of episode enabled and we have more items in the
+    /// queue, we do not want to potentially delete the episode when we reach
+    /// the end. When the user continues playback, we'll complete fully and
+    /// can delete the episode.
+    final sleepy = _sleep.type == SleepType.episode && _queue.isNotEmpty;
+
     if (
         settingsService.deleteDownloadedPlayedEpisodes &&
-        _currentEpisode?.downloadState == DownloadState.downloaded
+        _currentEpisode?.downloadState == DownloadState.downloaded && !sleepy
     ) {
       await podcastService.deleteDownload(_currentEpisode!);
     }
@@ -1072,25 +1078,16 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     );
   }
 
-  Future<void> _savePosition({bool complete = false}) async {
+  Future<void> _savePosition() async {
     if (_currentItem != null) {
       // The episode may have been updated elsewhere - re-fetch it.
       var currentPosition = playbackState.value.position.inMilliseconds;
       var storedEpisode = (await repository.findEpisodeByGuid(_currentItem!.extras!['eid'] as String))!;
 
       log.fine(
-          '_savePosition(): Current position is $currentPosition - stored position is ${storedEpisode.position} complete is $complete on episode ${storedEpisode.title}');
+          '_savePosition(): Current position is $currentPosition - stored position is ${storedEpisode.position} on episode ${storedEpisode.title}');
 
-      if (complete) {
-        storedEpisode.position = 0;
-        storedEpisode.played = true;
-
-        if (settings.deleteDownloadedPlayedEpisodes) {
-          podcastService.deleteDownload(storedEpisode);
-        } else {
-          await repository.saveEpisode(storedEpisode);
-        }
-      } else if (currentPosition != storedEpisode.position) {
+      if (currentPosition != storedEpisode.position) {
         storedEpisode.position = currentPosition;
 
         await repository.saveEpisode(storedEpisode);
