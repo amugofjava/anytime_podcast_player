@@ -79,6 +79,14 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              ListTile(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  title: Text(L.of(context)!.settings_delete_played_label),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.deleteDownloadedPlayedEpisodes,
+                    onChanged: (value) => setState(() => settingsBloc.deleteDownloadedPlayedEpisodes(value)),
+                  )
+              ),
               sdcard
                   ? MergeSemantics(
                       child: ListTile(

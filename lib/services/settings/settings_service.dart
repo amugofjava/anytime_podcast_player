@@ -17,6 +17,10 @@ abstract class SettingsService {
 
   set markDeletedEpisodesAsPlayed(bool value);
 
+  bool get deleteDownloadedPlayedEpisodes;
+
+  set deleteDownloadedPlayedEpisodes(bool value);
+
   bool get storeDownloadsSDCard;
 
   set storeDownloadsSDCard(bool value);
