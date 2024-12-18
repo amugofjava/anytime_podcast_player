@@ -109,5 +109,10 @@
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
+
+        <!-- Opt out of Flutter's deep link system as we use app_links -->
+        <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
     </application>
 </manifest>
