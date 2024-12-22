@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:anytime/bloc/bloc.dart';
-import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -245,20 +244,9 @@ class PodcastBloc extends Bloc {
       var episode = _episodes.firstWhereOrNull((ep) => ep.guid == e.guid);
 
       if (episode != null) {
-        episode.downloadState = e.downloadState = DownloadState.queued;
-
         _refresh();
 
-        var result = await downloadService.downloadEpisode(e);
-
-        // If there was an error downloading the episode, push an error state
-        // and then restore to none.
-        if (!result) {
-          episode.downloadState = e.downloadState = DownloadState.failed;
-          _refresh();
-          episode.downloadState = e.downloadState = DownloadState.none;
-          _refresh();
-        }
+        await downloadService.downloadEpisode(e);
       }
     });
   }

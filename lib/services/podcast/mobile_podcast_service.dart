@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/chapter.dart';
-import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
@@ -20,7 +19,6 @@ import 'package:anytime/state/episode_state.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart';
@@ -505,41 +503,6 @@ class MobilePodcastService extends PodcastService {
   @override
   Future<List<Episode>> loadEpisodes() async {
     return repository.findAllEpisodes();
-  }
-
-  @override
-  Future<void> deleteDownload(Episode episode) async {
-    // If this episode is currently downloading, cancel the download first.
-    if (episode.downloadState == DownloadState.downloaded) {
-      if (settingsService.markDeletedEpisodesAsPlayed) {
-        episode.played = true;
-      }
-    } else if (episode.downloadState == DownloadState.downloading && episode.downloadPercentage! < 100) {
-      await FlutterDownloader.cancel(taskId: episode.downloadTaskId!);
-    }
-
-    episode.downloadTaskId = null;
-    episode.downloadPercentage = 0;
-    episode.position = 0;
-    episode.downloadState = DownloadState.none;
-
-    if (episode.transcriptId != null && episode.transcriptId! > 0) {
-      await repository.deleteTranscriptById(episode.transcriptId!);
-    }
-
-    await repository.saveEpisode(episode);
-
-    if (await hasStoragePermission()) {
-      final f = File.fromUri(Uri.file(await resolvePath(episode)));
-
-      log.fine('Deleting file ${f.path}');
-
-      if (await f.exists()) {
-        f.delete();
-      }
-    }
-
-    return;
   }
 
   @override
