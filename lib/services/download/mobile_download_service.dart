@@ -20,6 +20,7 @@ import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:uuid/uuid.dart';
 
 /// An implementation of a [DownloadService] that handles downloading
 /// of episodes on mobile.
@@ -61,7 +62,7 @@ class MobileDownloadService extends DownloadService {
   }
 
   @override
-  Future<bool> downloadEpisode(Episode episode) async {
+  Future<void> downloadEpisode(Episode episode) async {
     try {
       final season = episode.season > 0 ? episode.season.toString() : '';
       final epno = episode.episode > 0 ? episode.episode.toString() : '';
@@ -153,15 +154,34 @@ class MobileDownloadService extends DownloadService {
 
             await repository.saveEpisode(episode);
           });
-
-          return true;
         }
       }
-
-      return false;
     } catch (e, stack) {
       log.warning('Episode download failed (${episode.title})', e, stack);
-      return false;
+      episode.filename = null;
+      episode.filepath = null;
+      episode.downloadTaskId = null;
+      episode.downloadPercentage = 0;
+      episode.downloadState = DownloadState.none;
+
+      await repository.saveEpisode(episode);
+
+      /// If there was an error downloading the episode, push an error state
+      /// and then restore to none.
+      ///
+      /// If failure happens before download actual start, its [id] will be [null].
+      final downloadId = episode.downloadTaskId ?? const Uuid().v4();
+      downloadProgress
+        ..add(DownloadProgress(
+          downloadId,
+          0,
+          DownloadState.failed,
+        ))
+        ..add(DownloadProgress(
+          downloadId,
+          0,
+          DownloadState.none,
+        ));
     }
   }
 
@@ -196,6 +216,12 @@ class MobileDownloadService extends DownloadService {
             f.delete();
           }
         }
+
+        // downloadProgress.add(DownloadProgress(
+        //   episode.downloadTaskId!,
+        //   0,
+        //   DownloadState.none,
+        // ));
 
         return;
       });
