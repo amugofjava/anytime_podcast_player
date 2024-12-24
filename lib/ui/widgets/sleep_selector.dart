@@ -26,7 +26,8 @@ class SleepSelectorWidget extends StatefulWidget {
 class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
   @override
   Widget build(BuildContext context) {
-    var settingsBloc = Provider.of<SettingsBloc>(context);
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
     var theme = Theme.of(context);
 
     return StreamBuilder<AppSettings>(
@@ -38,49 +39,57 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              InkWell(
-                onTap: () {
-                  showModalBottomSheet<void>(
-                      context: context,
-                      backgroundColor: theme.secondaryHeaderColor,
-                      barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16.0),
-                          topRight: Radius.circular(16.0),
+              SizedBox(
+                height: 48.0,
+                width: 48.0,
+                child: Center(
+                  child: StreamBuilder<Sleep>(
+                    stream: audioBloc.sleepStream,
+                    initialData: Sleep(type: SleepType.none),
+                    builder: (context, sleepSnapshot) {
+                      var sl = '';
+
+                      if (sleepSnapshot.hasData) {
+                        var s = sleepSnapshot.data!;
+
+                        switch(s.type) {
+                          case SleepType.none:
+                            sl = '';
+                          case SleepType.time:
+                            sl = '${L.of(context)!.now_playing_episode_time_remaining} ${SleepSlider.formatDuration(s.timeRemaining)}';
+                          case SleepType.episode:
+                            sl = '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}';
+                        }
+                      }
+
+                      return IconButton(
+                        icon: sleepSnapshot.data?.type != SleepType.none ? Icon(
+                          Icons.bedtime,
+                          semanticLabel: '${L.of(context)!.sleep_timer_label}. $sl',
+                          size: 20.0,
+                        ) : Icon(
+                          Icons.bedtime_outlined,
+                          semanticLabel: L.of(context)!.sleep_timer_label,
+                          size: 20.0,
                         ),
-                      ),
-                      builder: (context) {
-                        return const SleepSlider();
-                      });
-                },
-                child: SizedBox(
-                  height: 48.0,
-                  width: 48.0,
-                  child: Center(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.bedtime_outlined,
-                        semanticLabel: L.of(context)!.sleep_timer_label,
-                        size: 20.0,
-                      ),
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                            isScrollControlled: true,
-                            context: context,
-                            backgroundColor: theme.secondaryHeaderColor,
-                            barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(16.0),
-                                topRight: Radius.circular(16.0),
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                              isScrollControlled: true,
+                              context: context,
+                              backgroundColor: theme.secondaryHeaderColor,
+                              barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16.0),
+                                  topRight: Radius.circular(16.0),
+                                ),
                               ),
-                            ),
-                            builder: (context) {
-                              return const SleepSlider();
-                            });
-                      },
-                    ),
+                              builder: (context) {
+                                return const SleepSlider();
+                              });
+                        },
+                      );
+                    }
                   ),
                 ),
               ),
@@ -92,6 +101,18 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
 
 class SleepSlider extends StatefulWidget {
   const SleepSlider({super.key});
+
+  static String formatDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return '$n';
+      return '0$n';
+    }
+
+    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
+    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
+
+    return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
+  }
 
   @override
   State<SleepSlider> createState() => _SleepSliderState();
@@ -132,9 +153,9 @@ class _SleepSliderState extends State<SleepSlider> {
                   ),
                 if (s != null && s.type == SleepType.time)
                   Text(
-                    '(${_formatDuration(s.timeRemaining)})',
+                    '(${SleepSlider.formatDuration(s.timeRemaining)})',
                     semanticsLabel:
-                        '${L.of(context)!.semantic_current_value_label} ${_formatDuration(s.timeRemaining)}',
+                        '${L.of(context)!.semantic_current_value_label} ${SleepSlider.formatDuration(s.timeRemaining)}',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.episode)
@@ -213,18 +234,6 @@ class _SleepSliderState extends State<SleepSlider> {
                 )
               ]);
         });
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) {
-      if (n >= 10) return '$n';
-      return '0$n';
-    }
-
-    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
-    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
-
-    return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
   }
 }
 
