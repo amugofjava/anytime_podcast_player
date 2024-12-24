@@ -69,12 +69,15 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                   height: 48.0,
                   width: 48.0,
                   child: Center(
-                    child: Text(
-                      snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
-                      semanticsLabel: L.of(context)!.playback_speed_label,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        color: Theme.of(context).iconTheme.color,
+                    child: Semantics(
+                      button: true,
+                      child: Text(
+                        semanticsLabel: '${L.of(context)!.playback_speed_label} ${snapshot.data!.playbackSpeed.toTenth}',
+                        snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
                       ),
                     ),
                   ),
