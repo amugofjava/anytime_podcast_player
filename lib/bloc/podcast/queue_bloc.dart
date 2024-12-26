@@ -24,17 +24,17 @@ class QueueBloc extends Bloc {
   void _handleQueueEvents() {
     _queueEvent.listen((QueueEvent event) async {
       if (event is QueueAddEvent) {
-        var e = event.episode;
+        final e = event.episode;
         if (e != null) {
           await audioPlayerService.addUpNextEpisode(e);
         }
       } else if (event is QueueRemoveEvent) {
-        var e = event.episode;
+        final e = event.episode;
         if (e != null) {
           await audioPlayerService.removeUpNextEpisode(e);
         }
       } else if (event is QueueMoveEvent) {
-        var e = event.episode;
+        final e = event.episode;
         if (e != null) {
           await audioPlayerService.moveUpNextEpisode(e, event.oldIndex, event.newIndex);
         }

@@ -50,7 +50,7 @@ class MobileDownloadService extends DownloadService {
       if (await hasStoragePermission()) {
         // If this episode contains chapter, fetch them first.
         if (episode.hasChapters && episode.chaptersUrl != null) {
-          var chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
+          final chapters = await podcastService.loadChaptersByUrl(url: episode.chaptersUrl!);
 
           episode.chapters = chapters;
 
@@ -120,7 +120,7 @@ class MobileDownloadService extends DownloadService {
 
           /// If we get a redirect to an http endpoint the download will fail. Let's fully resolve
           /// the URL before calling download and ensure it is https.
-          var url = await resolveUrl(episode.contentUrl!, forceHttps: true);
+          final url = await resolveUrl(episode.contentUrl!, forceHttps: true);
 
           final taskId = await downloadManager.enqueueTask(url, downloadPath, filename);
 
@@ -150,7 +150,7 @@ class MobileDownloadService extends DownloadService {
   }
 
   Future<void> _updateDownloadProgress(DownloadProgress progress) async {
-    var episode = await repository.findEpisodeByTaskId(progress.id);
+    final episode = await repository.findEpisodeByTaskId(progress.id);
 
     if (episode != null) {
       // We might be called during the cleanup routine during startup.
@@ -165,7 +165,7 @@ class MobileDownloadService extends DownloadService {
 
             // If we do not have a duration for this file - let's calculate it
             if (episode.duration == 0) {
-              var mp3Info = MP3Processor.fromFile(File(filename));
+              final mp3Info = MP3Processor.fromFile(File(filename));
 
               episode.duration = mp3Info.duration.inSeconds;
             }

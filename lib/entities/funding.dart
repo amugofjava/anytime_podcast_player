@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/podcast.dart';
 
 /// part of a [Podcast].
 ///

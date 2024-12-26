@@ -38,14 +38,14 @@ class MobileOPMLService extends OPMLService {
     final outlines = document.findAllElements('outline');
     final pods = <OmplOutlineTag>[];
 
-    for (var outline in outlines) {
+    for (final outline in outlines) {
       pods.add(OmplOutlineTag.parse(outline));
     }
 
-    var total = pods.length;
+    final total = pods.length;
     var current = 0;
 
-    for (var p in pods) {
+    for (final p in pods) {
       if (process) {
         yield OPMLLoadingState(
           current: ++current,
@@ -56,7 +56,7 @@ class MobileOPMLService extends OPMLService {
         try {
           log.fine('Importing podcast ${p.xmlUrl}');
 
-          var result = await podcastService.loadPodcast(
+          final result = await podcastService.loadPodcast(
             podcast: Podcast(guid: '', link: '', title: p.text!, url: p.xmlUrl!),
             refresh: true,
           );
@@ -75,7 +75,7 @@ class MobileOPMLService extends OPMLService {
 
   @override
   Stream<OPMLState> saveOPMLFile() async* {
-    var subs = await podcastService.subscriptions();
+    final subs = await podcastService.subscriptions();
 
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0"');
@@ -85,14 +85,14 @@ class MobileOPMLService extends OPMLService {
           builder.text('Anytime Subscriptions');
         });
         builder.element('dateCreated', nest: () {
-          var n = DateTime.now().toUtc();
-          var f = DateFormat('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'').format(n);
+          final n = DateTime.now().toUtc();
+          final f = DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(n);
           builder.text(f);
         });
       });
 
       builder.element('body', nest: () {
-        for (var sub in subs) {
+        for (final sub in subs) {
           builder.element('outline', nest: () {
             builder.attribute('text', sub.title);
             builder.attribute('xmlUrl', sub.url);
@@ -103,9 +103,9 @@ class MobileOPMLService extends OPMLService {
 
     final export = builder.buildDocument();
 
-    var output = Platform.isAndroid ? (await getExternalStorageDirectory())! : await getApplicationDocumentsDirectory();
-    var outputFile = '${output.path}/anytime_export.opml';
-    var file = File(outputFile);
+    final output = Platform.isAndroid ? (await getExternalStorageDirectory())! : await getApplicationDocumentsDirectory();
+    final outputFile = '${output.path}/anytime_export.opml';
+    final file = File(outputFile);
 
     file.writeAsStringSync(export.toXmlString(pretty: true));
 

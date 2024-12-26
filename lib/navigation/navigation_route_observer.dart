@@ -39,7 +39,7 @@ class NavigationRouteObserver extends NavigatorObserver {
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    int oldRouteIndex = _routeStack.indexOf(oldRoute);
+    final oldRouteIndex = _routeStack.indexOf(oldRoute);
 
     _routeStack.replaceRange(oldRouteIndex, oldRouteIndex + 1, [newRoute]);
   }

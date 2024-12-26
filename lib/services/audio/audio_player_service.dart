@@ -34,8 +34,8 @@ class PositionState {
   });
 
   PositionState.emptyState()
-      : position = const Duration(seconds: 0),
-        length = const Duration(seconds: 0),
+      : position = Duration.zero,
+        length = Duration.zero,
         percentage = 0,
         buffering = false;
 }

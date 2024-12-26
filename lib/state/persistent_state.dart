@@ -11,11 +11,11 @@ import 'package:path_provider/path_provider.dart';
 
 class PersistentState {
   static Future<void> persistState(Persistable persistable) async {
-    var d = await getApplicationSupportDirectory();
+    final d = await getApplicationSupportDirectory();
 
-    var file = File(join(d.path, 'state.json'));
-    var sink = file.openWrite();
-    var json = jsonEncode(persistable.toMap());
+    final file = File(join(d.path, 'state.json'));
+    final sink = file.openWrite();
+    final json = jsonEncode(persistable.toMap());
 
     sink.write(json);
     await sink.flush();
@@ -23,16 +23,16 @@ class PersistentState {
   }
 
   static Future<Persistable> fetchState() async {
-    var d = await getApplicationSupportDirectory();
+    final d = await getApplicationSupportDirectory();
 
-    var file = File(join(d.path, 'state.json'));
+    final file = File(join(d.path, 'state.json'));
     var p = Persistable.empty();
 
     if (file.existsSync()) {
-      var result = file.readAsStringSync();
+      final result = file.readAsStringSync();
 
       if (result.isNotEmpty) {
-        var data = jsonDecode(result) as Map<String, dynamic>;
+        final data = jsonDecode(result) as Map<String, dynamic>;
 
         p = Persistable.fromMap(data);
       }
@@ -42,10 +42,10 @@ class PersistentState {
   }
 
   static Future<void> clearState() async {
-    var file = await _getFile();
+    final file = await _getFile();
 
     if (file.existsSync()) {
-      file.delete();
+      file.deleteSync();
     }
   }
 
@@ -54,7 +54,7 @@ class PersistentState {
   }
 
   static Future<int> readInt(String name) async {
-    var result = await _readValue(name);
+    final result = await _readValue(name);
 
     return result.isEmpty ? 0 : int.parse(result);
   }
@@ -68,27 +68,27 @@ class PersistentState {
   }
 
   static Future<String> _readValue(String name) async {
-    var d = await getApplicationSupportDirectory();
+    final d = await getApplicationSupportDirectory();
 
-    var file = File(join(d.path, name));
-    var result = file.readAsStringSync();
+    final file = File(join(d.path, name));
+    final result = file.readAsStringSync();
 
     return result;
   }
 
   static Future<void> _writeValue(String name, String value) async {
-    var d = await getApplicationSupportDirectory();
+    final d = await getApplicationSupportDirectory();
 
-    var file = File(join(d.path, name));
-    var sink = file.openWrite();
+    final file = File(join(d.path, name));
+    final sink = file.openWrite();
 
-    sink.write(value.toString());
+    sink.write(value);
     await sink.flush();
     await sink.close();
   }
 
   static Future<File> _getFile() async {
-    var d = await getApplicationSupportDirectory();
+    final d = await getApplicationSupportDirectory();
 
     return File(join(d.path, 'state.json'));
   }

@@ -3,11 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
 import 'package:podcast_search/podcast_search.dart' as search;
-
-import 'episode.dart';
 
 enum PodcastEpisodeFilter {
   none(id: 0),
@@ -173,7 +172,7 @@ class Podcast {
     }
 
     if (podcast['funding'] != null) {
-      for (var chapter in (podcast['funding'] as List)) {
+      for (final chapter in (podcast['funding'] as List)) {
         if (chapter is Map<String, dynamic>) {
           funding.add(Funding.fromMap(chapter));
         }
@@ -181,7 +180,7 @@ class Podcast {
     }
 
     if (podcast['persons'] != null) {
-      for (var person in (podcast['persons'] as List)) {
+      for (final person in (podcast['persons'] as List)) {
         if (person is Map<String, dynamic>) {
           persons.add(Person.fromMap(person));
         }
@@ -189,7 +188,7 @@ class Podcast {
     }
 
     if (podcast['filter'] != null) {
-      var filterValue = (podcast['filter'] as int);
+      final filterValue = podcast['filter'] as int;
 
       filter = switch (filterValue) {
         1 => PodcastEpisodeFilter.started,
@@ -200,7 +199,7 @@ class Podcast {
     }
 
     if (podcast['sort'] != null) {
-      var sortValue = (podcast['sort'] as int);
+      final sortValue = podcast['sort'] as int;
 
       sort = switch (sortValue) {
         1 => PodcastEpisodeSort.latestFirst,

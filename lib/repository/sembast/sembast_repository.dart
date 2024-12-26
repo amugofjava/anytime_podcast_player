@@ -132,7 +132,7 @@ class SembastRepository extends Repository {
         await _podcastStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null) {
-      var p = Podcast.fromMap(snapshot.key, snapshot.value);
+      final p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
       p.episodes = await findEpisodesByPodcastGuid(
@@ -155,7 +155,7 @@ class SembastRepository extends Repository {
         await _podcastStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null) {
-      var p = Podcast.fromMap(snapshot.key, snapshot.value);
+      final p = Podcast.fromMap(snapshot.key, snapshot.value);
 
       // Now attach all episodes for this podcast
       p.episodes = await findEpisodesByPodcastGuid(
@@ -194,7 +194,7 @@ class SembastRepository extends Repository {
     final RecordSnapshot<int, Map<String, Object?>> snapshot =
         (await _episodeStore.findFirst(await _db, finder: finder))!;
 
-    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    return _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
 
   @override
@@ -208,7 +208,7 @@ class SembastRepository extends Repository {
       return null;
     }
 
-    return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+    return _loadEpisodeSnapshot(snapshot.key, snapshot.value);
   }
 
   // TODO: Remove nullable on pguid as this does not make sense.
@@ -234,7 +234,7 @@ class SembastRepository extends Repository {
         await _episodeStore.find(await _db, finder: finder);
 
     final results = recordSnapshots.map((snapshot) async {
-      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+      return _loadEpisodeSnapshot(snapshot.key, snapshot.value);
     }).toList();
 
     final episodeList = Future.wait(results);
@@ -298,14 +298,14 @@ class SembastRepository extends Repository {
 
   @override
   Future<void> deleteEpisodes(List<Episode> episodes) async {
-    var d = await _db;
+    final d = await _db;
 
     if (episodes.isNotEmpty) {
-      for (var chunk in episodes.chunk(100)) {
+      for (final chunk in episodes.chunk(100)) {
         await d.transaction((txn) async {
-          var futures = <Future<int>>[];
+          final futures = <Future<int>>[];
 
-          for (var episode in chunk) {
+          for (final episode in chunk) {
             final finder = Finder(filter: Filter.byKey(episode.id));
 
             futures.add(_episodeStore.delete(txn, finder: finder));
@@ -321,7 +321,7 @@ class SembastRepository extends Repository {
 
   @override
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
-    var e = await _saveEpisode(episode, updateIfSame);
+    final e = await _saveEpisode(episode, updateIfSame);
 
     _episodeSubject.add(EpisodeUpdateState(e));
 
@@ -332,8 +332,8 @@ class SembastRepository extends Repository {
   Future<List<Episode>> saveEpisodes(List<Episode> episodes, [bool updateIfSame = false]) async {
     final updatedEpisodes = <Episode>[];
 
-    for (var es in episodes) {
-      var e = await _saveEpisode(es, updateIfSame);
+    for (final es in episodes) {
+      final e = await _saveEpisode(es, updateIfSame);
 
       updatedEpisodes.add(e);
 
@@ -350,9 +350,9 @@ class SembastRepository extends Repository {
     final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _queueStore.record(1).getSnapshot(await _db);
 
     if (snapshot != null) {
-      var queue = Queue.fromMap(snapshot.key, snapshot.value);
+      final queue = Queue.fromMap(snapshot.key, snapshot.value);
 
-      var episodeFinder = Finder(filter: Filter.inList('guid', queue.guids));
+      final episodeFinder = Finder(filter: Filter.inList('guid', queue.guids));
 
       final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
           await _episodeStore.find(await _db, finder: episodeFinder);
@@ -370,13 +370,13 @@ class SembastRepository extends Repository {
   @override
   Future<void> saveQueue(List<Episode> episodes) async {
     /// Check to see if we have any ad-hoc episodes and save them first
-    for (var e in episodes) {
+    for (final e in episodes) {
       if (e.pguid == null || e.pguid!.isEmpty) {
-        _saveEpisode(e, false);
+        await _saveEpisode(e, false);
       }
     }
 
-    var guids = episodes.map((e) => e.guid).toList();
+    final guids = episodes.map((e) => e.guid).toList();
 
     /// Only bother saving if the queue has changed
     if (!listEquals(guids, _queueGuids)) {
@@ -414,14 +414,14 @@ class SembastRepository extends Repository {
 
   @override
   Future<void> deleteTranscriptsById(List<int> id) async {
-    var d = await _db;
+    final d = await _db;
 
     if (id.isNotEmpty) {
-      for (var chunk in id.chunk(100)) {
+      for (final chunk in id.chunk(100)) {
         await d.transaction((txn) async {
-          var futures = <Future<int>>[];
+          final futures = <Future<int>>[];
 
-          for (var id in chunk) {
+          for (final id in chunk) {
             final finder = Finder(filter: Filter.byKey(id));
 
             futures.add(_transcriptStore.delete(txn, finder: finder));
@@ -468,11 +468,11 @@ class SembastRepository extends Repository {
         await _episodeStore.find(await _db, finder: Finder(filter: filter));
 
     // First, find all podcasts
-    for (var podcast in await _podcastStore.find(await _db)) {
+    for (final podcast in await _podcastStore.find(await _db)) {
       pguids.add(podcast.value['guid'] as String?);
     }
 
-    for (var episode in episodes) {
+    for (final episode in episodes) {
       final pguid = episode.value['pguid'] as String?;
       final podcast = pguids.contains(pguid);
 
@@ -530,15 +530,15 @@ class SembastRepository extends Repository {
   /// split the episodes into chunks of 100 and save any that have been updated
   /// in that chunk in a single transaction.
   Future<void> _saveEpisodes(List<Episode?>? episodes) async {
-    var d = await _db;
-    var dateStamp = DateTime.now();
+    final d = await _db;
+    final dateStamp = DateTime.now();
 
     if (episodes != null && episodes.isNotEmpty) {
-      for (var chunk in episodes.chunk(100)) {
+      for (final chunk in episodes.chunk(100)) {
         await d.transaction((txn) async {
-          var futures = <Future<int>>[];
+          final futures = <Future<int>>[];
 
-          for (var episode in chunk) {
+          for (final episode in chunk) {
             episode!.lastUpdated = dateStamp;
 
             if (episode.id == null) {
@@ -546,7 +546,7 @@ class SembastRepository extends Repository {
             } else {
               final finder = Finder(filter: Filter.byKey(episode.id));
 
-              var existingEpisode = await findEpisodeById(episode.id);
+              final existingEpisode = await findEpisodeById(episode.id);
 
               if (existingEpisode == null || existingEpisode != episode) {
                 futures.add(_episodeStore.update(txn, episode.toMap(), finder: finder));
@@ -572,7 +572,7 @@ class SembastRepository extends Repository {
       episode.lastUpdated = DateTime.now();
       episode.id = await _episodeStore.add(await _db, episode.toMap());
     } else {
-      var e = Episode.fromMap(episode.id, snapshot.value);
+      final e = Episode.fromMap(episode.id, snapshot.value);
       episode.lastUpdated = DateTime.now();
 
       if (updateIfSame || episode != e) {
@@ -590,7 +590,7 @@ class SembastRepository extends Repository {
         await _episodeStore.findFirst(await _db, finder: finder);
 
     if (snapshot != null) {
-      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
+      return _loadEpisodeSnapshot(snapshot.key, snapshot.value);
     } else {
       return null;
     }
@@ -616,7 +616,7 @@ class SembastRepository extends Repository {
 
             final nextInSeries = podcast.episodes.indexWhere(
               (e) => !e.played,
-              (matchedEpisode + 1),
+              matchedEpisode + 1,
             );
 
             if (nextInSeries != -1) {
@@ -638,7 +638,7 @@ class SembastRepository extends Repository {
   }
 
   Future<Episode> _loadEpisodeSnapshot(int key, Map<String, Object?> snapshot) async {
-    var episode = Episode.fromMap(key, snapshot);
+    final episode = Episode.fromMap(key, snapshot);
 
     if (episode.transcriptId! > 0) {
       episode.transcript = await findTranscriptById(episode.transcriptId);
@@ -665,12 +665,12 @@ class SembastRepository extends Repository {
   /// We use the passed [Database] rather than _db to prevent deadlocking, hence the direct
   /// update to data within this routine rather than using the existing find/update methods.
   Future<void> _upgradeV2(Database db) async {
-    List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
+    final List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
     final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
 
     log.info('Upgrading Sembast store to V2');
 
-    for (var podcast in podcasts) {
+    for (final podcast in podcasts) {
       if (podcast.guid!.startsWith('http:')) {
         final idFinder = Finder(filter: Filter.byKey(podcast.id));
         final guid = podcast.guid!.replaceFirst('http:', 'https:');
@@ -680,7 +680,7 @@ class SembastRepository extends Repository {
 
         log.fine('Upgrading GUID ${podcast.guid} - to $guid');
 
-        var upgradedPodcast = Podcast(
+        final upgradedPodcast = Podcast(
           id: podcast.id,
           guid: guid,
           url: podcast.url,
@@ -700,7 +700,7 @@ class SembastRepository extends Repository {
         final episodes = episodeData.map((e) => Episode.fromMap(e.key, e.value)).toList();
 
         // Now upgrade episodes
-        for (var e in episodes) {
+        for (final e in episodes) {
           e.pguid = guid;
           log.fine('Updating episode guid for ${e.title} from ${e.pguid} to $guid');
 

@@ -15,7 +15,7 @@ final class Sleep {
 
   Sleep({
     required this.type,
-    this.duration = const Duration(milliseconds: 0),
+    this.duration = Duration.zero,
   }) {
     endTime = DateTime.now().add(duration);
   }

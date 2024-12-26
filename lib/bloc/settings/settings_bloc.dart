@@ -38,7 +38,7 @@ class SettingsBloc extends Bloc {
   void _init() {
     /// Load all settings
     // Add our available search providers.
-    var providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
+    final providers = <SearchProvider>[SearchProvider(key: 'itunes', name: 'iTunes')];
 
     if (podcastIndexKey.isNotEmpty) {
       providers.add(SearchProvider(key: 'podcastindex', name: 'PodcastIndex'));

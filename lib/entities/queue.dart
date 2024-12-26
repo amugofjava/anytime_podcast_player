@@ -17,7 +17,7 @@ class Queue {
   }
 
   static Queue fromMap(int key, Map<String, dynamic> guids) {
-    var g = guids['q'] as List<dynamic>?;
+    final g = guids['q'] as List<dynamic>?;
     var result = <String>[];
 
     if (g != null) {

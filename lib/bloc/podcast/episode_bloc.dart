@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/bloc_state.dart';
@@ -56,9 +57,9 @@ class EpisodeBloc extends Bloc {
     _listenEpisodeEvents();
   }
 
-  void _handleDeleteDownloads() async {
+  Future<void> _handleDeleteDownloads() async {
     _deleteDownload.stream.listen((episode) async {
-      var nowPlaying = audioPlayerService.nowPlaying?.guid == episode?.guid;
+      final nowPlaying = audioPlayerService.nowPlaying?.guid == episode?.guid;
 
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
       if (nowPlaying) {
@@ -71,7 +72,7 @@ class EpisodeBloc extends Bloc {
     });
   }
 
-  void _handleMarkAsPlayed() async {
+  Future<void> _handleMarkAsPlayed() async {
     _togglePlayed.stream.listen((episode) async {
       await podcastService.toggleEpisodePlayed(episode!);
 

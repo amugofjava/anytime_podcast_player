@@ -64,7 +64,7 @@ class SearchBloc extends Bloc {
         yield BlocLoadingState();
 
         // Check we have network
-        var connectivityResult = await Connectivity().checkConnectivity();
+        final connectivityResult = await Connectivity().checkConnectivity();
 
         // TODO: Docs do not recommend this approach as a reliable way to
         //       determine if network is available.

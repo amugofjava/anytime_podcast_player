@@ -32,7 +32,7 @@ class MobilePodcastApi extends PodcastApi {
     bool explicit = false,
     String? searchProvider,
   }) async {
-    var searchParams = {
+    final searchParams = {
       'term': term,
       'searchProvider': searchProvider,
     };
@@ -48,7 +48,7 @@ class MobilePodcastApi extends PodcastApi {
     String? countryCode = '',
     String? languageCode = '',
   }) async {
-    var searchParams = {
+    final searchParams = {
       'size': size.toString(),
       'genre': genre,
       'searchProvider': searchProvider,
@@ -61,7 +61,7 @@ class MobilePodcastApi extends PodcastApi {
 
   @override
   List<String> genres(String searchProvider) {
-    var provider = searchProvider == 'itunes'
+    final provider = searchProvider == 'itunes'
         ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
@@ -108,8 +108,8 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   static Future<podcast_search.SearchResult> _search(Map<String, String?> searchParams) {
-    var term = searchParams['term']!;
-    var provider = searchParams['searchProvider'] == 'itunes'
+    final term = searchParams['term']!;
+    final provider = searchParams['searchProvider'] == 'itunes'
         ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
@@ -123,15 +123,15 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   static Future<podcast_search.SearchResult> _charts(Map<String, String?> searchParams) {
-    var provider = searchParams['searchProvider'] == 'itunes'
+    final provider = searchParams['searchProvider'] == 'itunes'
         ? const podcast_search.ITunesProvider()
         : podcast_search.PodcastIndexProvider(
             key: podcastIndexKey,
             secret: podcastIndexSecret,
           );
 
-    var countryCode = searchParams['countryCode'];
-    var languageCode = searchParams['languageCode'] ?? '';
+    final countryCode = searchParams['countryCode'];
+    final languageCode = searchParams['languageCode'] ?? '';
     var country = podcast_search.Country.none;
 
     if (countryCode != null && countryCode.isNotEmpty) {

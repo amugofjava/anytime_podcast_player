@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/episode.dart';
 
 /// A class that represents an individual chapter within an [Episode].
 ///
@@ -55,7 +56,7 @@ class Chapter {
       title: chapter['title'] as String,
       imageUrl: chapter['imageUrl'] as String?,
       url: chapter['url'] as String?,
-      toc: chapter['toc'] == 'false' ? false : true,
+      toc: chapter['toc'] != 'false',
       startTime: double.parse(chapter['startTime'] as String),
       endTime: double.parse(chapter['endTime'] as String),
     );

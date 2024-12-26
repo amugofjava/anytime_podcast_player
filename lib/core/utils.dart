@@ -28,20 +28,20 @@ Future<String> resolvePath(Episode episode) async {
 
 Future<String> resolveDirectory({required Episode episode, bool full = false}) async {
   if (full || Platform.isAndroid) {
-    return Future.value(join(await getStorageDirectory(), safePath(episode.podcast!)));
+    return Future.value(join(await getStorageDirectory(), safePath(episode.podcast)));
   }
 
-  return Future.value(safePath(episode.podcast!));
+  return Future.value(safePath(episode.podcast));
 }
 
 Future<void> createDownloadDirectory(Episode episode) async {
-  var path = join(await getStorageDirectory(), safePath(episode.podcast!));
+  final path = join(await getStorageDirectory(), safePath(episode.podcast));
 
   Directory(path).createSync(recursive: true);
 }
 
 Future<bool> hasStoragePermission() async {
-  SettingsService? settings = await MobileSettingsService.instance();
+  final SettingsService? settings = await MobileSettingsService.instance();
 
   if (Platform.isIOS || !settings!.storeDownloadsSDCard) {
     return Future.value(true);
@@ -53,7 +53,7 @@ Future<bool> hasStoragePermission() async {
 }
 
 Future<String> getStorageDirectory() async {
-  SettingsService? settings = await MobileSettingsService.instance();
+  final SettingsService? settings = await MobileSettingsService.instance();
   Directory directory;
 
   if (Platform.isIOS) {
@@ -88,7 +88,7 @@ Future<Directory> _getSDCard() async {
   // non-emulated directory.
   if (appDocumentDir.isNotEmpty) {
     // See if we can find the last card without emulated
-    for (var d in appDocumentDir) {
+    for (final d in appDocumentDir) {
       if (!d.path.contains('emulated')) {
         path = d.absolute;
       }
@@ -96,7 +96,7 @@ Future<Directory> _getSDCard() async {
   }
 
   if (path == null) {
-    throw ('No SD card found');
+    throw 'No SD card found';
   }
 
   return path;
@@ -121,7 +121,7 @@ Future<String> resolveUrl(String url, {bool forceHttps = false}) async {
   var response = await request.close();
 
   while (response.isRedirect) {
-    response.drain(0);
+    await response.drain(0);
     final location = response.headers.value(HttpHeaders.locationHeader);
     if (location != null) {
       uri = uri.resolve(location);
