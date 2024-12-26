@@ -54,7 +54,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   final log = Logger('PodcastDetails');
   final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   final ScrollController _sliverScrollController = ScrollController();
-  var brightness = Brightness.dark;
+  Brightness brightness = Brightness.dark;
   bool toolbarCollapsed = false;
   SystemUiOverlayStyle? _systemOverlayStyle;
 
@@ -65,11 +65,13 @@ class _PodcastDetailsState extends State<PodcastDetails> {
     // Load the details of the Podcast specified in the URL
     log.fine('initState() - load feed');
 
-    widget._podcastBloc.load(Feed(
-      podcast: widget.podcast,
-      backgroundFresh: true,
-      silently: true,
-    ));
+    widget._podcastBloc.load(
+      Feed(
+        podcast: widget.podcast,
+        backgroundFresh: true,
+        silently: true,
+      ),
+    );
 
     // We only want to display the podcast title when the toolbar is in a
     // collapsed state. Add a listener and set toollbarCollapsed variable
@@ -99,19 +101,24 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         if (_sliverScrollController.offset < 20) {
           widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
         } else {
-          scaffoldMessengerKey.currentState!.showSnackBar(SnackBar(
-            content: Text(L.of(context)!.new_episodes_label),
-            behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(
-              label: L.of(context)!.new_episodes_view_now_label,
-              onPressed: () {
-                _sliverScrollController.animateTo(100,
-                    duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
-                widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
-              },
+          scaffoldMessengerKey.currentState!.showSnackBar(
+            SnackBar(
+              content: Text(L.of(context)!.new_episodes_label),
+              behavior: SnackBarBehavior.floating,
+              action: SnackBarAction(
+                label: L.of(context)!.new_episodes_view_now_label,
+                onPressed: () {
+                  _sliverScrollController.animateTo(
+                    100,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.easeInOut,
+                  );
+                  widget._podcastBloc.podcastEvent(PodcastEvent.refresh);
+                },
+              ),
+              duration: const Duration(seconds: 5),
             ),
-            duration: const Duration(seconds: 5),
-          ));
+          );
         }
       }
     });
@@ -134,10 +141,12 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   Future<void> _handleRefresh() async {
     log.fine('_handleRefresh');
 
-    widget._podcastBloc.load(Feed(
-      podcast: widget.podcast,
-      refresh: true,
-    ));
+    widget._podcastBloc.load(
+      Feed(
+        podcast: widget.podcast,
+        refresh: true,
+      ),
+    );
   }
 
   void _resetSystemOverlayStyle() {
@@ -178,106 +187,109 @@ class _PodcastDetailsState extends State<PodcastDetails> {
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: RefreshIndicator(
-              displacement: 60.0,
+              displacement: 60,
               onRefresh: _handleRefresh,
               child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 controller: _sliverScrollController,
                 slivers: <Widget>[
                   SliverAppBar(
-                      systemOverlayStyle: _systemOverlayStyle,
-                      title: AnimatedOpacity(
-                          opacity: toolbarCollapsed ? 1.0 : 0.0,
-                          duration: const Duration(milliseconds: 500),
-                          child: Text(widget.podcast.title)),
-                      leading: PlatformBackButton(
-                        iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
-                            ? Theme.of(context).appBarTheme.foregroundColor!
-                            : Colors.white,
-                        decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
-                        onPressed: () {
-                          _resetSystemOverlayStyle();
-                          Navigator.pop(context);
-                        },
-                      ),
-                      expandedHeight: 300.0,
-                      floating: false,
-                      pinned: true,
-                      snap: false,
-                      flexibleSpace: FlexibleSpaceBar(
-                        background: Hero(
-                          key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
-                          tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
-                          child: ExcludeSemantics(
-                            child: StreamBuilder<BlocState<Podcast>>(
-                                initialData: BlocEmptyState<Podcast>(),
-                                stream: podcastBloc.details,
-                                builder: (context, snapshot) {
-                                  final state = snapshot.data;
-                                  Podcast? podcast = widget.podcast;
+                    systemOverlayStyle: _systemOverlayStyle,
+                    title: AnimatedOpacity(
+                      opacity: toolbarCollapsed ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: Text(widget.podcast.title),
+                    ),
+                    leading: PlatformBackButton(
+                      iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
+                          ? Theme.of(context).appBarTheme.foregroundColor!
+                          : Colors.white,
+                      decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
+                      onPressed: () {
+                        _resetSystemOverlayStyle();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    expandedHeight: 300,
+                    floating: false,
+                    pinned: true,
+                    snap: false,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: Hero(
+                        key: Key('detailhero${widget.podcast.imageUrl}:${widget.podcast.link}'),
+                        tag: '${widget.podcast.imageUrl}:${widget.podcast.link}',
+                        child: ExcludeSemantics(
+                          child: StreamBuilder<BlocState<Podcast>>(
+                            initialData: BlocEmptyState<Podcast>(),
+                            stream: podcastBloc.details,
+                            builder: (context, snapshot) {
+                              final state = snapshot.data;
+                              Podcast? podcast = widget.podcast;
 
-                                  if (state is BlocLoadingState<Podcast>) {
-                                    podcast = state.data;
-                                  }
+                              if (state is BlocLoadingState<Podcast>) {
+                                podcast = state.data;
+                              }
 
-                                  if (state is BlocPopulatedState<Podcast>) {
-                                    podcast = state.results;
-                                  }
+                              if (state is BlocPopulatedState<Podcast>) {
+                                podcast = state.results;
+                              }
 
-                                  return PodcastHeaderImage(
-                                    podcast: podcast!,
-                                    placeholderBuilder: placeholderBuilder,
-                                  );
-                                }),
+                              return PodcastHeaderImage(
+                                podcast: podcast!,
+                                placeholderBuilder: placeholderBuilder,
+                              );
+                            },
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                   StreamBuilder<BlocState<Podcast>>(
-                      initialData: BlocEmptyState<Podcast>(),
-                      stream: podcastBloc.details,
-                      builder: (context, snapshot) {
-                        final state = snapshot.data;
+                    initialData: BlocEmptyState<Podcast>(),
+                    stream: podcastBloc.details,
+                    builder: (context, snapshot) {
+                      final state = snapshot.data;
 
-                        if (state is BlocLoadingState) {
-                          return const SliverToBoxAdapter(
-                            child: Padding(
-                              padding: EdgeInsets.all(24.0),
-                              child: Column(
-                                children: <Widget>[
-                                  PlatformProgressIndicator(),
-                                ],
-                              ),
+                      if (state is BlocLoadingState) {
+                        return const SliverToBoxAdapter(
+                          child: Padding(
+                            padding: EdgeInsets.all(24),
+                            child: Column(
+                              children: <Widget>[
+                                PlatformProgressIndicator(),
+                              ],
                             ),
-                          );
-                        }
+                          ),
+                        );
+                      }
 
-                        if (state is BlocErrorState) {
-                          return SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  const Icon(
-                                    Icons.error_outline,
-                                    size: 50,
-                                  ),
-                                  Text(
-                                    L.of(context)!.no_podcast_details_message,
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
+                      if (state is BlocErrorState) {
+                        return SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Padding(
+                            padding: const EdgeInsets.all(32),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                const Icon(
+                                  Icons.error_outline,
+                                  size: 50,
+                                ),
+                                Text(
+                                  L.of(context)!.no_podcast_details_message,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
-                          );
-                        }
+                          ),
+                        );
+                      }
 
-                        if (state is BlocPopulatedState<Podcast>) {
-                          return SliverToBoxAdapter(
-                              child: PlaybackErrorListener(
+                      if (state is BlocPopulatedState<Podcast>) {
+                        return SliverToBoxAdapter(
+                          child: PlaybackErrorListener(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -285,50 +297,56 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                                 const Divider(),
                               ],
                             ),
-                          ));
-                        }
-
-                        return const SliverToBoxAdapter(
-                          child: SizedBox(
-                            width: 0.0,
-                            height: 0.0,
                           ),
                         );
-                      }),
-                  StreamBuilder<BlocState<Podcast>>(
-                      initialData: BlocEmptyState<Podcast>(),
-                      stream: podcastBloc.details,
-                      builder: (context1, snapshot1) {
-                        final state = snapshot1.data;
+                      }
 
-                        if (state is BlocPopulatedState<Podcast>) {
-                          return StreamBuilder<List<Episode?>?>(
-                              stream: podcastBloc.episodes,
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return snapshot.data!.isNotEmpty
-                                      ? PodcastEpisodeList(
-                                          episodes: snapshot.data!,
-                                          play: true,
-                                          download: true,
-                                        )
-                                      : const SliverToBoxAdapter(child: NoEpisodesFound());
-                                } else {
-                                  return const SliverToBoxAdapter(
-                                      child: SizedBox(
-                                    height: 200,
-                                    width: 200,
-                                  ));
-                                }
-                              });
-                        } else {
-                          return const SliverToBoxAdapter(
-                              child: SizedBox(
+                      return const SliverToBoxAdapter(
+                        child: SizedBox(
+                          width: 0,
+                          height: 0,
+                        ),
+                      );
+                    },
+                  ),
+                  StreamBuilder<BlocState<Podcast>>(
+                    initialData: BlocEmptyState<Podcast>(),
+                    stream: podcastBloc.details,
+                    builder: (context1, snapshot1) {
+                      final state = snapshot1.data;
+
+                      if (state is BlocPopulatedState<Podcast>) {
+                        return StreamBuilder<List<Episode?>?>(
+                          stream: podcastBloc.episodes,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return snapshot.data!.isNotEmpty
+                                  ? PodcastEpisodeList(
+                                      episodes: snapshot.data,
+                                      play: true,
+                                      download: true,
+                                    )
+                                  : const SliverToBoxAdapter(child: NoEpisodesFound());
+                            } else {
+                              return const SliverToBoxAdapter(
+                                child: SizedBox(
+                                  height: 200,
+                                  width: 200,
+                                ),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return const SliverToBoxAdapter(
+                          child: SizedBox(
                             height: 200,
                             width: 200,
-                          ));
-                        }
-                      }),
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
@@ -416,7 +434,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -432,7 +450,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 2),
                         child: Text(widget.podcast.title, style: textTheme.titleLarge),
                       ),
                       Padding(
@@ -444,41 +462,42 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                 ),
               ),
               StreamBuilder<bool>(
-                  stream: isDescriptionExpandedStream.stream,
-                  initialData: false,
-                  builder: (context, snapshot) {
-                    final expanded = snapshot.data!;
-                    return Visibility(
-                      visible: showOverflow,
-                      child: SizedBox(
-                        height: 48.0,
-                        width: 48.0,
-                        child: expanded
-                            ? TextButton(
-                                style: const ButtonStyle(
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                child: Icon(
-                                  Icons.expand_less,
-                                  semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
-                                ),
-                                onPressed: () {
-                                  isDescriptionExpandedStream.add(false);
-                                },
-                              )
-                            : TextButton(
-                                style: const ButtonStyle(visualDensity: VisualDensity.compact),
-                                child: Icon(
-                                  Icons.expand_more,
-                                  semanticLabel: L.of(context)!.semantics_expand_podcast_description,
-                                ),
-                                onPressed: () {
-                                  isDescriptionExpandedStream.add(true);
-                                },
+                stream: isDescriptionExpandedStream.stream,
+                initialData: false,
+                builder: (context, snapshot) {
+                  final expanded = snapshot.data!;
+                  return Visibility(
+                    visible: showOverflow,
+                    child: SizedBox(
+                      height: 48,
+                      width: 48,
+                      child: expanded
+                          ? TextButton(
+                              style: const ButtonStyle(
+                                visualDensity: VisualDensity.compact,
                               ),
-                      ),
-                    );
-                  })
+                              child: Icon(
+                                Icons.expand_less,
+                                semanticLabel: L.of(context)!.semantics_collapse_podcast_description,
+                              ),
+                              onPressed: () {
+                                isDescriptionExpandedStream.add(false);
+                              },
+                            )
+                          : TextButton(
+                              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                              child: Icon(
+                                Icons.expand_more,
+                                semanticLabel: L.of(context)!.semantics_expand_podcast_description,
+                              ),
+                              onPressed: () {
+                                isDescriptionExpandedStream.add(true);
+                              },
+                            ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           PodcastDescription(
@@ -487,7 +506,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
             isDescriptionExpandedStream: isDescriptionExpandedStream,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            padding: const EdgeInsets.only(left: 8, right: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -514,56 +533,60 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                 ),
                 SortButton(widget.podcast),
                 FilterButton(widget.podcast),
-                settings.showFunding
-                    ? FundingMenu(widget.podcast.funding)
-                    : const SizedBox(
-                        width: 0.0,
-                        height: 0.0,
-                      ),
+                if (settings.showFunding)
+                  FundingMenu(widget.podcast.funding)
+                else
+                  const SizedBox(
+                    width: 0,
+                    height: 0,
+                  ),
                 const Expanded(
-                    child: Align(
-                  alignment: Alignment.centerRight,
-                  child: SyncSpinner(),
-                )),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: SyncSpinner(),
+                  ),
+                ),
               ],
             ),
           ),
           SizeTransition(
             sizeFactor: _animation,
             child: Padding(
-                padding: const EdgeInsets.all(7.0),
-                child: TextField(
-                    focusNode: _searchFocus,
-                    controller: _episodeSearchController,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.all(0.0),
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          Icons.close,
-                          semanticLabel: L.of(context)!.clear_search_button_label,
-                        ),
-                        onPressed: () {
-                          _episodeSearchController.clear();
-                          podcastBloc.podcastSearchEvent('');
-                        },
-                      ),
-                      isDense: true,
-                      filled: true,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        borderSide: BorderSide.none,
-                        gapPadding: 0.0,
-                      ),
-                      hintText: L.of(context)!.search_episodes_label,
+              padding: const EdgeInsets.all(7),
+              child: TextField(
+                focusNode: _searchFocus,
+                controller: _episodeSearchController,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.zero,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      semanticLabel: L.of(context)!.clear_search_button_label,
                     ),
-                    onChanged: ((search) {
-                      podcastBloc.podcastSearchEvent(search);
-                    }),
-                    onSubmitted: ((search) {
-                      podcastBloc.podcastSearchEvent(search);
-                    }),
-                    onTapOutside: (event) => _searchFocus.unfocus())),
+                    onPressed: () {
+                      _episodeSearchController.clear();
+                      podcastBloc.podcastSearchEvent('');
+                    },
+                  ),
+                  isDense: true,
+                  filled: true,
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide.none,
+                    gapPadding: 0,
+                  ),
+                  hintText: L.of(context)!.search_episodes_label,
+                ),
+                onChanged: (search) {
+                  podcastBloc.podcastSearchEvent(search);
+                },
+                onSubmitted: (search) {
+                  podcastBloc.podcastSearchEvent(search);
+                },
+                onTapOutside: (event) => _searchFocus.unfocus(),
+              ),
+            ),
           ),
         ],
       ),
@@ -620,31 +643,33 @@ class PodcastDescription extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: PodcastDescription.padding),
       child: StreamBuilder<bool>(
-          stream: isDescriptionExpandedStream!.stream,
-          initialData: false,
-          builder: (context, snapshot) {
-            final expanded = snapshot.data!;
-            return AnimatedSize(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.fastOutSlowIn,
-              alignment: Alignment.topCenter,
-              child: Container(
-                constraints: expanded
-                    ? const BoxConstraints()
-                    : BoxConstraints.loose(const Size(double.infinity, maxHeight - padding)),
-                child: expanded
-                    ? content
-                    : ShaderMask(
-                        shaderCallback: LinearGradient(
-                          colors: [Colors.white, Colors.white.withAlpha(0)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          stops: const [0.9, 1],
-                        ).createShader,
-                        child: content),
-              ),
-            );
-          }),
+        stream: isDescriptionExpandedStream!.stream,
+        initialData: false,
+        builder: (context, snapshot) {
+          final expanded = snapshot.data!;
+          return AnimatedSize(
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.fastOutSlowIn,
+            alignment: Alignment.topCenter,
+            child: Container(
+              constraints: expanded
+                  ? const BoxConstraints()
+                  : BoxConstraints.loose(const Size(double.infinity, maxHeight - padding)),
+              child: expanded
+                  ? content
+                  : ShaderMask(
+                      shaderCallback: LinearGradient(
+                        colors: [Colors.white, Colors.white.withAlpha(0)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0.9, 1],
+                      ).createShader,
+                      child: content,
+                    ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -655,7 +680,7 @@ class NoEpisodesFound extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -666,7 +691,7 @@ class NoEpisodesFound extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(64.0, 24.0, 64.0, 64.0),
+            padding: const EdgeInsets.fromLTRB(64, 24, 64, 64),
             child: Text(
               L.of(context)!.episode_filter_no_episodes_title_description,
               style: Theme.of(context).textTheme.titleSmall,
@@ -689,86 +714,87 @@ class FollowButton extends StatelessWidget {
     final bloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<BlocState<Podcast>>(
-        stream: bloc.details,
-        builder: (context, snapshot) {
-          var ready = false;
-          var subscribed = false;
+      stream: bloc.details,
+      builder: (context, snapshot) {
+        var ready = false;
+        var subscribed = false;
 
-          // To prevent jumpy UI, we always need to display the follow/unfollow button.
-          // Display a disabled follow button until the full state it loaded.
-          if (snapshot.hasData) {
-            final state = snapshot.data;
+        // To prevent jumpy UI, we always need to display the follow/unfollow button.
+        // Display a disabled follow button until the full state it loaded.
+        if (snapshot.hasData) {
+          final state = snapshot.data;
 
-            if (state is BlocPopulatedState<Podcast>) {
-              ready = true;
-              subscribed = state.results!.subscribed;
-            }
+          if (state is BlocPopulatedState<Podcast>) {
+            ready = true;
+            subscribed = state.results!.subscribed;
           }
-          return Semantics(
-            liveRegion: true,
-            child: subscribed
-                ? OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(10.0, 4.0, 10.0, 4.0),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                    icon: const Icon(
-                      Icons.delete_outline,
-                    ),
-                    label: Text(L.of(context)!.unsubscribe_label),
-                    onPressed: ready
-                        ? () {
-                            showPlatformDialog<void>(
-                              context: context,
-                              useRootNavigator: false,
-                              builder: (_) => BasicDialogAlert(
-                                title: Text(L.of(context)!.unsubscribe_label),
-                                content: Text(L.of(context)!.unsubscribe_message),
-                                actions: <Widget>[
-                                  BasicDialogAction(
-                                    title: ActionText(
-                                      L.of(context)!.cancel_button_label,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  BasicDialogAction(
-                                    title: ActionText(
-                                      L.of(context)!.unsubscribe_button_label,
-                                    ),
-                                    iosIsDefaultAction: true,
-                                    iosIsDestructiveAction: true,
-                                    onPressed: () {
-                                      bloc.podcastEvent(PodcastEvent.unsubscribe);
-
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        : null,
-                  )
-                : OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(10.0, 4.0, 10.0, 4.0),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                    icon: const Icon(
-                      Icons.add,
-                    ),
-                    label: Text(L.of(context)!.subscribe_label),
-                    onPressed: ready
-                        ? () {
-                            bloc.podcastEvent(PodcastEvent.subscribe);
-                          }
-                        : null,
+        }
+        return Semantics(
+          liveRegion: true,
+          child: subscribed
+              ? OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
-          );
-        });
+                  icon: const Icon(
+                    Icons.delete_outline,
+                  ),
+                  label: Text(L.of(context)!.unsubscribe_label),
+                  onPressed: ready
+                      ? () {
+                          showPlatformDialog<void>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: Text(L.of(context)!.unsubscribe_label),
+                              content: Text(L.of(context)!.unsubscribe_message),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: ActionText(
+                                    L.of(context)!.cancel_button_label,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                BasicDialogAction(
+                                  title: ActionText(
+                                    L.of(context)!.unsubscribe_button_label,
+                                  ),
+                                  iosIsDefaultAction: true,
+                                  iosIsDestructiveAction: true,
+                                  onPressed: () {
+                                    bloc.podcastEvent(PodcastEvent.unsubscribe);
+
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      : null,
+                )
+              : OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  icon: const Icon(
+                    Icons.add,
+                  ),
+                  label: Text(L.of(context)!.subscribe_label),
+                  onPressed: ready
+                      ? () {
+                          bloc.podcastEvent(PodcastEvent.subscribe);
+                        }
+                      : null,
+                ),
+        );
+      },
+    );
   }
 }
 
@@ -782,22 +808,23 @@ class FilterButton extends StatelessWidget {
     final bloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<BlocState<Podcast>>(
-        stream: bloc.details,
-        builder: (context, snapshot) {
-          Podcast? podcast;
+      stream: bloc.details,
+      builder: (context, snapshot) {
+        Podcast? podcast;
 
-          if (snapshot.hasData) {
-            final state = snapshot.data;
+        if (snapshot.hasData) {
+          final state = snapshot.data;
 
-            if (state is BlocPopulatedState<Podcast>) {
-              podcast = state.results!;
-            }
+          if (state is BlocPopulatedState<Podcast>) {
+            podcast = state.results;
           }
+        }
 
-          return EpisodeFilterSelectorWidget(
-            podcast: podcast,
-          );
-        });
+        return EpisodeFilterSelectorWidget(
+          podcast: podcast,
+        );
+      },
+    );
   }
 }
 
@@ -811,21 +838,22 @@ class SortButton extends StatelessWidget {
     final bloc = Provider.of<PodcastBloc>(context);
 
     return StreamBuilder<BlocState<Podcast>>(
-        stream: bloc.details,
-        builder: (context, snapshot) {
-          Podcast? podcast;
+      stream: bloc.details,
+      builder: (context, snapshot) {
+        Podcast? podcast;
 
-          if (snapshot.hasData) {
-            final state = snapshot.data;
+        if (snapshot.hasData) {
+          final state = snapshot.data;
 
-            if (state is BlocPopulatedState<Podcast>) {
-              podcast = state.results!;
-            }
+          if (state is BlocPopulatedState<Podcast>) {
+            podcast = state.results;
           }
+        }
 
-          return EpisodeSortSelectorWidget(
-            podcast: podcast,
-          );
-        });
+        return EpisodeSortSelectorWidget(
+          podcast: podcast,
+        );
+      },
+    );
   }
 }

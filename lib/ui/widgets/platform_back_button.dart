@@ -28,14 +28,14 @@ class PlatformBackButton extends StatelessWidget {
         button: true,
         child: Center(
           child: SizedBox(
-            height: 48.0,
-            width: 48.0,
+            height: 48,
+            width: 48,
             child: InkWell(
               onTap: onPressed,
               child: Container(
-                margin: const EdgeInsets.all(6.0),
-                height: 48.0,
-                width: 48.0,
+                margin: const EdgeInsets.all(6),
+                height: 48,
+                width: 48,
                 decoration: ShapeDecoration(
                   color: decorationColour,
                   shape: const CircleBorder(),

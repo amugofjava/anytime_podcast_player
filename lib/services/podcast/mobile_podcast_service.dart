@@ -19,7 +19,6 @@ import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
@@ -27,8 +26,8 @@ import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as podcast_search;
 
 class MobilePodcastService extends PodcastService {
-  final descriptionRegExp1 = RegExp(r'(</p><br>|</p></br>|<p><br></p>|<p></br></p>)');
-  final descriptionRegExp2 = RegExp(r'(<p><br></p>|<p></br></p>)');
+  final descriptionRegExp1 = RegExp('(</p><br>|</p></br>|<p><br></p>|<p></br></p>)');
+  final descriptionRegExp2 = RegExp('(<p><br></p>|<p></br></p>)');
   final log = Logger('MobilePodcastService');
   final _cache = _PodcastCache(maxItems: 10, expiration: const Duration(minutes: 30));
   var _categories = <String>[];
@@ -44,7 +43,7 @@ class MobilePodcastService extends PodcastService {
   }
 
   Future<void> _init() async {
-    final List<Locale> systemLocales = PlatformDispatcher.instance.locales;
+    final systemLocales = PlatformDispatcher.instance.locales;
 
     var currentLocale = Platform.localeName;
     // Attempt to get current locale
@@ -52,7 +51,7 @@ class MobilePodcastService extends PodcastService {
 
     // If we do not support the default, try all supported locales
     if (!supportedLocale) {
-      for (var l in systemLocales) {
+      for (final l in systemLocales) {
         supportedLocale = await initializeMessages('${l.languageCode}_${l.countryCode}');
         if (supportedLocale) {
           currentLocale = '${l.languageCode}_${l.countryCode}';
@@ -120,7 +119,7 @@ class MobilePodcastService extends PodcastService {
     String? countryCode = '',
     String? languageCode = '',
   }) {
-    var providerGenre = _decodeGenre(genre);
+    final providerGenre = _decodeGenre(genre);
 
     return api.charts(
       size: size,
@@ -153,7 +152,7 @@ class MobilePodcastService extends PodcastService {
       podcast_search.Podcast? loadedPodcast;
       var imageUrl = podcast.imageUrl;
       var thumbImageUrl = podcast.thumbImageUrl;
-      var sourceUrl = podcast.url;
+      final sourceUrl = podcast.url;
 
       if (!refresh) {
         log.fine('Not a refresh so try to fetch from cache');
@@ -200,23 +199,25 @@ class MobilePodcastService extends PodcastService {
         thumbImageUrl = loadedPodcast.image;
       }
 
-      for (var f in loadedPodcast.funding) {
+      for (final f in loadedPodcast.funding) {
         if (f.url != null) {
           funding.add(Funding(url: f.url!, value: f.value ?? ''));
         }
       }
 
-      for (var p in loadedPodcast.persons) {
-        persons.add(Person(
-          name: p.name,
-          role: p.role ?? '',
-          group: p.group ?? '',
-          image: p.image,
-          link: p.link,
-        ));
+      for (final p in loadedPodcast.persons) {
+        persons.add(
+          Person(
+            name: p.name,
+            role: p.role ?? '',
+            group: p.group ?? '',
+            image: p.image,
+            link: p.link,
+          ),
+        );
       }
 
-      Podcast pc = Podcast(
+      var pc = Podcast(
         guid: sourceUrl,
         url: sourceUrl,
         link: loadedPodcast.link,
@@ -231,7 +232,7 @@ class MobilePodcastService extends PodcastService {
       );
 
       /// We could be following this podcast already. Let's check.
-      var follow = await repository.findPodcastByGuid(sourceUrl);
+      final follow = await repository.findPodcastByGuid(sourceUrl);
 
       if (follow != null) {
         // We are, so swap in the stored ID so we update the saved version later.
@@ -268,7 +269,7 @@ class MobilePodcastService extends PodcastService {
         final transcriptUrls = <TranscriptUrl>[];
         final episodePersons = <Person>[];
 
-        for (var t in episode.transcripts) {
+        for (final t in episode.transcripts) {
           late TranscriptFormat type;
 
           switch (t.type) {
@@ -287,14 +288,16 @@ class MobilePodcastService extends PodcastService {
         }
 
         if (episode.persons.isNotEmpty) {
-          for (var p in episode.persons) {
-            episodePersons.add(Person(
-              name: p.name,
-              role: p.role!,
-              group: p.group!,
-              image: p.image,
-              link: p.link,
-            ));
+          for (final p in episode.persons) {
+            episodePersons.add(
+              Person(
+                name: p.name,
+                role: p.role!,
+                group: p.group!,
+                image: p.image,
+                link: p.link,
+              ),
+            );
           }
         } else if (persons.isNotEmpty) {
           episodePersons.addAll(persons);
@@ -303,28 +306,30 @@ class MobilePodcastService extends PodcastService {
         if (existingEpisode == null) {
           pc.newEpisodes = highlightNewEpisodes && pc.id != null;
 
-          pc.episodes.add(Episode(
-            highlight: pc.newEpisodes,
-            pguid: pc.guid,
-            guid: episode.guid,
-            podcast: pc.title,
-            title: title,
-            description: description,
-            content: content,
-            author: author,
-            season: episode.season ?? 0,
-            episode: episode.episode ?? 0,
-            contentUrl: episode.contentUrl,
-            link: episode.link,
-            imageUrl: episodeImage,
-            thumbImageUrl: episodeThumbImage,
-            duration: duration,
-            publicationDate: episode.publicationDate,
-            chaptersUrl: episode.chapters?.url,
-            transcriptUrls: transcriptUrls,
-            persons: episodePersons,
-            chapters: <Chapter>[],
-          ));
+          pc.episodes.add(
+            Episode(
+              highlight: pc.newEpisodes,
+              pguid: pc.guid,
+              guid: episode.guid,
+              podcast: pc.title,
+              title: title,
+              description: description,
+              content: content,
+              author: author,
+              season: episode.season ?? 0,
+              episode: episode.episode ?? 0,
+              contentUrl: episode.contentUrl,
+              link: episode.link,
+              imageUrl: episodeImage,
+              thumbImageUrl: episodeThumbImage,
+              duration: duration,
+              publicationDate: episode.publicationDate,
+              chaptersUrl: episode.chapters?.url,
+              transcriptUrls: transcriptUrls,
+              persons: episodePersons,
+              chapters: <Chapter>[],
+            ),
+          );
         } else {
           /// Check if the ancillary episode data has changed.
           if (!listEquals(existingEpisode.persons, episodePersons) ||
@@ -361,10 +366,10 @@ class MobilePodcastService extends PodcastService {
 
       // Add any downloaded episodes that are no longer in the feed - they
       // may have expired but we still want them.
-      var expired = <Episode>[];
+      final expired = <Episode>[];
 
       for (final episode in existingEpisodes) {
-        var feedEpisode = loadedPodcast.episodes.firstWhereOrNull((ep) => ep.guid == episode!.guid);
+        final feedEpisode = loadedPodcast.episodes.firstWhereOrNull((ep) => ep.guid == episode!.guid);
 
         if (feedEpisode == null && episode!.downloaded) {
           pc.episodes.add(episode);
@@ -387,7 +392,7 @@ class MobilePodcastService extends PodcastService {
 
       return pc;
     } else {
-      return await loadPodcastById(id: podcast.id ?? 0);
+      return loadPodcastById(id: podcast.id ?? 0);
     }
   }
 
@@ -398,19 +403,21 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<List<Chapter>> loadChaptersByUrl({required String url}) async {
-    var c = await _loadChaptersByUrl(url);
-    var chapters = <Chapter>[];
+    final c = await _loadChaptersByUrl(url);
+    final chapters = <Chapter>[];
 
     if (c != null) {
-      for (var chapter in c.chapters) {
-        chapters.add(Chapter(
-          title: chapter.title,
-          url: chapter.url,
-          imageUrl: chapter.imageUrl,
-          startTime: chapter.startTime,
-          endTime: chapter.endTime,
-          toc: chapter.toc,
-        ));
+      for (final chapter in c.chapters) {
+        chapters.add(
+          Chapter(
+            title: chapter.title,
+            url: chapter.url,
+            imageUrl: chapter.imageUrl,
+            startTime: chapter.startTime,
+            endTime: chapter.endTime,
+            toc: chapter.toc,
+          ),
+        );
       }
     }
 
@@ -422,14 +429,14 @@ class MobilePodcastService extends PodcastService {
   /// lines together by speaker and/or timeframe.
   @override
   Future<Transcript> loadTranscriptByUrl({required TranscriptUrl transcriptUrl}) async {
-    var subtitles = <Subtitle>[];
-    var result = await _loadTranscriptByUrl(transcriptUrl);
-    var threshold = const Duration(seconds: 5);
+    final subtitles = <Subtitle>[];
+    final result = await _loadTranscriptByUrl(transcriptUrl);
+    const threshold = Duration(seconds: 5);
     Subtitle? groupSubtitle;
 
     if (result != null) {
       for (var index = 0; index < result.subtitles.length; index++) {
-        var subtitle = result.subtitles[index];
+        final subtitle = result.subtitles[index];
         var completeGroup = true;
         var data = subtitle.data;
 
@@ -534,8 +541,8 @@ class MobilePodcastService extends PodcastService {
 
       log.fine('Deleting file ${f.path}');
 
-      if (await f.exists()) {
-        f.delete();
+      if (f.existsSync()) {
+        f.deleteSync();
       }
     }
 
@@ -547,7 +554,7 @@ class MobilePodcastService extends PodcastService {
     episode.played = !episode.played;
     episode.position = 0;
 
-    repository.saveEpisode(episode);
+    await repository.saveEpisode(episode);
   }
 
   @override
@@ -562,8 +569,8 @@ class MobilePodcastService extends PodcastService {
 
       final d = Directory.fromUri(Uri.file(filename));
 
-      if (await d.exists()) {
-        await d.delete(recursive: true);
+      if (d.existsSync()) {
+        d.deleteSync(recursive: true);
       }
     }
 
@@ -575,11 +582,11 @@ class MobilePodcastService extends PodcastService {
     // We may already have episodes download for this podcast before the user
     // hit subscribe.
     if (podcast != null && podcast.guid != null) {
-      var savedEpisodes = await repository.findEpisodesByPodcastGuid(podcast.guid!);
+      final savedEpisodes = await repository.findEpisodesByPodcastGuid(podcast.guid!);
 
       if (podcast.episodes.isNotEmpty) {
-        for (var episode in podcast.episodes) {
-          var savedEpisode = savedEpisodes.firstWhereOrNull((ep) => ep!.guid == episode.guid);
+        for (final episode in podcast.episodes) {
+          final savedEpisode = savedEpisodes.firstWhereOrNull((ep) => ep!.guid == episode.guid);
 
           if (savedEpisode != null) {
             episode.pguid = podcast.guid;
@@ -620,7 +627,7 @@ class MobilePodcastService extends PodcastService {
 
   @override
   Future<List<Episode>> loadQueue() async {
-    return await repository.loadQueue();
+    return repository.loadQueue();
   }
 
   /// Remove HTML padding from the content. The padding may look fine within
@@ -631,7 +638,9 @@ class MobilePodcastService extends PodcastService {
 
   Future<podcast_search.Chapters?> _loadChaptersByUrl(String url) {
     return compute<_FeedComputer, podcast_search.Chapters?>(
-        _loadChaptersByUrlCompute, _FeedComputer(api: api, url: url));
+      _loadChaptersByUrlCompute,
+      _FeedComputer(api: api, url: url),
+    );
   }
 
   static Future<podcast_search.Chapters?> _loadChaptersByUrlCompute(_FeedComputer c) async {
@@ -651,7 +660,9 @@ class MobilePodcastService extends PodcastService {
 
   Future<podcast_search.Transcript?> _loadTranscriptByUrl(TranscriptUrl transcriptUrl) {
     return compute<_TranscriptComputer, podcast_search.Transcript?>(
-        _loadTranscriptByUrlCompute, _TranscriptComputer(api: api, transcriptUrl: transcriptUrl));
+      _loadTranscriptByUrlCompute,
+      _TranscriptComputer(api: api, transcriptUrl: transcriptUrl),
+    );
   }
 
   static Future<podcast_search.Transcript?> _loadTranscriptByUrlCompute(_TranscriptComputer c) async {
@@ -687,7 +698,7 @@ class MobilePodcastService extends PodcastService {
   /// The service providers expect the genre to be passed in English. This function takes
   /// the selected genre and returns the English version.
   String _decodeGenre(String? genre) {
-    var index = _intlCategories.indexOf(genre);
+    final index = _intlCategories.indexOf(genre);
     var decodedGenre = '';
 
     if (index >= 0) {
@@ -755,11 +766,11 @@ class _PodcastCache {
   _PodcastCache({required this.maxItems, required this.expiration}) : _queue = Queue<_CacheItem>();
 
   podcast_search.Podcast? item(String key) {
-    var hit = _queue.firstWhereOrNull((_CacheItem i) => i.podcast.url == key);
+    final hit = _queue.firstWhereOrNull((_CacheItem i) => i.podcast.url == key);
     podcast_search.Podcast? p;
 
     if (hit != null) {
-      var now = DateTime.now();
+      final now = DateTime.now();
 
       if (now.difference(hit.dateAdded) <= expiration) {
         p = hit.podcast;

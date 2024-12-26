@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:anytime/ui/widgets/sleep_selector.dart';
 import 'package:anytime/ui/widgets/speed_selector.dart';
 import 'package:flutter/material.dart';
@@ -30,44 +31,45 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: StreamBuilder<AudioState>(
-          stream: audioBloc.playingState,
-          initialData: AudioState.none,
-          builder: (context, snapshot) {
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                const SleepSelectorWidget(),
-                IconButton(
-                  onPressed: () {
-                    return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
-                  },
-                  tooltip: L.of(context)!.rewind_button_label,
-                  padding: const EdgeInsets.all(0.0),
-                  icon: const Icon(
-                    Icons.replay_10,
-                    size: 48.0,
-                  ),
+        stream: audioBloc.playingState,
+        initialData: AudioState.none,
+        builder: (context, snapshot) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              const SleepSelectorWidget(),
+              IconButton(
+                onPressed: () {
+                  return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
+                },
+                tooltip: L.of(context)!.rewind_button_label,
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.replay_10,
+                  size: 48,
                 ),
-                AnimatedPlayButton(audioState: snapshot.data!),
-                IconButton(
-                  onPressed: () {
-                    return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
-                  },
-                  tooltip: L.of(context)!.fast_forward_button_label,
-                  padding: const EdgeInsets.all(0.0),
-                  icon: const Icon(
-                    Icons.forward_30,
-                    size: 48.0,
-                  ),
+              ),
+              AnimatedPlayButton(audioState: snapshot.data!),
+              IconButton(
+                onPressed: () {
+                  return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
+                },
+                tooltip: L.of(context)!.fast_forward_button_label,
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.forward_30,
+                  size: 48,
                 ),
-                const SpeedSelectorWidget(),
-              ],
-            );
-          }),
+              ),
+              const SpeedSelectorWidget(),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -162,7 +164,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
       children: [
         if (buffering)
           SpinKitRing(
-            lineWidth: 4.0,
+            lineWidth: 4,
             color: Theme.of(context).primaryColor,
             size: 84,
           ),
@@ -175,10 +177,10 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
           message: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
           child: TextButton(
             style: TextButton.styleFrom(
-              shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
+              shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0)),
               backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
               foregroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-              padding: const EdgeInsets.all(6.0),
+              padding: const EdgeInsets.all(6),
             ),
             onPressed: () {
               if (playing) {
@@ -188,7 +190,7 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
               }
             },
             child: AnimatedIcon(
-              size: 60.0,
+              size: 60,
               semanticLabel: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
               icon: AnimatedIcons.play_pause,
               color: Colors.white,

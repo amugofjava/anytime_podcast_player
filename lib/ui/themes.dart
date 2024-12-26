@@ -55,20 +55,21 @@ ThemeData _buildLightTheme() {
     ),
     sliderTheme: const SliderThemeData().copyWith(
       valueIndicatorColor: Colors.orange,
-      trackHeight: 2.0,
+      trackHeight: 2,
       thumbShape: const RoundSliderThumbShape(
-        enabledThumbRadius: 6.0,
-        disabledThumbRadius: 6.0,
+        enabledThumbRadius: 6,
+        disabledThumbRadius: 6,
       ),
     ),
     appBarTheme: base.appBarTheme.copyWith(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
-          systemNavigationBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-        )),
+      backgroundColor: Colors.white,
+      foregroundColor: Colors.black,
+      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    ),
     snackBarTheme: base.snackBarTheme.copyWith(
       actionTextColor: Colors.white,
     ),
@@ -123,22 +124,23 @@ ThemeData _buildDarkTheme() {
     ),
     sliderTheme: const SliderThemeData().copyWith(
       valueIndicatorColor: Colors.white,
-      trackHeight: 2.0,
+      trackHeight: 2,
       thumbShape: const RoundSliderThumbShape(
-        enabledThumbRadius: 6.0,
-        disabledThumbRadius: 6.0,
+        enabledThumbRadius: 6,
+        disabledThumbRadius: 6,
       ),
     ),
     appBarTheme: base.appBarTheme.copyWith(
-        backgroundColor: const Color(0xff222222),
-        foregroundColor: Colors.white,
-        shadowColor: const Color(0xff222222),
-        elevation: 1.0,
-        systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
-          systemNavigationBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: const Color(0xff222222),
-          statusBarIconBrightness: Brightness.light,
-        )),
+      backgroundColor: const Color(0xff222222),
+      foregroundColor: Colors.white,
+      shadowColor: const Color(0xff222222),
+      elevation: 1,
+      systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
+        systemNavigationBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: const Color(0xff222222),
+        statusBarIconBrightness: Brightness.light,
+      ),
+    ),
     snackBarTheme: base.snackBarTheme.copyWith(
       actionTextColor: Colors.orange,
     ),

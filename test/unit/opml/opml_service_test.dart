@@ -41,7 +41,7 @@ void main() {
   });
 
   tearDown(() async {
-    var f = File('${Directory.systemTemp.path}/$dbName');
+    final f = File('${Directory.systemTemp.path}/$dbName');
 
     if (f.existsSync()) {
       f.deleteSync();
@@ -49,17 +49,18 @@ void main() {
   });
 
   test('Load test OPML file. Single Podcast. Single episode.', () async {
-    var stream = opmlService.loadOPMLFile('test_resources/opml_import_test1.opml');
+    final stream = opmlService.loadOPMLFile('test_resources/opml_import_test1.opml');
 
     await expectLater(
-        stream,
-        emitsInOrder(<Matcher>[
-          emits(isInstanceOf<OPMLParsingState>()),
-          emits(isInstanceOf<OPMLLoadingState>()),
-          emits(isInstanceOf<OPMLCompletedState>()),
-        ]));
+      stream,
+      emitsInOrder(<Matcher>[
+        emits(isInstanceOf<OPMLParsingState>()),
+        emits(isInstanceOf<OPMLLoadingState>()),
+        emits(isInstanceOf<OPMLCompletedState>()),
+      ]),
+    );
 
-    var subs = await podcastService.subscriptions();
+    final subs = await podcastService.subscriptions();
 
     expect(subs.length, 1);
     expect(subs[0].title, 'Podcast Load Test 1');

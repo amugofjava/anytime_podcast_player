@@ -31,7 +31,7 @@ class FundingMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     switch (theme.platform) {
       case TargetPlatform.android:
@@ -59,8 +59,8 @@ class _MaterialFundingMenu extends StatelessWidget {
 
     return funding == null || funding!.isEmpty
         ? const SizedBox(
-            width: 0.0,
-            height: 0.0,
+            width: 0,
+            height: 0,
           )
         : StreamBuilder<AppSettings>(
             stream: settingsBloc.settings,
@@ -92,7 +92,8 @@ class _MaterialFundingMenu extends StatelessWidget {
                   },
                 ),
               );
-            });
+            },
+          );
   }
 }
 
@@ -109,8 +110,8 @@ class _CupertinoFundingMenu extends StatelessWidget {
 
     return funding == null || funding!.isEmpty
         ? const SizedBox(
-            width: 0.0,
-            height: 0.0,
+            width: 0,
+            height: 0,
           )
         : StreamBuilder<AppSettings>(
             stream: settingsBloc.settings,
@@ -152,7 +153,8 @@ class _CupertinoFundingMenu extends StatelessWidget {
                   },
                 ),
               );
-            });
+            },
+          );
   }
 }
 
@@ -207,7 +209,7 @@ class FundingLink {
       );
 
       if (result!) {
-        var uri = Uri.parse(url);
+        final uri = Uri.parse(url);
 
         unawaited(
           canLaunchUrl(uri).then((value) => launchUrl(uri)),

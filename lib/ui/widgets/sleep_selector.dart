@@ -28,74 +28,79 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final settingsBloc = Provider.of<SettingsBloc>(context);
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return StreamBuilder<AppSettings>(
-        stream: settingsBloc.settings,
-        initialData: AppSettings.sensibleDefaults(),
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 48.0,
-                width: 48.0,
-                child: Center(
-                  child: StreamBuilder<Sleep>(
-                    stream: audioBloc.sleepStream,
-                    initialData: Sleep(type: SleepType.none),
-                    builder: (context, sleepSnapshot) {
-                      var sl = '';
+      stream: settingsBloc.settings,
+      initialData: AppSettings.sensibleDefaults(),
+      builder: (context, snapshot) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: Center(
+                child: StreamBuilder<Sleep>(
+                  stream: audioBloc.sleepStream,
+                  initialData: Sleep(type: SleepType.none),
+                  builder: (context, sleepSnapshot) {
+                    var sl = '';
 
-                      if (sleepSnapshot.hasData) {
-                        var s = sleepSnapshot.data!;
+                    if (sleepSnapshot.hasData) {
+                      final s = sleepSnapshot.data!;
 
-                        switch(s.type) {
-                          case SleepType.none:
-                            sl = '';
-                          case SleepType.time:
-                            sl = '${L.of(context)!.now_playing_episode_time_remaining} ${SleepSlider.formatDuration(s.timeRemaining)}';
-                          case SleepType.episode:
-                            sl = '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}';
-                        }
+                      switch (s.type) {
+                        case SleepType.none:
+                          sl = '';
+                        case SleepType.time:
+                          sl =
+                              '${L.of(context)!.now_playing_episode_time_remaining} ${SleepSlider.formatDuration(s.timeRemaining)}';
+                        case SleepType.episode:
+                          sl = '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}';
                       }
-
-                      return IconButton(
-                        icon: sleepSnapshot.data?.type != SleepType.none ? Icon(
-                          Icons.bedtime,
-                          semanticLabel: '${L.of(context)!.sleep_timer_label}. $sl',
-                          size: 20.0,
-                        ) : Icon(
-                          Icons.bedtime_outlined,
-                          semanticLabel: L.of(context)!.sleep_timer_label,
-                          size: 20.0,
-                        ),
-                        onPressed: () {
-                          showModalBottomSheet<void>(
-                              isScrollControlled: true,
-                              context: context,
-                              backgroundColor: theme.secondaryHeaderColor,
-                              barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16.0),
-                                  topRight: Radius.circular(16.0),
-                                ),
-                              ),
-                              builder: (context) {
-                                return const SleepSlider();
-                              });
-                        },
-                      );
                     }
-                  ),
+
+                    return IconButton(
+                      icon: sleepSnapshot.data?.type != SleepType.none
+                          ? Icon(
+                              Icons.bedtime,
+                              semanticLabel: '${L.of(context)!.sleep_timer_label}. $sl',
+                              size: 20,
+                            )
+                          : Icon(
+                              Icons.bedtime_outlined,
+                              semanticLabel: L.of(context)!.sleep_timer_label,
+                              size: 20,
+                            ),
+                      onPressed: () {
+                        showModalBottomSheet<void>(
+                          isScrollControlled: true,
+                          context: context,
+                          backgroundColor: theme.secondaryHeaderColor,
+                          barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
+                            ),
+                          ),
+                          builder: (context) {
+                            return const SleepSlider();
+                          },
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -108,8 +113,8 @@ class SleepSlider extends StatefulWidget {
       return '0$n';
     }
 
-    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
-    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
+    final twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    final twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
 
     return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
   }
@@ -124,116 +129,117 @@ class _SleepSliderState extends State<SleepSlider> {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return StreamBuilder<Sleep>(
-        stream: audioBloc.sleepStream,
-        initialData: Sleep(type: SleepType.none),
-        builder: (context, snapshot) {
-          var s = snapshot.data;
+      stream: audioBloc.sleepStream,
+      initialData: Sleep(type: SleepType.none),
+      builder: (context, snapshot) {
+        final s = snapshot.data;
 
-          return Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const SliderHandle(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                  child: Semantics(
-                    header: true,
-                    child: Text(
-                      L.of(context)!.sleep_timer_label,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            const SliderHandle(),
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Semantics(
+                header: true,
+                child: Text(
+                  L.of(context)!.sleep_timer_label,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-                if (s != null && s.type == SleepType.none)
-                  Text(
-                    '(${L.of(context)!.sleep_off_label})',
-                    semanticsLabel: '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_off_label}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+            if (s != null && s.type == SleepType.none)
+              Text(
+                '(${L.of(context)!.sleep_off_label})',
+                semanticsLabel: '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_off_label}',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            if (s != null && s.type == SleepType.time)
+              Text(
+                '(${SleepSlider.formatDuration(s.timeRemaining)})',
+                semanticsLabel:
+                    '${L.of(context)!.semantic_current_value_label} ${SleepSlider.formatDuration(s.timeRemaining)}',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            if (s != null && s.type == SleepType.episode)
+              Text(
+                '(${L.of(context)!.sleep_episode_label})',
+                semanticsLabel: '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  SleepSelectorEntry(
+                    sleep: Sleep(type: SleepType.none),
+                    current: s,
                   ),
-                if (s != null && s.type == SleepType.time)
-                  Text(
-                    '(${SleepSlider.formatDuration(s.timeRemaining)})',
-                    semanticsLabel:
-                        '${L.of(context)!.semantic_current_value_label} ${SleepSlider.formatDuration(s.timeRemaining)}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 5),
+                    ),
+                    current: s,
                   ),
-                if (s != null && s.type == SleepType.episode)
-                  Text(
-                    '(${L.of(context)!.sleep_episode_label})',
-                    semanticsLabel:
-                        '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 10),
+                    ),
+                    current: s,
                   ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      SleepSelectorEntry(
-                        sleep: Sleep(type: SleepType.none),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 5),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 10),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 15),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 30),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 45),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.time,
-                          duration: const Duration(minutes: 60),
-                        ),
-                        current: s,
-                      ),
-                      const Divider(),
-                      SleepSelectorEntry(
-                        sleep: Sleep(
-                          type: SleepType.episode,
-                        ),
-                        current: s,
-                      ),
-                    ],
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 15),
+                    ),
+                    current: s,
                   ),
-                )
-              ]);
-        });
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 30),
+                    ),
+                    current: s,
+                  ),
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 45),
+                    ),
+                    current: s,
+                  ),
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.time,
+                      duration: const Duration(minutes: 60),
+                    ),
+                    current: s,
+                  ),
+                  const Divider(),
+                  SleepSelectorEntry(
+                    sleep: Sleep(
+                      type: SleepType.episode,
+                    ),
+                    current: s,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -254,17 +260,19 @@ class SleepSelectorEntry extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        audioBloc.sleep(Sleep(
-          type: sleep.type,
-          duration: sleep.duration,
-        ));
+        audioBloc.sleep(
+          Sleep(
+            type: sleep.type,
+            duration: sleep.duration,
+          ),
+        );
 
         Navigator.pop(context);
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
+          top: 4,
+          bottom: 4,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,7 +296,7 @@ class SleepSelectorEntry extends StatelessWidget {
             if (sleep == current)
               const Icon(
                 Icons.check,
-                size: 18.0,
+                size: 18,
               ),
           ],
         ),

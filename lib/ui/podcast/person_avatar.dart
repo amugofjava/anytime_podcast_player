@@ -25,9 +25,9 @@ class PersonAvatar extends StatelessWidget {
     required this.person,
   }) {
     if (person.name.isNotEmpty) {
-      var parts = person.name.split(' ');
+      final parts = person.name.split(' ');
 
-      for (var i in parts) {
+      for (final i in parts) {
         if (i.isNotEmpty) {
           initials += i.substring(0, 1).toUpperCase();
         }
@@ -55,7 +55,7 @@ class PersonAvatar extends StatelessWidget {
       child: SizedBox(
         width: 96,
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0),
+          padding: const EdgeInsets.only(left: 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -20,7 +20,7 @@ class ChapterSelector extends StatefulWidget {
   Episode episode;
   Chapter? chapter;
   StreamSubscription? positionSubscription;
-  var chapters = <Chapter>[];
+  List<Chapter> chapters = <Chapter>[];
 
   ChapterSelector({
     super.key,
@@ -40,14 +40,14 @@ class _ChapterSelectorState extends State<ChapterSelector> {
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     Chapter? lastChapter;
-    bool first = true;
+    var first = true;
 
     // Listen for changes in position. If the change in position results in
     // a change in chapter we scroll to it. This ensures that the current
     // chapter is always visible.
     // TODO: Jump only if current chapter is not visible.
     widget.positionSubscription = audioBloc.playPosition!.listen((event) {
-      var episode = event.episode;
+      final episode = event.episode;
 
       if (widget.itemScrollController.isAttached) {
         lastChapter ??= episode!.currentChapter;
@@ -56,7 +56,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
           lastChapter = episode.currentChapter;
 
           if (!episode.chaptersLoading && episode.chapters.isNotEmpty) {
-            var index = widget.chapters.indexWhere((element) => element == lastChapter);
+            final index = widget.chapters.indexWhere((element) => element == lastChapter);
 
             if (index >= 0) {
               if (first) {
@@ -80,61 +80,62 @@ class _ChapterSelectorState extends State<ChapterSelector> {
     final audioBloc = Provider.of<AudioBloc>(context);
 
     return StreamBuilder<Episode?>(
-        stream: audioBloc.nowPlaying,
-        builder: (context, snapshot) {
-          return !snapshot.hasData || snapshot.data!.chaptersLoading
-              ? const Align(
-                  alignment: Alignment.center,
-                  child: PlatformProgressIndicator(),
-                )
-              : ScrollablePositionedList.builder(
-                  initialScrollIndex: _initialIndex(snapshot.data),
-                  itemScrollController: widget.itemScrollController,
-                  itemCount: widget.chapters.length,
-                  itemBuilder: (context, i) {
-                    final index = i < 0 ? 0 : i;
-                    final chapter = widget.chapters[index];
-                    final chapterSelected = chapter == snapshot.data!.currentChapter;
-                    final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        );
+      stream: audioBloc.nowPlaying,
+      builder: (context, snapshot) {
+        return !snapshot.hasData || snapshot.data!.chaptersLoading
+            ? const Align(
+                alignment: Alignment.center,
+                child: PlatformProgressIndicator(),
+              )
+            : ScrollablePositionedList.builder(
+                initialScrollIndex: _initialIndex(snapshot.data),
+                itemScrollController: widget.itemScrollController,
+                itemCount: widget.chapters.length,
+                itemBuilder: (context, i) {
+                  final index = i < 0 ? 0 : i;
+                  final chapter = widget.chapters[index];
+                  final chapterSelected = chapter == snapshot.data!.currentChapter;
+                  final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      );
 
-                    /// We should be able to use the selectedTileColor property but, if we do, when
-                    /// we scroll the currently selected item out of view, the selected colour is
-                    /// still visible behind the transport control. This is a little hack, but fixes
-                    /// the issue until I can get ListTile to work correctly.
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
-                      child: ListTile(
-                        selectedTileColor: Theme.of(context).cardTheme.color,
-                        onTap: () {
-                          audioBloc.transitionPosition(chapter.startTime);
-                        },
-                        selected: chapterSelected,
-                        leading: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Text(
-                            '${index + 1}.',
-                            style: textStyle,
-                          ),
-                        ),
-                        title: Text(
-                          widget.chapters[index].title.trim(),
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          maxLines: 3,
-                          style: textStyle,
-                        ),
-                        trailing: Text(
-                          _formatStartTime(widget.chapters[index].startTime),
+                  /// We should be able to use the selectedTileColor property but, if we do, when
+                  /// we scroll the currently selected item out of view, the selected colour is
+                  /// still visible behind the transport control. This is a little hack, but fixes
+                  /// the issue until I can get ListTile to work correctly.
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                    child: ListTile(
+                      selectedTileColor: Theme.of(context).cardTheme.color,
+                      onTap: () {
+                        audioBloc.transitionPosition(chapter.startTime);
+                      },
+                      selected: chapterSelected,
+                      leading: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: Text(
+                          '${index + 1}.',
                           style: textStyle,
                         ),
                       ),
-                    );
-                  },
-                );
-        });
+                      title: Text(
+                        widget.chapters[index].title.trim(),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        maxLines: 3,
+                        style: textStyle,
+                      ),
+                      trailing: Text(
+                        _formatStartTime(widget.chapters[index].startTime),
+                        style: textStyle,
+                      ),
+                    ),
+                  );
+                },
+              );
+      },
+    );
   }
 
   @override
@@ -158,7 +159,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
   }
 
   String _formatStartTime(double startTime) {
-    var time = Duration(seconds: startTime.ceil());
+    final time = Duration(seconds: startTime.ceil());
     var result = '';
 
     if (time.inHours > 0) {

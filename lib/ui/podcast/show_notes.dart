@@ -25,8 +25,10 @@ class ShowNotes extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: CustomScrollView(controller: _sliverScrollController, slivers: <Widget>[
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: CustomScrollView(
+        controller: _sliverScrollController,
+        slivers: <Widget>[
           SliverAppBar(
             title: Text(episode.podcast!),
             floating: false,
@@ -39,16 +41,18 @@ class ShowNotes extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: Text(episode.title ?? '', style: textTheme.titleLarge),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                   child: PodcastHtml(content: episode.content ?? episode.description!),
                 ),
               ],
             ),
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }

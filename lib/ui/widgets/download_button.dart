@@ -27,14 +27,14 @@ class DownloadButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var progress = percent.toDouble() / 100;
+    final progress = percent.toDouble() / 100;
 
     return Semantics(
       label: '$label $title',
       child: InkWell(
         onTap: onPressed,
         child: CircularPercentIndicator(
-          radius: 19.0,
+          radius: 19,
           lineWidth: 1.5,
           backgroundColor: Theme.of(context).primaryColor,
           progressColor: Theme.of(context).indicatorColor,
@@ -45,12 +45,12 @@ class DownloadButton extends StatelessWidget {
               ? Text(
                   '$percent%',
                   style: const TextStyle(
-                    fontSize: 12.0,
+                    fontSize: 12,
                   ),
                 )
               : Icon(
                   icon,
-                  size: 22.0,
+                  size: 22,
 
                   /// Why is this not picking up the theme like other widgets?!?!?!
                   color: Theme.of(context).primaryColor,

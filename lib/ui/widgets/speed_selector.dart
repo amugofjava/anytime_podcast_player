@@ -24,11 +24,11 @@ class SpeedSelectorWidget extends StatefulWidget {
 }
 
 class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
-  var speed = 1.0;
+  double speed = 1;
 
   @override
   void initState() {
-    var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
 
     speed = settingsBloc.currentSettings.playbackSpeed;
 
@@ -37,55 +37,57 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var settingsBloc = Provider.of<SettingsBloc>(context);
-    var theme = Theme.of(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
+    final theme = Theme.of(context);
 
     return StreamBuilder<AppSettings>(
-        stream: settingsBloc.settings,
-        initialData: AppSettings.sensibleDefaults(),
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              InkWell(
-                onTap: () {
-                  showModalBottomSheet<void>(
-                      context: context,
-                      backgroundColor: theme.secondaryHeaderColor,
-                      barrierLabel: L.of(context)!.scrim_speed_selector,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16.0),
-                          topRight: Radius.circular(16.0),
-                        ),
-                      ),
-                      builder: (context) {
-                        return const SpeedSlider();
-                      });
-                },
-                child: SizedBox(
-                  height: 48.0,
-                  width: 48.0,
-                  child: Center(
-                    child: Semantics(
-                      button: true,
-                      child: Text(
-                        semanticsLabel: '${L.of(context)!.playback_speed_label} ${snapshot.data!.playbackSpeed.toTenth}',
-                        snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
+      stream: settingsBloc.settings,
+      initialData: AppSettings.sensibleDefaults(),
+      builder: (context, snapshot) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  backgroundColor: theme.secondaryHeaderColor,
+                  barrierLabel: L.of(context)!.scrim_speed_selector,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  builder: (context) {
+                    return const SpeedSlider();
+                  },
+                );
+              },
+              child: SizedBox(
+                height: 48,
+                width: 48,
+                child: Center(
+                  child: Semantics(
+                    button: true,
+                    child: Text(
+                      semanticsLabel: '${L.of(context)!.playback_speed_label} ${snapshot.data!.playbackSpeed.toTenth}',
+                      snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -97,9 +99,9 @@ class SpeedSlider extends StatefulWidget {
 }
 
 class _SpeedSliderState extends State<SpeedSlider> {
-  var speed = 1.0;
-  var trimSilence = false;
-  var volumeBoost = false;
+  double speed = 1;
+  bool trimSilence = false;
+  bool volumeBoost = false;
 
   @override
   void initState() {
@@ -125,7 +127,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
       children: <Widget>[
         const SliderHandle(),
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
           child: Text(
             L.of(context)!.audio_settings_playback_speed_label,
             style: Theme.of(context).textTheme.titleLarge,
@@ -133,7 +135,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
         ),
         const Divider(),
         Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.only(top: 16),
           child: Text(
             '${speed.toStringAsFixed(1)}x',
             style: Theme.of(context).textTheme.headlineSmall,
@@ -146,7 +148,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             Expanded(
               child: IconButton(
                 tooltip: L.of(context)!.semantics_decrease_playback_speed,
-                iconSize: 28.0,
+                iconSize: 28,
                 icon: const Icon(Icons.remove_circle_outline),
                 onPressed: (speed <= 0.5)
                     ? null
@@ -165,7 +167,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
               child: Slider(
                 value: speed.toTenth,
                 min: 0.5,
-                max: 2.0,
+                max: 2,
                 divisions: 15,
                 onChanged: (value) {
                   setState(() {
@@ -181,7 +183,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
             Expanded(
               child: IconButton(
                 tooltip: L.of(context)!.semantics_increase_playback_speed,
-                iconSize: 28.0,
+                iconSize: 28,
                 icon: const Icon(Icons.add_circle_outline),
                 onPressed: (speed > 1.9)
                     ? null
@@ -198,7 +200,7 @@ class _SpeedSliderState extends State<SpeedSlider> {
           ],
         ),
         const SizedBox(
-          height: 8.0,
+          height: 8,
         ),
         const Divider(),
         if (theme.platform == TargetPlatform.android) ...[
@@ -232,8 +234,8 @@ class _SpeedSliderState extends State<SpeedSlider> {
           ),
         ] else
           const SizedBox(
-            width: 0.0,
-            height: 0.0,
+            width: 0,
+            height: 0,
           ),
       ],
     );

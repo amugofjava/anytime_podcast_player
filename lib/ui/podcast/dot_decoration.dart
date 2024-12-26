@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:flutter/widgets.dart';
 
 /// Custom [Decoration] for the chapters, episode & notes tab selector
@@ -24,8 +25,8 @@ class _DotDecorationPainter extends BoxPainter {
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
-    const double pillWidth = 8.0;
-    const double pillHeight = 3.0;
+    const pillWidth = 8;
+    const pillHeight = 3;
 
     final center = configuration.size!.center(offset);
     final height = configuration.size!.height;
@@ -37,13 +38,14 @@ class _DotDecorationPainter extends BoxPainter {
     paint.style = PaintingStyle.fill;
 
     canvas.drawRRect(
-        RRect.fromLTRBR(
-          newOffset.dx - pillWidth,
-          newOffset.dy - pillHeight,
-          newOffset.dx + pillWidth,
-          newOffset.dy + pillHeight,
-          const Radius.circular(12.0),
-        ),
-        paint);
+      RRect.fromLTRBR(
+        newOffset.dx - pillWidth,
+        newOffset.dy - pillHeight,
+        newOffset.dx + pillWidth,
+        newOffset.dy + pillHeight,
+        const Radius.circular(12),
+      ),
+      paint,
+    );
   }
 }

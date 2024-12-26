@@ -26,54 +26,56 @@ class EpisodeSortSelectorWidget extends StatefulWidget {
 class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
   @override
   Widget build(BuildContext context) {
-    var podcastBloc = Provider.of<PodcastBloc>(context);
-    var theme = Theme.of(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
+    final theme = Theme.of(context);
 
     return StreamBuilder<BlocState<Podcast>>(
-        stream: podcastBloc.details,
-        initialData: BlocEmptyState<Podcast>(),
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 48.0,
-                width: 48.0,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.sort,
-                      semanticLabel: L.of(context)!.episode_sort_semantic_label,
-                    ),
-                    visualDensity: VisualDensity.compact,
-                    onPressed: widget.podcast != null && widget.podcast!.subscribed
-                        ? () {
-                            showModalBottomSheet<void>(
-                                barrierLabel: L.of(context)!.scrim_episode_sort_selector,
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16.0),
-                                    topRight: Radius.circular(16.0),
-                                  ),
-                                ),
-                                builder: (context) {
-                                  return EpisodeSortSlider(
-                                    podcast: widget.podcast!,
-                                  );
-                                });
-                          }
-                        : null,
+      stream: podcastBloc.details,
+      initialData: BlocEmptyState<Podcast>(),
+      builder: (context, snapshot) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: Center(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.sort,
+                    semanticLabel: L.of(context)!.episode_sort_semantic_label,
                   ),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: widget.podcast != null && widget.podcast!.subscribed
+                      ? () {
+                          showModalBottomSheet<void>(
+                            barrierLabel: L.of(context)!.scrim_episode_sort_selector,
+                            isScrollControlled: true,
+                            context: context,
+                            backgroundColor: theme.secondaryHeaderColor,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (context) {
+                              return EpisodeSortSlider(
+                                podcast: widget.podcast!,
+                              );
+                            },
+                          );
+                        }
+                      : null,
                 ),
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -93,61 +95,62 @@ class _EpisodeSortSliderState extends State<EpisodeSortSlider> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SliderHandle(),
-          Semantics(
-            header: true,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Text(
-                L.of(context)!.episode_sort_semantic_label,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const SliderHandle(),
+        Semantics(
+          header: true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            child: Text(
+              L.of(context)!.episode_sort_semantic_label,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const Divider(),
-                EpisodeSortSelectorEntry(
-                  label: L.of(context)!.episode_sort_none_label,
-                  sort: PodcastEpisodeSort.none,
-                  selectedSort: widget.podcast.sort,
-                ),
-                const Divider(),
-                EpisodeSortSelectorEntry(
-                  label: L.of(context)!.episode_sort_latest_first_label,
-                  sort: PodcastEpisodeSort.latestFirst,
-                  selectedSort: widget.podcast.sort,
-                ),
-                const Divider(),
-                EpisodeSortSelectorEntry(
-                  label: L.of(context)!.episode_sort_earliest_first_label,
-                  sort: PodcastEpisodeSort.earliestFirst,
-                  selectedSort: widget.podcast.sort,
-                ),
-                const Divider(),
-                EpisodeSortSelectorEntry(
-                  label: L.of(context)!.episode_sort_alphabetical_ascending_label,
-                  sort: PodcastEpisodeSort.alphabeticalAscending,
-                  selectedSort: widget.podcast.sort,
-                ),
-                const Divider(),
-                EpisodeSortSelectorEntry(
-                  label: L.of(context)!.episode_sort_alphabetical_descending_label,
-                  sort: PodcastEpisodeSort.alphabeticalDescending,
-                  selectedSort: widget.podcast.sort,
-                ),
-                const Divider(),
-              ],
-            ),
-          )
-        ]);
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              const Divider(),
+              EpisodeSortSelectorEntry(
+                label: L.of(context)!.episode_sort_none_label,
+                sort: PodcastEpisodeSort.none,
+                selectedSort: widget.podcast.sort,
+              ),
+              const Divider(),
+              EpisodeSortSelectorEntry(
+                label: L.of(context)!.episode_sort_latest_first_label,
+                sort: PodcastEpisodeSort.latestFirst,
+                selectedSort: widget.podcast.sort,
+              ),
+              const Divider(),
+              EpisodeSortSelectorEntry(
+                label: L.of(context)!.episode_sort_earliest_first_label,
+                sort: PodcastEpisodeSort.earliestFirst,
+                selectedSort: widget.podcast.sort,
+              ),
+              const Divider(),
+              EpisodeSortSelectorEntry(
+                label: L.of(context)!.episode_sort_alphabetical_ascending_label,
+                sort: PodcastEpisodeSort.alphabeticalAscending,
+                selectedSort: widget.podcast.sort,
+              ),
+              const Divider(),
+              EpisodeSortSelectorEntry(
+                label: L.of(context)!.episode_sort_alphabetical_descending_label,
+                sort: PodcastEpisodeSort.alphabeticalDescending,
+                selectedSort: widget.podcast.sort,
+              ),
+              const Divider(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -192,8 +195,8 @@ class EpisodeSortSelectorEntry extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
+          top: 4,
+          bottom: 4,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,7 +212,7 @@ class EpisodeSortSelectorEntry extends StatelessWidget {
             if (sort == selectedSort)
               const Icon(
                 Icons.check,
-                size: 18.0,
+                size: 18,
               ),
           ],
         ),

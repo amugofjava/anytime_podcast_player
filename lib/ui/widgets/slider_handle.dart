@@ -27,13 +27,13 @@ class SliderHandle extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Container(
             width: 36,
             height: 4,
             decoration: BoxDecoration(
               color: Theme.of(context).hintColor,
-              borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
             ),
           ),
         ),

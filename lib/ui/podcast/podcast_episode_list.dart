@@ -30,20 +30,20 @@ class PodcastEpisodeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (episodes != null && episodes!.isNotEmpty) {
-      var queueBloc = Provider.of<QueueBloc>(context);
+      final queueBloc = Provider.of<QueueBloc>(context);
 
       return StreamBuilder<QueueState>(
-          stream: queueBloc.queue,
-          builder: (context, snapshot) {
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
+        stream: queueBloc.queue,
+        builder: (context, snapshot) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 var queued = false;
                 var playing = false;
-                var episode = episodes![index]!;
+                final episode = episodes![index]!;
 
                 if (snapshot.hasData) {
-                  var playingGuid = snapshot.data!.playing?.guid;
+                  final playingGuid = snapshot.data!.playing?.guid;
 
                   queued = snapshot.data!.queue.any((element) => element.guid == episode.guid);
 
@@ -60,13 +60,15 @@ class PodcastEpisodeList extends StatelessWidget {
               },
               childCount: episodes!.length,
               addAutomaticKeepAlives: false,
-            ));
-          });
+            ),
+          );
+        },
+      );
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

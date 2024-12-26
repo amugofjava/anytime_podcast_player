@@ -23,15 +23,16 @@ class DelayedCircularProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Widget>(
-        future: f,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const Center(
-              child: PlatformProgressIndicator(),
-            );
-          } else {
-            return Container();
-          }
-        });
+      future: f,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const Center(
+            child: PlatformProgressIndicator(),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }

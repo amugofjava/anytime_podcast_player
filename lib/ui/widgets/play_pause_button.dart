@@ -23,13 +23,13 @@ class PlayPauseButton extends StatelessWidget {
     return Semantics(
       label: '$label $title',
       child: CircularPercentIndicator(
-        radius: 19.0,
+        radius: 19,
         lineWidth: 1.5,
         backgroundColor: Theme.of(context).primaryColor,
-        percent: 0.0,
+        percent: 0,
         center: Icon(
           icon,
-          size: 22.0,
+          size: 22,
 
           /// Why is this not picking up the theme like other widgets?!?!?!
           color: Theme.of(context).primaryColor,
@@ -54,24 +54,25 @@ class PlayPauseBusyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-        label: '$label $title',
-        child: Stack(
-          children: <Widget>[
-            SizedBox(
-              height: 48.0,
-              width: 48.0,
-              child: Icon(
-                icon,
-                size: 22.0,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            SpinKitRing(
-              lineWidth: 1.5,
+      label: '$label $title',
+      child: Stack(
+        children: <Widget>[
+          SizedBox(
+            height: 48,
+            width: 48,
+            child: Icon(
+              icon,
+              size: 22,
               color: Theme.of(context).primaryColor,
-              size: 38.0,
             ),
-          ],
-        ));
+          ),
+          SpinKitRing(
+            lineWidth: 1.5,
+            color: Theme.of(context).primaryColor,
+            size: 38,
+          ),
+        ],
+      ),
+    );
   }
 }

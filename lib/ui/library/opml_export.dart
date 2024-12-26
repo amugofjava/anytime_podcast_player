@@ -27,34 +27,35 @@ class _OPMLExportState extends State<OPMLExport> {
       height: 80,
       width: width,
       child: StreamBuilder<OPMLState>(
-          initialData: OPMLNoneState(),
-          stream: bloc.opmlState,
-          builder: (context, snapshot) {
-            if (snapshot.data is OPMLCompletedState) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pop(context);
-              });
-            }
+        initialData: OPMLNoneState(),
+        stream: bloc.opmlState,
+        builder: (context, snapshot) {
+          if (snapshot.data is OPMLCompletedState) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pop(context);
+            });
+          }
 
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Flexible(
-                  child: CircularProgressIndicator.adaptive(),
-                ),
-                Flexible(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      L.of(context)!.settings_export_opml,
-                      maxLines: 1,
-                    ),
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Flexible(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    L.of(context)!.settings_export_opml,
+                    maxLines: 1,
                   ),
                 ),
-              ],
-            );
-          }),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 

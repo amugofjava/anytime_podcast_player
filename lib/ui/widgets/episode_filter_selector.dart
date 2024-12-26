@@ -26,56 +26,58 @@ class EpisodeFilterSelectorWidget extends StatefulWidget {
 class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidget> {
   @override
   Widget build(BuildContext context) {
-    var podcastBloc = Provider.of<PodcastBloc>(context);
-    var theme = Theme.of(context);
+    final podcastBloc = Provider.of<PodcastBloc>(context);
+    final theme = Theme.of(context);
 
     return StreamBuilder<BlocState<Podcast>>(
-        stream: podcastBloc.details,
-        initialData: BlocEmptyState<Podcast>(),
-        builder: (context, snapshot) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 48.0,
-                width: 48.0,
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      widget.podcast == null || widget.podcast!.filter == PodcastEpisodeFilter.none
-                          ? Icons.filter_alt_outlined
-                          : Icons.filter_alt_off_outlined,
-                      semanticLabel: L.of(context)!.episode_filter_semantic_label,
-                    ),
-                    visualDensity: VisualDensity.compact,
-                    onPressed: widget.podcast != null && widget.podcast!.subscribed
-                        ? () {
-                            showModalBottomSheet<void>(
-                                isScrollControlled: true,
-                                barrierLabel: L.of(context)!.scrim_episode_filter_selector,
-                                context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16.0),
-                                    topRight: Radius.circular(16.0),
-                                  ),
-                                ),
-                                builder: (context) {
-                                  return EpisodeFilterSlider(
-                                    podcast: widget.podcast!,
-                                  );
-                                });
-                          }
-                        : null,
+      stream: podcastBloc.details,
+      initialData: BlocEmptyState<Podcast>(),
+      builder: (context, snapshot) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: Center(
+                child: IconButton(
+                  icon: Icon(
+                    widget.podcast == null || widget.podcast!.filter == PodcastEpisodeFilter.none
+                        ? Icons.filter_alt_outlined
+                        : Icons.filter_alt_off_outlined,
+                    semanticLabel: L.of(context)!.episode_filter_semantic_label,
                   ),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: widget.podcast != null && widget.podcast!.subscribed
+                      ? () {
+                          showModalBottomSheet<void>(
+                            isScrollControlled: true,
+                            barrierLabel: L.of(context)!.scrim_episode_filter_selector,
+                            context: context,
+                            backgroundColor: theme.secondaryHeaderColor,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16),
+                              ),
+                            ),
+                            builder: (context) {
+                              return EpisodeFilterSlider(
+                                podcast: widget.podcast!,
+                              );
+                            },
+                          );
+                        }
+                      : null,
                 ),
               ),
-            ],
-          );
-        });
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -95,55 +97,56 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          const SliderHandle(),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            child: Semantics(
-              header: true,
-              child: Text(
-                'Episode Filter',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const SliderHandle(),
+        Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
+          child: Semantics(
+            header: true,
+            child: Text(
+              'Episode Filter',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_none_label,
-                  filter: PodcastEpisodeFilter.none,
-                  selectedFilter: widget.podcast.filter,
-                ),
-                const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_started_label,
-                  filter: PodcastEpisodeFilter.started,
-                  selectedFilter: widget.podcast.filter,
-                ),
-                const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_played_label,
-                  filter: PodcastEpisodeFilter.played,
-                  selectedFilter: widget.podcast.filter,
-                ),
-                const Divider(),
-                EpisodeFilterSelectorEntry(
-                  label: L.of(context)!.episode_filter_unplayed_label,
-                  filter: PodcastEpisodeFilter.notPlayed,
-                  selectedFilter: widget.podcast.filter,
-                ),
-                const Divider(),
-              ],
-            ),
-          )
-        ]);
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              const Divider(),
+              EpisodeFilterSelectorEntry(
+                label: L.of(context)!.episode_filter_none_label,
+                filter: PodcastEpisodeFilter.none,
+                selectedFilter: widget.podcast.filter,
+              ),
+              const Divider(),
+              EpisodeFilterSelectorEntry(
+                label: L.of(context)!.episode_filter_started_label,
+                filter: PodcastEpisodeFilter.started,
+                selectedFilter: widget.podcast.filter,
+              ),
+              const Divider(),
+              EpisodeFilterSelectorEntry(
+                label: L.of(context)!.episode_filter_played_label,
+                filter: PodcastEpisodeFilter.played,
+                selectedFilter: widget.podcast.filter,
+              ),
+              const Divider(),
+              EpisodeFilterSelectorEntry(
+                label: L.of(context)!.episode_filter_unplayed_label,
+                filter: PodcastEpisodeFilter.notPlayed,
+                selectedFilter: widget.podcast.filter,
+              ),
+              const Divider(),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -185,8 +188,8 @@ class EpisodeFilterSelectorEntry extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          top: 4.0,
-          bottom: 4.0,
+          top: 4,
+          bottom: 4,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,7 +205,7 @@ class EpisodeFilterSelectorEntry extends StatelessWidget {
             if (filter == selectedFilter)
               const Icon(
                 Icons.check,
-                size: 18.0,
+                size: 18,
               ),
           ],
         ),

@@ -49,7 +49,7 @@ class DiscoveryResults extends StatelessWidget {
             return SliverFillRemaining(
               hasScrollBody: false,
               child: Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(32),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,36 +102,38 @@ class _DiscoveryHeaderState extends State<DiscoveryHeader> {
         offset: ViewportOffset.zero(),
         slivers: [
           SliverToBoxAdapter(
-              child: StreamBuilder<List<String>>(
-                  stream: discoveryBloc.genres,
-                  initialData: const <String>[],
-                  builder: (context, snapshot) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 4.0),
-                      child: DropdownButton<String>(
-                        value: 'All',
-                        // icon: const Icon(Icons.arrow_downward),
-                        // iconSize: 16,
-                        // elevation: 16,
-                        style: const TextStyle(color: Colors.white),
-                        underline: Container(
-                          height: 2,
-                          color: Colors.white,
-                        ),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            // dropdownValue = newValue!;
-                          });
-                        },
-                        items: snapshot.data!.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  })),
+            child: StreamBuilder<List<String>>(
+              stream: discoveryBloc.genres,
+              initialData: const <String>[],
+              builder: (context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+                  child: DropdownButton<String>(
+                    value: 'All',
+                    // icon: const Icon(Icons.arrow_downward),
+                    // iconSize: 16,
+                    // elevation: 16,
+                    style: const TextStyle(color: Colors.white),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.white,
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        // dropdownValue = newValue!;
+                      });
+                    },
+                    items: snapshot.data!.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            ),
+          ),
           PodcastList(results: widget.results),
         ],
       ),

@@ -30,59 +30,60 @@ class _OPMLImportState extends State<OPMLImport> {
       child: SizedBox(
         width: width,
         child: StreamBuilder<OPMLState>(
-            initialData: OPMLNoneState(),
-            stream: bloc.opmlState,
-            builder: (context, snapshot) {
-              String? t = '';
-              var d = snapshot.data;
+          initialData: OPMLNoneState(),
+          stream: bloc.opmlState,
+          builder: (context, snapshot) {
+            String? t = '';
+            final d = snapshot.data;
 
-              if (d is OPMLCompletedState) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pop(context);
-                });
-              } else if (d is OPMLLoadingState) {
-                double pct = ((d.current / d.total) * 100);
-                t = '${pct.toInt()}% - ${d.podcast}';
-              }
+            if (d is OPMLCompletedState) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pop(context);
+              });
+            } else if (d is OPMLLoadingState) {
+              final pct = (d.current / d.total) * 100;
+              t = '${pct.toInt()}% - ${d.podcast}';
+            }
 
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Flexible(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            L.of(context)!.label_opml_importing,
-                            maxLines: 1,
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Flexible(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                Flexible(
+                  flex: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          L.of(context)!.label_opml_importing,
+                          maxLines: 1,
+                        ),
+                        const SizedBox(
+                          width: 0,
+                          height: 2,
+                        ),
+                        Text(
+                          t,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
                           ),
-                          const SizedBox(
-                            width: 0.0,
-                            height: 2.0,
-                          ),
-                          Text(
-                            t,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              );
-            }),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -86,16 +86,16 @@ class _EpisodesState extends State<Episodes> {
   ///TODO: Refactor out into a separate Widget class
   Widget buildResults(BuildContext context, List<Episode> episodes) {
     if (episodes.isNotEmpty) {
-      var queueBloc = Provider.of<QueueBloc>(context);
+      final queueBloc = Provider.of<QueueBloc>(context);
 
       return StreamBuilder<QueueState>(
-          stream: queueBloc.queue,
-          builder: (context, snapshot) {
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
+        stream: queueBloc.queue,
+        builder: (context, snapshot) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 var queued = false;
-                var episode = episodes[index];
+                final episode = episodes[index];
 
                 if (snapshot.hasData) {
                   queued = snapshot.data!.queue.any((element) => element.guid == episode.guid);
@@ -110,13 +110,15 @@ class _EpisodesState extends State<Episodes> {
               },
               childCount: episodes.length,
               addAutomaticKeepAlives: false,
-            ));
-          });
+            ),
+          );
+        },
+      );
     } else {
       return SliverFillRemaining(
         hasScrollBody: false,
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

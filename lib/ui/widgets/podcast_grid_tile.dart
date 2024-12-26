@@ -26,8 +26,9 @@ class PodcastGridTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-              settings: const RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, podcastBloc)),
+            settings: const RouteSettings(name: 'podcastdetails'),
+            builder: (context) => PodcastDetails(podcast, podcastBloc),
+          ),
         );
       },
       child: Semantics(
@@ -38,7 +39,7 @@ class PodcastGridTile extends StatelessWidget {
             tag: '${podcast.imageUrl}:${podcast.link}',
             child: TileImage(
               url: podcast.imageUrl!,
-              size: 18.0,
+              size: 18,
             ),
           ),
         ),
@@ -65,8 +66,9 @@ class PodcastTitledGridTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-              settings: const RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, podcastBloc)),
+            settings: const RouteSettings(name: 'podcastdetails'),
+            builder: (context) => PodcastDetails(podcast, podcastBloc),
+          ),
         );
       },
       child: GridTile(
@@ -77,11 +79,11 @@ class PodcastTitledGridTile extends StatelessWidget {
             children: [
               TileImage(
                 url: podcast.imageUrl!,
-                size: 128.0,
+                size: 128,
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                  top: 4.0,
+                  top: 4,
                 ),
                 child: Text(
                   podcast.title,

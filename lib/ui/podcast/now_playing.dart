@@ -48,9 +48,9 @@ class NowPlaying extends StatefulWidget {
 
 class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   late StreamSubscription<AudioState> playingStateSubscription;
-  var textGroup = AutoSizeGroup();
-  double scrollPos = 0.0;
-  double opacity = 0.0;
+  AutoSizeGroup textGroup = AutoSizeGroup();
+  double scrollPos = 0;
+  double opacity = 0;
 
   @override
   void initState() {
@@ -81,7 +81,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
   bool isMobilePortrait(BuildContext context) {
     final query = MediaQuery.of(context);
-    return (query.orientation == Orientation.portrait || query.size.width <= 1000);
+    return query.orientation == Orientation.portrait || query.size.width <= 1000;
   }
 
   @override
@@ -94,44 +94,44 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
       label: L.of(context)!.semantics_main_player_header,
       explicitChildNodes: true,
       child: StreamBuilder<Episode?>(
-          stream: audioBloc.nowPlaying,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
+        stream: audioBloc.nowPlaying,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
 
-            var duration = snapshot.data == null ? 0 : snapshot.data!.duration;
-            final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
+          final duration = snapshot.data == null ? 0 : snapshot.data!.duration;
+          final transportBuilder = playerBuilder?.builder(duration);
 
-            return isMobilePortrait(context)
-                ? NotificationListener<DraggableScrollableNotification>(
-                    onNotification: (notification) {
-                      setState(() {
-                        if (notification.extent > (notification.minExtent)) {
-                          opacity = 1 - (notification.maxExtent - notification.extent);
-                          scrollPos = 1.0;
-                        } else {
-                          opacity = 0.0;
-                          scrollPos = 0.0;
-                        }
-                      });
+          return isMobilePortrait(context)
+              ? NotificationListener<DraggableScrollableNotification>(
+                  onNotification: (notification) {
+                    setState(() {
+                      if (notification.extent > (notification.minExtent)) {
+                        opacity = 1 - (notification.maxExtent - notification.extent);
+                        scrollPos = 1.0;
+                      } else {
+                        opacity = 0.0;
+                        scrollPos = 0.0;
+                      }
+                    });
 
-                      return true;
-                    },
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // We need to hide the main player when the floating player is visible to prevent
-                        // screen readers from reading both parts of the stack.
-                        Visibility(
-                          visible: opacity < 1,
-                          child: NowPlayingTabs(
-                            episode: snapshot.data!,
-                            transportBuilder: transportBuilder,
-                          ),
+                    return true;
+                  },
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // We need to hide the main player when the floating player is visible to prevent
+                      // screen readers from reading both parts of the stack.
+                      Visibility(
+                        visible: opacity < 1,
+                        child: NowPlayingTabs(
+                          episode: snapshot.data!,
+                          transportBuilder: transportBuilder,
                         ),
-                        SizedBox.expand(
-                            child: SafeArea(
+                      ),
+                      SizedBox.expand(
+                        child: SafeArea(
                           child: Column(
                             children: [
                               /// Sized boxes without a child are 'invisible' so they do not prevent taps below
@@ -139,7 +139,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                               /// the draggable panel from jumping as you start to pull it up. I am really looking
                               /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
                               SizedBox(
-                                height: 64.0,
+                                height: 64,
                                 child: scrollPos == 1
                                     ? Opacity(
                                         opacity: opacity,
@@ -153,24 +153,26 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                 ),
                             ],
                           ),
-                        )),
-                      ],
-                    ),
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder),
-                      ),
-                      const Expanded(
-                        flex: 1,
-                        child: NowPlayingOptionsSelectorWide(),
+                        ),
                       ),
                     ],
-                  );
-          }),
+                  ),
+                )
+              : Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: NowPlayingTabs(episode: snapshot.data!, transportBuilder: transportBuilder),
+                    ),
+                    const Expanded(
+                      flex: 1,
+                      child: NowPlayingOptionsSelectorWide(),
+                    ),
+                  ],
+                );
+        },
+      ),
     );
   }
 }
@@ -200,7 +202,7 @@ class NowPlayingEpisode extends StatelessWidget {
     return OrientationBuilder(
       builder: (context, orientation) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: MediaQuery.of(context).orientation == Orientation.portrait || MediaQuery.of(context).size.width >= 1000
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -215,7 +217,7 @@ class NowPlayingEpisode extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * .75,
                           height: MediaQuery.of(context).size.height * .75,
                           fit: BoxFit.contain,
-                          borderRadius: 6.0,
+                          borderRadius: 6,
                           placeholder: placeholderBuilder != null
                               ? placeholderBuilder.builder()(context)
                               : DelayedCircularProgressIndicator(),
@@ -241,8 +243,8 @@ class NowPlayingEpisode extends StatelessWidget {
                       flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          left: 8.0,
-                          bottom: 8.0,
+                          left: 8,
+                          bottom: 8,
                         ),
                         child: PodcastImage(
                           key: Key('nowplaying$imageUrl'),
@@ -250,7 +252,7 @@ class NowPlayingEpisode extends StatelessWidget {
                           height: 280,
                           width: 280,
                           fit: BoxFit.contain,
-                          borderRadius: 8.0,
+                          borderRadius: 8,
                           placeholder: placeholderBuilder != null
                               ? placeholderBuilder.builder()(context)
                               : DelayedCircularProgressIndicator(),
@@ -300,7 +302,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
         Expanded(
           flex: 5,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
+            padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
             child: Semantics(
               container: true,
               child: AutoSizeText(
@@ -311,7 +313,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                 minFontSize: minFontSize,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
+                  fontSize: 24,
                 ),
                 maxLines: episode!.hasChapters ? 3 : 4,
               ),
@@ -322,7 +324,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
           Expanded(
             flex: 4,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 8.0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 0, 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -340,30 +342,32 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.grey[300],
                           fontWeight: FontWeight.normal,
-                          fontSize: 16.0,
+                          fontSize: 16,
                         ),
                         maxLines: 2,
                       ),
                     ),
                   ),
-                  chapterUrl.isEmpty
-                      ? const SizedBox(
-                          height: 0,
-                          width: 0,
-                        )
-                      : Semantics(
-                          label: L.of(context)!.semantic_chapter_link_label,
-                          container: true,
-                          child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: const Icon(
-                                Icons.link,
-                              ),
-                              color: Theme.of(context).primaryIconTheme.color,
-                              onPressed: () {
-                                _chapterLink(chapterUrl);
-                              }),
+                  if (chapterUrl.isEmpty)
+                    const SizedBox(
+                      height: 0,
+                      width: 0,
+                    )
+                  else
+                    Semantics(
+                      label: L.of(context)!.semantic_chapter_link_label,
+                      container: true,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(
+                          Icons.link,
                         ),
+                        color: Theme.of(context).primaryIconTheme.color,
+                        onPressed: () {
+                          _chapterLink(chapterUrl);
+                        },
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -372,7 +376,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
     );
   }
 
-  void _chapterLink(String url) async {
+  Future<void> _chapterLink(String url) async {
     final uri = Uri.parse(url);
 
     if (await canLaunchUrl(uri)) {
@@ -406,9 +410,9 @@ class NowPlayingShowNotes extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  bottom: 16.0,
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
                 ),
                 child: Text(
                   episode!.title!,
@@ -420,7 +424,7 @@ class NowPlayingShowNotes extends StatelessWidget {
             ),
             if (episode!.persons.isNotEmpty)
               SizedBox(
-                height: 120.0,
+                height: 120,
                 child: ListView.builder(
                   itemCount: episode!.persons.length,
                   scrollDirection: Axis.horizontal,
@@ -431,9 +435,9 @@ class NowPlayingShowNotes extends StatelessWidget {
               ),
             Padding(
               padding: const EdgeInsets.only(
-                top: 8.0,
-                left: 8.0,
-                right: 8.0,
+                top: 8,
+                left: 8,
+                right: 8,
               ),
               child: PodcastHtml(content: episode?.content ?? episode?.description ?? ''),
             ),
@@ -462,62 +466,64 @@ class NowPlayingTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: episode.hasChapters ? 3 : 2,
-        initialIndex: episode.hasChapters ? 1 : 0,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: Theme.of(context)
-              .appBarTheme
-              .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              elevation: 0.0,
-              leading: IconButton(
-                tooltip: L.of(context)!.minimise_player_window_button_label,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Theme.of(context).primaryIconTheme.color,
-                ),
-                onPressed: () => {
-                  Navigator.pop(context),
-                },
+      length: episode.hasChapters ? 3 : 2,
+      initialIndex: episode.hasChapters ? 1 : 0,
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: Theme.of(context)
+            .appBarTheme
+            .systemOverlayStyle!
+            .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              tooltip: L.of(context)!.minimise_player_window_button_label,
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: Theme.of(context).primaryIconTheme.color,
               ),
-              flexibleSpace: PlaybackErrorListener(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    EpisodeTabBar(
-                      chapters: episode.hasChapters,
-                    ),
-                  ],
-                ),
-              ),
+              onPressed: () => {
+                Navigator.pop(context),
+              },
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: EpisodeTabBarView(
-                    episode: episode,
+            flexibleSpace: PlaybackErrorListener(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  EpisodeTabBar(
                     chapters: episode.hasChapters,
                   ),
-                ),
-                transportBuilder != null
-                    ? transportBuilder!(context)
-                    : const SizedBox(
-                        height: 148.0,
-                        child: NowPlayingTransport(),
-                      ),
-                if (MediaQuery.of(context).orientation == Orientation.portrait)
-                  const Expanded(
-                    flex: 1,
-                    child: NowPlayingOptionsScaffold(),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
-        ));
+          body: Column(
+            children: [
+              Expanded(
+                flex: 5,
+                child: EpisodeTabBarView(
+                  episode: episode,
+                  chapters: episode.hasChapters,
+                ),
+              ),
+              if (transportBuilder != null)
+                transportBuilder!(context)
+              else
+                const SizedBox(
+                  height: 148,
+                  child: NowPlayingTransport(),
+                ),
+              if (MediaQuery.of(context).orientation == Orientation.portrait)
+                const Expanded(
+                  flex: 1,
+                  child: NowPlayingOptionsScaffold(),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -591,16 +597,17 @@ class EpisodeTabBarView extends StatelessWidget {
             episode: episode!,
           ),
         StreamBuilder<Episode?>(
-            stream: audioBloc.nowPlaying,
-            builder: (context, snapshot) {
-              final e = snapshot.hasData ? snapshot.data! : episode!;
+          stream: audioBloc.nowPlaying,
+          builder: (context, snapshot) {
+            final e = snapshot.hasData ? snapshot.data! : episode!;
 
-              return NowPlayingEpisode(
-                episode: e,
-                imageUrl: e.positionalImageUrl,
-                textGroup: textGroup,
-              );
-            }),
+            return NowPlayingEpisode(
+              episode: e,
+              imageUrl: e.positionalImageUrl,
+              textGroup: textGroup,
+            );
+          },
+        ),
         NowPlayingShowNotes(episode: episode),
       ],
     );
@@ -617,7 +624,7 @@ class NowPlayingTransport extends StatelessWidget {
     return const Column(
       children: <Widget>[
         Divider(
-          height: 0.0,
+          height: 0,
         ),
         PlayerPositionControls(),
         PlayerTransportControls(),

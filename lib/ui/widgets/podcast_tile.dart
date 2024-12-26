@@ -26,8 +26,9 @@ class PodcastTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-              settings: const RouteSettings(name: 'podcastdetails'),
-              builder: (context) => PodcastDetails(podcast, podcastBloc)),
+            settings: const RouteSettings(name: 'podcastdetails'),
+            builder: (context) => PodcastDetails(podcast, podcastBloc),
+          ),
         );
       },
       minVerticalPadding: 9,

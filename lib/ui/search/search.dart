@@ -74,23 +74,25 @@ class _SearchState extends State<Search> {
               label: L.of(context)!.search_for_podcasts_hint,
               textField: true,
               child: TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  autofocus: widget.searchTerm != null ? false : true,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    hintText: L.of(context)!.search_for_podcasts_hint,
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                      color: Theme.of(context).primaryIconTheme.color,
-                      fontSize: 18.0,
-                      decorationColor: Theme.of(context).scaffoldBackgroundColor),
-                  onSubmitted: ((value) {
-                    SemanticsService.announce(L.of(context)!.semantic_announce_searching, TextDirection.ltr);
-                    bloc.search(SearchTermEvent(value));
-                  })),
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                autofocus: widget.searchTerm == null,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: L.of(context)!.search_for_podcasts_hint,
+                  border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).primaryIconTheme.color,
+                  fontSize: 18,
+                  decorationColor: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                onSubmitted: (value) {
+                  SemanticsService.announce(L.of(context)!.semantic_announce_searching, TextDirection.ltr);
+                  bloc.search(SearchTermEvent(value));
+                },
+              ),
             ),
             floating: false,
             pinned: true,

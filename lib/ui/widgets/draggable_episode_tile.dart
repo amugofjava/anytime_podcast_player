@@ -34,7 +34,7 @@ class DraggableEpisodeTile extends StatelessWidget {
       enabled: playable,
       leading: TileImage(
         url: episode.thumbImageUrl ?? episode.imageUrl ?? '',
-        size: 56.0,
+        size: 56,
         highlight: episode.highlight,
       ),
       title: Text(
@@ -51,8 +51,8 @@ class DraggableEpisodeTile extends StatelessWidget {
               child: const Icon(Icons.drag_handle),
             )
           : const SizedBox(
-              width: 0.0,
-              height: 0.0,
+              width: 0,
+              height: 0,
             ),
       onTap: () {
         if (playable) {
