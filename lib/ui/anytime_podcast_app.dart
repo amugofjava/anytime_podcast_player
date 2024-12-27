@@ -554,6 +554,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         await Navigator.push(
           context,
           MaterialPageRoute<void>(
+            fullscreenDialog: true,
             settings: const RouteSettings(name: 'settings'),
             builder: (context) => const Settings(),
           ),

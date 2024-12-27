@@ -86,8 +86,7 @@ class _SettingsState extends State<Settings> {
                     trailing: Switch.adaptive(
                       value: snapshot.data!.deleteDownloadedPlayedEpisodes,
                       onChanged: (value) => setState(() => settingsBloc.deleteDownloadedPlayedEpisodes(value)),
-                    )
-                ),
+                    )),
               ),
               sdcard
                   ? MergeSemantics(
@@ -202,6 +201,16 @@ class _SettingsState extends State<Settings> {
   Widget _buildIos(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        padding: const EdgeInsetsDirectional.all(0.0),
+        leading: CupertinoButton(
+            child: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        middle: Text(
+          L.of(context)!.settings_label,
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+        ),
         backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       child: Material(child: _buildList(context)),
