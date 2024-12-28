@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:logging/logging.dart';
@@ -17,6 +18,7 @@ import 'package:rxdart/rxdart.dart';
 class EpisodeBloc extends Bloc {
   final log = Logger('EpisodeBloc');
   final PodcastService podcastService;
+  final DownloadService downloadService;
   final AudioPlayerService audioPlayerService;
 
   /// Add to sink to fetch list of current downloaded episodes.
@@ -43,6 +45,7 @@ class EpisodeBloc extends Bloc {
   EpisodeBloc({
     required this.podcastService,
     required this.audioPlayerService,
+    required this.downloadService,
   }) {
     _init();
   }
@@ -65,7 +68,7 @@ class EpisodeBloc extends Bloc {
         await audioPlayerService.stop();
       }
 
-      await podcastService.deleteDownload(episode!);
+      await downloadService.deleteDownload(episode!);
 
       fetchDownloads(true);
     });
