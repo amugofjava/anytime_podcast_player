@@ -14,7 +14,7 @@ dependencies:
   audio_service: ^0.18.16
   audio_session: ^0.1.23
   collection: ^1.18.0
-  connectivity_plus: ^6.0.5
+  connectivity_plus: ^6.0.11
   cupertino_icons: ^1.0.6
   device_info_plus: ^10.1.2
   expand_widget: ^3.1.0
