@@ -770,10 +770,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Stream<EpisodeState>? get episodeListener => repository.episodeListener;
 
   @override
-  Stream<PositionState> get playPosition => _playPosition.stream;
+  ValueStream<PositionState> get playPosition => _playPosition.stream;
 
   @override
-  Stream<Episode?> get episodeEvent => _episodeEvent.stream;
+  ValueStream<Episode?> get episodeEvent => _episodeEvent.stream;
 
   @override
   Stream<TranscriptState> get transcriptEvent => _transcriptEvent.stream;

@@ -6,6 +6,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
+import 'package:rxdart/rxdart.dart';
 
 enum AudioState {
   none,
@@ -102,8 +103,8 @@ abstract class AudioPlayerService {
 
   /// Event listeners
   Stream<AudioState>? playingState;
-  Stream<PositionState>? playPosition;
-  Stream<Episode?>? episodeEvent;
+  ValueStream<PositionState>? playPosition;
+  ValueStream<Episode?>? episodeEvent;
   Stream<TranscriptState>? transcriptEvent;
   Stream<int>? playbackError;
   Stream<QueueListState>? queueState;
