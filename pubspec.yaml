@@ -11,7 +11,7 @@ dependencies:
   accessibility_tools: ^2.3.0
   app_links: ^6.3.0
   auto_size_text: ^3.0.0
-  audio_service: ^0.18.15
+  audio_service: ^0.18.16
   audio_session: ^0.1.23
   collection: ^1.18.0
   connectivity_plus: ^6.0.5
