@@ -615,7 +615,11 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                     MaterialPageRoute<void>(
                         settings: const RouteSettings(name: 'podcastdetails'),
                         builder: (context) => PodcastDetails(Podcast.fromUrl(url: url), podcastBloc)),
-                  ).then((value) => Navigator.pop(context));
+                  ).then((value) {
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  });
                 },
               ),
             ],

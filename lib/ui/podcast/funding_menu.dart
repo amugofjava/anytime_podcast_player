@@ -134,7 +134,9 @@ class _CupertinoFundingMenu extends StatelessWidget {
                                 context,
                               ).then((value) {
                                 settingsBloc.setExternalLinkConsent(value);
-                                Navigator.pop(context, 'Cancel');
+                                if (context.mounted) {
+                                  Navigator.of(context).pop('Cancel');
+                                }
                               });
                             },
                             child: Text(funding![index].value),
