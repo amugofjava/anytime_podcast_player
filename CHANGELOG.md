@@ -1,3 +1,10 @@
+## 1.3.11
+
+- Fix double read issue with some buttons when using VoiceOver.
+- Add visual indicator to sleep timer control to show if it is currently running.
+- Improve semantic labels for sleep timer and speed controls to read out current value.
+- Added option to delete downloaded episode once played (@mrkrash).
+
 ## 1.3.10
 
 - Episode search
