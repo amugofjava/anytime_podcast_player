@@ -67,7 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_label': MessageLookupByLibrary.simpleMessage('Episode'),
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('Alphabetisch von A bis Z'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('Alphabetisch von Z bis A'),
-    'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Früheste zuerst'),
+    'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Das Älteste zuerst'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Das Neueste zuerst'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Standard'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Episoden sortieren'),

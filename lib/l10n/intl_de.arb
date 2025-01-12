@@ -951,7 +951,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "episode_sort_earliest_first_label": "Früheste zuerst",
+  "episode_sort_earliest_first_label": "Das Älteste zuerst",
   "@episode_sort_earliest_first_label": {
     "description": "Episode earliest first sort",
     "type": "text",
