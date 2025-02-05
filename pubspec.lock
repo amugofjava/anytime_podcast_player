@@ -391,10 +391,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_downloader
-      sha256: "93a9ddbd561f8a3f5483b4189453fba145a0a1014a88143c96a966296b78a118"
+      sha256: b6da5495b6258aa7c243d0f0a5281e3430b385bccac11cc508f981e653b25aa6
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.0"
+    version: "1.11.8"
   flutter_html:
     dependency: "direct main"
     description:
