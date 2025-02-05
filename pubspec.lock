@@ -926,10 +926,10 @@ packages:
     dependency: "direct main"
     description:
       name: sembast
-      sha256: cae6c2b606226c94d9a6a9951b7b0632194077a9d7ea5e8e2300c88d8f19a823
+      sha256: "9026ea34aa3a0f26a966529ef80b57b6fe40f810cadeadd1b208202d1bf153e7"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.4"
+    version: "3.8.3"
   share_plus:
     dependency: "direct main"
     description:
@@ -1280,5 +1280,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.6.0 <4.0.0"
   flutter: ">=3.27.0"
