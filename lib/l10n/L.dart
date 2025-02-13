@@ -507,12 +507,22 @@ class L {
         );
   }
 
-  String get settings_theme_dropdown_label {
-    return message('settings_theme_dropdown_label') ??
+  String get settings_theme {
+    return message('settings_theme') ??
         Intl.message(
-          'Dark/Light theme',
-          name: 'settings_theme_dropdown_label',
-          desc: 'Dark/Light theme',
+          'Auto/Dark/Light theme',
+          name: 'settings_theme',
+          desc: 'Auto/Dark/Light theme',
+          locale: localeName,
+        );
+  }
+
+  String get settings_theme_heading {
+    return message('settings_theme_heading') ??
+        Intl.message(
+          'Choose theme behaviour',
+          name: 'settings_theme_heading',
+          desc: 'Choose theme behaviour',
           locale: localeName,
         );
   }

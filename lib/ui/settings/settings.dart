@@ -14,6 +14,7 @@ import 'package:anytime/ui/library/opml_import.dart';
 import 'package:anytime/ui/settings/episode_refresh.dart';
 import 'package:anytime/ui/settings/search_provider.dart';
 import 'package:anytime/ui/settings/settings_section_label.dart';
+import 'package:anytime/ui/settings/theme_select.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,23 +59,7 @@ class _SettingsState extends State<Settings> {
           return ListView(
             children: [
               SettingsDividerLabel(label: L.of(context)!.settings_personalisation_divider_label),
-              MergeSemantics(
-                child: ListTile(
-                  shape: const RoundedRectangleBorder(side: BorderSide.none),
-                  title: Text(L.of(context)!.settings_theme_dropdown_label),
-                  trailing: DropdownMenu<String>(
-                      initialSelection: snapshot.data!.theme,
-                      onSelected: (value) {
-                        settingsBloc.themeMode(value!);
-                      },
-                      dropdownMenuEntries: [
-                        DropdownMenuEntry(value: ThemeMode.system.name, label: L.of(context)!.settings_theme_value_auto),
-                        DropdownMenuEntry(value: ThemeMode.light.name, label: L.of(context)!.settings_theme_value_light),
-                        DropdownMenuEntry(value: ThemeMode.dark.name, label: L.of(context)!.settings_theme_value_dark),
-                      ]
-                  ),
-                ),
-              ),
+              const ThemeSelectWidget(),
               SettingsDividerLabel(label: L.of(context)!.settings_episodes_divider_label),
               MergeSemantics(
                 child: ListTile(
