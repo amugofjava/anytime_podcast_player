@@ -72,12 +72,20 @@ class MobileSettingsService extends SettingsService {
 
   @override
   set themeMode(String mode) {
-    bool followSystem = _sharedPreferences.getString('theme') == ThemeMode.system.name;
-    _sharedPreferences.setString('theme', mode);
     settingsNotifier.sink.add('theme');
-    if (followSystem) {
-      _sharedPreferences.setString('theme', ThemeMode.system.name);
-    }
+  }
+
+  @override
+  String get selectedTheme {
+    var value = _sharedPreferences.getString('selectedTheme') ?? ThemeMode.system.name;
+
+    return value;
+  }
+
+  @override
+  set selectedTheme(String mode) {
+    _sharedPreferences.setString('theme', mode);
+    settingsNotifier.sink.add('selectedTheme');
   }
 
   @override

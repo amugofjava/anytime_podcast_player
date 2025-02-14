@@ -2,11 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:ui';
+
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/search_providers.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -15,6 +19,7 @@ class SettingsBloc extends Bloc {
   final SettingsService _settingsService;
   final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
   final BehaviorSubject<String> _themeMode = BehaviorSubject<String>();
+  final BehaviorSubject<String> _selectedTheme = BehaviorSubject<String>();
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _deleteDownloadedPlayedEpisodes = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _storeDownloadOnSDCard = BehaviorSubject<bool>();
@@ -44,6 +49,7 @@ class SettingsBloc extends Bloc {
 
     _currentSettings = AppSettings(
       theme: _settingsService.themeMode,
+      selectedTheme: _settingsService.selectedTheme,
       markDeletedEpisodesAsPlayed: _settingsService.markDeletedEpisodesAsPlayed,
       deleteDownloadedPlayedEpisodes: _settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: _settingsService.storeDownloadsSDCard,
@@ -62,9 +68,20 @@ class SettingsBloc extends Bloc {
     _settings.add(_currentSettings);
 
     _themeMode.listen((String mode) {
+      if (mode == ThemeMode.system.name) {
+        var brightness = SchedulerBinding.instance.platformDispatcher
+            .platformBrightness;
+        mode = brightness == Brightness.dark ? ThemeMode.dark.name : ThemeMode.light.name;
+      }
       _currentSettings = _currentSettings.copyWith(theme: mode);
       _settings.add(_currentSettings);
       _settingsService.themeMode = mode;
+    });
+
+    _selectedTheme.listen((String mode) {
+      _currentSettings = _currentSettings.copyWith(selectedTheme: mode);
+      _settings.add(_currentSettings);
+      _settingsService.selectedTheme = mode;
     });
 
     _markDeletedAsPlayed.listen((bool mark) {
@@ -152,6 +169,8 @@ class SettingsBloc extends Bloc {
 
   void Function(String) get themeMode => _themeMode.add;
 
+  void Function(String) get selectedTheme => _selectedTheme.add;
+
   void Function(bool) get storeDownloadonSDCard => _storeDownloadOnSDCard.add;
 
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
@@ -181,6 +200,7 @@ class SettingsBloc extends Bloc {
   @override
   void dispose() {
     _themeMode.close();
+    _selectedTheme.close();
     _markDeletedAsPlayed.close();
     _deleteDownloadedPlayedEpisodes.close();
     _storeDownloadOnSDCard.close();

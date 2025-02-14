@@ -45,6 +45,9 @@ class MockSettingsService extends SettingsService {
   String themeMode = ThemeMode.dark.name;
 
   @override
+  String selectedTheme = ThemeMode.dark.name;
+
+  @override
   bool trimSilence = false;
 
   @override

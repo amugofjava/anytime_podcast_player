@@ -50,10 +50,11 @@ class _ThemeSelectWidgetState extends State<ThemeSelectWidget> {
                                       dense: true,
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                       value: ThemeMode.system.name,
-                                      groupValue: snapshot.data!.theme,
+                                      groupValue: snapshot.data!.selectedTheme,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          settingsBloc.themeMode(value ?? ThemeMode.system.name);
+                                          settingsBloc.selectedTheme(value ?? ThemeMode.system.name);
+                                          settingsBloc.themeMode(value ?? ThemeMode.light.name);
 
                                           Navigator.pop(context);
                                         });
@@ -64,9 +65,10 @@ class _ThemeSelectWidgetState extends State<ThemeSelectWidget> {
                                         dense: true,
                                         contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         value: ThemeMode.light.name,
-                                        groupValue: snapshot.data!.theme,
+                                        groupValue: snapshot.data!.selectedTheme,
                                         onChanged: (String? value) {
                                           setState(() {
+                                            settingsBloc.selectedTheme(value ?? ThemeMode.light.name);
                                             settingsBloc.themeMode(value ?? ThemeMode.light.name);
 
                                             Navigator.pop(context);
@@ -78,9 +80,10 @@ class _ThemeSelectWidgetState extends State<ThemeSelectWidget> {
                                         dense: true,
                                         contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         value: ThemeMode.dark.name,
-                                        groupValue: snapshot.data!.theme,
+                                        groupValue: snapshot.data!.selectedTheme,
                                         onChanged: (String? value) {
                                           setState(() {
+                                            settingsBloc.selectedTheme(value ?? ThemeMode.dark.name);
                                             settingsBloc.themeMode(value ?? ThemeMode.dark.name);
 
                                             Navigator.pop(context);
@@ -103,9 +106,9 @@ class _ThemeSelectWidgetState extends State<ThemeSelectWidget> {
   }
 
   Text updateSubtitle(AppSettings settings) {
-    if (settings.theme == ThemeMode.light.name) {
+    if (settings.selectedTheme == ThemeMode.light.name) {
       return Text(L.of(context)!.settings_theme_value_light);
-    } else if (settings.theme == ThemeMode.dark.name) {
+    } else if (settings.selectedTheme == ThemeMode.dark.name) {
       return Text(L.of(context)!.settings_theme_value_dark);
     }
 
