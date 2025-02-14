@@ -282,9 +282,33 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_theme_switch_label": "Tema scuro",
-  "@settings_theme_switch_label": {
-    "description": "Dark theme",
+  "settings_theme": "Auto/Dark/Light theme",
+  "@settings_theme": {
+    "description": "Auto/Dark/Light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_heading": "Scegli il comportamento",
+  "@settings_theme_heading": {
+    "description": "Scegli il comportamento",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_auto": "Auto",
+  "@settings_theme_value_auto": {
+    "description": "Segui il tema globale",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_light": "Tema chiaro",
+  "@settings_theme_value_light": {
+    "description": "Tema chiaro",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_dark": "Tema scuro",
+  "@settings_theme_value_dark": {
+    "description": "Tema scuro",
     "type": "text",
     "placeholders": {}
   },

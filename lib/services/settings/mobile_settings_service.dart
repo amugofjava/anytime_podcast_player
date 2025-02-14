@@ -7,6 +7,8 @@ import 'dart:math';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,16 +60,32 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
-  bool get themeDarkMode {
-    var theme = _sharedPreferences.getString('theme') ?? 'dark';
-
-    return theme == 'dark';
+  String get themeMode {
+    var value = _sharedPreferences.getString('theme') ?? ThemeMode.system.name;
+    if (value == ThemeMode.system.name) {
+      var brightness = SchedulerBinding.instance.platformDispatcher
+          .platformBrightness;
+      return brightness == Brightness.dark ? ThemeMode.dark.name : ThemeMode.light.name;
+    }
+    return value;
   }
 
   @override
-  set themeDarkMode(bool value) {
-    _sharedPreferences.setString('theme', value ? 'dark' : 'light');
+  set themeMode(String mode) {
     settingsNotifier.sink.add('theme');
+  }
+
+  @override
+  String get selectedTheme {
+    var value = _sharedPreferences.getString('selectedTheme') ?? ThemeMode.system.name;
+
+    return value;
+  }
+
+  @override
+  set selectedTheme(String mode) {
+    _sharedPreferences.setString('theme', mode);
+    settingsNotifier.sink.add('selectedTheme');
   }
 
   @override
