@@ -1,6 +1,7 @@
 ## 1.3.12
 
 - Add continuous play option.
+- HTML within notes now selectable for copy/pasting.
 
 ## 1.3.11
 

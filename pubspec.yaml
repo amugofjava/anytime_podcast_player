@@ -21,9 +21,9 @@ dependencies:
   file_picker: ^8.1.7
   flutter_dialogs: ^3.0.0
   flutter_downloader: ^1.11.8
-  flutter_html: ^3.0.0-beta.2
-  flutter_html_svg: ^3.0.0-beta.2
-  flutter_html_table: ^3.0.0-beta.2
+  flutter_html: ^3.0.0
+  flutter_html_svg: ^3.0.0
+  flutter_html_table: ^3.0.0
   flutter_launcher_icons: ^0.14.2
   flutter_spinkit: ^5.0.0
   html: ^0.15.0
