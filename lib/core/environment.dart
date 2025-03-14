@@ -25,8 +25,8 @@ const feedbackUrl = String.fromEnvironment('FEEDBACK_URL', defaultValue: '');
 class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
-  static const _projectVersion = '1.3.11';
-  static const _build = '166';
+  static const _projectVersion = '1.3.12';
+  static const _build = '169';
 
   static var _agentString = userAgentAppString;
 

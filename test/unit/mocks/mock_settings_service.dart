@@ -50,4 +50,7 @@ class MockSettingsService extends SettingsService {
 
   @override
   Stream<String> get settingsListener => PublishSubject<String>().stream;
+
+  @override
+  bool autoPlay = false;
 }

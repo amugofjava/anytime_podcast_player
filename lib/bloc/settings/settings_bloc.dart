@@ -27,6 +27,8 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _volumeBoost = BehaviorSubject<bool>();
   final BehaviorSubject<int> _autoUpdatePeriod = BehaviorSubject<int>();
   final BehaviorSubject<int> _layoutMode = BehaviorSubject<int>();
+  final BehaviorSubject<bool> _autoPlay = BehaviorSubject<bool>();
+
   var _currentSettings = AppSettings.sensibleDefaults();
 
   SettingsBloc(this._settingsService) {
@@ -57,6 +59,7 @@ class SettingsBloc extends Bloc {
       trimSilence: _settingsService.trimSilence,
       volumeBoost: _settingsService.volumeBoost,
       layout: _settingsService.layoutMode,
+      autoPlay: _settingsService.autoPlay,
     );
 
     _settings.add(_currentSettings);
@@ -146,6 +149,12 @@ class SettingsBloc extends Bloc {
       _settings.add(_currentSettings);
       _settingsService.layoutMode = mode;
     });
+
+    _autoPlay.listen((autoPlay) {
+      _currentSettings = _currentSettings.copyWith(autoPlay: autoPlay);
+      _settings.add(_currentSettings);
+      _settingsService.autoPlay = autoPlay;
+    });
   }
 
   Stream<AppSettings> get settings => _settings.stream;
@@ -175,6 +184,8 @@ class SettingsBloc extends Bloc {
   void Function(bool) get volumeBoost => _volumeBoost.add;
 
   void Function(int) get layoutMode => _layoutMode.add;
+
+  void Function(bool) get autoPlay => _autoPlay.add;
 
   AppSettings get currentSettings => _settings.value;
 

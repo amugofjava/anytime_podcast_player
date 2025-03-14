@@ -596,6 +596,47 @@ class SembastRepository extends Repository {
     }
   }
 
+  @override
+  Future<Episode?> findNextPlayableEpisode(Episode episode) async {
+    /// Lookup the podcast and its episodes
+    if (episode.pguid != null) {
+      final podcast = await findPodcastByGuid(episode.pguid!);
+
+      if (podcast != null) {
+        /// If we do not have a filter applied, find the next un-played episode in the series.
+        /// If we have a filter applied, text the first episode which will be the next in the
+        /// filtered series.
+        if (podcast.filter == PodcastEpisodeFilter.none) {
+          log.fine('Searching for episode ${episode.guid} - ${episode.id}');
+
+          final matchedEpisode = podcast.episodes.indexWhere((e) => e.guid == episode.guid);
+
+          if (matchedEpisode != -1 && podcast.episodes.length > (matchedEpisode + 1)) {
+            log.fine('Found match at index $matchedEpisode');
+
+            final nextInSeries = podcast.episodes.indexWhere(
+              (e) => !e.played,
+              (matchedEpisode + 1),
+            );
+
+            if (nextInSeries != -1) {
+              log.fine('Found next in series at index $nextInSeries');
+
+              return podcast.episodes[nextInSeries];
+            }
+          }
+        } else {
+          /// Just take the top one from the filtered list
+          if (podcast.episodes.isNotEmpty) {
+            return podcast.episodes[0];
+          }
+        }
+      }
+    }
+
+    return null;
+  }
+
   Future<Episode> _loadEpisodeSnapshot(int key, Map<String, Object?> snapshot) async {
     var episode = Episode.fromMap(key, snapshot);
 

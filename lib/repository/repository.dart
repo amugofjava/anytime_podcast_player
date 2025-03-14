@@ -39,6 +39,8 @@ abstract class Repository {
 
   Future<Episode?> findEpisodeByTaskId(String taskId);
 
+  Future<Episode?> findNextPlayableEpisode(Episode episode);
+
   Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]);
 
   Future<List<Episode>> saveEpisodes(List<Episode> episodes, [bool updateIfSame = false]);

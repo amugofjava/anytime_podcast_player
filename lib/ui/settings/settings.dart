@@ -122,6 +122,16 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_continuous_play_option),
+                  subtitle: Text(L.of(context)!.settings_continuous_play_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.autoPlay,
+                    onChanged: (value) => setState(() => settingsBloc.autoPlay(value)),
+                  ),
+                ),
+              ),
               const EpisodeRefreshWidget(),
               SettingsDividerLabel(label: L.of(context)!.settings_data_divider_label),
               ListTile(

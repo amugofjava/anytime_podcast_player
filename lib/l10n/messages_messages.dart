@@ -164,6 +164,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Always'),
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Refresh episodes on details screen after'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Never'),
+    'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Continuous play'),
+    'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Automatically play the next episode in the podcast if the queue is empty'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATA'),
     'settings_delete_played_label': MessageLookupByLibrary.simpleMessage('Delete downloaded episodes once played'),
     'settings_download_sd_card_label': MessageLookupByLibrary.simpleMessage('Download episodes to SD card'),

@@ -1064,5 +1064,17 @@
     "description": "Hint text for episode search box",
     "type": "text",
     "placeholders": {}
- }
+  },
+  "settings_continuous_play_option": "Riproduzione continua",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "Riproduci automaticamente l'episodio successivo del podcast se la coda è vuota",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  }
 }

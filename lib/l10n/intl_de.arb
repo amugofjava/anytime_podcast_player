@@ -1064,5 +1064,17 @@
     "description": "Hint text for episode search box",
     "type": "text",
     "placeholders": {}
- }
+  },
+  "settings_continuous_play_option": "Kontinuierliches Spielen",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "Automatische Wiedergabe der nächsten Episode im Podcast, wenn die Warteschlange leer ist",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  }
 }

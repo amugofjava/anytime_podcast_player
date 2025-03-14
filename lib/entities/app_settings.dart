@@ -47,6 +47,9 @@ class AppSettings {
   /// If 0, list view; else grid view
   final int layout;
 
+  /// True if auto play is enabled.
+  final bool autoPlay;
+
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
@@ -62,6 +65,7 @@ class AppSettings {
     required this.trimSilence,
     required this.volumeBoost,
     required this.layout,
+    required this.autoPlay,
   });
 
   AppSettings.sensibleDefaults()
@@ -78,7 +82,8 @@ class AppSettings {
         autoUpdateEpisodePeriod = -1,
         trimSilence = false,
         volumeBoost = false,
-        layout = 0;
+        layout = 0,
+        autoPlay = false;
 
   AppSettings copyWith({
     String? theme,
@@ -95,6 +100,7 @@ class AppSettings {
     bool? trimSilence,
     bool? volumeBoost,
     int? layout,
+    bool? autoPlay,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -111,5 +117,6 @@ class AppSettings {
         trimSilence: trimSilence ?? this.trimSilence,
         volumeBoost: volumeBoost ?? this.volumeBoost,
         layout: layout ?? this.layout,
+        autoPlay: autoPlay ?? this.autoPlay,
       );
 }

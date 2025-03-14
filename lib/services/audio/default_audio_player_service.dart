@@ -51,6 +51,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// The currently playing episode
   Episode? _currentEpisode;
 
+  /// The starting episode initiated by the user.
+  Episode? _seedEpisode;
+
   /// The currently 'processed' transcript;
   Transcript? _currentTranscript;
 
@@ -132,12 +135,16 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
+  @override
+  Future<void> playEpisode({required Episode episode, bool? resume}) async {
+    return _playNextEpisode(episode: episode, resume: resume, fresh: true);
+  }
+
   /// Called by the client (UI), or when we move to a different episode within the queue, to play an episode.
   ///
   /// If we have a downloaded copy of the requested episode we will use that; otherwise we will stream the
   /// episode directly.
-  @override
-  Future<void> playEpisode({required Episode episode, bool? resume}) async {
+  Future<void> _playNextEpisode({required Episode episode, bool? resume, bool fresh = false}) async {
     if (episode.guid != '' && _initialised) {
       var uri = (await _generateEpisodeUri(episode))!;
 
@@ -174,6 +181,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
       _currentEpisode = episode;
       _currentEpisode!.played = false;
+
+      if (fresh) {
+        _seedEpisode = episode;
+      }
 
       await repository.saveEpisode(_currentEpisode!);
 
@@ -531,34 +542,51 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     /// can delete the episode.
     final sleepy = _sleep.type == SleepType.episode && _queue.isNotEmpty;
 
-    if (
-        settingsService.deleteDownloadedPlayedEpisodes &&
-        _currentEpisode?.downloadState == DownloadState.downloaded && !sleepy
-    ) {
+    if (settingsService.deleteDownloadedPlayedEpisodes &&
+        _currentEpisode?.downloadState == DownloadState.downloaded &&
+        !sleepy) {
       await podcastService.deleteDownload(_currentEpisode!);
     }
 
     _stopPositionTicker();
 
-    if (_queue.isEmpty) {
-      log.fine('Queue is empty so we will stop');
-      _queue = <Episode>[];
-      _currentEpisode = null;
-      _playingState.add(AudioState.stopped);
+    final autoPlay = settingsService.autoPlay;
 
-      await _audioHandler.customAction('queueend');
-    } else if (_sleep.type == SleepType.episode) {
+    if (_queue.isNotEmpty && _sleep.type == SleepType.episode) {
       log.fine('Sleeping at end of episode');
 
       await _audioHandler.customAction('sleep');
       _playingState.add(AudioState.pausing);
       _stopSleepTicker();
+    } else if (_queue.isEmpty) {
+      log.fine('Queue is empty so we will stop unless Autoplay ($autoPlay)');
+
+      if (autoPlay && _seedEpisode != null) {
+        final nextEpisode = await repository.findNextPlayableEpisode(_seedEpisode!);
+
+        if (nextEpisode != null) {
+          playEpisode(episode: nextEpisode);
+        } else {
+          _queue = <Episode>[];
+          _currentEpisode = null;
+          _seedEpisode = null;
+          _playingState.add(AudioState.stopped);
+
+          await _audioHandler.customAction('queueend');
+        }
+      } else {
+        _queue = <Episode>[];
+        _currentEpisode = null;
+        _playingState.add(AudioState.stopped);
+
+        await _audioHandler.customAction('queueend');
+      }
     } else {
       log.fine('Queue has ${_queue.length} episodes left');
       _currentEpisode = null;
       var ep = _queue.removeAt(0);
 
-      await playEpisode(episode: ep);
+      await _playNextEpisode(episode: ep);
 
       _updateQueueState();
     }

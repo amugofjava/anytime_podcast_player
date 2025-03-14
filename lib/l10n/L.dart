@@ -1717,6 +1717,26 @@ class L {
           locale: localeName,
         );
   }
+
+  String get settings_continuous_play_option {
+    return message('settings_continuous_play_option') ??
+        Intl.message(
+          'Continuous play',
+          name: 'settings_continuous_play_option',
+          desc: 'Continuous play toggle switch label',
+          locale: localeName,
+        );
+  }
+
+  String get settings_continuous_play_subtitle {
+    return message('settings_continuous_play_subtitle') ??
+        Intl.message(
+          'Automatically play the next episode in the podcast if the queue is empty',
+          name: 'settings_continuous_play_subtitle',
+          desc: 'Continuous play toggle switch subtitle',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

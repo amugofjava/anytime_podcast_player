@@ -1,3 +1,7 @@
+## 1.3.12
+
+- Add continuous play option.
+
 ## 1.3.11
 
 - Fix double read issue with some buttons when using VoiceOver.

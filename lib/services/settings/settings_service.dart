@@ -61,5 +61,9 @@ abstract class SettingsService {
 
   int get layoutMode;
 
+  set autoPlay(bool autoPlay);
+
+  bool get autoPlay;
+
   Stream<String> get settingsListener;
 }

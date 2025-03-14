@@ -181,6 +181,17 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set autoPlay(bool autoPlay) {
+    _sharedPreferences.setBool('autoplay', autoPlay);
+    settingsNotifier.sink.add('autoplay');
+  }
+
+  @override
+  bool get autoPlay {
+    return _sharedPreferences.getBool('autoplay') ?? false;
+  }
+
+  @override
   AppSettings? settings;
 
   @override
