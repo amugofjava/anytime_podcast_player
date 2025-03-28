@@ -283,7 +283,7 @@ class _ExpandableEpisodeTileState extends State<ExpandableEpisodeTile> {
                       ),
                       ExcludeSemantics(
                         child: Text(
-                          widget.queued ? 'Remove' : 'Add',
+                          widget.queued ? L.of(context)!.queue_remove_label : L.of(context)!.queue_add_label,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontWeight: FontWeight.normal,

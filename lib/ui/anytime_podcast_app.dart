@@ -202,6 +202,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         ],
         supportedLocales: const [
           Locale('en', ''),
+          Locale('es', ''),
           Locale('de', ''),
           Locale('it', ''),
         ],

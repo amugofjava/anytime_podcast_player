@@ -105,7 +105,7 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
             child: Semantics(
               header: true,
               child: Text(
-                'Episode Filter',
+                L.of(context)!.episode_filter_semantic_label,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),

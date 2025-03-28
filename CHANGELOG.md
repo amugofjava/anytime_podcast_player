@@ -2,6 +2,7 @@
 
 - Add continuous play option.
 - HTML within notes now selectable for copy/pasting.
+- Add support for Spanish language (thank you Paco).
 
 ## 1.3.11
 
