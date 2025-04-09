@@ -35,7 +35,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -52,10 +52,16 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
     defaultConfig {
         applicationId "uk.me.amugofjava.anytime"
         minSdkVersion 22
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
