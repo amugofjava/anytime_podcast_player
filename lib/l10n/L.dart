@@ -507,11 +507,51 @@ class L {
         );
   }
 
-  String get settings_theme_switch_label {
-    return message('settings_theme_switch_label') ??
+  String get settings_theme {
+    return message('settings_theme') ??
+        Intl.message(
+          'Theme',
+          name: 'settings_theme',
+          desc: 'Display theme',
+          locale: localeName,
+        );
+  }
+
+  String get settings_theme_heading {
+    return message('settings_theme_heading') ??
+        Intl.message(
+          'Choose theme behaviour',
+          name: 'settings_theme_heading',
+          desc: 'Choose theme behaviour',
+          locale: localeName,
+        );
+  }
+
+  String get settings_theme_value_auto {
+    return message('settings_theme_value_auto') ??
+        Intl.message(
+          'System theme',
+          name: 'settings_theme_value_auto',
+          desc: 'Based on System theme',
+          locale: localeName,
+        );
+  }
+
+  String get settings_theme_value_light {
+    return message('settings_theme_value_light') ??
+        Intl.message(
+          'Light theme',
+          name: 'settings_theme_value_light',
+          desc: 'Light theme',
+          locale: localeName,
+        );
+  }
+
+  String get settings_theme_value_dark {
+    return message('settings_theme_value_dark') ??
         Intl.message(
           'Dark theme',
-          name: 'settings_theme_switch_label',
+          name: 'settings_theme_value_dark',
           desc: 'Dark theme',
           locale: localeName,
         );

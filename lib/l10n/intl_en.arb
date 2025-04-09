@@ -282,8 +282,32 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_theme_switch_label": "Dark theme",
-  "@settings_theme_switch_label": {
+  "settings_theme": "Theme",
+  "@settings_theme": {
+    "description": "Display theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_heading": "Select Theme",
+  "@settings_theme_heading": {
+    "description": "Choose theme behaviour",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_auto": "System theme",
+  "@settings_theme_value_auto": {
+    "description": "Based on System theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_light": "Light theme",
+  "@settings_theme_value_light": {
+    "description": "Light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_dark": "Dark theme",
+  "@settings_theme_value_dark": {
     "description": "Dark theme",
     "type": "text",
     "placeholders": {}

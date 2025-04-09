@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ void main() {
   final Map<String, Object> settings = <String, Object>{'dummy': 1};
   SettingsService? mobileSettingsService;
   late Stream<String>? settingsListener;
+  TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() async {
     SharedPreferences.setMockInitialValues(settings);
@@ -39,10 +41,10 @@ void main() {
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
   test('Test dark mode', () async {
-    expect(mobileSettingsService?.themeDarkMode, true);
+    expect(mobileSettingsService?.themeMode, ThemeMode.light.name);
     expectLater(settingsListener, emits('theme'));
-    mobileSettingsService?.themeDarkMode = false;
-    expect(mobileSettingsService?.themeDarkMode, false);
+    mobileSettingsService?.themeMode = ThemeMode.dark.name;
+    expect(mobileSettingsService?.themeMode, ThemeMode.dark.name);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
   test('Test playback speed', () async {
