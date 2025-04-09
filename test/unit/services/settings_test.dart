@@ -4,6 +4,7 @@
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show SchedulerBinding;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,11 +41,17 @@ void main() {
     expect(mobileSettingsService?.storeDownloadsSDCard, true);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
-  test('Test dark mode', () async {
-    expect(mobileSettingsService?.themeMode, ThemeMode.light.name);
+  test('Test theme', () async {
+    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+
+    expect(mobileSettingsService?.selectedTheme, ThemeMode.system.name);
     expectLater(settingsListener, emits('theme'));
     mobileSettingsService?.themeMode = ThemeMode.dark.name;
     expect(mobileSettingsService?.themeMode, ThemeMode.dark.name);
+    mobileSettingsService?.themeMode = ThemeMode.light.name;
+    expect(mobileSettingsService?.themeMode, ThemeMode.light.name);
+    mobileSettingsService?.themeMode = ThemeMode.system.name;
+    expect(mobileSettingsService?.themeMode, brightness.name);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
   test('Test playback speed', () async {

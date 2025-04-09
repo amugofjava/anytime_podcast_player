@@ -63,8 +63,7 @@ class MobileSettingsService extends SettingsService {
   String get themeMode {
     var value = _sharedPreferences.getString('theme') ?? ThemeMode.system.name;
     if (value == ThemeMode.system.name) {
-      var brightness = SchedulerBinding.instance.platformDispatcher
-          .platformBrightness;
+      var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
       return brightness == Brightness.dark ? ThemeMode.dark.name : ThemeMode.light.name;
     }
     return value;
@@ -72,6 +71,7 @@ class MobileSettingsService extends SettingsService {
 
   @override
   set themeMode(String mode) {
+    _sharedPreferences.setString('theme', mode);
     settingsNotifier.sink.add('theme');
   }
 
