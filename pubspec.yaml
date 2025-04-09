@@ -36,7 +36,7 @@ dependencies:
   path: ^1.8.3
   path_provider: ^2.1.4
   path_provider_platform_interface: ^2.0.4
-  percent_indicator: 4.2.4
+  percent_indicator: 4.2.5
   permission_handler: ^11.1.0
   podcast_search: ^0.7.4
   provider: ^6.0.3
