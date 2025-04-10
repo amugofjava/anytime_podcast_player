@@ -46,7 +46,7 @@ import 'package:anytime/ui/widgets/search_slide_route.dart';
 import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/scheduler.dart' show SchedulerBinding;
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -123,7 +123,21 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
     /// Listen to theme change events from settings.
     widget.settingsBloc!.settings.listen((event) {
       setState(() {
-        var newTheme = event.theme == 'dark' ? Themes.darkTheme().themeData : Themes.lightTheme().themeData;
+        var newTheme = Themes.darkTheme().themeData;
+
+        /// As we add new themes, we will move this selection into its own theme module.
+        switch (event.theme) {
+          case 'system':
+            var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+            newTheme = brightness == Brightness.dark ? Themes.darkTheme().themeData : Themes.lightTheme().themeData;
+            break;
+          case 'light':
+            newTheme = Themes.lightTheme().themeData;
+            break;
+          case 'dark':
+            newTheme = Themes.darkTheme().themeData;
+            break;
+        }
 
         /// Only update the theme if it has changed.
         if (newTheme != theme) {
@@ -318,7 +332,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         if (context.mounted) {
           SettingsService? settings = await MobileSettingsService.instance();
           var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
-          settingsBloc.themeMode(settings!.themeMode);
+          settingsBloc.theme(settings!.theme);
         }
         break;
       case AppLifecycleState.paused:

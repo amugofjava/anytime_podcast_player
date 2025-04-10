@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/action_text.dart';
+
 class ThemeSelectWidget extends StatefulWidget {
   const ThemeSelectWidget({super.key});
 
@@ -41,77 +43,75 @@ class _ThemeSelectWidgetState extends State<ThemeSelectWidget> {
                               textAlign: TextAlign.center,
                             ),
                             scrollable: true,
-                            content: StatefulBuilder(
-                              builder: (BuildContext context, StateSetter setState) {
-                                return Column(
-                                  children: <Widget>[
-                                    RadioListTile<String>(
-                                      title: Text(L.of(context)!.settings_theme_value_auto),
-                                      dense: true,
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                      value: ThemeMode.system.name,
-                                      groupValue: snapshot.data!.selectedTheme,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          settingsBloc.selectedTheme(value ?? ThemeMode.system.name);
-                                          settingsBloc.themeMode(value ?? ThemeMode.light.name);
+                            content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                              return Column(children: <Widget>[
+                                RadioListTile<String>(
+                                    title: Text(L.of(context)!.settings_theme_value_auto),
+                                    dense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                    value: 'system',
+                                    groupValue: snapshot.data!.theme,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        settingsBloc.theme(value ?? 'system');
 
-                                          Navigator.pop(context);
-                                        });
-                                      }
-                                    ),
-                                    RadioListTile<String>(
-                                        title: Text(L.of(context)!.settings_theme_value_light),
-                                        dense: true,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                        value: ThemeMode.light.name,
-                                        groupValue: snapshot.data!.selectedTheme,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            settingsBloc.selectedTheme(value ?? ThemeMode.light.name);
-                                            settingsBloc.themeMode(value ?? ThemeMode.light.name);
+                                        Navigator.pop(context);
+                                      });
+                                    }),
+                                RadioListTile<String>(
+                                    title: Text(L.of(context)!.settings_theme_value_light),
+                                    dense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                    value: 'light',
+                                    groupValue: snapshot.data!.theme,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        settingsBloc.theme(value ?? 'light');
 
-                                            Navigator.pop(context);
-                                          });
-                                        }
-                                    ),
-                                    RadioListTile<String>(
-                                        title: Text(L.of(context)!.settings_theme_value_dark),
-                                        dense: true,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                        value: ThemeMode.dark.name,
-                                        groupValue: snapshot.data!.selectedTheme,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            settingsBloc.selectedTheme(value ?? ThemeMode.dark.name);
-                                            settingsBloc.themeMode(value ?? ThemeMode.dark.name);
+                                        Navigator.pop(context);
+                                      });
+                                    }),
+                                RadioListTile<String>(
+                                    title: Text(L.of(context)!.settings_theme_value_dark),
+                                    dense: true,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                    value: 'dark',
+                                    groupValue: snapshot.data!.theme,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        settingsBloc.theme(value ?? 'dark');
 
-                                            Navigator.pop(context);
-                                          });
-                                        }
+                                        Navigator.pop(context);
+                                      });
+                                    }),
+                                SimpleDialogOption(
+                                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                                  // child: Text(L.of(context)!.close_button_label),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      child: ActionText(L.of(context)!.close_button_label),
+                                      onPressed: () {
+                                        Navigator.pop(context, '');
+                                      },
                                     ),
-                                  ]
-                                );
-                              }
-                            ),
+                                  ),
+                                ),
+                              ]);
+                            }),
                           );
-                        }
-                    );
+                        });
                   },
                 )
-              ]
-          );
-        }
-    );
+              ]);
+        });
   }
 
   Text updateSubtitle(AppSettings settings) {
-    if (settings.selectedTheme == ThemeMode.light.name) {
-      return Text(L.of(context)!.settings_theme_value_light);
-    } else if (settings.selectedTheme == ThemeMode.dark.name) {
-      return Text(L.of(context)!.settings_theme_value_dark);
-    }
-
-    return Text(L.of(context)!.settings_theme_value_auto);
+    return switch (settings.theme) {
+      'system' => Text(L.of(context)!.settings_theme_value_auto),
+      'light' => Text(L.of(context)!.settings_theme_value_light),
+      _ => Text(L.of(context)!.settings_theme_value_dark)
+    };
   }
 }

@@ -9,13 +9,9 @@ abstract class SettingsService {
 
   set settings(AppSettings? settings);
 
-  String get themeMode;
+  String get theme;
 
-  set themeMode(String mode);
-
-  String get selectedTheme;
-
-  set selectedTheme(String mode);
+  set theme(String mode);
 
   bool get markDeletedEpisodesAsPlayed;
 

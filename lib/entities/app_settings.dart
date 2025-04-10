@@ -8,9 +8,6 @@ class AppSettings {
   /// The current theme name.
   final String theme;
 
-  /// The selected theme
-  final String selectedTheme;
-
   /// True if episodes are marked as played when deleted.
   final bool markDeletedEpisodesAsPlayed;
 
@@ -55,7 +52,6 @@ class AppSettings {
 
   AppSettings({
     required this.theme,
-    required this.selectedTheme,
     required this.markDeletedEpisodesAsPlayed,
     required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
@@ -74,7 +70,6 @@ class AppSettings {
 
   AppSettings.sensibleDefaults()
       : theme = 'dark',
-        selectedTheme = 'dark',
         markDeletedEpisodesAsPlayed = false,
         deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
@@ -110,7 +105,6 @@ class AppSettings {
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
-        selectedTheme: selectedTheme ?? this.selectedTheme,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
         deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
