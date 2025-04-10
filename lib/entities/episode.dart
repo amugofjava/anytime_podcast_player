@@ -322,7 +322,8 @@ class Episode {
             chaptersUrl == other.chaptersUrl &&
             transcriptId == other.transcriptId &&
             listEquals(persons, other.persons) &&
-            listEquals(chapters, other.chapters);
+            listEquals(chapters, other.chapters) &&
+            listEquals(transcriptUrls, other.transcriptUrls);
   }
 
   @override

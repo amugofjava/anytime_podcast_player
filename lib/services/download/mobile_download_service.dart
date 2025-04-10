@@ -57,10 +57,11 @@ class MobileDownloadService extends DownloadService {
           dirty = true;
         }
 
-        // Next, if the episode supports transcripts download that next
+        // Next, if the episode supports transcripts download that next. Vtt takes precedence, followed
+        // by json then SRT.
         if (episode.hasTranscripts) {
-          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
-
+          var sub = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.vtt);
+          sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
           sub ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
 
           if (sub != null) {

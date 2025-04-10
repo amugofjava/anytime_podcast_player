@@ -870,10 +870,10 @@ packages:
     dependency: "direct main"
     description:
       name: podcast_search
-      sha256: "30eae661851bcdba2a10007b350cd0633374bbe688a98e82e2b5bf45f2742cd8"
+      sha256: a31b8c7d2944e423e9831bdd14ec64d4fd14872782d6bcb6589c5264874ab1fe
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.4"
+    version: "0.7.5"
   provider:
     dependency: "direct main"
     description:

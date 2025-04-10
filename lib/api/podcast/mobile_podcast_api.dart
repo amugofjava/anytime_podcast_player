@@ -95,6 +95,9 @@ class MobilePodcastApi extends PodcastApi {
       case TranscriptFormat.json:
         format = podcast_search.TranscriptFormat.json;
         break;
+      case TranscriptFormat.vtt:
+        format = podcast_search.TranscriptFormat.vtt;
+        break;
       case TranscriptFormat.unsupported:
         format = podcast_search.TranscriptFormat.unsupported;
         break;

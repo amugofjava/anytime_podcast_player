@@ -9,6 +9,7 @@ enum TranscriptFormat {
   json,
   subrip,
   unsupported,
+  vtt,
 }
 
 /// This class represents a Podcasting 2.0 transcript URL.
@@ -42,6 +43,9 @@ class TranscriptUrl {
       case TranscriptFormat.unsupported:
         t = 2;
         break;
+      case TranscriptFormat.vtt:
+        t = 3;
+        break;
     }
 
     return <String, dynamic>{
@@ -66,6 +70,9 @@ class TranscriptUrl {
         break;
       case 2:
         t = TranscriptFormat.unsupported;
+        break;
+      case 3:
+        t = TranscriptFormat.vtt;
         break;
     }
 
