@@ -58,7 +58,7 @@ class TranscriptUrl {
   }
 
   static TranscriptUrl fromMap(Map<String, dynamic> transcript) {
-    var ts = transcript['type'] as int? ?? 2;
+    final ts = transcript['type'] as int? ?? 2;
     var t = TranscriptFormat.unsupported;
 
     switch (ts) {
@@ -121,16 +121,16 @@ class Transcript {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'guid': guid,
-      'subtitles': (subtitles).map((subtitle) => subtitle.toMap()).toList(growable: false),
+      'subtitles': subtitles.map((subtitle) => subtitle.toMap()).toList(growable: false),
       'lastUpdated': DateTime.now().millisecondsSinceEpoch,
     };
   }
 
   static Transcript fromMap(int? key, Map<String, dynamic> transcript) {
-    var subtitles = <Subtitle>[];
+    final subtitles = <Subtitle>[];
 
     if (transcript['subtitles'] != null) {
-      for (var subtitle in (transcript['subtitles'] as List)) {
+      for (final subtitle in (transcript['subtitles'] as List)) {
         if (subtitle is Map<String, dynamic>) {
           subtitles.add(Subtitle.fromMap(subtitle));
         }
@@ -158,7 +158,7 @@ class Transcript {
   @override
   int get hashCode => guid.hashCode ^ subtitles.hashCode;
 
-  bool get transcriptAvailable => (subtitles.isNotEmpty || filtered);
+  bool get transcriptAvailable => subtitles.isNotEmpty || filtered;
 }
 
 /// Represents an individual line within a transcript.

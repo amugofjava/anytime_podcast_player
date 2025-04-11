@@ -32,7 +32,7 @@ class Environment {
 
   static String userAgent() {
     if (_agentString.isEmpty) {
-      var platform = '${Platform.operatingSystem} ${Platform.operatingSystemVersion}'.trim();
+      final platform = '${Platform.operatingSystem} ${Platform.operatingSystemVersion}'.trim();
 
       _agentString = '$_applicationName/$_projectVersion b$_build (phone;$platform) $_applicationUrl';
     }

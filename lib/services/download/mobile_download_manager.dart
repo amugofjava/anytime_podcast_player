@@ -36,17 +36,17 @@ class MobileDownloaderManager implements DownloadManager {
 
     IsolateNameServer.registerPortWithName(_port.sendPort, portName);
 
-    var tasks = await FlutterDownloader.loadTasks();
+    final tasks = await FlutterDownloader.loadTasks();
 
     // Update the status of any tasks that may have been updated whilst
     // AnyTime was close or in the background.
     if (tasks != null && tasks.isNotEmpty) {
-      for (var t in tasks) {
+      for (final t in tasks) {
         _updateDownloadState(id: t.taskId, progress: t.progress, status: t.status);
 
         /// If we are not queued or running we can safely clean up this event
         if (t.status != DownloadTaskStatus.enqueued && t.status != DownloadTaskStatus.running) {
-          FlutterDownloader.remove(taskId: t.taskId, shouldDeleteContent: false);
+          await FlutterDownloader.remove(taskId: t.taskId, shouldDeleteContent: false);
         }
       }
     }
@@ -59,12 +59,12 @@ class MobileDownloaderManager implements DownloadManager {
       _updateDownloadState(id: id, progress: progress, status: status);
     });
 
-    FlutterDownloader.registerCallback(downloadCallback);
+    await FlutterDownloader.registerCallback(downloadCallback);
   }
 
   @override
   Future<String?> enqueueTask(String url, String downloadPath, String fileName) async {
-    return await FlutterDownloader.enqueue(
+    return FlutterDownloader.enqueue(
       url: url,
       savedDir: downloadPath,
       fileName: fileName,
@@ -84,7 +84,7 @@ class MobileDownloaderManager implements DownloadManager {
 
   void _updateDownloadState({required String id, required int progress, required DownloadTaskStatus status}) {
     var state = DownloadState.none;
-    var updateTime = DateTime.now().millisecondsSinceEpoch;
+    final updateTime = DateTime.now().millisecondsSinceEpoch;
 
     if (status == DownloadTaskStatus.enqueued) {
       state = DownloadState.queued;

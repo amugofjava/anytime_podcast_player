@@ -195,23 +195,23 @@ class Episode {
       'downloadPercentage': downloadPercentage.toString(),
       'played': played ? 'true' : 'false',
       'chaptersUrl': chaptersUrl,
-      'chapters': (chapters).map((chapter) => chapter.toMap()).toList(growable: false),
+      'chapters': chapters.map((chapter) => chapter.toMap()).toList(growable: false),
       'tid': transcriptId ?? 0,
-      'transcriptUrls': (transcriptUrls).map((tu) => tu.toMap()).toList(growable: false),
-      'persons': (persons).map((person) => person.toMap()).toList(growable: false),
+      'transcriptUrls': transcriptUrls.map((tu) => tu.toMap()).toList(growable: false),
+      'persons': persons.map((person) => person.toMap()).toList(growable: false),
       'lastUpdated': lastUpdated?.millisecondsSinceEpoch.toString() ?? '',
     };
   }
 
   static Episode fromMap(int? key, Map<String, dynamic> episode) {
-    var chapters = <Chapter>[];
-    var transcriptUrls = <TranscriptUrl>[];
-    var persons = <Person>[];
+    final chapters = <Chapter>[];
+    final transcriptUrls = <TranscriptUrl>[];
+    final persons = <Person>[];
 
     // We need to perform an 'is' on each loop to prevent Dart
     // from complaining that we have not set the type for chapter.
     if (episode['chapters'] != null) {
-      for (var chapter in (episode['chapters'] as List)) {
+      for (final chapter in (episode['chapters'] as List)) {
         if (chapter is Map<String, dynamic>) {
           chapters.add(Chapter.fromMap(chapter));
         }
@@ -219,7 +219,7 @@ class Episode {
     }
 
     if (episode['transcriptUrls'] != null) {
-      for (var transcriptUrl in (episode['transcriptUrls'] as List)) {
+      for (final transcriptUrl in (episode['transcriptUrls'] as List)) {
         if (transcriptUrl is Map<String, dynamic>) {
           transcriptUrls.add(TranscriptUrl.fromMap(transcriptUrl));
         }
@@ -227,7 +227,7 @@ class Episode {
     }
 
     if (episode['persons'] != null) {
-      for (var person in (episode['persons'] as List)) {
+      for (final person in (episode['persons'] as List)) {
         if (person is Map<String, dynamic>) {
           persons.add(Person.fromMap(person));
         }
@@ -259,7 +259,7 @@ class Episode {
       duration: int.parse(episode['duration'] as String? ?? '0'),
       position: int.parse(episode['position'] as String? ?? '0'),
       downloadPercentage: int.parse(episode['downloadPercentage'] as String? ?? '0'),
-      played: episode['played'] == 'true' ? true : false,
+      played: episode['played'] == 'true',
       chaptersUrl: episode['chaptersUrl'] as String?,
       chapters: chapters,
       transcriptUrls: transcriptUrls,
@@ -365,14 +365,14 @@ class Episode {
 
   Duration get timeRemaining {
     if (position > 0 && duration > 0) {
-      var currentPosition = Duration(milliseconds: position);
+      final currentPosition = Duration(milliseconds: position);
 
-      var tr = duration - currentPosition.inSeconds;
+      final tr = duration - currentPosition.inSeconds;
 
       return Duration(seconds: tr);
     }
 
-    return const Duration(seconds: 0);
+    return Duration.zero;
   }
 
   double get percentagePlayed {
@@ -395,7 +395,7 @@ class Episode {
         _descriptionText = '';
       } else {
         // Replace break tags with space character for readability
-        var formattedDescription = description!.replaceAll(RegExp(r'(<br/?>)+'), ' ');
+        final formattedDescription = description!.replaceAll(RegExp('(<br/?>)+'), ' ');
         _descriptionText = parseFragment(formattedDescription).text;
       }
     }
