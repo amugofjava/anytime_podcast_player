@@ -3,6 +3,7 @@
 - Add continuous play option.
 - HTML within notes now selectable for copy/pasting.
 - Add support for Spanish language (thank you Paco).
+- Add support for VTT transcripts.
 
 ## 1.3.11
 
