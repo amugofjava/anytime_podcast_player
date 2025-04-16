@@ -204,7 +204,10 @@ class _SettingsState extends State<Settings> {
       navigationBar: CupertinoNavigationBar(
         padding: const EdgeInsetsDirectional.all(0.0),
         leading: CupertinoButton(
-            child: const Icon(Icons.arrow_back_ios),
+            child: Icon(
+              Icons.arrow_back_ios,
+              semanticLabel: L.of(context)?.go_back_button_label,
+            ),
             onPressed: () {
               Navigator.pop(context);
             }),
