@@ -17,12 +17,22 @@ import 'package:url_launcher/url_launcher.dart';
 /// https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#person
 class PersonAvatar extends StatelessWidget {
   final Person person;
+  final double width;
+  final double radius;
+  final EdgeInsetsGeometry padding;
+  final bool showName;
+  final bool highlight;
   String initials = '';
   String role = '';
 
   PersonAvatar({
     super.key,
     required this.person,
+    this.width = 96,
+    this.radius = 32,
+    this.padding = const EdgeInsets.all(0.0),
+    this.highlight = false,
+    this.showName = true,
   }) {
     if (person.name.isNotEmpty) {
       var parts = person.name.split(' ');
@@ -53,26 +63,36 @@ class PersonAvatar extends StatelessWidget {
             }
           : null,
       child: SizedBox(
-        width: 96,
+        width: width,
         child: Padding(
           padding: const EdgeInsets.only(left: 16.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircleAvatar(
-                radius: 32,
-                foregroundImage: ExtendedImage.network(
-                  person.image!,
-                  cache: true,
-                ).image,
-                child: Text(initials),
+              Container(
+                padding: padding,
+                decoration: BoxDecoration(
+                  color: highlight ? Colors.orange : Colors.transparent,
+                  shape: BoxShape.circle,
+                ),
+                child: CircleAvatar(
+                  radius: radius,
+                  foregroundImage: person.image == null
+                      ? null
+                      : ExtendedImage.network(
+                          person.image!,
+                          cache: true,
+                        ).image,
+                  child: Text(initials),
+                ),
               ),
-              Text(
-                person.name,
-                maxLines: 3,
-                textAlign: TextAlign.center,
-              ),
-              Text(role),
+              if (showName)
+                Text(
+                  person.name,
+                  maxLines: 3,
+                  textAlign: TextAlign.center,
+                ),
+              if (showName) Text(role),
             ],
           ),
         ),

@@ -12,8 +12,8 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
+import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -294,7 +294,7 @@ class _TranscriptViewState extends State<TranscriptView> {
                             queueSnapshot.data?.playing != null &&
                             queueSnapshot.data!.playing!.persons.isNotEmpty)
                           Container(
-                            padding: const EdgeInsets.only(left: 16.0),
+                            padding: const EdgeInsets.only(left: 0.0),
                             width: double.infinity,
                             height: 72.0,
                             child: ListView.builder(
@@ -312,21 +312,13 @@ class _TranscriptViewState extends State<TranscriptView> {
                                     selected = true;
                                   }
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4.0),
-                                      decoration: BoxDecoration(
-                                          color: selected ? Colors.orange : Colors.transparent, shape: BoxShape.circle),
-                                      child: CircleAvatar(
-                                        radius: 28,
-                                        backgroundImage: ExtendedImage.network(
-                                          person.image!,
-                                          cache: true,
-                                        ).image,
-                                        child: const Text(''),
-                                      ),
-                                    ),
+                                  return PersonAvatar(
+                                    padding: const EdgeInsets.all(4.0),
+                                    person: person,
+                                    width: 80,
+                                    radius: 28,
+                                    showName: false,
+                                    highlight: selected,
                                   );
                                 }),
                           ),
