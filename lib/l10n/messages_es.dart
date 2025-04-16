@@ -184,6 +184,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('Tema del sistema'),
     'settings_theme_value_dark': MessageLookupByLibrary.simpleMessage('Tema oscuro'),
     'settings_theme_value_light': MessageLookupByLibrary.simpleMessage('Tema ligero'),
+    'share_episode_option_label': MessageLookupByLibrary.simpleMessage('Compartir episodio'),
+    'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Compartir podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Mostrar notas'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Fin del episodio'),
     'sleep_minute_label': m0,

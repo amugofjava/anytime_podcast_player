@@ -2,14 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// Returns the storage directory for the current platform.
 ///
@@ -137,4 +140,28 @@ Future<String> resolveUrl(String url, {bool forceHttps = false}) async {
   }
 
   return uri.toString();
+}
+
+Future<void> sharePodcast({required Podcast podcast}) async {
+  var url = base64UrlEncode(utf8.encode(podcast.url));
+
+  /// Manually remove padding. Required to work with episodes.fm
+  url = url.replaceAll('=', '');
+
+  final link = '${podcast.title}\n\nhttps://episodes.fm/$url';
+
+  await Share.share(link);
+}
+
+Future<void> shareEpisode({required Episode episode}) async {
+  var podcastId = base64UrlEncode(utf8.encode(episode.pguid ?? ''));
+  var episodeId = base64UrlEncode(utf8.encode(episode.guid));
+
+  /// Manually remove padding. Required to work with episodes.fm
+  podcastId = podcastId.replaceAll('=', '');
+  episodeId = episodeId.replaceAll('=', '');
+
+  final link = '${episode.title}\n\nhttps://episodes.fm/$podcastId/episode/$episodeId';
+
+  await Share.share(link);
 }
