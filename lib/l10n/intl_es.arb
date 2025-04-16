@@ -695,21 +695,21 @@
     "placeholders_order": [],
     "placeholders": {}
    },
-   "semantics_layout_option_list": "Lista de diseño.",
+   "semantics_layout_option_list": "Diseño en lista",
    "@semantics_layout_option_list": {
      "description": "Describes list layout button",
      "type": "text",
      "placeholders_order": [],
      "placeholders": {}
    },
-   "semantics_layout_option_compact_grid": "Diseño de cuadrícula compacta.",
+   "semantics_layout_option_compact_grid": "Diseño encuadrícula compacta",
    "@semantics_layout_option_compact_grid": {
      "description": "Describes compact grid layout button",
      "type": "text",
      "placeholders_order": [],
      "placeholders": {}
    },
-   "semantics_layout_option_grid": "Diseño de cuadrícula.",
+   "semantics_layout_option_grid": "Diseño en cuadrícula",
    "@semantics_layout_option_grid": {
      "description": "Describes grid layout button",
      "type": "text",
@@ -853,7 +853,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "feedback_menu_item_label": "Comentarios",
+  "feedback_menu_item_label": "Envíar comentarios",
   "@feedback_menu_item_label": {
     "description": "Feedback option in main menu",
     "type": "text",
@@ -909,7 +909,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "episode_filter_none_label": "Ninguno",
+  "episode_filter_none_label": "Sin filtro",
   "@episode_filter_none_label": {
     "description": "Episodes not filtered",
     "type": "text",
