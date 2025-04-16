@@ -1,7 +1,7 @@
 ## Anytime Podcast Player
 
-This is the official repository for the Anytime Podcast Player - the simple Podcast playing app for
-Android & iOS, built with Dart & Flutter.
+This is the official repository for Anytime Podcast Player - the simple and easy to use Podcast playing 
+app for Android & iOS, built with Dart & Flutter.
 ***
 Latest build status
 
@@ -15,13 +15,13 @@ Latest build status
 
 ## Getting Started
 
-Anytime is currently at v1.3.x and is built against Flutter 3.16.5+. View
-the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to
-see what is currently being worked on.
+Anytime is currently at v1.3.x and is built against Flutter 3.29.2+. View
+the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to see what is
+currently being worked on.
 
 The official website can be found at [https://anytimeplayer.app](https://anytimeplayer.app)
 
-#### Testers
+### Testers
 
 If you would like to help test Anytime please click the image below to head over to the Play Store,
 or Amazon App Store.
@@ -37,7 +37,7 @@ I would really appreciate all feedback - positive and negative - as it both help
 and prioritise new features. You can reach me
 at [hello@anytimeplayer.app](mailto:hello@anytimeplayer.app).
 
-#### Building from source
+### Building from source
 
 If you do not already have the Flutter SDK installed, follow the instructions from the
 Flutter site [here](https://flutter.dev/docs/get-started/install).
@@ -66,7 +66,7 @@ Or build:
 flutter build apk
 ```
 
-#### Search Engines
+### Search Engines
 
 Anytime can search for podcasts via iTunes and PodcastIndex. To use PodcastIndex, first create
 an account at [https://podcastindex.org](https://podcastindex.org). This will generate the required
@@ -126,6 +126,14 @@ Anytime takes a layered approach:
   and other services.
 * API - Interacts with the iTunes API (via a package) to fetch and parse podcast data.
 * Repository - Provides persistent storage.
+
+## Supporting
+
+Anytime is free and open source software. If you would like to help support the development of Anytime,
+please consider donating a tea. Anytime is fuelled by caffeine! Please checkout the 
+GitHub [sponsors](https://github.com/sponsors/amugofjava) link or my [ko-fi](https://ko-fi.com/amugofjava) page.
+
+<a href='https://ko-fi.com/amugofjava'><img alt="Support me on ko-fi" height="128" src="docs/kofi.jpg"/></a>
 
 ## Contributing
 
