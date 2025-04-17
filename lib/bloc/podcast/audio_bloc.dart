@@ -115,14 +115,14 @@ class AudioBloc extends Bloc {
 
   /// Setup a listener for episode requests and then connect to the
   /// underlying audio service.
-  void _handleEpisodeRequests() async {
+  Future<void> _handleEpisodeRequests() async {
     _play.listen((episode) {
       audioPlayerService.playEpisode(episode: episode!, resume: true);
     });
   }
 
   /// Listen for requests to change the position of the current episode.
-  void _handlePositionTransitions() async {
+  Future<void> _handlePositionTransitions() async {
     _transitionPosition.listen((pos) async {
       await audioPlayerService.seek(position: pos.ceil());
     });
@@ -167,15 +167,15 @@ class AudioBloc extends Bloc {
   }
 
   @override
-  void pause() async {
+  Future<void> pause() async {
     log.fine('Audio lifecycle pause');
     await audioPlayerService.suspend();
   }
 
   @override
-  void resume() async {
+  Future<void> resume() async {
     log.fine('Audio lifecycle resume');
-    var ep = await audioPlayerService.resume();
+    final ep = await audioPlayerService.resume();
 
     if (ep != null) {
       log.fine('Resuming with episode ${ep.title} - ${ep.position} - ${ep.played}');

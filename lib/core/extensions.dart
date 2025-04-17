@@ -43,7 +43,7 @@ extension ExtString on String? {
 
 extension ExtDouble on double {
   double get toTenth {
-    var mod = pow(10.0, 1).toDouble();
-    return ((this * mod).round().toDouble() / mod);
+    final mod = pow(10.0, 1).toDouble();
+    return (this * mod).round().toDouble() / mod;
   }
 }

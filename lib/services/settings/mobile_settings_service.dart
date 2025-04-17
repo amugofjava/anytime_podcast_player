@@ -75,12 +75,12 @@ class MobileSettingsService extends SettingsService {
 
   @override
   double get playbackSpeed {
-    var speed = _sharedPreferences.getDouble('speed') ?? 1.0;
+    final speed = _sharedPreferences.getDouble('speed') ?? 1.0;
 
     // We used to use 0.25 increments and now we use 0.1. Round
     // any setting that uses the old 0.25.
-    var mod = pow(10.0, 1).toDouble();
-    return ((speed * mod).round().toDouble() / mod);
+    final mod = pow(10.0, 1).toDouble();
+    return (speed * mod).round().toDouble() / mod;
   }
 
   @override

@@ -11,7 +11,7 @@ import 'package:podcast_search/podcast_search.dart' as pslib;
 /// TODO: Make this more generic so it's not tied to podcast_search
 abstract class PodcastApi {
   /// Search for podcasts matching the search criteria. Returns a
-  /// [SearchResult] instance.
+  /// [pslib.SearchResult] instance.
   Future<pslib.SearchResult> search(
     String term, {
     String? country,

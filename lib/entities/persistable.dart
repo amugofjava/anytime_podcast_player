@@ -51,7 +51,7 @@ class Persistable {
   }
 
   static Persistable fromMap(Map<String, dynamic> persistable) {
-    var stateString = persistable['state'] as String?;
+    final stateString = persistable['state'] as String?;
     var state = LastState.none;
 
     if (stateString != null) {
@@ -68,7 +68,7 @@ class Persistable {
       }
     }
 
-    var lastUpdated = persistable['lastUpdated'] as int?;
+    final lastUpdated = persistable['lastUpdated'] as int?;
 
     return Persistable(
       pguid: persistable['pguid'] as String,

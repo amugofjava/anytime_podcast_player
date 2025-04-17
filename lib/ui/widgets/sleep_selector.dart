@@ -28,7 +28,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final settingsBloc = Provider.of<SettingsBloc>(context);
-    var theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
@@ -50,7 +50,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                       var sl = '';
 
                       if (sleepSnapshot.hasData) {
-                        var s = sleepSnapshot.data!;
+                        final s = sleepSnapshot.data!;
 
                         switch(s.type) {
                           case SleepType.none:
@@ -108,8 +108,8 @@ class SleepSlider extends StatefulWidget {
       return '0$n';
     }
 
-    var twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).toInt());
-    var twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).toInt());
+    final twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    final twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
 
     return '${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds';
   }
@@ -127,7 +127,7 @@ class _SleepSliderState extends State<SleepSlider> {
         stream: audioBloc.sleepStream,
         initialData: Sleep(type: SleepType.none),
         builder: (context, snapshot) {
-          var s = snapshot.data;
+          final s = snapshot.data;
 
           return Column(
               mainAxisSize: MainAxisSize.min,
