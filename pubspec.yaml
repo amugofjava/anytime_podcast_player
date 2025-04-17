@@ -8,7 +8,7 @@ environment:
   flutter: 3.29.2
 
 dependencies:
-  accessibility_tools: ^2.3.0
+  accessibility_tools: ^2.4.1
   app_links: ^6.3.0
   auto_size_text: ^3.0.0
   audio_service: ^0.18.18
