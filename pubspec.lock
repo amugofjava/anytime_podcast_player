@@ -926,10 +926,10 @@ packages:
     dependency: "direct main"
     description:
       name: sembast
-      sha256: "9026ea34aa3a0f26a966529ef80b57b6fe40f810cadeadd1b208202d1bf153e7"
+      sha256: d3f0d0ba501a5f1fd7d6c8532ee01385977c8a069c334635dae390d059ae3d6d
       url: "https://pub.dev"
     source: hosted
-    version: "3.8.3"
+    version: "3.8.5"
   share_plus:
     dependency: "direct main"
     description:
