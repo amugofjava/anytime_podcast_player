@@ -225,6 +225,6 @@ abstract class PodcastService {
   Future<List<Episode>> loadQueue();
 
   /// Event listeners
-  Stream<Podcast?>? podcastListener;
-  Stream<EpisodeState>? episodeListener;
+  late Stream<Podcast?> podcastListener;
+  late Stream<EpisodeState> episodeListener;
 }

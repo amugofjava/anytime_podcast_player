@@ -274,7 +274,7 @@ void main() {
     test('Podcast stream', () async {
       await persistenceService!.savePodcast(podcast1);
 
-      persistenceService!.podcastListener!.listen(
+      persistenceService!.podcastListener.listen(
         expectAsync1(
           (event) {
             expect(event, podcast1);
@@ -293,7 +293,7 @@ void main() {
 
       await persistenceService!.saveEpisode(episode);
 
-      persistenceService!.episodeListener!.listen(
+      persistenceService!.episodeListener.listen(
         expectAsync1(
           (event) {
             expect(event.episode, episode);

@@ -7,6 +7,7 @@ import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
@@ -125,113 +126,119 @@ class EpisodeToolBar extends StatelessWidget {
     final episodeBloc = Provider.of<EpisodeBloc>(context);
     final queueBloc = Provider.of<QueueBloc>(context);
 
-    return StreamBuilder<QueueState>(
-        stream: queueBloc.queue,
-        initialData: QueueEmptyState(),
-        builder: (context, queueSnapshot) {
-          final data = queueSnapshot.data!;
-          final queued = queueSnapshot.data!.queue.any((element) => element.guid == episode.guid);
+    return StreamBuilder<EpisodeState>(
+      stream: episodeBloc.episodeListener.where((e) => e.episode.guid == episode.guid),
+      initialData: EpisodeUpdateState(episode),
+      builder: (context, episodeSnapshot) {
+        return StreamBuilder<QueueState>(
+            stream: queueBloc.queue,
+            initialData: QueueEmptyState(),
+            builder: (context, queueSnapshot) {
+              final data = queueSnapshot.data!;
+              final queued = queueSnapshot.data!.queue.any((element) => element.guid == episode.guid);
 
-          return Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(
-                    Icons.delete_outline,
-                    semanticLabel: L.of(context)!.delete_episode_button_label,
-                    size: 20,
-                  ),
-                  onPressed: episode.downloaded
-                      ? () {
-                          showPlatformDialog<void>(
-                            context: context,
-                            useRootNavigator: false,
+              return Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        Icons.delete_outline,
+                        semanticLabel: L.of(context)!.delete_episode_button_label,
+                        size: 20,
+                      ),
+                      onPressed: episodeSnapshot.data!.episode.downloaded
+                          ? () {
+                              showPlatformDialog<void>(
+                                context: context,
+                                useRootNavigator: false,
 
-                            /// TODO: Extract to own delete dialog for reuse
-                            builder: (_) => BasicDialogAlert(
-                              title: Text(
-                                L.of(context)!.delete_episode_title,
-                              ),
-                              content: Text(L.of(context)!.delete_episode_confirmation),
-                              actions: <Widget>[
-                                BasicDialogAction(
-                                  title: ActionText(
-                                    L.of(context)!.cancel_button_label,
+                                /// TODO: Extract to own delete dialog for reuse
+                                builder: (_) => BasicDialogAlert(
+                                  title: Text(
+                                    L.of(context)!.delete_episode_title,
                                   ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
+                                  content: Text(L.of(context)!.delete_episode_confirmation),
+                                  actions: <Widget>[
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        L.of(context)!.cancel_button_label,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        L.of(context)!.delete_button_label,
+                                      ),
+                                      iosIsDefaultAction: true,
+                                      iosIsDestructiveAction: true,
+                                      onPressed: () {
+                                        episodeBloc.deleteDownload(episode);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                BasicDialogAction(
-                                  title: ActionText(
-                                    L.of(context)!.delete_button_label,
-                                  ),
-                                  iosIsDefaultAction: true,
-                                  iosIsDestructiveAction: true,
-                                  onPressed: () {
-                                    episodeBloc.deleteDownload(episode);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      : null,
+                              );
+                            }
+                          : null,
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
+                        semanticLabel:
+                            queued ? L.of(context)!.semantics_remove_from_queue : L.of(context)!.semantics_add_to_queue,
+                        size: 20,
+                      ),
+                      onPressed: data.playing?.guid == episodeSnapshot.data!.episode.guid
+                          ? null
+                          : () {
+                              if (queued) {
+                                queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
+                              } else {
+                                queueBloc.queueEvent(QueueAddEvent(episode: episode));
+                              }
+                            },
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        episodeSnapshot.data!.episode.played ? Icons.unpublished_outlined : Icons.check_circle_outline,
+                        semanticLabel: data.playing?.played ?? false
+                            ? L.of(context)!.mark_unplayed_label
+                            : L.of(context)!.mark_played_label,
+                        size: 20,
+                      ),
+                      onPressed: data.playing?.played ?? false
+                          ? null
+                          : () {
+                              episodeBloc.togglePlayed(episode);
+                            },
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        Icons.share_outlined,
+                        semanticLabel: L.of(context)!.delete_episode_button_label,
+                        size: 20,
+                      ),
+                      onPressed: episode.guid.isEmpty
+                          ? null
+                          : () {
+                              _shareEpisode();
+                            },
+                    ),
+                  ],
                 ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(
-                    queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
-                    semanticLabel:
-                        queued ? L.of(context)!.semantics_remove_from_queue : L.of(context)!.semantics_add_to_queue,
-                    size: 20,
-                  ),
-                  onPressed: data.playing?.guid == episode.guid
-                      ? null
-                      : () {
-                          if (queued) {
-                            queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
-                          } else {
-                            queueBloc.queueEvent(QueueAddEvent(episode: episode));
-                          }
-                        },
-                ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(
-                    data.playing?.played ?? false ? Icons.unpublished_outlined : Icons.check_circle_outline,
-                    semanticLabel: data.playing?.played ?? false
-                        ? L.of(context)!.mark_unplayed_label
-                        : L.of(context)!.mark_played_label,
-                    size: 20,
-                  ),
-                  onPressed: data.playing?.played ?? false
-                      ? null
-                      : () {
-                          episodeBloc.togglePlayed(episode);
-                        },
-                ),
-                IconButton(
-                  visualDensity: VisualDensity.compact,
-                  icon: Icon(
-                    Icons.share_outlined,
-                    semanticLabel: L.of(context)!.delete_episode_button_label,
-                    size: 20,
-                  ),
-                  onPressed: episode.guid.isEmpty
-                      ? null
-                      : () {
-                          _shareEpisode();
-                        },
-                ),
-              ],
-            ),
-          );
-        });
+              );
+            });
+      }
+    );
   }
 
   void _shareEpisode() async {

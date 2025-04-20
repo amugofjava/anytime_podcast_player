@@ -1,8 +1,6 @@
 // Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'dart:convert';
-
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/feed.dart';
@@ -12,7 +10,6 @@ import 'package:anytime/state/bloc_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This class is responsible for rendering the context menu on the podcast details
@@ -114,7 +111,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
                 const PopupMenuDivider(),
                 PopupMenuItem<String>(
                   value: 'sharepod',
-                  enabled: podcast.subscribed,
+                  enabled: true,
                   child: Row(
                     children: [
                       const Padding(
@@ -227,14 +224,7 @@ class _CupertinoContextMenu extends StatelessWidget {
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
                       onPressed: () async {
-                        var url = base64UrlEncode(utf8.encode(podcast.url));
-
-                        /// Manually remove padding. Required to work with episodes.fm
-                        url = url.replaceAll('=', '');
-
-                        final link = '${podcast.title}\n\nhttps://episodes.fm/$url';
-
-                        await Share.share(link);
+                        await sharePodcast(podcast: podcast);
 
                         if (context.mounted) {
                           Navigator.pop(context, 'Cancel');
