@@ -400,7 +400,7 @@ class L {
   String get mark_episodes_not_played_label {
     return message('mark_episodes_not_played_label') ??
         Intl.message(
-          'Mark all episodes as not played',
+          'Mark all episodes as unplayed',
           name: 'mark_episodes_not_played_label',
           desc: 'Mark all episodes not played menu item',
           locale: localeName,
@@ -1774,6 +1774,26 @@ class L {
           'Automatically play the next episode in the podcast if the queue is empty',
           name: 'settings_continuous_play_subtitle',
           desc: 'Continuous play toggle switch subtitle',
+          locale: localeName,
+        );
+  }
+
+  String get share_podcast_option_label {
+    return message('share_podcast_option_label') ??
+        Intl.message(
+          'Share podcast',
+          name: 'share_podcast_option_label',
+          desc: 'Context menu option to share the current podcast',
+          locale: localeName,
+        );
+  }
+
+  String get share_episode_option_label {
+    return message('share_episode_option_label') ??
+        Intl.message(
+          'Share episode',
+          name: 'share_episode_option_label',
+          desc: 'Context menu option to share the current podcast episode',
           locale: localeName,
         );
   }

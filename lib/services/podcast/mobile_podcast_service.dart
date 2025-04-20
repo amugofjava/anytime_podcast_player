@@ -738,10 +738,10 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
-  Stream<Podcast?>? get podcastListener => repository.podcastListener;
+  Stream<Podcast?> get podcastListener => repository.podcastListener;
 
   @override
-  Stream<EpisodeState>? get episodeListener => repository.episodeListener;
+  Stream<EpisodeState> get episodeListener => repository.episodeListener;
 }
 
 /// A simple cache to reduce the number of network calls when loading podcast

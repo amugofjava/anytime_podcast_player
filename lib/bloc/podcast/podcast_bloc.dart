@@ -288,7 +288,7 @@ class PodcastBloc extends Bloc {
 
   /// Listen to episode change events sent by the [Repository]
   void _listenEpisodeRepositoryEvents() {
-    podcastService.episodeListener!.listen((state) {
+    podcastService.episodeListener.listen((state) {
       // Do we have this episode?
       var eidx = _episodes.indexWhere((e) => e.guid == state.episode.guid && e.pguid == state.episode.pguid);
 

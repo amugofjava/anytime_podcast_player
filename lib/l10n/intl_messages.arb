@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2025-03-14T14:51:16.443908",
+  "@@last_modified": "2025-04-13T16:56:42.612402",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -216,7 +216,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_episodes_not_played_label": "Mark all episodes as not played",
+  "mark_episodes_not_played_label": "Mark all episodes as unplayed",
   "@mark_episodes_not_played_label": {
     "description": "Mark all episodes not played menu item",
     "type": "text",
@@ -288,7 +288,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_theme_heading": "Select Theme",
+  "settings_theme_heading": "Choose theme behaviour",
   "@settings_theme_heading": {
     "description": "Choose theme behaviour",
     "type": "text",
@@ -1043,6 +1043,18 @@
   "settings_continuous_play_subtitle": "Automatically play the next episode in the podcast if the queue is empty",
   "@settings_continuous_play_subtitle": {
     "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_podcast_option_label": "Share podcast",
+  "@share_podcast_option_label": {
+    "description": "Context menu option to share the current podcast",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_episode_option_label": "Share episode",
+  "@share_episode_option_label": {
+    "description": "Context menu option to share the current podcast episode",
     "type": "text",
     "placeholders": {}
   }

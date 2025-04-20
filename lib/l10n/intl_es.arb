@@ -1100,5 +1100,17 @@
     "description": "Continuous play toggle switch subtitle",
     "type": "text",
     "placeholders": {}
+  },
+  "share_podcast_option_label": "Compartir podcast",
+  "@share_podcast_option_label": {
+    "description": "Context menu option to share the current podcast",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_episode_option_label": "Compartir episodio",
+  "@share_episode_option_label": {
+    "description": "Context menu option to share the current podcast episode",
+    "type": "text",
+    "placeholders": {}
   }
 }

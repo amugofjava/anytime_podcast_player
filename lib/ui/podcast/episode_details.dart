@@ -2,13 +2,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/episode_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/episode_state.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
+import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:provider/provider.dart';
 
 /// This class renders the more info widget that is accessed from the 'more'
 /// button on an episode.
@@ -65,8 +74,12 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       style: Theme.of(context).textTheme.bodyMedium,
                     )),
                 const Divider(),
+                EpisodeToolBar(
+                  episode: episode,
+                ),
+                const Divider(),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -97,5 +110,138 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
             ),
           );
         });
+  }
+}
+
+class EpisodeToolBar extends StatelessWidget {
+  final Episode episode;
+
+  const EpisodeToolBar({
+    super.key,
+    required this.episode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final episodeBloc = Provider.of<EpisodeBloc>(context);
+    final queueBloc = Provider.of<QueueBloc>(context);
+
+    return StreamBuilder<EpisodeState>(
+      stream: episodeBloc.episodeListener.where((e) => e.episode.guid == episode.guid),
+      initialData: EpisodeUpdateState(episode),
+      builder: (context, episodeSnapshot) {
+        return StreamBuilder<QueueState>(
+            stream: queueBloc.queue,
+            initialData: QueueEmptyState(),
+            builder: (context, queueSnapshot) {
+              final data = queueSnapshot.data!;
+              final queued = queueSnapshot.data!.queue.any((element) => element.guid == episode.guid);
+
+              return Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        Icons.delete_outline,
+                        semanticLabel: L.of(context)!.delete_episode_button_label,
+                        size: 20,
+                      ),
+                      onPressed: episodeSnapshot.data!.episode.downloaded
+                          ? () {
+                              showPlatformDialog<void>(
+                                context: context,
+                                useRootNavigator: false,
+
+                                /// TODO: Extract to own delete dialog for reuse
+                                builder: (_) => BasicDialogAlert(
+                                  title: Text(
+                                    L.of(context)!.delete_episode_title,
+                                  ),
+                                  content: Text(L.of(context)!.delete_episode_confirmation),
+                                  actions: <Widget>[
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        L.of(context)!.cancel_button_label,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    BasicDialogAction(
+                                      title: ActionText(
+                                        L.of(context)!.delete_button_label,
+                                      ),
+                                      iosIsDefaultAction: true,
+                                      iosIsDestructiveAction: true,
+                                      onPressed: () {
+                                        episodeBloc.deleteDownload(episode);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          : null,
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        queued ? Icons.playlist_add_check_outlined : Icons.playlist_add_outlined,
+                        semanticLabel:
+                            queued ? L.of(context)!.semantics_remove_from_queue : L.of(context)!.semantics_add_to_queue,
+                        size: 20,
+                      ),
+                      onPressed: data.playing?.guid == episodeSnapshot.data!.episode.guid
+                          ? null
+                          : () {
+                              if (queued) {
+                                queueBloc.queueEvent(QueueRemoveEvent(episode: episode));
+                              } else {
+                                queueBloc.queueEvent(QueueAddEvent(episode: episode));
+                              }
+                            },
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        episodeSnapshot.data!.episode.played ? Icons.unpublished_outlined : Icons.check_circle_outline,
+                        semanticLabel: data.playing?.played ?? false
+                            ? L.of(context)!.mark_unplayed_label
+                            : L.of(context)!.mark_played_label,
+                        size: 20,
+                      ),
+                      onPressed: data.playing?.played ?? false
+                          ? null
+                          : () {
+                              episodeBloc.togglePlayed(episode);
+                            },
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: Icon(
+                        Icons.share_outlined,
+                        semanticLabel: L.of(context)!.delete_episode_button_label,
+                        size: 20,
+                      ),
+                      onPressed: episode.guid.isEmpty
+                          ? null
+                          : () {
+                              _shareEpisode();
+                            },
+                    ),
+                  ],
+                ),
+              );
+            });
+      }
+    );
+  }
+
+  void _shareEpisode() async {
+    await shareEpisode(episode: episode);
   }
 }

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/feed.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
@@ -58,8 +59,10 @@ class _MaterialPodcastMenu extends StatelessWidget {
         stream: bloc.details,
         builder: (context, snapshot) {
           return PopupMenuButton<String>(
+            position: PopupMenuPosition.under,
+            offset: Offset.fromDirection(135.0, 40.0),
             onSelected: (event) {
-              togglePlayed(value: event, bloc: bloc);
+              handleMenuActions(value: event, bloc: bloc);
             },
             icon: const Icon(
               Icons.more_vert,
@@ -69,24 +72,69 @@ class _MaterialPodcastMenu extends StatelessWidget {
                 PopupMenuItem<String>(
                   value: 'ma',
                   enabled: podcast.subscribed,
-                  child: Text(L.of(context)!.mark_episodes_played_label),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.mark_chat_read_outlined, size: 18.0),
+                      ),
+                      Text(L.of(context)!.mark_episodes_played_label),
+                    ],
+                  ),
                 ),
                 PopupMenuItem<String>(
                   value: 'ua',
                   enabled: podcast.subscribed,
-                  child: Text(L.of(context)!.mark_episodes_not_played_label),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.mark_chat_unread_outlined, size: 18.0),
+                      ),
+                      Text(L.of(context)!.mark_episodes_not_played_label),
+                    ],
+                  ),
                 ),
-                const PopupMenuDivider(),
                 PopupMenuItem<String>(
                   value: 'refresh',
                   enabled: podcast.link?.isNotEmpty ?? false,
-                  child: Text(L.of(context)!.refresh_feed_label),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.refresh, size: 18.0),
+                      ),
+                      Text(L.of(context)!.refresh_feed_label),
+                    ],
+                  ),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem<String>(
+                  value: 'sharepod',
+                  enabled: true,
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.share_outlined, size: 18.0),
+                      ),
+                      Text(L.of(context)!.share_podcast_option_label),
+                    ],
+                  ),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem<String>(
                   value: 'web',
                   enabled: podcast.link?.isNotEmpty ?? false,
-                  child: Text(L.of(context)!.open_show_website_label),
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(right: 8.0),
+                        child: Icon(Icons.public_outlined, size: 18.0),
+                      ),
+                      Text(L.of(context)!.open_show_website_label),
+                    ],
+                  ),
                 ),
               ];
             },
@@ -94,7 +142,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
         });
   }
 
-  void togglePlayed({
+  void handleMenuActions({
     required String value,
     required PodcastBloc bloc,
   }) async {
@@ -116,6 +164,8 @@ class _MaterialPodcastMenu extends StatelessWidget {
       )) {
         throw Exception('Could not launch $uri');
       }
+    } else if (value == 'sharepod') {
+      await sharePodcast(podcast: podcast);
     }
   }
 }
@@ -170,6 +220,17 @@ class _CupertinoContextMenu extends StatelessWidget {
                         }
                       },
                       child: Text(L.of(context)!.refresh_feed_label),
+                    ),
+                    CupertinoActionSheetAction(
+                      isDefaultAction: true,
+                      onPressed: () async {
+                        await sharePodcast(podcast: podcast);
+
+                        if (context.mounted) {
+                          Navigator.pop(context, 'Cancel');
+                        }
+                      },
+                      child: Text(L.of(context)!.share_podcast_option_label),
                     ),
                     CupertinoActionSheetAction(
                       isDefaultAction: true,
