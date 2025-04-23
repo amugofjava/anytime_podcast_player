@@ -25,7 +25,7 @@ class SearchProviderWidget extends StatefulWidget {
 class _SearchProviderWidgetState extends State<SearchProviderWidget> {
   @override
   Widget build(BuildContext context) {
-    var settingsBloc = Provider.of<SettingsBloc>(context);
+    final settingsBloc = Provider.of<SettingsBloc>(context);
 
     return StreamBuilder<AppSettings>(
         stream: settingsBloc.settings,
@@ -58,15 +58,13 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                         title: const Text('iTunes'),
                                         value: 'itunes',
                                         dense: true,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                        contentPadding: EdgeInsets.zero,
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {
                                             settingsBloc.setSearchProvider(value ?? 'itunes');
 
-                                            if (widget.onChanged != null) {
-                                              widget.onChanged!(value);
-                                            }
+                                            widget.onChanged?.call(value);
 
                                             Navigator.pop(context);
                                           });
@@ -76,22 +74,20 @@ class _SearchProviderWidgetState extends State<SearchProviderWidget> {
                                         title: const Text('PodcastIndex'),
                                         value: 'podcastindex',
                                         dense: true,
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                        contentPadding: EdgeInsets.zero,
                                         groupValue: snapshot.data!.searchProvider,
                                         onChanged: (String? value) {
                                           setState(() {
                                             settingsBloc.setSearchProvider(value ?? 'podcastindex');
 
-                                            if (widget.onChanged != null) {
-                                              widget.onChanged!(value);
-                                            }
+                                            widget.onChanged?.call(value);
 
                                             Navigator.pop(context);
                                           });
                                         },
                                       ),
                                       SimpleDialogOption(
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                                         // child: Text(L.of(context)!.close_button_label),
                                         child: Align(
                                           alignment: Alignment.centerRight,

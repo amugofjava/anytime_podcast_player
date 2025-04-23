@@ -32,6 +32,7 @@ import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
@@ -53,8 +54,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../services/settings/settings_service.dart';
 
 var theme = Themes.lightTheme().themeData;
 
@@ -128,7 +127,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         /// As we add new themes, we will move this selection into its own theme module.
         switch (event.theme) {
           case 'system':
-            var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+            final brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
             newTheme = brightness == Brightness.dark ? Themes.darkTheme().themeData : Themes.lightTheme().themeData;
             break;
           case 'light':
@@ -263,7 +262,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   /// We listen to external links from outside the app. For example, someone may navigate
   /// to a web page that supports 'Open with Anytime'.
-  void _setupLinkListener() async {
+  Future<void> _setupLinkListener() async {
     final appLinks = AppLinks(); // AppLinks is singleton
 
     // Subscribe to all events (initial link and further)
@@ -275,12 +274,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   /// This method handles the actual link supplied from [uni_links], either
   /// at app startup or during running.
-  void _handleLinkEvent(Uri uri) async {
+  Future<void> _handleLinkEvent(Uri uri) async {
     if ((uri.scheme == 'anytime-subscribe' || uri.scheme == 'https') &&
         (uri.query.startsWith('uri=') || uri.query.startsWith('url='))) {
-      var path = uri.query.substring(4);
-      var loadPodcastBloc = Provider.of<PodcastBloc>(context, listen: false);
-      var routeName = NavigationRouteObserver().top!.settings.name;
+      final path = uri.query.substring(4);
+      final loadPodcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+      final routeName = NavigationRouteObserver().top!.settings.name;
 
       /// If we are currently on the podcast details page, we can simply request (via
       /// the BLoC) that we load this new URL. If not, we pop the stack until we are
@@ -294,7 +293,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       } else {
         /// Pop back to route.
         Navigator.of(context).popUntil((route) {
-          var currentRouteName = NavigationRouteObserver().top!.settings.name;
+          final currentRouteName = NavigationRouteObserver().top!.settings.name;
 
           return currentRouteName == null || currentRouteName == '' || currentRouteName == '/';
         });
@@ -323,15 +322,15 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecycleState.resume);
         if (context.mounted) {
-          SettingsService? settings = await MobileSettingsService.instance();
-          var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+          final SettingsService? settings = await MobileSettingsService.instance();
+          final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
           settingsBloc.theme(settings!.theme);
         }
         break;
@@ -484,7 +483,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             stream: pager.currentPage,
             initialData: 0,
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-              int index = snapshot.data ?? 0;
+              final int index = snapshot.data ?? 0;
 
               return BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
@@ -534,9 +533,9 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     }
   }
 
-  void _menuSelect(String choice) async {
-    var textFieldController = TextEditingController();
-    var podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+  Future<void> _menuSelect(String choice) async {
+    final textFieldController = TextEditingController();
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     final theme = Theme.of(context);
     var url = '';
 
@@ -646,7 +645,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     }
   }
 
-  void _launchFeedback() async {
+  Future<void> _launchFeedback() async {
     final uri = Uri.parse(feedbackUrl);
 
     if (!await launchUrl(
@@ -657,7 +656,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     }
   }
 
-  void _launchEmail() async {
+  Future<void> _launchEmail() async {
     final uri = Uri.parse('mailto:hello@anytimeplayer.app');
 
     if (await canLaunchUrl(uri)) {
