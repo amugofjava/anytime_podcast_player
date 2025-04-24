@@ -150,7 +150,9 @@ Future<void> sharePodcast({required Podcast podcast}) async {
 
   final link = '${podcast.title}\n\nhttps://episodes.fm/$url';
 
-  await Share.share(link);
+  await SharePlus.instance.share(
+    ShareParams(text: link),
+  );
 }
 
 Future<void> shareEpisode({required Episode episode}) async {
@@ -163,5 +165,7 @@ Future<void> shareEpisode({required Episode episode}) async {
 
   final link = '${episode.title}\n\nhttps://episodes.fm/$podcastId/episode/$episodeId';
 
-  await Share.share(link);
+  await SharePlus.instance.share(
+    ShareParams(text: link),
+  );
 }
