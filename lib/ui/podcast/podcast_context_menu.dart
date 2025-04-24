@@ -76,7 +76,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.mark_chat_read_outlined, size: 18.0),
+                        child: Icon(Icons.unpublished_outlined, size: 18.0),
                       ),
                       Text(L.of(context)!.mark_episodes_played_label),
                     ],
@@ -89,7 +89,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
                     children: [
                       const Padding(
                         padding: EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.mark_chat_unread_outlined, size: 18.0),
+                        child: Icon(Icons.check_circle_outline, size: 18.0),
                       ),
                       Text(L.of(context)!.mark_episodes_not_played_label),
                     ],

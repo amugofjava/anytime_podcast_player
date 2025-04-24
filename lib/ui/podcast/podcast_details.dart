@@ -577,6 +577,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     description = PodcastHtml(
       content: widget.podcast.description!,
       fontSize: FontSize.medium,
+      clipboard: false,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
