@@ -212,16 +212,14 @@ class EpisodeToolBar extends StatelessWidget {
                           episodeSnapshot.data!.episode.played
                               ? Icons.unpublished_outlined
                               : Icons.check_circle_outline,
-                          semanticLabel: data.playing?.played ?? false
+                          semanticLabel: episodeSnapshot.data!.episode.played
                               ? L.of(context)!.mark_unplayed_label
                               : L.of(context)!.mark_played_label,
                           size: 20,
                         ),
-                        onPressed: data.playing?.played ?? false
-                            ? null
-                            : () {
-                                episodeBloc.togglePlayed(episode);
-                              },
+                        onPressed: () {
+                          episodeBloc.togglePlayed(episode);
+                        },
                       ),
                       IconButton(
                         visualDensity: VisualDensity.compact,
