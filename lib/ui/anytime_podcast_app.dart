@@ -371,7 +371,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       actions: <Widget>[
                         IconButton(
                           tooltip: L.of(context)!.search_for_podcasts_hint,
-                          icon: const Icon(Icons.search),
+                          icon: Icon(
+                            Icons.search,
+                            semanticLabel: L.of(context)!.search_for_podcasts_hint,
+                          ),
                           onPressed: () async {
                             await Navigator.push(
                               context,
@@ -389,8 +392,9 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                         ),
                         PopupMenuButton<String>(
                           onSelected: _menuSelect,
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.more_vert,
+                            semanticLabel: L.of(context)!.podcast_options_overflow_menu_semantic_label,
                           ),
                           itemBuilder: (BuildContext context) {
                             return <PopupMenuEntry<String>>[

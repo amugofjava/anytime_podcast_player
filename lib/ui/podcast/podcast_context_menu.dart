@@ -64,8 +64,9 @@ class _MaterialPodcastMenu extends StatelessWidget {
             onSelected: (event) {
               handleMenuActions(value: event, bloc: bloc);
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.more_vert,
+              semanticLabel: L.of(context)!.podcast_options_overflow_menu_semantic_label,
             ),
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry<String>>[
