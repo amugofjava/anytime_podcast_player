@@ -86,7 +86,7 @@ class _MaterialFundingMenu extends StatelessWidget {
                       return PopupMenuItem<String>(
                         value: funding![index].url,
                         enabled: true,
-                        child: Text(funding![index].value),
+                        child: index == 0 ? Focus(child: Text(funding![index].value)) : Text(funding![index].value),
                       );
                     });
                   },

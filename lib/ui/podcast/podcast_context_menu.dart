@@ -73,14 +73,16 @@ class _MaterialPodcastMenu extends StatelessWidget {
                 PopupMenuItem<String>(
                   value: 'ma',
                   enabled: podcast.subscribed,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.unpublished_outlined, size: 18.0),
-                      ),
-                      Text(L.of(context)!.mark_episodes_played_label),
-                    ],
+                  child: Focus(
+                    child: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(right: 8.0),
+                          child: Icon(Icons.unpublished_outlined, size: 18.0),
+                        ),
+                        Text(L.of(context)!.mark_episodes_played_label),
+                      ],
+                    ),
                   ),
                 ),
                 PopupMenuItem<String>(
