@@ -119,33 +119,28 @@ class _CategorySelectorWidgetState extends State<CategorySelectorWidget> {
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, i) {
                       final item = snapshot.data![i];
-                      final padding = i == 0 ? 14.0 : 2.0;
+                      final padding = i == 0 ? 14.0 : 8.0;
+                      final isSelected = item == selectedCategory || (selectedCategory.isEmpty && i == 0);
 
                       return Container(
                         margin: EdgeInsets.only(left: padding),
-                        child: Card(
-                          color: item == selectedCategory || (selectedCategory.isEmpty && i == 0)
-                              ? Theme.of(context).cardTheme.shadowColor
-                              : Theme.of(context).cardTheme.color,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xffffffff),
-                              visualDensity: VisualDensity.compact,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                selectedCategory = item;
-                              });
+                        child: ChoiceChip(
+                          selected: isSelected,
+                          padding: const EdgeInsets.all(6.0),
+                          showCheckmark: true,
+                          onSelected: (_) {
+                            setState(() {
+                              selectedCategory = item;
+                            });
 
-                              widget.discoveryBloc.discover(DiscoveryChartEvent(
-                                count: Discovery.fetchSize,
-                                genre: item,
-                                countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
-                                languageCode: PlatformDispatcher.instance.locale.languageCode,
-                              ));
-                            },
-                            child: Text(item),
-                          ),
+                            widget.discoveryBloc.discover(DiscoveryChartEvent(
+                              count: Discovery.fetchSize,
+                              genre: item,
+                              countryCode: PlatformDispatcher.instance.locale.countryCode?.toLowerCase() ?? '',
+                              languageCode: PlatformDispatcher.instance.locale.languageCode,
+                            ));
+                          },
+                          label: Text(item),
                         ),
                       );
                     })
