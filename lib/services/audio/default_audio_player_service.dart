@@ -54,6 +54,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// The starting episode initiated by the user.
   Episode? _seedEpisode;
 
+  /// The next episode to play if continuous playback is enabled.
+  Episode? _nextEpisode;
+
   /// The currently 'processed' transcript;
   Transcript? _currentTranscript;
 
@@ -182,10 +185,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _currentEpisode = episode;
       _currentEpisode!.played = false;
 
-      if (fresh) {
-        _seedEpisode = episode;
-      }
-
       await repository.saveEpisode(_currentEpisode!);
 
       /// Update the state of the queue.
@@ -204,6 +203,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         _currentEpisode!.duration = _audioHandler.mediaItem.value?.duration?.inSeconds ?? 0;
 
         await repository.saveEpisode(_currentEpisode!);
+
+        if (fresh) {
+          _seedEpisode = episode;
+          _nextEpisode = await repository.findNextPlayableEpisode(_seedEpisode!);
+        }
       } catch (e) {
         log.fine('Error during playback');
         log.fine(e.toString());
@@ -562,10 +566,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       log.fine('Queue is empty so we will stop unless Autoplay ($autoPlay)');
 
       if (autoPlay && _seedEpisode != null) {
-        final nextEpisode = await repository.findNextPlayableEpisode(_seedEpisode!);
-
-        if (nextEpisode != null) {
-          playEpisode(episode: nextEpisode);
+        if (_nextEpisode != null) {
+          playEpisode(episode: _nextEpisode!);
         } else {
           _queue = <Episode>[];
           _currentEpisode = null;

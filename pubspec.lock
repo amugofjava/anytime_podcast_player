@@ -428,7 +428,7 @@ packages:
     source: hosted
     version: "0.14.2"
   flutter_layout_grid:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: flutter_layout_grid
       sha256: "88b4f8484a0874962e27c47733ad256aeb26acc694a9f029edbef771d301885a"
