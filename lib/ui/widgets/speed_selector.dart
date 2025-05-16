@@ -72,7 +72,8 @@ class _SpeedSelectorWidgetState extends State<SpeedSelectorWidget> {
                     child: Semantics(
                       button: true,
                       child: Text(
-                        semanticsLabel: '${L.of(context)!.playback_speed_label} ${snapshot.data!.playbackSpeed.toTenth}',
+                        semanticsLabel:
+                            '${L.of(context)!.playback_speed_label} ${snapshot.data!.playbackSpeed.toTenth}',
                         snapshot.data!.playbackSpeed == 1.0 ? 'x1' : 'x${snapshot.data!.playbackSpeed.toTenth}',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -118,124 +119,126 @@ class _SpeedSliderState extends State<SpeedSlider> {
     final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
     final theme = Theme.of(context);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const SliderHandle(),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-          child: Text(
-            L.of(context)!.audio_settings_playback_speed_label,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: Text(
-            '${speed.toStringAsFixed(1)}x',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: IconButton(
-                tooltip: L.of(context)!.semantics_decrease_playback_speed,
-                iconSize: 28.0,
-                icon: const Icon(Icons.remove_circle_outline),
-                onPressed: (speed <= 0.5)
-                    ? null
-                    : () {
-                        setState(() {
-                          speed -= 0.1;
-                          speed = speed.toTenth;
-                          audioBloc.playbackSpeed(speed);
-                          settingsBloc.setPlaybackSpeed(speed);
-                        });
-                      },
-              ),
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const SliderHandle(),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+            child: Text(
+              L.of(context)!.audio_settings_playback_speed_label,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-            Expanded(
-              flex: 4,
-              child: Slider(
-                value: speed.toTenth,
-                min: 0.5,
-                max: 2.0,
-                divisions: 15,
-                onChanged: (value) {
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Text(
+              '${speed.toStringAsFixed(1)}x',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: IconButton(
+                  tooltip: L.of(context)!.semantics_decrease_playback_speed,
+                  iconSize: 28.0,
+                  icon: const Icon(Icons.remove_circle_outline),
+                  onPressed: (speed <= 0.5)
+                      ? null
+                      : () {
+                          setState(() {
+                            speed -= 0.1;
+                            speed = speed.toTenth;
+                            audioBloc.playbackSpeed(speed);
+                            settingsBloc.setPlaybackSpeed(speed);
+                          });
+                        },
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Slider(
+                  value: speed.toTenth,
+                  min: 0.5,
+                  max: 2.0,
+                  divisions: 15,
+                  onChanged: (value) {
+                    setState(() {
+                      speed = value;
+                    });
+                  },
+                  onChangeEnd: (value) {
+                    audioBloc.playbackSpeed(speed);
+                    settingsBloc.setPlaybackSpeed(value);
+                  },
+                ),
+              ),
+              Expanded(
+                child: IconButton(
+                  tooltip: L.of(context)!.semantics_increase_playback_speed,
+                  iconSize: 28.0,
+                  icon: const Icon(Icons.add_circle_outline),
+                  onPressed: (speed > 1.9)
+                      ? null
+                      : () {
+                          setState(() {
+                            speed += 0.1;
+                            speed = speed.toTenth;
+                            audioBloc.playbackSpeed(speed);
+                            settingsBloc.setPlaybackSpeed(speed);
+                          });
+                        },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 8.0,
+          ),
+          const Divider(),
+          if (theme.platform == TargetPlatform.android) ...[
+            /// Disable the trim silence option for now until the positioning bug
+            /// in just_audio is resolved.
+            // ListTile(
+            //   title: Text(L.of(context).audio_effect_trim_silence_label),
+            //   trailing: Switch.adaptive(
+            //     value: trimSilence,
+            //     onChanged: (value) {
+            //       setState(() {
+            //         trimSilence = value;
+            //         audioBloc.trimSilence(value);
+            //         settingsBloc.trimSilence(value);
+            //       });
+            //     },
+            //   ),
+            // ),
+            ListTile(
+              title: Text(L.of(context)!.audio_effect_volume_boost_label),
+              trailing: Switch.adaptive(
+                value: volumeBoost,
+                onChanged: (boost) {
                   setState(() {
-                    speed = value;
+                    volumeBoost = boost;
+                    audioBloc.volumeBoost(boost);
+                    settingsBloc.volumeBoost(boost);
                   });
                 },
-                onChangeEnd: (value) {
-                  audioBloc.playbackSpeed(speed);
-                  settingsBloc.setPlaybackSpeed(value);
-                },
               ),
             ),
-            Expanded(
-              child: IconButton(
-                tooltip: L.of(context)!.semantics_increase_playback_speed,
-                iconSize: 28.0,
-                icon: const Icon(Icons.add_circle_outline),
-                onPressed: (speed > 1.9)
-                    ? null
-                    : () {
-                        setState(() {
-                          speed += 0.1;
-                          speed = speed.toTenth;
-                          audioBloc.playbackSpeed(speed);
-                          settingsBloc.setPlaybackSpeed(speed);
-                        });
-                      },
-              ),
+          ] else
+            const SizedBox(
+              width: 0.0,
+              height: 0.0,
             ),
-          ],
-        ),
-        const SizedBox(
-          height: 8.0,
-        ),
-        const Divider(),
-        if (theme.platform == TargetPlatform.android) ...[
-          /// Disable the trim silence option for now until the positioning bug
-          /// in just_audio is resolved.
-          // ListTile(
-          //   title: Text(L.of(context).audio_effect_trim_silence_label),
-          //   trailing: Switch.adaptive(
-          //     value: trimSilence,
-          //     onChanged: (value) {
-          //       setState(() {
-          //         trimSilence = value;
-          //         audioBloc.trimSilence(value);
-          //         settingsBloc.trimSilence(value);
-          //       });
-          //     },
-          //   ),
-          // ),
-          ListTile(
-            title: Text(L.of(context)!.audio_effect_volume_boost_label),
-            trailing: Switch.adaptive(
-              value: volumeBoost,
-              onChanged: (boost) {
-                setState(() {
-                  volumeBoost = boost;
-                  audioBloc.volumeBoost(boost);
-                  settingsBloc.volumeBoost(boost);
-                });
-              },
-            ),
-          ),
-        ] else
-          const SizedBox(
-            width: 0.0,
-            height: 0.0,
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
