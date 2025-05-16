@@ -67,8 +67,10 @@ class Podcast {
   /// Zero or more funding links.
   final List<Funding>? funding;
 
+  /// The currently applied episode filter.
   PodcastEpisodeFilter filter;
 
+  /// The currently applied episode sort.
   PodcastEpisodeSort sort;
 
   /// Date and time user subscribed to the podcast.
@@ -80,6 +82,7 @@ class Podcast {
   /// One or more episodes for this podcast.
   List<Episode> episodes;
 
+  /// List of persons associated at the podcast level.
   final List<Person>? persons;
 
   bool newEpisodes;

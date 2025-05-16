@@ -325,13 +325,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
 
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecycleState.resume);
         if (context.mounted) {
           SettingsService? settings = await MobileSettingsService.instance();
-          var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
           settingsBloc.theme(settings!.theme);
         }
         break;
