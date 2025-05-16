@@ -26,6 +26,7 @@ dependencies:
   flutter_html_table: ^3.0.0
   flutter_launcher_icons: ^0.14.2
   flutter_spinkit: ^5.0.0
+  html: ^0.15.6
   intl: ^0.19.0
   intl_translation: ^0.20.0
   just_audio: ^0.10.2
