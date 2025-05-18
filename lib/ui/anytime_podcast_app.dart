@@ -403,15 +403,17 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 PopupMenuItem<String>(
                                   textStyle: Theme.of(context).textTheme.titleMedium,
                                   value: 'feedback',
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 8.0),
-                                        child: Icon(Icons.feedback_outlined, size: 18.0),
-                                      ),
-                                      Text(L.of(context)!.feedback_menu_item_label),
-                                    ],
+                                  child: Focus(
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Icon(Icons.feedback_outlined, size: 18.0),
+                                        ),
+                                        Text(L.of(context)!.feedback_menu_item_label),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               PopupMenuItem<String>(
