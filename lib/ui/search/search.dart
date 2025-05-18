@@ -66,8 +66,15 @@ class _SearchState extends State<Search> {
             leading: IconButton(
               tooltip: L.of(context)!.search_back_button_label,
               icon: Platform.isAndroid
-                  ? Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor)
-                  : const Icon(Icons.arrow_back_ios),
+                  ? Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).appBarTheme.foregroundColor,
+                      semanticLabel: L.of(context)!.search_back_button_label,
+                    )
+                  : Icon(
+                      Icons.arrow_back_ios,
+                      semanticLabel: L.of(context)!.search_back_button_label,
+                    ),
               onPressed: () => Navigator.pop(context),
             ),
             title: TextField(
@@ -94,7 +101,10 @@ class _SearchState extends State<Search> {
             actions: <Widget>[
               IconButton(
                 tooltip: L.of(context)!.clear_search_button_label,
-                icon: const Icon(Icons.clear),
+                icon: Icon(
+                  Icons.clear,
+                  semanticLabel: L.of(context)!.clear_search_button_label,
+                ),
                 onPressed: () {
                   _searchController.clear();
                   FocusScope.of(context).requestFocus(_searchFocusNode);
