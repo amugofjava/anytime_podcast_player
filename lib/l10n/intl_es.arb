@@ -252,7 +252,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_sd_card_label": "Descargar episodios a  tarjeta SD",
+  "settings_download_sd_card_label": "Descargar episodios a tarjeta SD",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",
     "type": "text",
@@ -420,7 +420,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_heading": "Actualizar episodios en la pantalla de detalles después de...",
+  "settings_auto_update_episodes_heading": "Actualizar episodios en la pantalla de detalles después de",
   "@settings_auto_update_episodes_heading": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -480,7 +480,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "new_episodes_label": "Nuevos episodios disponibles.",
+  "new_episodes_label": "Nuevos episodios disponibles",
   "@new_episodes_label": {
     "description": "Option label for new episodes snackbar",
     "type": "text",
@@ -618,7 +618,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "queue_clear_label_title": "Limpiar lista de reproducción.",
+  "queue_clear_label_title": "Limpiar lista de reproducción",
   "@queue_clear_label_title": {
     "description": "Shown on dialog box when clearing queue",
     "type": "text",
@@ -659,13 +659,13 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "search_transcript_label": "Buscar transcripción",
-   "@search_transcript_label": {
-     "description": "Hint text for transcript search box",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "search_transcript_label": "Buscar transcripción",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "auto_scroll_transcript_label": "Seguir transcrpción",
   "@auto_scroll_transcript_label": {
@@ -687,36 +687,36 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
- },
+  },
   "semantics_podcast_details_header": "Página de detalles y episodios del podcast",
   "@semantics_podcast_details_header": {
     "description": "Describes podcast details page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "semantics_layout_option_list": "Diseño en lista",
-   "@semantics_layout_option_list": {
-     "description": "Describes list layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_compact_grid": "Diseño encuadrícula compacta",
-   "@semantics_layout_option_compact_grid": {
-     "description": "Describes compact grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_grid": "Diseño en cuadrícula",
-   "@semantics_layout_option_grid": {
-     "description": "Describes grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
   },
-  "semantics_mini_player_header": "Mini reproductor. Desliza a la derecha para el botón de reproducir/pausar. Activa para abrir la ventana del reproductor principal.",
+  "semantics_layout_option_list": "Diseño en lista",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Diseño encuadrícula compacta",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Diseño en cuadrícula",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mini_player_header": "Mini reproductor. Desliza a la derecha para el botón de reproducir/pausar. Activa para abrir la ventana del reproductor principal",
   "@semantics_mini_player_header": {
     "description": "Describes the mini player",
     "type": "text",
@@ -765,7 +765,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_add_to_queue": "Añadir episodio a  la lista de reproducción",
+  "semantics_add_to_queue": "Añadir episodio a la lista de reproducción",
   "@semantics_add_to_queue": {
     "description": "Describes add to queue button",
     "type": "text",
@@ -807,14 +807,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_collapsed_hint": "Expandir y mostrar más detalles y opciones adicionales.",
+  "semantics_episode_tile_collapsed_hint": "Expandir y mostrar más detalles y opciones adicionales",
   "@semantics_episode_tile_collapsed_hint": {
     "description": "Describes episode tile options when collapsed",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_episode_tile_expanded_hint": "Contraer y mostrar resumen, descarga y control de reproducción.",
+  "semantics_episode_tile_expanded_hint": "Contraer y mostrar resumen, descarga y control de reproducción",
   "@semantics_episode_tile_expanded_hint": {
     "description": "Describes episode tile options when expanded",
     "type": "text",
@@ -881,7 +881,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantic_playing_options_collapse_label": "Cerrar  control deslizante de opciones de reproducción",
+  "semantic_playing_options_collapse_label": "Cerrar control deslizante de opciones de reproducción",
   "@semantic_playing_options_collapse_label": {
     "description": "Placed on options handle when screen reader enabled.",
     "type": "text",
@@ -902,7 +902,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantic_current_chapter_label": "Episodio actual.",
+  "semantic_current_chapter_label": "Episodio actual",
   "@semantic_current_chapter_label": {
     "description": "Placed around chapter",
     "type": "text",
@@ -975,7 +975,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "episode_sort_earliest_first_label": "Más antiguos primero. ",
+  "episode_sort_earliest_first_label": "Más antiguos primero",
   "@episode_sort_earliest_first_label": {
     "description": "Episode earliest first sort",
     "type": "text",
@@ -1064,12 +1064,12 @@
     "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
-   },
-   "scrim_episode_details_selector": "Cerrar detalles del episodio",
-   "@scrim_episode_details_selector": {
-     "description": "Replaces default scrim label for episode details bottom sheet.",
-     "type": "text",
-     "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Cerrar detalles del episodio",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
   },
   "scrim_episode_sort_selector": "Cerrar orden de episodios",
   "@scrim_episode_sort_selector": {
