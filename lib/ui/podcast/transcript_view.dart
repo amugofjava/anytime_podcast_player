@@ -237,7 +237,10 @@ class _TranscriptViewState extends State<TranscriptView> {
                               contentPadding: const EdgeInsets.all(0.0),
                               prefixIcon: const Icon(Icons.search),
                               suffixIcon: IconButton(
-                                icon: const Icon(Icons.close),
+                                icon: Icon(
+                                  Icons.close,
+                                  semanticLabel: L.of(context)!.clear_search_button_label,
+                                ),
                                 onPressed: () {
                                   _transcriptSearchController.clear();
                                   audioBloc.filterTranscript(TranscriptClearEvent());
