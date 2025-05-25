@@ -1,6 +1,7 @@
 // Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'package:anytime/l10n/L.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,9 @@ class PlatformProgressIndicator extends StatelessWidget {
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
-        return const CircularProgressIndicator();
+        return CircularProgressIndicator(
+          semanticsLabel: L.of(context)!.semantic_announce_loading,
+        );
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
         return const CupertinoActivityIndicator();

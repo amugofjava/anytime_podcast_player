@@ -127,6 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'search_for_podcasts_hint': MessageLookupByLibrary.simpleMessage('Buscar podcasts'),
     'search_provider_label': MessageLookupByLibrary.simpleMessage('Motor de búsqueda'),
     'search_transcript_label': MessageLookupByLibrary.simpleMessage('Buscar transcripción'),
+    'semantic_announce_loading': MessageLookupByLibrary.simpleMessage('Cargando, por favor espere.'),
     'semantic_announce_searching': MessageLookupByLibrary.simpleMessage('Buscando, por favor espere.'),
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Enlace web del episodio'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Episodio actual.'),

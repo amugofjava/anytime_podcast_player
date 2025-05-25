@@ -127,6 +127,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'search_for_podcasts_hint': MessageLookupByLibrary.simpleMessage('Zoek naar podcasts'),
     'search_provider_label': MessageLookupByLibrary.simpleMessage('Zoekprovider'),
     'search_transcript_label': MessageLookupByLibrary.simpleMessage('Transcriptie zoeken'),
+    'semantic_announce_loading': MessageLookupByLibrary.simpleMessage('Bezig met laden. Even geduld.'),
     'semantic_announce_searching': MessageLookupByLibrary.simpleMessage('Bezig met zoeken even geduld aub.'),
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Hoofdstukweblink'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Huidig hoofdstuk'),

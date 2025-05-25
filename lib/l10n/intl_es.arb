@@ -1112,5 +1112,11 @@
     "description": "Context menu option to share the current podcast episode",
     "type": "text",
     "placeholders": {}
+  },
+  "semantic_announce_loading": "Cargando, por favor espere.",
+  "@semantic_announce_loading": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -1797,6 +1797,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get semantic_announce_loading {
+    return message('semantic_announce_loading') ??
+        Intl.message(
+          'Loading, please wait.',
+          name: 'semantic_announce_loading',
+          desc: 'Spoken when search in progress.',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
