@@ -109,7 +109,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                       ),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.0),
+                          color: Colors.white.withValues(alpha: 0.0),
                           border: Border(
                             bottom: draggableController != null &&
                                     (!draggableController!.isAttached || draggableController!.size <= minSize)
@@ -255,7 +255,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                 children: <Widget>[
                   DecoratedBox(
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.0),
+                      color: Colors.white.withValues(alpha: 0.0),
                       border: Border(
                         bottom: BorderSide(color: Colors.grey[800]!, width: 1.0),
                       ),
