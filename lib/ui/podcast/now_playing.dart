@@ -480,6 +480,7 @@ class NowPlayingTabs extends StatelessWidget {
                 icon: Icon(
                   Icons.keyboard_arrow_down,
                   color: Theme.of(context).primaryIconTheme.color,
+                  semanticLabel: L.of(context)!.minimise_player_window_button_label,
                 ),
                 onPressed: () => {
                   Navigator.pop(context),
