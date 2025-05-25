@@ -289,8 +289,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       if (routeName != null && routeName == 'podcastdetails') {
         loadPodcastBloc.load(Feed(
           podcast: Podcast.fromUrl(url: path),
-          backgroundFresh: false,
-          silently: false,
+          backgroundFetch: false,
+          errorSilently: false,
         ));
       } else {
         /// Pop back to route.

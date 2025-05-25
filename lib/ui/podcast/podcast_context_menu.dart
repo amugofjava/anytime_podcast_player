@@ -156,7 +156,7 @@ class _MaterialPodcastMenu extends StatelessWidget {
     } else if (value == 'refresh') {
       bloc.load(Feed(
         podcast: podcast,
-        refresh: true,
+        forceFetch: true,
       ));
     } else if (value == 'web') {
       final uri = Uri.parse(podcast.link!);
@@ -216,7 +216,7 @@ class _CupertinoContextMenu extends StatelessWidget {
                       onPressed: () {
                         bloc.load(Feed(
                           podcast: podcast,
-                          refresh: true,
+                          forceFetch: true,
                         ));
                         if (context.mounted) {
                           Navigator.pop(context, 'Cancel');

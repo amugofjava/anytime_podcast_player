@@ -65,15 +65,16 @@ class PodcastBloc extends Bloc {
   /// Receives subscription and mark/clear as played events.
   final PublishSubject<PodcastEvent> _podcastEvent = PublishSubject<PodcastEvent>();
 
+  /// Receives episode search events.
   final BehaviorSubject<String> _podcastSearchEvent = BehaviorSubject<String>();
 
+  /// A separate stream that allows us to listen to events from background loading of episodes.
   final BehaviorSubject<BlocState<void>> _backgroundLoadStream = BehaviorSubject<BlocState<void>>();
 
   Podcast? _podcast;
   List<Episode> _episodes = <Episode>[];
   String _searchTerm = '';
-  late Feed lastFeed;
-  bool first = true;
+  late Feed _lastFeed;
 
   PodcastBloc({
     required this.podcastService,
@@ -118,34 +119,38 @@ class PodcastBloc extends Bloc {
   void _listenPodcastLoad() async {
     _podcastFeed.listen((feed) async {
       var silent = false;
-      lastFeed = feed;
 
+      _lastFeed = feed;
       _episodes = [];
       _refresh();
 
       _podcastStream.sink.add(BlocLoadingState<Podcast>(feed.podcast));
 
       try {
-        await _loadEpisodes(feed, feed.refresh);
+        await _loadEpisodes(feed: feed, forceFetch: feed.forceFetch);
 
         /// Do we also need to perform a background refresh?
-        if (feed.podcast.id != null && feed.backgroundFresh && _shouldAutoRefresh()) {
-          silent = feed.silently;
+        if (feed.podcast.id != null && feed.backgroundFetch && _shouldAutoRefresh()) {
+          silent = feed.errorSilently;
+
           log.fine('Performing background refresh of ${feed.podcast.url}');
+
           _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
-          await _loadNewEpisodes(feed);
+          await _loadEpisodes(feed: feed, highlightNewEpisodes: true, forceFetch: true);
         }
 
         _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
-      } catch (e) {
+      } catch (e, s) {
         _backgroundLoadStream.sink.add(BlocDefaultState<void>());
 
         // For now we'll assume a network error as this is the most likely.
-        if ((_podcast == null || lastFeed.podcast.url == _podcast!.url) && !silent) {
+        if ((_podcast == null || _lastFeed.podcast.url == _podcast!.url) && !silent) {
           _podcastStream.sink.add(BlocErrorState<Podcast>());
+
           log.fine('Error loading podcast', e);
           log.fine(e);
+          log.fine(s);
         }
       }
     });
@@ -173,52 +178,65 @@ class PodcastBloc extends Bloc {
     return false;
   }
 
-  Future<void> _loadEpisodes(Feed feed, bool force) async {
-    _podcast = await podcastService.loadPodcast(
-      podcast: feed.podcast,
-      refresh: force,
-    );
+  Future<void> _loadEpisodes({
+    required Feed feed,
+    bool highlightNewEpisodes = false,
+    bool forceFetch = false,
+  }) async {
+    if (feed.podcast.id == null || forceFetch) {
+      log.fine('_loadEpisodes triggered');
 
-    /// Only populate episodes if the ID we started the load with is the
-    /// same as the one we have ended up with.
-    if (_podcast != null && _podcast?.url != null) {
-      if (lastFeed.podcast.url == _podcast!.url) {
-        _episodes = _podcast!.episodes;
-        _refresh();
+      final loadedPodcast = await podcastService.loadPodcast(
+        podcast: feed.podcast,
+        highlightNewEpisodes: highlightNewEpisodes,
+        refresh: feed.forceFetch,
+      );
 
-        _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+      /// Only populate episodes if the ID we started the load with is the
+      /// same as the one we have ended up with.
+      if (loadedPodcast != null) {
+        _podcast = loadedPodcast;
+
+        if (_lastFeed.podcast.url == _podcast?.url) {
+          log.fine('Fetching...');
+          _episodes = _podcast!.episodes;
+          _refresh();
+
+          /// If this is not a saved podcast, show all episodes. If we have new episodes,
+          /// show them. If we have updated episodes, re-display them.
+          if (feed.podcast.id == null) {
+            log.fine('Podcast ID is null');
+            _refresh();
+            _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+          } else {
+            log.fine('Any updates?');
+            if (_podcast!.newEpisodes) {
+              log.fine('We have new episodes to display');
+              _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
+              _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+            } else if (_podcast!.updatedEpisodes) {
+              log.fine('We have updated episodes to re-display');
+              _refresh();
+            }
+          }
+        }
+      } else if (feed.backgroundFetch) {
+        log.fine('Background loading successful state');
+        _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
       }
+    } else {
+      /// Load podcast from disk
+      _podcast = await podcastService.loadPodcastById(id: feed.podcast.id ?? 0);
+
+      _episodes = _podcast!.episodes;
+      _refresh();
+
+      _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
     }
   }
 
   void _refresh() {
     applySearchFilter();
-  }
-
-  Future<void> _loadNewEpisodes(Feed feed) async {
-    _podcast = await podcastService.loadPodcast(
-      podcast: feed.podcast,
-      highlightNewEpisodes: true,
-      refresh: true,
-    );
-
-    /// Only populate episodes if the ID we started the load with is the
-    /// same as the one we have ended up with.
-    if (_podcast != null && lastFeed.podcast.url == _podcast!.url) {
-      _episodes = _podcast!.episodes;
-
-      if (_podcast!.newEpisodes) {
-        log.fine('We have new episodes to display');
-        _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
-        _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
-      } else if (_podcast!.updatedEpisodes) {
-        log.fine('We have updated episodes to re-display');
-        _refresh();
-      }
-    }
-
-    log.fine('Background loading successful state');
-    _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
   }
 
   Future<void> _loadFilteredEpisodes() async {

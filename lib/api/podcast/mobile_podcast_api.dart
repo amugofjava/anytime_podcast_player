@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:anytime/api/podcast/podcast_api.dart';
 import 'package:anytime/core/environment.dart';
@@ -80,8 +81,13 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   @override
+  Future<DateTime?> feedLastUpdated(String url) async {
+    return Isolate.run(() => podcast_search.Feed.feedLastUpdated(url: url));
+  }
+
+  @override
   Future<podcast_search.Chapters> loadChapters(String url) async {
-    return podcast_search.Podcast.loadChaptersByUrl(url: url);
+    return podcast_search.Feed.loadChaptersByUrl(url: url);
   }
 
   @override
@@ -103,7 +109,7 @@ class MobilePodcastApi extends PodcastApi {
         break;
     }
 
-    return podcast_search.Podcast.loadTranscriptByUrl(
+    return podcast_search.Feed.loadTranscriptByUrl(
         transcriptUrl: podcast_search.TranscriptUrl(url: transcriptUrl.url, type: format));
   }
 
@@ -145,7 +151,7 @@ class MobilePodcastApi extends PodcastApi {
 
   Future<podcast_search.Podcast> _loadFeed(String url) {
     _setupSecurityContext();
-    return podcast_search.Podcast.loadFeed(url: url, userAgent: Environment.userAgent());
+    return podcast_search.Feed.loadFeed(url: url, userAgent: Environment.userAgent());
   }
 
   void _setupSecurityContext() {

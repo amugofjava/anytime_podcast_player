@@ -19,21 +19,21 @@ class Feed {
   /// The thumbnail artwork for the podcast,
   String? thumbImageUrl;
 
-  /// If true the podcast is loaded regardless of if it's currently cached.
-  bool refresh;
+  /// If true the podcast is loaded regardless of if it's currently cached or on disk.
+  bool forceFetch;
 
   /// If true, will also perform an additional background refresh.
-  bool backgroundFresh;
+  bool backgroundFetch;
 
   /// If true any error can be ignored.
-  bool silently;
+  bool errorSilently;
 
   Feed({
     required this.podcast,
     this.imageUrl,
     this.thumbImageUrl,
-    this.refresh = false,
-    this.backgroundFresh = false,
-    this.silently = false,
+    this.forceFetch = false,
+    this.backgroundFetch = false,
+    this.errorSilently = false,
   });
 }
