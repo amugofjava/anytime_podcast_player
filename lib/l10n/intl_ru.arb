@@ -855,5 +855,247 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
+  },
+  "unsubscribe_message": "При отмене подписки будут удалены все загруженные эпизоды этого подкаста.",
+  "@unsubscribe_message": {
+    "description": "Displayed when the user unsubscribes from a podcast.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewind_button_label": "Промотать выпуск на 10 секунд",
+  "@rewind_button_label": {
+    "description": "Rewind button tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fast_forward_button_label": "Промотать выпуск на 30 секунд",
+  "@fast_forward_button_label": {
+    "description": "Fast forward tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_confirmation": "Вы уверены, что хотите остановить скачивание и удалить выпуск?",
+  "@stop_download_confirmation": {
+    "description": "User is asked to confirm when they wish to stop the active download.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed": "Пункт списка выпусков. Отображает изображение, сводку и основные элементы управления.",
+  "@semantics_episode_tile_collapsed": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded": "Пункт списка выпусков. Отображает описание, основные и дополнительные элементы управления.",
+  "@semantics_episode_tile_expanded": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed_hint": "развернуть и показать больше подробностей и дополнительных опций",
+  "@semantics_episode_tile_collapsed_hint": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded_hint": "свернуть и показать только сводку, скачивание и управление воспроизведением",
+  "@semantics_episode_tile_expanded_hint": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_expand_label": "Открыть опции проигрывания с прокруткой",
+  "@semantic_playing_options_expand_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_collapse_label": "Закрыть опции проигрывания с прокруткой",
+  "@semantic_playing_options_collapse_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "Изображения подкаста",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "Веб ссылка на главу",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "episode_filter_started_label": "Начался",
+  "@episode_filter_started_label": {
+    "description": "Only show episodes that have been started",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_played_label": "Прослушано",
+  "@episode_filter_played_label": {
+    "description": "Only show episodes that have been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_unplayed_label": "Непрослушано",
+  "@episode_filter_unplayed_label": {
+    "description": "Only show episodes that have not been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_clear_filters_button_label": "Очистить фильтры",
+  "@episode_filter_clear_filters_button_label": {
+    "description": "Clear filters button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_semantic_label": "Отфильтровать выпуски",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "Сортировать выпуски",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "По умолчанию",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "Сначала ранние",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "По алфавиту А-Я",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "По алфавиту Я-А",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "Открыть вебсайт шоу",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "refresh_feed_label": "Обновить выпуски",
+  "@refresh_feed_label": {
+    "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "Осталось",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_layout_selector": "Скрыть выбор макета",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "Скрыть выбор таймера сна",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Скрыть подробности выпуска",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "Скрыть выбор скорости воспроизведения",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_filter_selector": "Скрыть фильтр выпусков",
+  "@scrim_episode_filter_selector": {
+    "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "Поиск выпусков",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "Автоматически воспроизводить следующий эпизод в подкасте, если очередь пуста",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_option": "Непрерывное проигрывание",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "Сначала последние",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_position": "Позиция в выпуске",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_label": "Не найдено выпусков",
+  "@episode_filter_no_episodes_title_label": {
+    "description": "No Episodes title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "Текущее значение",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_sort_selector": "Скрыть сортировку выпусков",
+  "@scrim_episode_sort_selector": {
+    "description": "Replaces default scrim label for episode sort bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_description": "В этом подкасте нет выпусков по вашим критериям поиска и фильтру",
+  "@episode_filter_no_episodes_title_description": {
+    "description": "No episodes found description",
+    "type": "text",
+    "placeholders": {}
   }
 }
