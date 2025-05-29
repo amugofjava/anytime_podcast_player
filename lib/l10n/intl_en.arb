@@ -659,13 +659,13 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "search_transcript_label": "Search transcript",
-   "@search_transcript_label": {
-     "description": "Hint text for transcript search box",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "search_transcript_label": "Search transcript",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "auto_scroll_transcript_label": "Follow transcript",
   "@auto_scroll_transcript_label": {
@@ -687,34 +687,34 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
- },
+  },
   "semantics_podcast_details_header": "Podcast details and episodes page",
   "@semantics_podcast_details_header": {
     "description": "Describes podcast details page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "semantics_layout_option_list": "List layout",
-   "@semantics_layout_option_list": {
-     "description": "Describes list layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_compact_grid": "Compact grid layout",
-   "@semantics_layout_option_compact_grid": {
-     "description": "Describes compact grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_grid": "Grid layout",
-   "@semantics_layout_option_grid": {
-     "description": "Describes grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "semantics_layout_option_list": "List layout",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Compact grid layout",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Grid layout",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "semantics_mini_player_header": "Mini player. Swipe right to play/pause button. Activate to open main player window",
   "@semantics_mini_player_header": {
@@ -1064,12 +1064,12 @@
     "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
-   },
-   "scrim_episode_details_selector": "Dismiss episode details",
-   "@scrim_episode_details_selector": {
-     "description": "Replaces default scrim label for episode details bottom sheet.",
-     "type": "text",
-     "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Dismiss episode details",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
   },
   "scrim_episode_sort_selector": "Dismiss episode sort",
   "@scrim_episode_sort_selector": {
