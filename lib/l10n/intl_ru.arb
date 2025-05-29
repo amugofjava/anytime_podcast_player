@@ -1097,5 +1097,11 @@
     "description": "No episodes found description",
     "type": "text",
     "placeholders": {}
+  },
+  "semantic_announce_loading": "Загрузка, пожалуйста, подождите.",
+  "@semantic_announce_loading": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders": {}
   }
 }
