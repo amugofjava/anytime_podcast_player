@@ -147,15 +147,31 @@ class MobilePodcastService extends PodcastService {
     bool highlightNewEpisodes = false,
     bool refresh = false,
   }) async {
+    DateTime? rssLastUpdated;
     log.fine('loadPodcast. ID ${podcast.id} (refresh $refresh)');
+    var fetch = false;
 
+    /// Do we fetch from the RSS feed or disk?
     if (podcast.id == null || refresh) {
+      log.fine('Not a refresh so try to fetch from RSS');
+      fetch = true;
+    } else {
+      final storedPodcast = await repository.findPodcastById(podcast.id!);
+
+      rssLastUpdated = await api.feedLastUpdated(podcast.url);
+
+      if (rssLastUpdated == null || rssLastUpdated.isAfter(storedPodcast!.rssFeedLastUpdated)) {
+        fetch = true;
+      }
+    }
+
+    if (fetch) {
       podcast_search.Podcast? loadedPodcast;
       var imageUrl = podcast.imageUrl;
       var thumbImageUrl = podcast.thumbImageUrl;
       var sourceUrl = podcast.url;
 
-      if (!refresh) {
+      if (podcast.id == null) {
         log.fine('Not a refresh so try to fetch from cache');
         loadedPodcast = _cache.item(podcast.url);
       }
@@ -187,9 +203,6 @@ class MobilePodcastService extends PodcastService {
         _cache.store(loadedPodcast!);
       }
 
-      final title = _format(loadedPodcast.title);
-      final description = _format(loadedPodcast.description);
-      final copyright = _format(loadedPodcast.copyright);
       final funding = <Funding>[];
       final persons = <Person>[];
       final existingEpisodes = await repository.findEpisodesByPodcastGuid(sourceUrl);
@@ -220,11 +233,12 @@ class MobilePodcastService extends PodcastService {
         guid: sourceUrl,
         url: sourceUrl,
         link: loadedPodcast.link,
-        title: title,
-        description: description,
+        title: _format(loadedPodcast.title),
+        description: _format(loadedPodcast.description),
         imageUrl: imageUrl,
         thumbImageUrl: thumbImageUrl,
-        copyright: copyright,
+        copyright: _format(loadedPodcast.copyright),
+        rssFeedLastUpdated: loadedPodcast.dateTimeModified,
         funding: funding,
         persons: persons,
         episodes: <Episode>[],
@@ -378,7 +392,7 @@ class MobilePodcastService extends PodcastService {
 
       // If we are subscribed to this podcast and are simply refreshing we need to save the updated subscription.
       // A non-null ID indicates this podcast is subscribed too. We also need to delete any expired episodes.
-      if (podcast.id != null && refresh) {
+      if (podcast.id != null) {
         await repository.deleteEpisodes(expired);
 
         pc = await repository.savePodcast(pc);
@@ -389,9 +403,9 @@ class MobilePodcastService extends PodcastService {
       }
 
       return pc;
-    } else {
-      return await loadPodcastById(id: podcast.id ?? 0);
     }
+
+    return null;
   }
 
   @override

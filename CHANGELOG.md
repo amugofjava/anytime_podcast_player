@@ -1,3 +1,8 @@
+## 1.3.13
+
+- Add support for Dutch language (thank you Raphael Gout).
+- Fix layout issues with edge-to-edge on Android 15+.
+
 ## 1.3.12
 
 - Add continuous play option.

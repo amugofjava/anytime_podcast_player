@@ -15,6 +15,6 @@ class MockPodcastApi extends MobilePodcastApi {
   }
 
   Future<Podcast> _loadFeed(String url) {
-    return Podcast.loadFeedFile(file: url);
+    return Feed.loadFeedFile(file: url);
   }
 }

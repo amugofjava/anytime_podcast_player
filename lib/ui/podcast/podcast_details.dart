@@ -67,8 +67,8 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
     widget._podcastBloc.load(Feed(
       podcast: widget.podcast,
-      backgroundFresh: true,
-      silently: true,
+      backgroundFetch: true,
+      errorSilently: true,
     ));
 
     // We only want to display the podcast title when the toolbar is in a
@@ -136,7 +136,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
     widget._podcastBloc.load(Feed(
       podcast: widget.podcast,
-      refresh: true,
+      forceFetch: true,
     ));
   }
 
