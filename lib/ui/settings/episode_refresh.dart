@@ -34,10 +34,9 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                 title: Text(L.of(context)!.settings_auto_update_episodes),
                 subtitle: updateSubtitle(snapshot.data!),
                 onTap: () {
-                  showDialog<void>(
+                  showPlatformDialog<void>(
                     context: context,
                     useRootNavigator: false,
-                    barrierDismissible: true,
                     builder: (BuildContext context) {
                       return AlertDialog(
                           title: Text(
