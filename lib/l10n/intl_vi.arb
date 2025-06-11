@@ -1,0 +1,1123 @@
+{
+  "@@last_modified": "2025-06-11T23:30:00.000000",
+  "app_title": "Anytime Podcast Player",
+  "@app_title": {
+    "description": "Full title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "app_title_short": "Anytime Player",
+  "@app_title_short": {
+    "description": "Title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library": "Thư viện",
+  "@library": {
+    "description": "Library tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "discover": "Khám phá",
+  "@discover": {
+    "description": "Discover tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads": "Tải về",
+  "@downloads": {
+    "description": "Downloads tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_button_label": "Theo dõi",
+  "@subscribe_button_label": {
+    "description": "Subscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_button_label": "Bỏ theo dõi",
+  "@unsubscribe_button_label": {
+    "description": "Unsubscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_button_label": "Hủy",
+  "@cancel_button_label": {
+    "description": "Cancel button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok_button_label": "OK",
+  "@ok_button_label": {
+    "description": "OK button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_label": "Theo dõi",
+  "@subscribe_label": {
+    "description": "Subscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_label": "Bỏ theo dõi",
+  "@unsubscribe_label": {
+    "description": "Unsubscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_message": "Bỏ theo dõi sẽ xóa tất cả các tập đã tải về của podcast này.",
+  "@unsubscribe_message": {
+    "description": "Displayed when the user unsubscribes from a podcast.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_for_podcasts_hint": "Tìm kiếm podcast",
+  "@search_for_podcasts_hint": {
+    "description": "Hint displayed on search bar when the user clicks the search icon.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_subscriptions_message": "Nhấn nút Khám phá bên dưới hoặc dùng thanh tìm kiếm bên trên để tìm podcast đầu tiên của bạn",
+  "@no_subscriptions_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_label": "Xóa",
+  "@delete_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_button_label": "Xóa",
+  "@delete_button_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_played_label": "Đánh dấu đã nghe",
+  "@mark_played_label": {
+    "description": "Mark as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_unplayed_label": "Đánh dấu chưa nghe",
+  "@mark_unplayed_label": {
+    "description": "Mark as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_confirmation": "Bạn có chắc chắn muốn xóa tập này không?",
+  "@delete_episode_confirmation": {
+    "description": "User is asked to confirm when they attempt to delete an episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_title": "Xóa tập",
+  "@delete_episode_title": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_downloads_message": "Bạn chưa có tập nào được tải về",
+  "@no_downloads_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_search_results_message": "Không tìm thấy podcast nào",
+  "@no_search_results_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_podcast_details_message": "Không thể tải các tập của podcast. Vui lòng kiểm tra kết nối mạng.",
+  "@no_podcast_details_message": {
+    "description": "Displayed on the podcast details page when the details could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_button_label": "Phát tập",
+  "@play_button_label": {
+    "description": "Semantic label for the play button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pause_button_label": "Tạm dừng tập",
+  "@pause_button_label": {
+    "description": "Semantic label for the pause button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_episode_button_label": "Tải tập",
+  "@download_episode_button_label": {
+    "description": "Semantic label for the download episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_button_label": "Xóa tập đã tải",
+  "@delete_episode_button_label": {
+    "description": "Semantic label for the delete episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close_button_label": "Đóng",
+  "@close_button_label": {
+    "description": "Close button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_button_label": "Tìm kiếm",
+  "@search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clear_search_button_label": "Xóa nội dung tìm kiếm",
+  "@clear_search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_back_button_label": "Quay lại",
+  "@search_back_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimise_player_window_button_label": "Thu nhỏ cửa sổ phát",
+  "@minimise_player_window_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewind_button_label": "Tua lại 10 giây",
+  "@rewind_button_label": {
+    "description": "Rewind button tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fast_forward_button_label": "Tua tới 30 giây",
+  "@fast_forward_button_label": {
+    "description": "Fast forward tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "about_label": "Giới thiệu",
+  "@about_label": {
+    "description": "About menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_played_label": "Đánh dấu tất cả đã nghe",
+  "@mark_episodes_played_label": {
+    "description": "Mark all episodes played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_not_played_label": "Đánh dấu tất cả chưa nghe",
+  "@mark_episodes_not_played_label": {
+    "description": "Mark all episodes not-played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_confirmation": "Bạn có chắc muốn dừng tải về và xóa tập này không?",
+  "@stop_download_confirmation": {
+    "description": "User is asked to confirm when they wish to stop the active download.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_button_label": "Dừng",
+  "@stop_download_button_label": {
+    "description": "Stop label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_title": "Dừng tải về",
+  "@stop_download_title": {
+    "description": "Stop download label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_mark_deleted_played_label": "Đánh dấu các tập đã xóa là đã nghe",
+  "@settings_mark_deleted_played_label": {
+    "description": "Mark deleted episodes as played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_delete_played_label": "Xóa các tập đã tải sau khi nghe xong",
+  "@settings_delete_played_label": {
+    "description": "Delete downloaded episodes once played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_sd_card_label": "Tải các tập về thẻ nhớ SD",
+  "@settings_download_sd_card_label": {
+    "description": "Download episodes to SD card setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_card": "Các nội dung tải về mới sẽ được lưu vào thẻ nhớ SD. Các nội dung đã có vẫn nằm trong bộ nhớ trong.",
+  "@settings_download_switch_card": {
+    "description": "Displayed when user switches from internal storage to SD card",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_internal": "Các nội dung tải về mới sẽ được lưu vào bộ nhớ trong. Các nội dung đã có vẫn nằm trên thẻ nhớ SD.",
+  "@settings_download_switch_internal": {
+    "description": "Displayed when user switches from internal SD card to internal storage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_label": "Thay đổi vị trí lưu trữ",
+  "@settings_download_switch_label": {
+    "description": "Dialog label for storage switch",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_option_label": "Hủy",
+  "@cancel_option_label": {
+    "description": "Cancel option label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme": "Giao diện",
+  "@settings_theme": {
+    "description": "Display theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_heading": "Chọn Giao diện",
+  "@settings_theme_heading": {
+    "description": "Choose theme behaviour",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_auto": "Theo hệ thống",
+  "@settings_theme_value_auto": {
+    "description": "Based on System theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_light": "Giao diện sáng",
+  "@settings_theme_value_light": {
+    "description": "Light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_dark": "Giao diện tối",
+  "@settings_theme_value_dark": {
+    "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Tốc độ phát",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Hiển thị ghi chú",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_provider_label": "Nhà cung cấp tìm kiếm",
+  "@search_provider_label": {
+    "description": "Set search provider label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_label": "Cài đặt",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "Quay lại",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "Tiếp tục",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "consent_message": "Liên kết này sẽ đưa bạn đến một trang web bên ngoài, nơi bạn có thể ủng hộ trực tiếp cho chương trình. Các liên kết được cung cấp bởi tác giả podcast và không do Anytime kiểm soát.",
+  "@consent_message": {
+    "description": "Display when first accessing external funding link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_label": "Tập",
+  "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "Chương",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "Ghi chú",
+  "@notes_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_funding_dialog_header": "Ủng hộ Podcast",
+  "@podcast_funding_dialog_header": {
+    "description": "Header on podcast funding consent dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Mở trình phát toàn màn hình khi bắt đầu tập",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_no_connection": "Không thể phát tập. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "Đã xảy ra lỗi không mong muốn khi phát. Vui lòng kiểm tra kết nối mạng và thử lại.",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "Thêm nguồn RSS",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_import_opml": "Nhập OPML",
+  "@settings_import_opml": {
+    "description": "Option label importing OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_opml": "Xuất OPML",
+  "@settings_export_opml": {
+    "description": "Option label exporting OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_opml_importing": "Đang nhập",
+  "@label_opml_importing": {
+    "description": "Label for importing OPML dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_heading": "Tải lại các tập trên màn hình chi tiết sau",
+  "@settings_auto_update_episodes_heading": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes": "Tự động cập nhật các tập",
+  "@settings_auto_update_episodes": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_never": "Không bao giờ",
+  "@settings_auto_update_episodes_never": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_always": "Luôn luôn",
+  "@settings_auto_update_episodes_always": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_10min": "10 phút kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_10min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_30min": "30 phút kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_30min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_1hour": "1 giờ kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_1hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_3hour": "3 giờ kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_3hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_6hour": "6 giờ kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_6hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_12hour": "12 giờ kể từ lần cập nhật cuối",
+  "@settings_auto_update_episodes_12hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_label": "Đã có các tập mới",
+  "@new_episodes_label": {
+    "description": "Option label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_view_now_label": "XEM NGAY",
+  "@new_episodes_view_now_label": {
+    "description": "Option action label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_personalisation_divider_label": "CÁ NHÂN HÓA",
+  "@settings_personalisation_divider_label": {
+    "description": "Settings divider label for personalisation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_episodes_divider_label": "CÁC TẬP",
+  "@settings_episodes_divider_label": {
+    "description": "Settings divider label for episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_playback_divider_label": "PHÁT",
+  "@settings_playback_divider_label": {
+    "description": "Settings divider label for playback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_data_divider_label": "DỮ LIỆU",
+  "@settings_data_divider_label": {
+    "description": "Settings divider label for data",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_effect_trim_silence_label": "Cắt bỏ khoảng lặng",
+  "@audio_effect_trim_silence_label": {
+    "description": "Label for trim silence toggle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_effect_volume_boost_label": "Tăng cường âm lượng",
+  "@audio_effect_volume_boost_label": {
+    "description": "Label for volume boost toggle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_settings_playback_speed_label": "Tốc độ phát",
+  "@audio_settings_playback_speed_label": {
+    "description": "Label for playback settings widget",
+    "type": "text",
+    "placeholders": {}
+  },
+  "empty_queue_message": "Hàng chờ của bạn đang trống",
+  "@empty_queue_message": {
+    "description": "Displayed when there are no items left in the queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "clear_queue_button_label": "XÓA HÀNG CHỜ",
+  "@clear_queue_button_label": {
+    "description": "Clear queue button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "now_playing_queue_label": "Đang phát",
+  "@now_playing_queue_label": {
+    "description": "Now playing label on queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "up_next_queue_label": "Tiếp theo",
+  "@up_next_queue_label": {
+    "description": "Up next label on queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "more_label": "Thêm",
+  "@more_label": {
+    "description": "More label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_add_label": "Thêm",
+  "@queue_add_label": {
+    "description": "Queue add label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_remove_label": "Xóa",
+  "@queue_remove_label": {
+    "description": "Queue remove label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_import_button_label": "Nhập",
+  "@opml_import_button_label": {
+    "description": "OPML Import button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_export_button_label": "Xuất",
+  "@opml_export_button_label": {
+    "description": "OPML Export button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_import_export_label": "Nhập/Xuất OPML",
+  "@opml_import_export_label": {
+    "description": "OPML Import/Export label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label": "Bạn có chắc chắn muốn xóa hàng chờ không?",
+  "@queue_clear_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_button_label": "Xóa",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "Xóa hàng chờ",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "layout_label": "Bố cục",
+  "@layout_label": {
+    "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_itunes": "Tất cả,Nghệ thuật,Kinh doanh,Hài kịch,Giáo dục,Viễn tưởng,Chính phủ,Sức khỏe & Thể chất,Lịch sử,Trẻ em & Gia đình,Giải trí,Âm nhạc,Tin tức,Tôn giáo & Tâm linh,Khoa học,Xã hội & Văn hóa,Thể thao,TV & Phim ảnh,Công nghệ,Tội phạm có thật",
+  "@discovery_categories_itunes": {
+    "description": "Comma separated list of iTunes categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_pindex": "Tất cả,Bàn luận sau chương trình,Alternative,Động vật,Hoạt hình,Nghệ thuật,Thiên văn học,Ô tô,Hàng không,Bóng chày,Bóng rổ,Sắc đẹp,Sách,Phật giáo,Kinh doanh,Sự nghiệp,Hóa học,Thiên chúa giáo,Khí hậu,Hài kịch,Bình luận,Khóa học,Thủ công,Cricket,Tiền điện tử,Văn hóa,Hàng ngày,Thiết kế,Phim tài liệu,Kịch,Trái đất,Giáo dục,Giải trí,Khởi nghiệp,Gia đình,Kỳ ảo,Thời trang,Viễn tưởng,Phim,Thể chất,Ẩm thực,Bóng đá,Trò chơi,Làm vườn,Golf,Chính phủ,Sức khỏe,Ấn độ giáo,Lịch sử,Sở thích,Khúc côn cầu,Nhà cửa,Hướng dẫn,Ứng biến,Phỏng vấn,Đầu tư,Hồi giáo,Nhật ký,Do thái giáo,Trẻ em,Ngôn ngữ,Học tập,Giải trí,Cuộc sống,Quản lý,Manga,Tiếp thị,Toán học,Y học,Tinh thần,Âm nhạc,Tự nhiên,Thiên nhiên,Tin tức,Phi lợi nhuận,Dinh dưỡng,Làm cha mẹ,Biểu diễn,Cá nhân,Thú cưng,Triết học,Vật lý,Địa điểm,Chính trị,Mối quan hệ,Tôn giáo,Đánh giá,Nhập vai,Bóng bầu dục,Chạy bộ,Khoa học,Phát triển bản thân,Tình dục,Bóng đá,Xã hội,Xã hội,Tâm linh,Thể thao,Hài độc thoại,Câu chuyện,Bơi lội,TV, επιτραπέζιο,Công nghệ,Quần vợt,Du lịch,Tội phạm có thật,Trò chơi điện tử,Hình ảnh,Bóng chuyền,Thời tiết,Hoang dã,Đấu vật",
+  "@discovery_categories_pindex": {
+    "description": "Comma separated list of Podcast Index categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_label": "Lời thoại",
+  "@transcript_label": {
+    "description": "Transcript label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "no_transcript_available_label": "Không có bản ghi lời thoại cho podcast này",
+  "@no_transcript_available_label": {
+    "description": "Displayed in transcript view when no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "search_transcript_label": "Tìm kiếm trong lời thoại",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "auto_scroll_transcript_label": "Theo dõi lời thoại",
+  "@auto_scroll_transcript_label": {
+    "description": "Auto scroll switch label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_label": "Tại sao không?",
+  "@transcript_why_not_label": {
+    "description": "Link to why no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "@transcript_why_not_url": {
+    "description": "Language specific link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_podcast_details_header": "Trang chi tiết và các tập của podcast",
+  "@semantics_podcast_details_header": {
+    "description": "Describes podcast details page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_list": "Bố cục danh sách",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Bố cục lưới thu gọn",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Bố cục lưới",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mini_player_header": "Trình phát thu nhỏ. Vuốt sang phải để tới nút phát/tạm dừng. Kích hoạt để mở cửa sổ trình phát chính.",
+  "@semantics_mini_player_header": {
+    "description": "Describes the mini player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_main_player_header": "Cửa sổ trình phát chính",
+  "@semantics_main_player_header": {
+    "description": "Describes the main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_play_pause_toggle": "Nút chuyển đổi Phát/Tạm dừng",
+  "@semantics_play_pause_toggle": {
+    "description": "Describes play/pause toggle button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_decrease_playback_speed": "Giảm tốc độ phát",
+  "@semantics_decrease_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_increase_playback_speed": "Tăng tốc độ phát",
+  "@semantics_increase_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_expand_podcast_description": "Mở rộng mô tả podcast",
+  "@semantics_expand_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_collapse_podcast_description": "Thu gọn mô tả podcast",
+  "@semantics_collapse_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_add_to_queue": "Thêm tập vào hàng chờ",
+  "@semantics_add_to_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_remove_from_queue": "Xóa tập khỏi hàng chờ",
+  "@semantics_remove_from_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_played": "Đánh dấu tập đã nghe",
+  "@semantics_mark_episode_played": {
+    "description": "Describes mark played button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_unplayed": "Đánh dấu tập chưa nghe",
+  "@semantics_mark_episode_unplayed": {
+    "description": "Describes mark unplayed button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed": "Mục danh sách tập. Hiển thị hình ảnh, tóm tắt và các điều khiển chính.",
+  "@semantics_episode_tile_collapsed": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded": "Mục danh sách tập. Hiển thị mô tả, các điều khiển chính và các điều khiển bổ sung.",
+  "@semantics_episode_tile_expanded": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed_hint": "mở rộng để xem thêm chi tiết và các tùy chọn bổ sung",
+  "@semantics_episode_tile_collapsed_hint": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded_hint": "thu gọn để hiển thị tóm tắt, điều khiển tải và phát",
+  "@semantics_episode_tile_expanded_hint": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_off_label": "Tắt",
+  "@sleep_off_label": {
+    "description": "Describes off sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_episode_label": "Kết thúc tập",
+  "@sleep_episode_label": {
+    "description": "Describes end of episode sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_minute_label": "{minutes} phút",
+  "@sleep_minute_label": {
+    "description": "Describes the number of minutes to sleep",
+    "type": "text",
+    "placeholders_order": [
+      "minutes"
+    ],
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "sleep_timer_label": "Hẹn giờ ngủ",
+  "@sleep_timer_label": {
+    "description": "Describes sleep timer label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "feedback_menu_item_label": "Phản hồi",
+  "@feedback_menu_item_label": {
+    "description": "Feedback option in main menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "podcast_options_overflow_menu_semantic_label": "Menu tùy chọn",
+  "@podcast_options_overflow_menu_semantic_label": {
+    "description": "Podcast details overflow menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_announce_searching": "Đang tìm kiếm, vui lòng đợi.",
+  "@semantic_announce_searching": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_expand_label": "Mở thanh trượt tùy chọn phát",
+  "@semantic_playing_options_expand_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_collapse_label": "Đóng thanh trượt tùy chọn phát",
+  "@semantic_playing_options_collapse_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "Ảnh bìa podcast",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "Liên kết web của chương",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_current_chapter_label": "Chương hiện tại",
+  "@semantic_current_chapter_label": {
+    "description": "Placed around chapter",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "episode_filter_none_label": "Không",
+  "@episode_filter_none_label": {
+    "description": "Episodes not filtered",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_started_label": "Đã bắt đầu",
+  "@episode_filter_started_label": {
+    "description": "Only show episodes that have been started",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_played_label": "Đã nghe",
+  "@episode_filter_played_label": {
+    "description": "Only show episodes that have been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_unplayed_label": "Chưa nghe",
+  "@episode_filter_unplayed_label": {
+    "description": "Only show episodes that have not been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_label": "Không tìm thấy tập nào",
+  "@episode_filter_no_episodes_title_label": {
+    "description": "No Episodes title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_description": "Podcast này không có tập nào khớp với tiêu chí tìm kiếm và bộ lọc của bạn",
+  "@episode_filter_no_episodes_title_description": {
+    "description": "No episodes found description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_clear_filters_button_label": "Xóa bộ lọc",
+  "@episode_filter_clear_filters_button_label": {
+    "description": "Clear filters button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_semantic_label": "Lọc các tập",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "Sắp xếp các tập",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "Mặc định",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "Mới nhất trước",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "Cũ nhất trước",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "Theo bảng chữ cái A-Z",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "Theo bảng chữ cái Z-A",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "Mở trang web của chương trình",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "refresh_feed_label": "Tải lại các tập",
+  "@refresh_feed_label": {
+    "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_layout_selector": "Đóng bộ chọn bố cục",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_position": "Vị trí trong tập",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "Thời gian còn lại",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resume_button_label": "Phát tiếp",
+  "@resume_button_label": {
+    "description": "Semantic label for the resume button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_download_button_label": "Phát tập đã tải về",
+  "@play_download_button_label": {
+    "description": "Semantic label for the play downloaded episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_download_button_label": "Hủy tải về",
+  "@cancel_download_button_label": {
+    "description": "Semantic label for the play cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_details_button_label": "Hiển thị thông tin tập",
+  "@episode_details_button_label": {
+    "description": "Semantic label for the show info button.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "Đóng bộ chọn hẹn giờ ngủ",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "Đóng bộ chọn tốc độ phát",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "Giá trị hiện tại",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Đóng chi tiết tập",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_sort_selector": "Đóng sắp xếp tập",
+  "@scrim_episode_sort_selector": {
+    "description": "Replaces default scrim label for episode sort bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_filter_selector": "Đóng bộ lọc tập",
+  "@scrim_episode_filter_selector": {
+    "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "Tìm kiếm các tập",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_option": "Phát liên tục",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "Tự động phát tập tiếp theo trong podcast nếu hàng chờ trống",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_podcast_option_label": "Chia sẻ podcast",
+  "@share_podcast_option_label": {
+    "description": "Context menu option to share the current podcast",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_episode_option_label": "Chia sẻ tập",
+  "@share_episode_option_label": {
+    "description": "Context menu option to share the current podcast episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_announce_loading": "Đang tải, vui lòng đợi.",
+  "@semantic_announce_loading": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "@@locale": "vi"
+}
