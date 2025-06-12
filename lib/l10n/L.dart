@@ -1813,7 +1813,7 @@ class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
   const AnytimeLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'it', 'nl'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => ['en', 'es', 'de', 'it', 'nl', 'ru'].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, const {});
