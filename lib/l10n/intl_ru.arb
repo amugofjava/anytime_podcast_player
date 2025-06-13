@@ -1117,5 +1117,6 @@
     "description": "Spoken when search in progress.",
     "type": "text",
     "placeholders": {}
-  }
+  },
+  "@@locale": "ru"
 }
