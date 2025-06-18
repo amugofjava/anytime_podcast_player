@@ -47,6 +47,7 @@ class MobilePodcastService extends PodcastService {
     final List<Locale> systemLocales = PlatformDispatcher.instance.locales;
 
     var currentLocale = Platform.localeName;
+
     // Attempt to get current locale
     var supportedLocale = await initializeMessages(Platform.localeName);
 
@@ -157,14 +158,39 @@ class MobilePodcastService extends PodcastService {
       fetch = true;
     } else {
       final storedPodcast = await repository.findPodcastById(podcast.id!);
+      var headUrl = podcast.url;
 
-      rssLastUpdated = await api.feedLastUpdated(podcast.url);
+      int tries = 2;
+
+      while (tries-- > 0) {
+        try {
+          rssLastUpdated = await api.feedLastUpdated(headUrl);
+          tries = 0;
+        } catch (e) {
+          if (tries > 0) {
+            //TODO: Needs improving to only fall back if original URL was http and we forced it up to https.
+            if (e is podcast_search.PodcastCertificateException && headUrl.startsWith('https')) {
+              log.fine('Certificate error whilst fetching podcast. Fallback to http and try again');
+
+              headUrl = headUrl.replaceFirst('https', 'http');
+            }
+          } else {
+            rethrow;
+          }
+        }
+      }
 
       if (rssLastUpdated == null || rssLastUpdated.isAfter(storedPodcast!.rssFeedLastUpdated)) {
         fetch = true;
+      } else {
+        // Just update the last updated value.
+        save(storedPodcast, withEpisodes: false);
+
+        return storedPodcast;
       }
     }
 
+    /// TODO: Refactor out into separate method
     if (fetch) {
       podcast_search.Podcast? loadedPodcast;
       var imageUrl = podcast.imageUrl;
