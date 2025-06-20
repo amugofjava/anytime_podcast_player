@@ -45,9 +45,9 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
                   },
-                  tooltip: L.of(context)!.rewind_button_label,
                   padding: const EdgeInsets.all(0.0),
-                  icon: const Icon(
+                  icon: Icon(
+                    semanticLabel: L.of(context)!.rewind_button_label,
                     Icons.replay_10,
                     size: 48.0,
                   ),
@@ -57,9 +57,9 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
-                  tooltip: L.of(context)!.fast_forward_button_label,
                   padding: const EdgeInsets.all(0.0),
-                  icon: const Icon(
+                  icon: Icon(
+                    semanticLabel: L.of(context)!.fast_forward_button_label,
                     Icons.forward_30,
                     size: 48.0,
                   ),
