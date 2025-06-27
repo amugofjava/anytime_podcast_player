@@ -1,3 +1,11 @@
+## 1.3.14
+
+- Support for Russian language (thank you @yurtpage).
+- Support for Vietnamese language (thank you @daoductrung).
+- Improve RSS checking efficiency by checking modified-date in header where possible.
+- Bug fixes.
+- Accessibility fixes & improvements.
+
 ## 1.3.13
 
 - Add support for Dutch language (thank you Raphael Gout).
