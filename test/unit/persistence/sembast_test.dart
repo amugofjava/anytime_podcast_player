@@ -442,14 +442,14 @@ void main() {
       var p2e1 = Episode(
           guid: 'P02EP01',
           title: 'Episode 1',
-          pguid: podcast1.guid,
+          pguid: podcast2.guid,
           podcast: podcast1.title,
           publicationDate: DateTime.now());
 
       var p2e2 = Episode(
           guid: 'P02EP02',
           title: 'Episode 2',
-          pguid: podcast1.guid,
+          pguid: podcast2.guid,
           podcast: podcast1.title,
           publicationDate: DateTime.now());
 
@@ -459,7 +459,7 @@ void main() {
       await persistenceService!.savePodcast(podcast1);
       await persistenceService!.savePodcast(podcast2);
 
-      var queue = <Episode>[p1e1, p1e2, p2e1, p2e2];
+      var queue = <Episode>[p1e1, p2e2, p1e2, p2e2];
 
       await persistenceService!.saveQueue(queue);
 
