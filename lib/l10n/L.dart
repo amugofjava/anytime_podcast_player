@@ -1807,6 +1807,28 @@ class L {
           locale: localeName,
         );
   }
+
+  String episode_time_minute_remaining(String minutes) {
+    return message('episode_time_minute_remaining') ??
+        Intl.message(
+          '$minutes min left',
+          args: [minutes],
+          name: 'episode_time_minute_remaining',
+          desc: 'Shows number of minutes of episode time remaining',
+          locale: localeName,
+        );
+  }
+
+  String episode_time_second_remaining(String seconds) {
+    return message('episode_time_second_remaining') ??
+        Intl.message(
+          '$seconds sec left',
+          args: [seconds],
+          name: 'episode_time_second_remaining',
+          desc: 'Shows number of seconds of episode time remaining',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

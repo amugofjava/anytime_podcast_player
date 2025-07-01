@@ -362,6 +362,8 @@ class MobilePodcastService extends PodcastService {
             imageUrl: episodeImage,
             thumbImageUrl: episodeThumbImage,
             duration: duration,
+            length: episode.length,
+            mimeType: episode.mimeType,
             publicationDate: episode.publicationDate,
             chaptersUrl: episode.chapters?.url,
             transcriptUrls: transcriptUrls,
@@ -382,6 +384,8 @@ class MobilePodcastService extends PodcastService {
           existingEpisode.season = episode.season ?? 0;
           existingEpisode.episode = episode.episode ?? 0;
           existingEpisode.contentUrl = episode.contentUrl;
+          existingEpisode.length = episode.length;
+          existingEpisode.mimeType = episode.mimeType;
           existingEpisode.link = episode.link;
           existingEpisode.imageUrl = episodeImage;
           existingEpisode.thumbImageUrl = episodeThumbImage;

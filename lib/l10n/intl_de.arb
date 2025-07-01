@@ -1119,5 +1119,21 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_time_minute_remaining": "Noch {minutes} min",
+  "@episode_time_minute_remaining": {
+    "description": "Shows number of minutes of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_second_remaining": "Noch {seconds} sek",
+  "@episode_time_second_remaining": {
+    "description": "Shows number of seconds of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
   "@@locale": "de"
 }

@@ -21,7 +21,11 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'de';
 
-  static m0(minutes) => "${minutes} Minuten";
+  static m0(minutes) => "Noch ${minutes} min";
+
+  static m1(seconds) => "Noch ${seconds} sek";
+
+  static m2(minutes) => "${minutes} Minuten";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -71,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Das Neueste zuerst'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Standard'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Episoden sortieren'),
+    'episode_time_minute_remaining': m0,
+    'episode_time_second_remaining': m1,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Episode kann nicht abgespielt werden. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('Während der Wiedergabe ist ein unerwarteter Fehler aufgetreten. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('30 Sekunden schneller Vorlauf'),
@@ -189,7 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Podcast teilen'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Notizen anzeigen'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Ende der Folge'),
-    'sleep_minute_label': m0,
+    'sleep_minute_label': m2,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Aus'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep-Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Halt'),

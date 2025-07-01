@@ -906,25 +906,41 @@ class EpisodeSubtitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     var timeRemaining = episode.timeRemaining;
+    var dateStr = date;
 
     String title;
 
+    // If publication is within 7 days, give friendlier date format.
+    if (episode.publicationDate != null) {
+      final now = DateTime.now();
+      final diff = now.difference(episode.publicationDate!);
+
+      if (diff.inDays < 7) {
+        dateStr = timeAgo(episode.publicationDate!, now);
+      }
+    }
+
     if (length.inSeconds > 0) {
       if (length.inSeconds < 60) {
-        title = '$date • ${length.inSeconds} sec';
+        title = '$dateStr • ${length.inSeconds} sec';
       } else {
-        title = '$date • ${length.inMinutes} min';
+        title = '$dateStr • ${length.inMinutes} min';
       }
     } else {
-      title = date;
+      title = dateStr;
     }
 
     if (timeRemaining.inSeconds > 0) {
       if (timeRemaining.inSeconds < 60) {
-        title = '$title / ${timeRemaining.inSeconds} sec left';
+        title = '$title / ${L.of(context)!.episode_time_second_remaining(timeRemaining.inSeconds.toString())}';
       } else {
-        title = '$title / ${timeRemaining.inMinutes} min left';
+        title = '$title / ${L.of(context)!.episode_time_minute_remaining(timeRemaining.inMinutes.toString())}';
       }
+    }
+
+    if (episode.length > 0) {
+      final mb = (episode.length / (1024 * 1024)).toStringAsFixed(1);
+      title = '$title • ${mb}mb';
     }
 
     return Padding(
@@ -936,6 +952,30 @@ class EpisodeSubtitle extends StatelessWidget {
         style: textTheme.bodySmall,
       ),
     );
+  }
+
+  String timeAgo(DateTime d, DateTime n) {
+    final difference = n.difference(d);
+
+    if ((difference.inDays / 7).floor() >= 1) {
+      return '1w ago';
+    } else if (difference.inDays >= 2) {
+      return '${difference.inDays}d ago';
+    } else if (difference.inDays >= 1) {
+      return '1d ago';
+    } else if (difference.inHours >= 2) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inHours >= 1) {
+      return '1h ago';
+    } else if (difference.inMinutes >= 2) {
+      return '${difference.inMinutes}m ago';
+    } else if (difference.inMinutes >= 1) {
+      return '1m ago';
+    } else if (difference.inSeconds >= 3) {
+      return '${difference.inSeconds}s ago';
+    } else {
+      return 'Just now';
+    }
   }
 }
 

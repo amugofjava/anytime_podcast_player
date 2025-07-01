@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'nl';
 
-  static m0(minutes) => "${minutes} minuten";
+  static m2(minutes) => "${minutes} minuten";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -189,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Podcast delen'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Podcast omschrijving'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Einde van de aflevering'),
-    'sleep_minute_label': m0,
+    'sleep_minute_label': m2,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Uit'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Slaaptimer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),

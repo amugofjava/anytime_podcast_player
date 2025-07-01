@@ -69,6 +69,12 @@ class Episode {
   /// The URL for the episode location.
   String? contentUrl;
 
+  /// Enclosure file length in bytes.
+  int length;
+
+  /// Enclosure file type.
+  String? mimeType;
+
   /// Author of the episode if known.
   String? author;
 
@@ -151,6 +157,8 @@ class Episode {
     String? thumbImageUrl,
     this.publicationDate,
     String? contentUrl,
+    this.length = 0,
+    this.mimeType,
     this.author,
     this.season = 0,
     this.episode = 0,
@@ -187,6 +195,8 @@ class Episode {
       'thumbImageUrl': thumbImageUrl,
       'publicationDate': publicationDate?.millisecondsSinceEpoch.toString(),
       'contentUrl': contentUrl,
+      'length': length,
+      'mimeType': mimeType,
       'author': author,
       'season': season.toString(),
       'episode': episode.toString(),
@@ -253,6 +263,8 @@ class Episode {
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
       contentUrl: episode['contentUrl'] as String?,
+      length: episode['length'] as int? ?? 0,
+      mimeType: episode['mimeType'] as String? ?? '',
       author: episode['author'] as String?,
       season: int.parse(episode['season'] as String? ?? '0'),
       episode: int.parse(episode['episode'] as String? ?? '0'),

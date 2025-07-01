@@ -21,7 +21,11 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'messages';
 
-  static m0(minutes) => "${minutes} minutes";
+  static m0(minutes) => "${minutes} min left";
+
+  static m1(seconds) => "${seconds} sec left";
+
+  static m2(minutes) => "${minutes} minutes";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -71,6 +75,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Latest first'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Default'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Episode sort'),
+    'episode_time_minute_remaining': m0,
+    'episode_time_second_remaining': m1,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Unable to play episode. Please check your connection and try again.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('An unexpected error occurred during playback. Please check your connection and try again.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('Fast-forward episode 30 seconds'),
@@ -189,7 +195,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Share podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Show notes'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('End of episode'),
-    'sleep_minute_label': m0,
+    'sleep_minute_label': m2,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
