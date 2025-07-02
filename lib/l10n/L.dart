@@ -1829,6 +1829,194 @@ class L {
           locale: localeName,
         );
   }
+
+  String episode_semantic_time_minute_remaining(String minutes) {
+    return message('episode_semantic_time_minute_remaining') ??
+        Intl.message(
+          '$minutes min left',
+          args: [minutes],
+          name: 'episode_semantic_time_minute_remaining',
+          desc: 'Longer version of minutes remaining for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String episode_semantic_time_second_remaining(String seconds) {
+    return message('episode_semantic_time_second_remaining') ??
+        Intl.message(
+          '$seconds sec left',
+          args: [seconds],
+          name: 'episode_semantic_time_second_remaining',
+          desc: 'Longer version of seconds remaining for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String episode_time_weeks_ago(int weeks) {
+    return message('episode_time_weeks_ago') ??
+        Intl.message(
+          '''${Intl.plural(weeks, one: '1w ago', other: '${weeks}w ago')}''',
+          args: [weeks],
+          name: 'episode_time_weeks_ago',
+          desc: 'Shows number of weeks ago the episode was released',
+          locale: localeName,
+        );
+  }
+
+  String episode_semantic_time_weeks_ago(int weeks) {
+    return message('episode_semantic_time_weeks_ago') ??
+        Intl.message(
+          '''${Intl.plural(weeks, one: 'One week ago', other: '${weeks} weeks ago')}''',
+          args: [weeks],
+          name: 'episode_semantic_time_weeks_ago',
+          desc: 'Shows number of weeks ago the episode was release, longer form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String episode_time_days_ago(int days) {
+    return message('episode_time_days_ago') ??
+        Intl.message(
+          '''${Intl.plural(days, one: '1d ago', other: '${days}d ago')}''',
+          args: [days],
+          name: 'episode_time_days_ago',
+          desc: 'Shows number of days ago the episode was released',
+          locale: localeName,
+        );
+  }
+
+  String episode_semantic_time_days_ago(int days) {
+    return message('episode_semantic_time_days_ago') ??
+        Intl.message(
+          '''${Intl.plural(days, one: 'One day ago', other: '${days} days ago')}''',
+          args: [days],
+          name: 'episode_semantic_time_days_ago',
+          desc: 'Shows number of days ago the episode was release, longer form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String episode_time_hours_ago(int hours) {
+    return message('episode_time_hours_ago') ??
+        Intl.message(
+          '''${Intl.plural(hours, one: '1h ago', other: '${hours}h ago')}''',
+          args: [hours],
+          name: 'episode_time_hours_ago',
+          desc: 'Shows number of hours ago the episode was released',
+          locale: localeName,
+        );
+  }
+
+  String episode_semantic_time_hours_ago(int hours) {
+    return message('episode_semantic_time_hours_ago') ??
+        Intl.message(
+          '''${Intl.plural(
+            hours,
+            one: '${hours} hour ago tada!',
+            other: '${hours} hours ago you idiot',
+          )}''',
+          args: [hours],
+          name: 'episode_semantic_time_hours_ago',
+          desc: 'Shows number of hours ago the episode was release, longer form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String episode_time_minutes_ago(int minutes) {
+    return message('episode_time_minutes_ago') ??
+        Intl.message(
+          '''${Intl.plural(minutes, one: '1m ago', other: '${minutes}m ago')}''',
+          args: [minutes],
+          name: 'episode_time_minutes_ago',
+          desc: 'Shows number of minutes ago the episode was released',
+          locale: localeName,
+        );
+  }
+
+  String episode_semantic_time_minutes_ago(int minutes) {
+    return message('episode_semantic_time_minutes_ago') ??
+        Intl.message(
+          '''${Intl.plural(minutes, one: '1 minute ago', other: '${minutes} minutes ago')}''',
+          args: [minutes],
+          name: 'episode_semantic_time_minutes_ago',
+          desc: 'Shows number of minutes ago the episode was release, longer form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String get episode_time_now {
+    return message('episode_time_now') ??
+        Intl.message(
+          'Now',
+          name: 'episode_time_now',
+          desc: 'Episode has just been released',
+          locale: localeName,
+        );
+  }
+
+  String time_seconds(int seconds) {
+    return message('time_seconds') ??
+        Intl.message(
+          '${seconds} sec',
+          args: [seconds],
+          name: 'time_seconds',
+          desc: 'Episode length in seconds',
+          locale: localeName,
+        );
+  }
+
+  String time_semantic_seconds(int seconds) {
+    return message('time_semantic_seconds') ??
+        Intl.message(
+          '${seconds} seconds',
+          args: [seconds],
+          name: 'time_semantic_seconds',
+          desc: 'Episode length in seconds - long form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String time_minutes(int minutes) {
+    return message('time_minutes') ??
+        Intl.message(
+          '${minutes} min',
+          args: [minutes],
+          name: 'time_minutes',
+          desc: 'Episode length in minutes',
+          locale: localeName,
+        );
+  }
+
+  String time_semantic_minutes(int minutes) {
+    return message('time_semantic_minutes') ??
+        Intl.message(
+          '${minutes} minutes',
+          args: [minutes],
+          name: 'time_semantic_minutes',
+          desc: 'Episode length in minutes - long form for screen readers',
+          locale: localeName,
+        );
+  }
+
+  String get label_megabytes {
+    return message('label_megabytes') ??
+        Intl.message(
+          'megabytes',
+          name: 'label_megabytes',
+          desc: 'Megabytes label',
+          locale: localeName,
+        );
+  }
+
+  String get label_megabytes_abbr {
+    return message('label_megabytes_abbr') ??
+        Intl.message(
+          'mb',
+          name: 'label_megabytes_abbr',
+          desc: 'Megabytes label abbreviation',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {

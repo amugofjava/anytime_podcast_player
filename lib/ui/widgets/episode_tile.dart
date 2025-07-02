@@ -890,6 +890,8 @@ class EpisodeTransportControls extends StatelessWidget {
   }
 }
 
+/// This class builds the subtitle line for an episode. This consists of the publication date,
+/// episode length, time remaining (if episode has been started) and file size.
 class EpisodeSubtitle extends StatelessWidget {
   final Episode episode;
   final String date;
@@ -906,9 +908,11 @@ class EpisodeSubtitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     var timeRemaining = episode.timeRemaining;
-    var dateStr = date;
+    var dateLabel = date;
+    var dateSemanticLabel = date;
 
     String title;
+    String semanticTitle;
 
     // If publication is within 7 days, give friendlier date format.
     if (episode.publicationDate != null) {
@@ -916,37 +920,47 @@ class EpisodeSubtitle extends StatelessWidget {
       final diff = now.difference(episode.publicationDate!);
 
       if (diff.inDays < 7) {
-        dateStr = timeAgo(episode.publicationDate!, now);
+        (dateLabel, dateSemanticLabel) = calculateTimeAgo(context, episode.publicationDate!, now);
       }
     }
 
     if (length.inSeconds > 0) {
       if (length.inSeconds < 60) {
-        title = '$dateStr • ${length.inSeconds} sec';
+        title = '$dateLabel • ${L.of(context)!.time_semantic_seconds(length.inSeconds)}';
+        semanticTitle = '$dateSemanticLabel • ${L.of(context)!.time_seconds(length.inSeconds)}';
       } else {
-        title = '$dateStr • ${length.inMinutes} min';
+        title = '$dateLabel • ${L.of(context)!.time_semantic_minutes(length.inMinutes)}';
+        semanticTitle = '$dateSemanticLabel • ${L.of(context)!.time_minutes(length.inMinutes)}';
       }
     } else {
-      title = dateStr;
+      title = dateLabel;
+      semanticTitle = dateLabel;
     }
 
     if (timeRemaining.inSeconds > 0) {
       if (timeRemaining.inSeconds < 60) {
         title = '$title / ${L.of(context)!.episode_time_second_remaining(timeRemaining.inSeconds.toString())}';
+        semanticTitle =
+            '$semanticTitle / ${L.of(context)!.episode_time_second_remaining(timeRemaining.inSeconds.toString())}';
       } else {
         title = '$title / ${L.of(context)!.episode_time_minute_remaining(timeRemaining.inMinutes.toString())}';
+        semanticTitle =
+            '$semanticTitle / ${L.of(context)!.episode_time_minute_remaining(timeRemaining.inMinutes.toString())}';
       }
     }
 
     if (episode.length > 0) {
       final mb = (episode.length / (1024 * 1024)).toStringAsFixed(1);
-      title = '$title • ${mb}mb';
+
+      title = '$title • $mb${L.of(context)!.label_megabytes_abbr}';
+      semanticTitle = '$semanticTitle • $mb ${L.of(context)!.label_megabytes}';
     }
 
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Text(
         title,
+        semanticsLabel: semanticTitle,
         overflow: TextOverflow.ellipsis,
         softWrap: false,
         style: textTheme.bodySmall,
@@ -954,28 +968,29 @@ class EpisodeSubtitle extends StatelessWidget {
     );
   }
 
-  String timeAgo(DateTime d, DateTime n) {
+  (String, String) calculateTimeAgo(BuildContext context, DateTime d, DateTime n) {
     final difference = n.difference(d);
+    var label = "";
+    var semanticLabel = "";
 
     if ((difference.inDays / 7).floor() >= 1) {
-      return '1w ago';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays}d ago';
+      label = L.of(context)!.episode_time_weeks_ago(1);
+      semanticLabel = L.of(context)!.episode_semantic_time_weeks_ago(1);
     } else if (difference.inDays >= 1) {
-      return '1d ago';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours}h ago';
+      label = L.of(context)!.episode_time_days_ago(difference.inDays);
+      semanticLabel = L.of(context)!.episode_semantic_time_days_ago(difference.inDays);
     } else if (difference.inHours >= 1) {
-      return '1h ago';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes}m ago';
+      label = L.of(context)!.episode_time_hours_ago(difference.inHours);
+      semanticLabel = L.of(context)!.episode_semantic_time_hours_ago(difference.inHours);
     } else if (difference.inMinutes >= 1) {
-      return '1m ago';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds}s ago';
+      label = L.of(context)!.episode_time_minutes_ago(difference.inMinutes);
+      semanticLabel = L.of(context)!.episode_semantic_time_minutes_ago(difference.inMinutes);
     } else {
-      return 'Just now';
+      label = L.of(context)!.episode_time_now;
+      semanticLabel = L.of(context)!.episode_time_now;
     }
+
+    return (label, semanticLabel);
   }
 }
 
