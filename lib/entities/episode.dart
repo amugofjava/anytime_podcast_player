@@ -324,6 +324,8 @@ class Episode {
             thumbImageUrl == other.thumbImageUrl &&
             publicationDate?.millisecondsSinceEpoch == other.publicationDate?.millisecondsSinceEpoch &&
             contentUrl == other.contentUrl &&
+            length == other.length &&
+            mimeType == other.mimeType &&
             author == other.author &&
             season == other.season &&
             episode == other.episode &&

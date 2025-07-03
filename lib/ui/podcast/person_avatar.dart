@@ -53,9 +53,9 @@ class PersonAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: person.link != null && person.link!.isNotEmpty
+      onTap: person.link.isNotEmpty
           ? () {
-              final uri = Uri.parse(person.link!);
+              final uri = Uri.parse(person.link);
 
               unawaited(
                 canLaunchUrl(uri).then((value) => launchUrl(uri)),
@@ -77,20 +77,23 @@ class PersonAvatar extends StatelessWidget {
                 ),
                 child: CircleAvatar(
                   radius: radius,
-                  foregroundImage: person.image == null
+                  foregroundImage: person.image.isEmpty
                       ? null
                       : ExtendedImage.network(
-                          person.image!,
+                          person.image,
                           cache: true,
                         ).image,
                   child: Text(initials),
                 ),
               ),
               if (showName)
-                Text(
-                  person.name,
-                  maxLines: 3,
-                  textAlign: TextAlign.center,
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Text(
+                    person.name,
+                    maxLines: 3,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               if (showName) Text(role),
             ],

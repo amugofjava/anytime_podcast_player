@@ -250,8 +250,8 @@ class MobilePodcastService extends PodcastService {
           name: p.name,
           role: p.role ?? '',
           group: p.group ?? '',
-          image: p.image,
-          link: p.link,
+          image: p.image ?? '',
+          link: p.link ?? '',
         ));
       }
 
@@ -333,10 +333,10 @@ class MobilePodcastService extends PodcastService {
           for (var p in episode.persons) {
             episodePersons.add(Person(
               name: p.name,
-              role: p.role!,
-              group: p.group!,
-              image: p.image,
-              link: p.link,
+              role: p.role ?? '',
+              group: p.group ?? '',
+              image: p.image ?? '',
+              link: p.link ?? '',
             ));
           }
         } else if (persons.isNotEmpty) {
