@@ -143,23 +143,23 @@ void main() {
 
       podcast3.episodes = <Episode>[
         Episode(
-            guid: 'EP001',
-            title: 'Episode 1',
+            guid: 'EP003',
+            title: 'Episode 3',
             pguid: podcast3.guid,
             podcast: podcast3.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 1))),
         Episode(
             guid: 'EP002',
             title: 'Episode 2',
             pguid: podcast3.guid,
             podcast: podcast3.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 2))),
         Episode(
-            guid: 'EP003',
-            title: 'Episode 3',
+            guid: 'EP001',
+            title: 'Episode 1',
             pguid: podcast3.guid,
             podcast: podcast3.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 3))),
       ];
 
       await persistenceService!.savePodcast(podcast3);
@@ -187,23 +187,23 @@ void main() {
 
       podcast4.episodes = <Episode>[
         Episode(
-            guid: 'EP001',
-            title: 'Episode 1',
+            guid: 'EP003',
+            title: 'Episode 3',
             pguid: podcast4.guid,
             podcast: podcast4.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 1))),
         Episode(
             guid: 'EP002',
             title: 'Episode 2',
             pguid: podcast4.guid,
             podcast: podcast4.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 2))),
         Episode(
-            guid: 'EP003',
-            title: 'Episode 3',
+            guid: 'EP001',
+            title: 'Episode 1',
             pguid: podcast4.guid,
             podcast: podcast4.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(hours: 3))),
       ];
 
       await persistenceService!.savePodcast(podcast4);
@@ -307,23 +307,23 @@ void main() {
     test('Subscribe to podcasts and retrieve', () async {
       podcast2.episodes = <Episode>[
         Episode(
-            guid: 'EP001',
-            title: 'Episode 1',
+            guid: 'EP003',
+            title: 'Episode 3',
             pguid: podcast2.guid,
             podcast: podcast2.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(days: 1))),
         Episode(
             guid: 'EP002',
             title: 'Episode 2',
             pguid: podcast2.guid,
             podcast: podcast2.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(days: 2))),
         Episode(
-            guid: 'EP003',
-            title: 'Episode 3',
+            guid: 'EP001',
+            title: 'Episode 1',
             pguid: podcast2.guid,
             podcast: podcast2.title,
-            publicationDate: DateTime.now()),
+            publicationDate: DateTime.now().subtract(const Duration(days: 3))),
       ];
 
       var episode2 = podcast2.episodes[1];
