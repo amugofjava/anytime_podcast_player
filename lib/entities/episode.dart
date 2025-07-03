@@ -264,7 +264,7 @@ class Episode {
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['publicationDate'] as String)),
       contentUrl: episode['contentUrl'] as String?,
       length: episode['length'] as int? ?? 0,
-      mimeType: episode['mimeType'] as String? ?? '',
+      mimeType: episode['mimeType'] as String?,
       author: episode['author'] as String?,
       season: int.parse(episode['season'] as String? ?? '0'),
       episode: int.parse(episode['episode'] as String? ?? '0'),
