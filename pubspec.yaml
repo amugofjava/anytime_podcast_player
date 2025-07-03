@@ -24,7 +24,7 @@ dependencies:
   flutter_html: ^3.0.0
   flutter_html_svg: ^3.0.0
   flutter_html_table: ^3.0.0
-  flutter_launcher_icons: ^0.14.2
+  flutter_launcher_icons: ^0.14.4
   flutter_spinkit: ^5.0.0
   html: ^0.15.6
   intl: ^0.20.2
