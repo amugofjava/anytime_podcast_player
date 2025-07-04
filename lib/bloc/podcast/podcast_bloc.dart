@@ -244,13 +244,8 @@ class PodcastBloc extends Bloc {
   }
 
   Future<void> _loadFilteredEpisodes() async {
-    if (_podcast != null) {
-      _podcast = await podcastService.loadPodcast(
-        podcast: _podcast!,
-        highlightNewEpisodes: false,
-        refresh: false,
-      );
-
+    if (_podcast != null && _podcast!.id != null) {
+      _podcast = await podcastService.loadPodcastById(id: _podcast!.id!);
       _episodes = _podcast!.episodes;
       _podcastStream.add(BlocPopulatedState<Podcast>(results: _podcast));
       _refresh();
