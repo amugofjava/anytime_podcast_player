@@ -1136,7 +1136,7 @@
       "hours": {}
     }
   },
-  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} hour ago tada!}other{{hours} hours ago you idiot}}",
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} hour ago}other{{hours} hours ago}}",
   "@episode_semantic_time_hours_ago": {
     "description": "Shows number of hours ago the episode was release, longer form for screen readers",
     "type": "text",

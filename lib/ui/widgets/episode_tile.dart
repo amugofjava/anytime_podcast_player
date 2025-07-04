@@ -927,10 +927,10 @@ class EpisodeSubtitle extends StatelessWidget {
     if (length.inSeconds > 0) {
       if (length.inSeconds < 60) {
         title = '$dateLabel • ${L.of(context)!.time_semantic_seconds(length.inSeconds)}';
-        semanticTitle = '$dateSemanticLabel • ${L.of(context)!.time_seconds(length.inSeconds)}';
+        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_seconds(length.inSeconds)}';
       } else {
         title = '$dateLabel • ${L.of(context)!.time_semantic_minutes(length.inMinutes)}';
-        semanticTitle = '$dateSemanticLabel • ${L.of(context)!.time_minutes(length.inMinutes)}';
+        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_minutes(length.inMinutes)}';
       }
     } else {
       title = dateLabel;
@@ -953,7 +953,7 @@ class EpisodeSubtitle extends StatelessWidget {
       final mb = (episode.length / (1024 * 1024)).toStringAsFixed(1);
 
       title = '$title • $mb${L.of(context)!.label_megabytes_abbr}';
-      semanticTitle = '$semanticTitle • $mb ${L.of(context)!.label_megabytes}';
+      semanticTitle = '$semanticTitle, $mb ${L.of(context)!.label_megabytes}';
     }
 
     return Padding(
@@ -970,8 +970,8 @@ class EpisodeSubtitle extends StatelessWidget {
 
   (String, String) calculateTimeAgo(BuildContext context, DateTime d, DateTime n) {
     final difference = n.difference(d);
-    var label = "";
-    var semanticLabel = "";
+    var label = '';
+    var semanticLabel = '';
 
     if ((difference.inDays / 7).floor() >= 1) {
       label = L.of(context)!.episode_time_weeks_ago(1);

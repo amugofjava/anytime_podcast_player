@@ -1912,8 +1912,8 @@ class L {
         Intl.message(
           '''${Intl.plural(
             hours,
-            one: '${hours} hour ago tada!',
-            other: '${hours} hours ago you idiot',
+            one: '${hours} hour ago',
+            other: '${hours} hours ago',
           )}''',
           args: [hours],
           name: 'episode_semantic_time_hours_ago',
