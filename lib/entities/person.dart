@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:anytime/core/extensions.dart';
+
 
 /// This class represents a person of interest to the podcast.
 ///
@@ -11,17 +11,16 @@ class Person {
   final String name;
   final String role;
   final String group;
-  final String? image;
-  final String? link;
+  final String image;
+  final String link;
 
   Person({
     required this.name,
     this.role = '',
     this.group = '',
-    String? image = '',
-    String? link = '',
-  })  : image = image?.forceHttps,
-        link = link?.forceHttps;
+    this.image = '',
+    this.link = '',
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

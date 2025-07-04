@@ -345,23 +345,19 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Episode>> loadQueue() async {
-    var episodes = <Episode>[];
-
+    final episodes = <Episode>[];
     final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _queueStore.record(1).getSnapshot(await _db);
 
     if (snapshot != null) {
       var queue = Queue.fromMap(snapshot.key, snapshot.value);
 
-      var episodeFinder = Finder(filter: Filter.inList('guid', queue.guids));
+      for (var q in queue.guids) {
+        final e = await findEpisodeByGuid(q);
 
-      final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
-          await _episodeStore.find(await _db, finder: episodeFinder);
-
-      episodes = recordSnapshots.map((snapshot) {
-        final episode = Episode.fromMap(snapshot.key, snapshot.value);
-
-        return episode;
-      }).toList();
+        if (e != null) {
+          episodes.add(e);
+        }
+      }
     }
 
     return episodes;

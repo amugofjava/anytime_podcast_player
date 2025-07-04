@@ -527,6 +527,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   Future<void> _loadQueue() async {
     _queue = await podcastService.loadQueue();
+    _updateQueueState();
   }
 
   Future<void> _completed() async {
