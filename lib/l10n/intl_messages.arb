@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2025-07-02T14:53:50.883845",
+  "@@last_modified": "2025-07-04T06:40:38.603197",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -1207,6 +1207,12 @@
   "label_megabytes_abbr": "mb",
   "@label_megabytes_abbr": {
     "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Episode Actions",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
     "type": "text",
     "placeholders": {}
   }

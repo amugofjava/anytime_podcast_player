@@ -2017,6 +2017,16 @@ class L {
           locale: localeName,
         );
   }
+
+  String get label_episode_actions {
+    return message('label_episode_actions') ??
+        Intl.message(
+          'Episode Actions',
+          name: 'label_episode_actions',
+          desc: 'Episode Actions title',
+          locale: localeName,
+        );
+  }
 }
 
 class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
