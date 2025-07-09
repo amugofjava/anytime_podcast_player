@@ -21,11 +21,39 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'de';
 
-  static m0(minutes) => "Noch ${minutes} min";
+  static m0(days) => "${Intl.plural(days, one: 'Vor einem Tag', other: 'Vor ${days} Tagen')}";
 
-  static m1(seconds) => "Noch ${seconds} sek";
+  static m1(hours) => "${Intl.plural(hours, one: 'Vor einer Stunde', other: 'Vor ${hours} Stunden')}";
 
-  static m2(minutes) => "${minutes} Minuten";
+  static m2(minutes) => "Noch ${minutes} Minuten";
+
+  static m3(minutes) => "${Intl.plural(minutes, one: 'Vor 1 Minute', other: 'Vor ${minutes} Minuten')}";
+
+  static m4(seconds) => "Noch ${seconds} Sekunden";
+
+  static m5(weeks) => "${Intl.plural(weeks, one: 'Vor einer Woche', other: 'Vor ${weeks} Wochen')}";
+
+  static m6(days) => "${Intl.plural(days, one: 'Vor 1T', other: 'Vor ${days}T')}";
+
+  static m7(hours) => "${Intl.plural(hours, one: 'Vor 1h', other: 'Vor ${hours}h')}";
+
+  static m8(minutes) => "Noch ${minutes} min";
+
+  static m9(minutes) => "${Intl.plural(minutes, one: 'Vor 1m', other: 'Vor ${minutes}m')}";
+
+  static m10(seconds) => "Noch ${seconds} sek";
+
+  static m11(weeks) => "${Intl.plural(weeks, one: 'Vor 1W', other: 'Vor ${weeks}W')}";
+
+  static m12(minutes) => "${minutes} Minuten";
+
+  static m13(minutes) => "${minutes} min";
+
+  static m14(seconds) => "${seconds} sek";
+
+  static m15(minutes) => "${minutes} Minuten";
+
+  static m16(seconds) => "${seconds} Sekunden";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -69,19 +97,33 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_filter_started_label': MessageLookupByLibrary.simpleMessage('Gestartet'),
     'episode_filter_unplayed_label': MessageLookupByLibrary.simpleMessage('Nicht gespielt'),
     'episode_label': MessageLookupByLibrary.simpleMessage('Episode'),
+    'episode_semantic_time_days_ago': m0,
+    'episode_semantic_time_hours_ago': m1,
+    'episode_semantic_time_minute_remaining': m2,
+    'episode_semantic_time_minutes_ago': m3,
+    'episode_semantic_time_second_remaining': m4,
+    'episode_semantic_time_weeks_ago': m5,
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('Alphabetisch von A bis Z'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('Alphabetisch von Z bis A'),
     'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Das Älteste zuerst'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Das Neueste zuerst'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Standard'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Episoden sortieren'),
-    'episode_time_minute_remaining': m0,
-    'episode_time_second_remaining': m1,
+    'episode_time_days_ago': m6,
+    'episode_time_hours_ago': m7,
+    'episode_time_minute_remaining': m8,
+    'episode_time_minutes_ago': m9,
+    'episode_time_now': MessageLookupByLibrary.simpleMessage('Jetzt'),
+    'episode_time_second_remaining': m10,
+    'episode_time_weeks_ago': m11,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Episode kann nicht abgespielt werden. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('Während der Wiedergabe ist ein unerwarteter Fehler aufgetreten. Überprüfen Sie bitte Ihre Verbindung und versuchen Sie es erneut.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('30 Sekunden schneller Vorlauf'),
     'feedback_menu_item_label': MessageLookupByLibrary.simpleMessage('Rückmeldung'),
     'go_back_button_label': MessageLookupByLibrary.simpleMessage('Geh Zurück'),
+    'label_episode_actions': MessageLookupByLibrary.simpleMessage('Episoden-Aktionen'),
+    'label_megabytes': MessageLookupByLibrary.simpleMessage('Megabyte'),
+    'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Importieren'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Layout'),
     'library': MessageLookupByLibrary.simpleMessage('Bibliothek'),
@@ -195,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Podcast teilen'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Notizen anzeigen'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Ende der Folge'),
-    'sleep_minute_label': m2,
+    'sleep_minute_label': m12,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Aus'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep-Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Halt'),
@@ -203,6 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Stop Download'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Folgen'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Folgen'),
+    'time_minutes': m13,
+    'time_seconds': m14,
+    'time_semantic_minutes': m15,
+    'time_semantic_seconds': m16,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transkript'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Warum nicht?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_de.html'),

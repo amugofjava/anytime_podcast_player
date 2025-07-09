@@ -262,7 +262,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_switch_internal": "Новые скачивания будут сохраняться на внутреннем хранилище. Уже существующие так и останутся на SD-карте.",
+  "settings_download_switch_internal": "Новые скачивания будут сохраняться на внутреннем хранилище. Уже существующие так и останутся на SD-ка��те.",
   "@settings_download_switch_internal": {
     "description": "Displayed when user switches from internal SD card to internal storage",
     "type": "text",
@@ -594,7 +594,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "discovery_categories_pindex": "Все,После шоу,Альтернатива,Животные,Анимация,Искусство,Астрономия,Автомобили,Авиация,Бейсбол,Баскетбол,Красота,Книги,Буддизм,Предпринимательство,Карьера,Химия,Христианство,Климат,Комедия,Комментарии,Курсы,Ремёсла,Крикет,Криптовалюта,Культура,Ежедневные,Дизайн,Документальные,Драма,Земля,Образование,Развлечения,Предпринимательство,Семья,Фэнтези,Мода,Художественная литература,Фильм,Фитнес,Еда,Футбол,Игры,Сад,Гольф,Государство,Здоровье,Индуизм,История,Хобби,Хоккей,Дом,Советы,Импровизации,Интервью,Инвестиции,Ислам,Журналы,Иудаизм,Дети,Языки,Обучение,Досуг,Жизнь,Менеджмент,Манга,Маркетинг,Математика,Медицина,Умственный,Музыка,Естественный,Природа,Новости,Сообщества,Питание,Воспитание детей,Выступление,Личное,Домашние животные,Философия,Физика,Места,Политика,Отношения,Религия,Обзоры,Ролевые игры,Регби,Бег,Наука,Самосовершенствование,Сексуальность,Футбол,Социальное,Общество,Духовность,Спорт,Стендап,Истории,Плавание,ТВ,Настолки,Технологии,Теннис,Путешествия,Следствие вели,Видеоигры,Визуальные,Волейбол,Погода,Дикая местность,Борьба",
+  "discovery_categories_pindex": "Все,После шоу,Альтернатива,Животные,Анимация,Искусство,Астрономия,Автомобили,Авиация,Бейсбол,Баскетбол,Красота,Книги,Буддизм,Предпринимательство,Карьера,Химия,Христианство,Климат,Комедия,Комментарии,Курсы,Ремёсла,Крикет,Криптовалюта,Культура,Ежедневные,Дизайн,Документальные,Драма,Земля,Образование,Развлечения,Предпринимательство,Семья,Фэнтези,Мода,Художественная литература,Фильм,Фитнес,Еда,Футбол,Игры,Сад,Гольф,Государство,Здоровье,Индуизм,История,Хобби,Хоккей,Дом,Советы,Импровизации,Интервью,Инвестиции,Ислам,Журналы,Иудаизм,Дети,Языки,Обучение,Досуг,Жизнь,Менеджмент,Манга,М��ркетинг,Математика,Медицина,Умственный,Музыка,Естественный,Природа,Новости,Сообщества,Питание,Воспитание детей,Выступление,Личное,Домашние животные,Философия,Физика,Места,Политика,Отношения,Религия,Обзоры,Ролевые игры,Регби,Бег,Наука,Самосовершенствование,Сексуальность,Футбол,Социальное,Общество,Духовность,Спорт,Стендап,Истории,Плавание,ТВ,Настолки,Технологии,Теннис,Путешествия,Следствие вели,Видеоигры,Визуальные,Волейбол,Погода,Дикая местность,Борьба",
   "@discovery_categories_pindex": {
     "description": "Comma separated list of Podcast Index categories",
     "type": "text",
@@ -870,7 +870,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "unsubscribe_message": "При отмене подписки будут удалены все загруженные эпизоды этого подкаста.",
+  "unsubscribe_message": "При отмене ��одписки будут удалены все загруженные эпизоды этого подкаста.",
   "@unsubscribe_message": {
     "description": "Displayed when the user unsubscribes from a podcast.",
     "type": "text",
@@ -1115,6 +1115,158 @@
   "semantic_announce_loading": "Загрузка, пожалуйста, подождите.",
   "@semantic_announce_loading": {
     "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_time_minute_remaining": "{minutes} мин осталось",
+  "@episode_time_minute_remaining": {
+    "description": "Shows number of minutes of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_second_remaining": "{seconds} сек осталось",
+  "@episode_time_second_remaining": {
+    "description": "Shows number of seconds of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_semantic_time_minute_remaining": "{minutes} минут осталось",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "{seconds} секунд осталось",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{1н назад}other{{weeks}н назад}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{Одна неделя назад}other{{weeks} недели назад}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{1д назад}other{{days}д назад}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{О��ин день назад}other{{days} дня назад}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{1ч назад}other{{hours}ч назад}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} час назад}other{{hours} часов назад}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{1м назад}other{{minutes}м назад}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{1 минуту назад}other{{minutes} минут назад}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "Сейчас",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time_seconds": "{seconds} сек",
+  "@time_seconds": {
+    "description": "Episode length in seconds",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_semantic_seconds": "{seconds} секунд",
+  "@time_semantic_seconds": {
+    "description": "Episode length in seconds - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_minutes": "{minutes} мин",
+  "@time_minutes": {
+    "description": "Episode length in minutes",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "time_semantic_minutes": "{minutes} минут",
+  "@time_semantic_minutes": {
+    "description": "Episode length in minutes - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "label_megabytes": "мегабайт",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "mb",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Действия",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
     "type": "text",
     "placeholders": {}
   },
