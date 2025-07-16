@@ -1269,5 +1269,6 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-  }
+  },
+  "@@locale": "gl"
 }
