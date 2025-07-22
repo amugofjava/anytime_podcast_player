@@ -120,4 +120,11 @@ void main() {
     mobileSettingsService?.deleteDownloadedPlayedEpisodes = true;
     expect(mobileSettingsService?.deleteDownloadedPlayedEpisodes, true);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test autoplay toggle', () async {
+    expect(mobileSettingsService?.autoPlay, false);
+    expectLater(settingsListener, emits('autoplay'));
+    mobileSettingsService?.autoPlay = true;
+    expect(mobileSettingsService?.autoPlay, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }
