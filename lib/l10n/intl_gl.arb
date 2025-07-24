@@ -89,6 +89,12 @@
     "type": "text",
     "placeholders": {}
   },
+   "mark_downloaded_label": "Marcar como descargado",
+    "@mark_downloaded_label": {
+          "description": "Mark as downloaded",
+          "type": "text",
+          "placeholders": {}
+        },
   "delete_episode_confirmation": "Tes certeza de querer eliminar este episodio?",
   "@delete_episode_confirmation": {
     "description": "User is asked to confirm when they attempt to delete an episode",

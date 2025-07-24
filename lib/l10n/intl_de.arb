@@ -933,6 +933,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_filter_downloaded_label": "heruntergeladen",
+  "@episode_filter_downloaded_label": {
+        "description": "Only show episodes that have been downloaded",
+        "type": "text",
+        "placeholders": {}
+      },
   "episode_filter_no_episodes_title_label": "Keine Episoden Gefunden",
   "@episode_filter_no_episodes_title_label": {
     "description": "No Episodes title",

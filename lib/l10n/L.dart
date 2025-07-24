@@ -10,8 +10,11 @@ import 'messages_all.dart';
 class L {
   L(this.localeName, this.overrides);
 
-  static Future<L> load(Locale locale, Map<String, Map<String, String>> overrides) {
-    final name = locale.countryCode?.isEmpty ?? true ? locale.languageCode : locale.toString();
+  static Future<L> load(
+      Locale locale, Map<String, Map<String, String>> overrides) {
+    final name = locale.countryCode?.isEmpty ?? true
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
 
     return initializeMessages(localeName).then((_) {
@@ -28,10 +31,13 @@ class L {
 
   /// Message definitions start here
   String? message(String name) {
-    if (overrides == null || overrides.isEmpty || !overrides.containsKey(name)) {
+    if (overrides == null ||
+        overrides.isEmpty ||
+        !overrides.containsKey(name)) {
       return null;
     } else {
-      return overrides[name]![localeName] ?? 'Missing translation for $name and locale $localeName';
+      return overrides[name]![localeName] ??
+          'Missing translation for $name and locale $localeName';
     }
   }
 
@@ -162,7 +168,8 @@ class L {
         Intl.message(
           'Search for podcasts',
           name: 'search_for_podcasts_hint',
-          desc: 'Hint displayed on search bar when the user clicks the search icon.',
+          desc:
+              'Hint displayed on search bar when the user clicks the search icon.',
           locale: localeName,
         );
   }
@@ -172,7 +179,8 @@ class L {
         Intl.message(
           'Tap the Discovery button below or use the search bar above to find your first podcast',
           name: 'no_subscriptions_message',
-          desc: 'Displayed on the library tab when the user has no subscriptions',
+          desc:
+              'Displayed on the library tab when the user has no subscriptions',
           locale: localeName,
         );
   }
@@ -222,7 +230,8 @@ class L {
         Intl.message(
           'Are you sure you wish to delete this episode?',
           name: 'delete_episode_confirmation',
-          desc: 'User is asked to confirm when they attempt to delete an episode',
+          desc:
+              'User is asked to confirm when they attempt to delete an episode',
           locale: localeName,
         );
   }
@@ -242,7 +251,8 @@ class L {
         Intl.message(
           'You do not have any downloaded episodes',
           name: 'no_downloads_message',
-          desc: 'Displayed on the library tab when the user has no subscriptions',
+          desc:
+              'Displayed on the library tab when the user has no subscriptions',
           locale: localeName,
         );
   }
@@ -252,7 +262,8 @@ class L {
         Intl.message(
           'No podcasts found',
           name: 'no_search_results_message',
-          desc: 'Displayed on the library tab when the user has no subscriptions',
+          desc:
+              'Displayed on the library tab when the user has no subscriptions',
           locale: localeName,
         );
   }
@@ -262,7 +273,8 @@ class L {
         Intl.message(
           'Could not load podcast episodes. Please check your connection.',
           name: 'no_podcast_details_message',
-          desc: 'Displayed on the podcast details page when the details could not be loaded',
+          desc:
+              'Displayed on the podcast details page when the details could not be loaded',
           locale: localeName,
         );
   }
@@ -412,7 +424,8 @@ class L {
         Intl.message(
           'Are you sure you wish to stop this download and delete the episode?',
           name: 'stop_download_confirmation',
-          desc: 'User is asked to confirm when they wish to stop the active download.',
+          desc:
+              'User is asked to confirm when they wish to stop the active download.',
           locale: localeName,
         );
   }
@@ -482,7 +495,8 @@ class L {
         Intl.message(
           'New downloads will be saved to internal storage. Existing downloads will remain on the SD card.',
           name: 'settings_download_switch_internal',
-          desc: 'Displayed when user switches from internal SD card to internal storage',
+          desc:
+              'Displayed when user switches from internal SD card to internal storage',
           locale: localeName,
         );
   }
@@ -672,7 +686,8 @@ class L {
         Intl.message(
           'Full screen player mode on episode start',
           name: 'settings_auto_open_now_playing',
-          desc: 'Displayed when user switches to use full screen player automatically',
+          desc:
+              'Displayed when user switches to use full screen player automatically',
           locale: localeName,
         );
   }
@@ -682,7 +697,8 @@ class L {
         Intl.message(
           'Unable to play episode. Please check your connection and try again.',
           name: 'error_no_connection',
-          desc: 'Displayed when attempting to start streaming an episode with no data connection',
+          desc:
+              'Displayed when attempting to start streaming an episode with no data connection',
           locale: localeName,
         );
   }
@@ -692,7 +708,8 @@ class L {
         Intl.message(
           'An unexpected error occurred during playback. Please check your connection and try again.',
           name: 'error_playback_fail',
-          desc: 'Displayed when attempting to start streaming an episode with no data connection',
+          desc:
+              'Displayed when attempting to start streaming an episode with no data connection',
           locale: localeName,
         );
   }
@@ -1498,6 +1515,16 @@ class L {
         );
   }
 
+  String get episode_filter_downloaded_label {
+    return message('episode_filter_downloaded_label') ??
+        Intl.message(
+          'Downloaded',
+          name: 'episode_filter_downloaded_label',
+          desc: 'Only show episodes that have been downloaded',
+          locale: localeName,
+        );
+  }
+
   String get episode_filter_no_episodes_title_label {
     return message('episode_filter_no_episodes_title_label') ??
         Intl.message(
@@ -1513,7 +1540,8 @@ class L {
         Intl.message(
           'No Episodes Found',
           name: 'episode_filter_no_episodes_title_description',
-          desc: 'This podcast has no episodes matching your search criteria and filter',
+          desc:
+              'This podcast has no episodes matching your search criteria and filter',
           locale: localeName,
         );
   }
@@ -1623,7 +1651,8 @@ class L {
         Intl.message(
           'Dismiss layout selector',
           name: 'scrim_layout_selector',
-          desc: 'Replaces default scrim label for layout selector bottom sheet.',
+          desc:
+              'Replaces default scrim label for layout selector bottom sheet.',
           locale: localeName,
         );
   }
@@ -1723,7 +1752,8 @@ class L {
         Intl.message(
           'Dismiss episode details',
           name: 'scrim_episode_details_selector',
-          desc: 'Replaces default scrim label for episode details bottom sheet.',
+          desc:
+              'Replaces default scrim label for episode details bottom sheet.',
           locale: localeName,
         );
   }
@@ -1869,7 +1899,8 @@ class L {
           '''${Intl.plural(weeks, one: 'One week ago', other: '${weeks} weeks ago')}''',
           args: [weeks],
           name: 'episode_semantic_time_weeks_ago',
-          desc: 'Shows number of weeks ago the episode was release, longer form for screen readers',
+          desc:
+              'Shows number of weeks ago the episode was release, longer form for screen readers',
           locale: localeName,
         );
   }
@@ -1891,7 +1922,8 @@ class L {
           '''${Intl.plural(days, one: 'One day ago', other: '${days} days ago')}''',
           args: [days],
           name: 'episode_semantic_time_days_ago',
-          desc: 'Shows number of days ago the episode was release, longer form for screen readers',
+          desc:
+              'Shows number of days ago the episode was release, longer form for screen readers',
           locale: localeName,
         );
   }
@@ -1917,7 +1949,8 @@ class L {
           )}''',
           args: [hours],
           name: 'episode_semantic_time_hours_ago',
-          desc: 'Shows number of hours ago the episode was release, longer form for screen readers',
+          desc:
+              'Shows number of hours ago the episode was release, longer form for screen readers',
           locale: localeName,
         );
   }
@@ -1939,7 +1972,8 @@ class L {
           '''${Intl.plural(minutes, one: '1 minute ago', other: '${minutes} minutes ago')}''',
           args: [minutes],
           name: 'episode_semantic_time_minutes_ago',
-          desc: 'Shows number of minutes ago the episode was release, longer form for screen readers',
+          desc:
+              'Shows number of minutes ago the episode was release, longer form for screen readers',
           locale: localeName,
         );
   }
@@ -2033,7 +2067,16 @@ class AnytimeLocalisationsDelegate extends LocalizationsDelegate<L> {
   const AnytimeLocalisationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'vi'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => [
+        'en',
+        'es',
+        'de',
+        'gl',
+        'it',
+        'nl',
+        'ru',
+        'vi'
+      ].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, const {});
@@ -2056,7 +2099,16 @@ class EmbeddedLocalisationsDelegate extends LocalizationsDelegate<L> {
   EmbeddedLocalisationsDelegate({@required this.messages = const {}});
 
   @override
-  bool isSupported(Locale locale) => ['en', 'es', 'de', 'gl', 'it', 'nl', 'ru', 'vi'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => [
+        'en',
+        'es',
+        'de',
+        'gl',
+        'it',
+        'nl',
+        'ru',
+        'vi'
+      ].contains(locale.languageCode);
 
   @override
   Future<L> load(Locale locale) => L.load(locale, messages);

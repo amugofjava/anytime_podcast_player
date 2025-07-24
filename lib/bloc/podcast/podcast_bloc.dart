@@ -29,6 +29,7 @@ enum PodcastEvent {
   episodeFilterStarted,
   episodeFilterNotFinished,
   episodeFilterFinished,
+  episodeFilterDownloaded,
   // Sort
   episodeSortDefault,
   episodeSortLatest,
@@ -57,19 +58,23 @@ class PodcastBloc extends Bloc {
   late PublishSubject<List<Podcast>> _subscriptions;
 
   /// Stream containing details of the current podcast.
-  final BehaviorSubject<BlocState<Podcast>> _podcastStream = BehaviorSubject<BlocState<Podcast>>(sync: true);
+  final BehaviorSubject<BlocState<Podcast>> _podcastStream =
+      BehaviorSubject<BlocState<Podcast>>(sync: true);
 
   /// A separate stream that allows us to listen to changes in the podcast's episodes.
-  final BehaviorSubject<List<Episode?>?> _episodesStream = BehaviorSubject<List<Episode?>?>();
+  final BehaviorSubject<List<Episode?>?> _episodesStream =
+      BehaviorSubject<List<Episode?>?>();
 
   /// Receives subscription and mark/clear as played events.
-  final PublishSubject<PodcastEvent> _podcastEvent = PublishSubject<PodcastEvent>();
+  final PublishSubject<PodcastEvent> _podcastEvent =
+      PublishSubject<PodcastEvent>();
 
   /// Receives episode search events.
   final BehaviorSubject<String> _podcastSearchEvent = BehaviorSubject<String>();
 
   /// A separate stream that allows us to listen to events from background loading of episodes.
-  final BehaviorSubject<BlocState<void>> _backgroundLoadStream = BehaviorSubject<BlocState<void>>();
+  final BehaviorSubject<BlocState<void>> _backgroundLoadStream =
+      BehaviorSubject<BlocState<void>>();
 
   Podcast? _podcast;
   List<Episode> _episodes = <Episode>[];
@@ -87,7 +92,8 @@ class PodcastBloc extends Bloc {
 
   void _init() {
     /// When someone starts listening for subscriptions, load them.
-    _subscriptions = PublishSubject<List<Podcast>>(onListen: _loadSubscriptions);
+    _subscriptions =
+        PublishSubject<List<Podcast>>(onListen: _loadSubscriptions);
 
     /// When we receive a load podcast request, send back a BlocState.
     _listenPodcastLoad();
@@ -130,14 +136,17 @@ class PodcastBloc extends Bloc {
         await _loadEpisodes(feed: feed, forceFetch: feed.forceFetch);
 
         /// Do we also need to perform a background refresh?
-        if (feed.podcast.id != null && feed.backgroundFetch && _shouldAutoRefresh()) {
+        if (feed.podcast.id != null &&
+            feed.backgroundFetch &&
+            _shouldAutoRefresh()) {
           silent = feed.errorSilently;
 
           log.fine('Performing background refresh of ${feed.podcast.url}');
 
           _backgroundLoadStream.sink.add(BlocLoadingState<void>());
 
-          await _loadEpisodes(feed: feed, highlightNewEpisodes: true, forceFetch: true);
+          await _loadEpisodes(
+              feed: feed, highlightNewEpisodes: true, forceFetch: true);
         }
 
         _backgroundLoadStream.sink.add(BlocSuccessfulState<void>());
@@ -145,7 +154,8 @@ class PodcastBloc extends Bloc {
         _backgroundLoadStream.sink.add(BlocDefaultState<void>());
 
         // For now we'll assume a network error as this is the most likely.
-        if ((_podcast == null || _lastFeed.podcast.url == _podcast!.url) && !silent) {
+        if ((_podcast == null || _lastFeed.podcast.url == _podcast!.url) &&
+            !silent) {
           _podcastStream.sink.add(BlocErrorState<Podcast>());
 
           log.fine('Error loading podcast', e);
@@ -166,10 +176,12 @@ class PodcastBloc extends Bloc {
     /// after setting time.
     if (settingsService.autoUpdateEpisodePeriod == -1) {
       return false;
-    } else if (_podcast == null || settingsService.autoUpdateEpisodePeriod == 0) {
+    } else if (_podcast == null ||
+        settingsService.autoUpdateEpisodePeriod == 0) {
       return true;
     } else if (_podcast != null && _podcast!.id != null) {
-      var currentTime = DateTime.now().subtract(Duration(minutes: settingsService.autoUpdateEpisodePeriod));
+      var currentTime = DateTime.now()
+          .subtract(Duration(minutes: settingsService.autoUpdateEpisodePeriod));
       var lastUpdated = _podcast!.lastUpdated;
 
       return currentTime.isAfter(lastUpdated);
@@ -207,20 +219,24 @@ class PodcastBloc extends Bloc {
           if (feed.podcast.id == null) {
             log.fine('Podcast ID is null');
             _refresh();
-            _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+            _podcastStream.sink
+                .add(BlocPopulatedState<Podcast>(results: _podcast));
           } else {
             log.fine('Any updates?');
             if (_podcast!.newEpisodes) {
               log.fine('We have new episodes to display');
               _backgroundLoadStream.sink.add(BlocPopulatedState<void>());
-              _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+              _podcastStream.sink
+                  .add(BlocPopulatedState<Podcast>(results: _podcast));
             } else if (_podcast!.updatedEpisodes) {
               log.fine('We have updated episodes to re-display');
               _refresh();
-              _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+              _podcastStream.sink
+                  .add(BlocPopulatedState<Podcast>(results: _podcast));
             } else if (feed.forceFetch) {
               _refresh();
-              _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
+              _podcastStream.sink
+                  .add(BlocPopulatedState<Podcast>(results: _podcast));
             }
           }
         }
@@ -287,10 +303,13 @@ class PodcastBloc extends Bloc {
   void _listenDownloads() {
     // Listen to download progress
     MobileDownloadService.downloadProgress.listen((downloadProgress) {
-      downloadService.findEpisodeByTaskId(downloadProgress.id).then((downloadable) {
+      downloadService
+          .findEpisodeByTaskId(downloadProgress.id)
+          .then((downloadable) {
         if (downloadable != null) {
           // If the download matches a current episode push the update back into the stream.
-          var episode = _episodes.firstWhereOrNull((e) => e.downloadTaskId == downloadProgress.id);
+          var episode = _episodes
+              .firstWhereOrNull((e) => e.downloadTaskId == downloadProgress.id);
 
           if (episode != null) {
             // Update the stream.
@@ -307,7 +326,8 @@ class PodcastBloc extends Bloc {
   void _listenEpisodeRepositoryEvents() {
     podcastService.episodeListener.listen((state) {
       // Do we have this episode?
-      var eidx = _episodes.indexWhere((e) => e.guid == state.episode.guid && e.pguid == state.episode.pguid);
+      var eidx = _episodes.indexWhere((e) =>
+          e.guid == state.episode.guid && e.pguid == state.episode.pguid);
 
       if (eidx != -1) {
         _episodes[eidx] = state.episode;
@@ -320,6 +340,14 @@ class PodcastBloc extends Bloc {
   void _listenPodcastStateEvents() async {
     _podcastEvent.listen((event) async {
       switch (event) {
+        case PodcastEvent.episodeFilterDownloaded:
+          if (_podcast != null) {
+            _podcast!.filter = PodcastEpisodeFilter.downloaded;
+            _podcast =
+                await podcastService.save(_podcast!, withEpisodes: false);
+            await _loadFilteredEpisodes();
+          }
+          break;
         case PodcastEvent.subscribe:
           if (_podcast != null) {
             _podcast = await podcastService.subscribe(_podcast!);
@@ -380,7 +408,8 @@ class PodcastBloc extends Bloc {
         case PodcastEvent.episodeFilterNone:
           if (_podcast != null) {
             _podcast!.filter = PodcastEpisodeFilter.none;
-            _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+            _podcast =
+                await podcastService.save(_podcast!, withEpisodes: false);
             await _loadFilteredEpisodes();
           }
           break;
@@ -429,20 +458,37 @@ class PodcastBloc extends Bloc {
   }
 
   void _listenPodcastSearchEvents() {
-    _podcastSearchEvent.debounceTime(const Duration(milliseconds: 200)).listen((search) {
+    _podcastSearchEvent
+        .debounceTime(const Duration(milliseconds: 200))
+        .listen((search) {
       _searchTerm = search;
       applySearchFilter();
     });
   }
 
   void applySearchFilter() {
-    if (_searchTerm.isEmpty) {
-      _episodesStream.add(_episodes);
-    } else {
-      var searchFilteredEpisodes =
-          _episodes.where((e) => e.title!.toLowerCase().contains(_searchTerm.trim().toLowerCase())).toList();
-      _episodesStream.add(searchFilteredEpisodes);
+    List<Episode> filtered = _episodes;
+
+    switch (_podcast?.filter) {
+      case PodcastEpisodeFilter.started:
+        filtered = filtered.where((e) => e.position > 0 && !e.played).toList();
+        break;
+      case PodcastEpisodeFilter.played:
+        filtered = filtered.where((e) => e.played).toList();
+        break;
+      case PodcastEpisodeFilter.notPlayed:
+        filtered = filtered.where((e) => !e.played).toList();
+        break;
+      case PodcastEpisodeFilter.downloaded:
+        filtered = filtered
+            .where((e) => e.downloadState == DownloadState.downloaded)
+            .toList();
+        break;
+      case PodcastEpisodeFilter.none:
+      default:
+        break;
     }
+    _episodesStream.add(filtered);
   }
 
   @override
