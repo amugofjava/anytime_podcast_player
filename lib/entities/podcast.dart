@@ -156,16 +156,10 @@ class Podcast {
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'filter': filter.id,
       'sort': sort.id,
-      'funding': (funding ?? <Funding>[])
-          .map((funding) => funding.toMap())
-          .toList(growable: false),
-      'person': (persons ?? <Person>[])
-          .map((persons) => persons.toMap())
-          .toList(growable: false),
-      'rssFeedLastUpdated': _rssFeedLastUpdated?.millisecondsSinceEpoch ??
-          DateTime(1970, 1, 1).millisecondsSinceEpoch,
-      'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ??
-          DateTime.now().millisecondsSinceEpoch,
+      'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
+      'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
+      'rssFeedLastUpdated': _rssFeedLastUpdated?.millisecondsSinceEpoch ?? DateTime(1970, 1, 1).millisecondsSinceEpoch,
+      'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
 
@@ -262,8 +256,7 @@ class Podcast {
     _lastUpdated = value;
   }
 
-  DateTime get rssFeedLastUpdated =>
-      _rssFeedLastUpdated ?? DateTime(1970, 1, 1);
+  DateTime get rssFeedLastUpdated => _rssFeedLastUpdated ?? DateTime(1970, 1, 1);
 
   set rssFeedLastUpdated(DateTime? value) {
     _rssFeedLastUpdated = value;
@@ -272,10 +265,7 @@ class Podcast {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Podcast &&
-          runtimeType == other.runtimeType &&
-          guid == other.guid &&
-          url == other.url;
+      other is Podcast && runtimeType == other.runtimeType && guid == other.guid && url == other.url;
 
   @override
   int get hashCode => guid.hashCode ^ url.hashCode;
