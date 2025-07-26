@@ -38,7 +38,8 @@ class SembastRepository extends Repository {
     bool cleanup = true,
     String databaseName = 'anytime.db',
   }) {
-    _databaseService = DatabaseService(databaseName, version: 2, upgraderCallback: dbUpgrader);
+    _databaseService =
+        DatabaseService(databaseName, version: 2, upgraderCallback: dbUpgrader);
 
     if (cleanup) {
       _cleanupEpisodes().then((value) {
@@ -52,7 +53,8 @@ class SembastRepository extends Repository {
   /// new podcast we store the current [DateTime] to mark the
   /// subscription date.
   @override
-  Future<Podcast> savePodcast(Podcast podcast, {bool withEpisodes = true}) async {
+  Future<Podcast> savePodcast(Podcast podcast,
+      {bool withEpisodes = true}) async {
     log.fine('Saving podcast (${podcast.id ?? -1}) ${podcast.url}');
 
     final finder = podcast.id == null
@@ -90,7 +92,8 @@ class SembastRepository extends Repository {
       titleSortOrder,
     ]);
 
-    final List<RecordSnapshot<int, Map<String, Object?>>> subscriptionSnapshot = await _podcastStore.find(
+    final List<RecordSnapshot<int, Map<String, Object?>>> subscriptionSnapshot =
+        await _podcastStore.find(
       await _db,
       finder: finder,
     );
@@ -110,7 +113,8 @@ class SembastRepository extends Repository {
 
     await db.transaction((txn) async {
       final podcastFinder = Finder(filter: Filter.byKey(podcast.id));
-      final episodeFinder = Finder(filter: Filter.equals('pguid', podcast.guid));
+      final episodeFinder =
+          Finder(filter: Filter.equals('pguid', podcast.guid));
 
       await _podcastStore.delete(
         txn,
@@ -266,8 +270,9 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Episode>> findDownloads() async {
-    final finder =
-        Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
+    final finder = Finder(
+        filter: Filter.equals('downloadPercentage', '100'),
+        sortOrders: [SortOrder('publicationDate', false)]);
 
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);
@@ -320,7 +325,8 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<Episode> saveEpisode(Episode episode, [bool updateIfSame = false]) async {
+  Future<Episode> saveEpisode(Episode episode,
+      [bool updateIfSame = false]) async {
     var e = await _saveEpisode(episode, updateIfSame);
 
     _episodeSubject.add(EpisodeUpdateState(e));
@@ -329,7 +335,8 @@ class SembastRepository extends Repository {
   }
 
   @override
-  Future<List<Episode>> saveEpisodes(List<Episode> episodes, [bool updateIfSame = false]) async {
+  Future<List<Episode>> saveEpisodes(List<Episode> episodes,
+      [bool updateIfSame = false]) async {
     final updatedEpisodes = <Episode>[];
 
     for (var es in episodes) {
@@ -346,7 +353,8 @@ class SembastRepository extends Repository {
   @override
   Future<List<Episode>> loadQueue() async {
     final episodes = <Episode>[];
-    final RecordSnapshot<int, Map<String, Object?>>? snapshot = await _queueStore.record(1).getSnapshot(await _db);
+    final RecordSnapshot<int, Map<String, Object?>>? snapshot =
+        await _queueStore.record(1).getSnapshot(await _db);
 
     if (snapshot != null) {
       var queue = Queue.fromMap(snapshot.key, snapshot.value);
@@ -391,7 +399,9 @@ class SembastRepository extends Repository {
     final RecordSnapshot<int, Map<String, Object?>>? snapshot =
         await _transcriptStore.findFirst(await _db, finder: finder);
 
-    return snapshot == null ? null : Transcript.fromMap(snapshot.key, snapshot.value);
+    return snapshot == null
+        ? null
+        : Transcript.fromMap(snapshot.key, snapshot.value);
   }
 
   @override
@@ -443,14 +453,17 @@ class SembastRepository extends Repository {
     if (snapshot == null) {
       transcript.id = await _transcriptStore.add(await _db, transcript.toMap());
     } else {
-      await _transcriptStore.update(await _db, transcript.toMap(), finder: finder);
+      await _transcriptStore.update(await _db, transcript.toMap(),
+          finder: finder);
     }
 
     return transcript;
   }
 
   Future<void> _cleanupEpisodes() async {
-    final threshold = DateTime.now().subtract(const Duration(days: 60)).millisecondsSinceEpoch;
+    final threshold = DateTime.now()
+        .subtract(const Duration(days: 60))
+        .millisecondsSinceEpoch;
 
     /// Find all streamed episodes over the threshold.
     final filter = Filter.and([
@@ -480,7 +493,8 @@ class SembastRepository extends Repository {
     await deleteEpisodes(orphaned);
   }
 
-  SortOrder<Object?> _applyEpisodeSort(PodcastEpisodeSort sort, SortOrder<Object?> sortOrder) {
+  SortOrder<Object?> _applyEpisodeSort(
+      PodcastEpisodeSort sort, SortOrder<Object?> sortOrder) {
     switch (sort) {
       case PodcastEpisodeSort.none:
       case PodcastEpisodeSort.latestFirst:
@@ -503,23 +517,30 @@ class SembastRepository extends Repository {
     return sortOrder;
   }
 
-  Filter _applyEpisodeFilter(PodcastEpisodeFilter filter, Filter episodeFilter, String? pguid) {
+  Filter _applyEpisodeFilter(
+      PodcastEpisodeFilter filter, Filter episodeFilter, String? pguid) {
     // If we have an additional episode filter, apply it.
     switch (filter) {
       case PodcastEpisodeFilter.none:
         episodeFilter = Filter.equals('pguid', pguid);
         break;
       case PodcastEpisodeFilter.started:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.notEquals('position', '0')]);
+        episodeFilter = Filter.and(
+            [Filter.equals('pguid', pguid), Filter.notEquals('position', '0')]);
         break;
       case PodcastEpisodeFilter.played:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'true')]);
+        episodeFilter = Filter.and(
+            [Filter.equals('pguid', pguid), Filter.equals('played', 'true')]);
         break;
       case PodcastEpisodeFilter.notPlayed:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
+        episodeFilter = Filter.and(
+            [Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
         break;
       case PodcastEpisodeFilter.downloaded:
-        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('downloaded', '100')]);
+        episodeFilter = Filter.and([
+          Filter.equals('pguid', pguid),
+          Filter.equals('downloaded', '100')
+        ]);
         break;
     }
     return episodeFilter;
@@ -541,14 +562,17 @@ class SembastRepository extends Repository {
             episode!.lastUpdated = dateStamp;
 
             if (episode.id == null) {
-              futures.add(_episodeStore.add(txn, episode.toMap()).then((id) => episode.id = id));
+              futures.add(_episodeStore
+                  .add(txn, episode.toMap())
+                  .then((id) => episode.id = id));
             } else {
               final finder = Finder(filter: Filter.byKey(episode.id));
 
               var existingEpisode = await findEpisodeById(episode.id);
 
               if (existingEpisode == null || existingEpisode != episode) {
-                futures.add(_episodeStore.update(txn, episode.toMap(), finder: finder));
+                futures.add(
+                    _episodeStore.update(txn, episode.toMap(), finder: finder));
               }
             }
           }
@@ -608,9 +632,11 @@ class SembastRepository extends Repository {
         if (podcast.filter == PodcastEpisodeFilter.none) {
           log.fine('Searching for episode ${episode.guid} - ${episode.id}');
 
-          final matchedEpisode = podcast.episodes.indexWhere((e) => e.guid == episode.guid);
+          final matchedEpisode =
+              podcast.episodes.indexWhere((e) => e.guid == episode.guid);
 
-          if (matchedEpisode != -1 && podcast.episodes.length > (matchedEpisode + 1)) {
+          if (matchedEpisode != -1 &&
+              podcast.episodes.length > (matchedEpisode + 1)) {
             log.fine('Found match at index $matchedEpisode');
 
             final nextInSeries = podcast.episodes.indexWhere(
@@ -636,7 +662,8 @@ class SembastRepository extends Repository {
     return null;
   }
 
-  Future<Episode> _loadEpisodeSnapshot(int key, Map<String, Object?> snapshot) async {
+  Future<Episode> _loadEpisodeSnapshot(
+      int key, Map<String, Object?> snapshot) async {
     var episode = Episode.fromMap(key, snapshot);
 
     if (episode.transcriptId! > 0) {
@@ -664,7 +691,8 @@ class SembastRepository extends Repository {
   /// We use the passed [Database] rather than _db to prevent deadlocking, hence the direct
   /// update to data within this routine rather than using the existing find/update methods.
   Future<void> _upgradeV2(Database db) async {
-    List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
+    List<RecordSnapshot<int, Map<String, Object?>>> data =
+        await _podcastStore.find(db);
     final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
 
     log.info('Upgrading Sembast store to V2');
@@ -696,19 +724,22 @@ class SembastRepository extends Repository {
 
         final List<RecordSnapshot<int, Map<String, Object?>>> episodeData =
             await _episodeStore.find(db, finder: episodeFinder);
-        final episodes = episodeData.map((e) => Episode.fromMap(e.key, e.value)).toList();
+        final episodes =
+            episodeData.map((e) => Episode.fromMap(e.key, e.value)).toList();
 
         // Now upgrade episodes
         for (var e in episodes) {
           e.pguid = guid;
-          log.fine('Updating episode guid for ${e.title} from ${e.pguid} to $guid');
+          log.fine(
+              'Updating episode guid for ${e.title} from ${e.pguid} to $guid');
 
           final epf = Finder(filter: Filter.byKey(e.id));
           await _episodeStore.update(db, e.toMap(), finder: epf);
         }
 
         upgradedPodcast.episodes = episodes;
-        await _podcastStore.update(db, upgradedPodcast.toMap(), finder: idFinder);
+        await _podcastStore.update(db, upgradedPodcast.toMap(),
+            finder: idFinder);
       }
     }
   }

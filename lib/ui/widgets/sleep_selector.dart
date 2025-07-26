@@ -44,56 +44,53 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                 width: 48.0,
                 child: Center(
                   child: StreamBuilder<Sleep>(
-                      stream: audioBloc.sleepStream,
-                      initialData: Sleep(type: SleepType.none),
-                      builder: (context, sleepSnapshot) {
-                        var sl = '';
+                    stream: audioBloc.sleepStream,
+                    initialData: Sleep(type: SleepType.none),
+                    builder: (context, sleepSnapshot) {
+                      var sl = '';
 
-                        if (sleepSnapshot.hasData) {
-                          var s = sleepSnapshot.data!;
+                      if (sleepSnapshot.hasData) {
+                        var s = sleepSnapshot.data!;
 
-                          switch (s.type) {
-                            case SleepType.none:
-                              sl = '';
-                            case SleepType.time:
-                              sl =
-                                  '${L.of(context)!.now_playing_episode_time_remaining} ${SleepSlider.formatDuration(s.timeRemaining)}';
-                            case SleepType.episode:
-                              sl =
-                                  '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}';
-                          }
+                        switch(s.type) {
+                          case SleepType.none:
+                            sl = '';
+                          case SleepType.time:
+                            sl = '${L.of(context)!.now_playing_episode_time_remaining} ${SleepSlider.formatDuration(s.timeRemaining)}';
+                          case SleepType.episode:
+                            sl = '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}';
                         }
+                      }
 
-                        return IconButton(
-                          icon: sleepSnapshot.data?.type != SleepType.none
-                              ? Icon(
-                                  Icons.bedtime,
-                                  semanticLabel: '${L.of(context)!.sleep_timer_label}. $sl',
-                                  size: 20.0,
-                                )
-                              : Icon(
-                                  Icons.bedtime_outlined,
-                                  semanticLabel: L.of(context)!.sleep_timer_label,
-                                  size: 20.0,
+                      return IconButton(
+                        icon: sleepSnapshot.data?.type != SleepType.none ? Icon(
+                          Icons.bedtime,
+                          semanticLabel: '${L.of(context)!.sleep_timer_label}. $sl',
+                          size: 20.0,
+                        ) : Icon(
+                          Icons.bedtime_outlined,
+                          semanticLabel: L.of(context)!.sleep_timer_label,
+                          size: 20.0,
+                        ),
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                              isScrollControlled: true,
+                              context: context,
+                              backgroundColor: theme.secondaryHeaderColor,
+                              barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16.0),
+                                  topRight: Radius.circular(16.0),
                                 ),
-                          onPressed: () {
-                            showModalBottomSheet<void>(
-                                isScrollControlled: true,
-                                context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
-                                barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16.0),
-                                    topRight: Radius.circular(16.0),
-                                  ),
-                                ),
-                                builder: (context) {
-                                  return const SleepSlider();
-                                });
-                          },
-                        );
-                      }),
+                              ),
+                              builder: (context) {
+                                return const SleepSlider();
+                              });
+                        },
+                      );
+                    }
+                  ),
                 ),
               ),
             ],

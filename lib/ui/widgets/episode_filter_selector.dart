@@ -47,29 +47,33 @@ class _EpisodeFilterSelectorWidgetState extends State<EpisodeFilterSelectorWidge
                       widget.podcast == null || widget.podcast!.filter == PodcastEpisodeFilter.none
                           ? Icons.filter_alt_outlined
                           : Icons.filter_alt_off_outlined,
-                      semanticLabel: L.of(context)!.episode_filter_semantic_label,
+                      semanticLabel:
+                          L.of(context)!.episode_filter_semantic_label,
                     ),
                     visualDensity: VisualDensity.compact,
-                    onPressed: widget.podcast != null && widget.podcast!.subscribed
-                        ? () {
-                            showModalBottomSheet<void>(
-                                isScrollControlled: true,
-                                barrierLabel: L.of(context)!.scrim_episode_filter_selector,
-                                context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(16.0),
-                                    topRight: Radius.circular(16.0),
-                                  ),
-                                ),
-                                builder: (context) {
-                                  return EpisodeFilterSlider(
-                                    podcast: widget.podcast!,
-                                  );
-                                });
-                          }
-                        : null,
+                    onPressed:
+                        widget.podcast != null && widget.podcast!.subscribed
+                            ? () {
+                                showModalBottomSheet<void>(
+                                    isScrollControlled: true,
+                                    barrierLabel: L
+                                        .of(context)!
+                                        .scrim_episode_filter_selector,
+                                    context: context,
+                                    backgroundColor: theme.secondaryHeaderColor,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16.0),
+                                        topRight: Radius.circular(16.0),
+                                      ),
+                                    ),
+                                    builder: (context) {
+                                      return EpisodeFilterSlider(
+                                        podcast: widget.podcast!,
+                                      );
+                                    });
+                              }
+                            : null,
                   ),
                 ),
               ),
