@@ -13,7 +13,8 @@ enum PodcastEpisodeFilter {
   none(id: 0),
   started(id: 1),
   played(id: 2),
-  notPlayed(id: 3);
+  notPlayed(id: 3),
+  downloaded(id: 4);
 
   const PodcastEpisodeFilter({required this.id});
 
@@ -210,6 +211,7 @@ class Podcast {
         1 => PodcastEpisodeFilter.started,
         2 => PodcastEpisodeFilter.played,
         3 => PodcastEpisodeFilter.notPlayed,
+        4 => PodcastEpisodeFilter.downloaded,
         _ => PodcastEpisodeFilter.none,
       };
     }
