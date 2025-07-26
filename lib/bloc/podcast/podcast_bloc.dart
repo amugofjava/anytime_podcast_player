@@ -29,6 +29,7 @@ enum PodcastEvent {
   episodeFilterStarted,
   episodeFilterNotFinished,
   episodeFilterFinished,
+  episodeFilterDownloaded,
   // Sort
   episodeSortDefault,
   episodeSortLatest,
@@ -320,6 +321,13 @@ class PodcastBloc extends Bloc {
   void _listenPodcastStateEvents() async {
     _podcastEvent.listen((event) async {
       switch (event) {
+        case PodcastEvent.episodeFilterDownloaded:
+          if (_podcast != null) {
+            _podcast!.filter = PodcastEpisodeFilter.downloaded;
+            _podcast = await podcastService.save(_podcast!, withEpisodes: false);
+            await _loadFilteredEpisodes();
+          }
+          break;
         case PodcastEvent.subscribe:
           if (_podcast != null) {
             _podcast = await podcastService.subscribe(_podcast!);
@@ -436,13 +444,26 @@ class PodcastBloc extends Bloc {
   }
 
   void applySearchFilter() {
-    if (_searchTerm.isEmpty) {
-      _episodesStream.add(_episodes);
-    } else {
-      var searchFilteredEpisodes =
-          _episodes.where((e) => e.title!.toLowerCase().contains(_searchTerm.trim().toLowerCase())).toList();
-      _episodesStream.add(searchFilteredEpisodes);
+    List<Episode> filtered = _episodes;
+
+    switch (_podcast?.filter) {
+      case PodcastEpisodeFilter.started:
+        filtered = filtered.where((e) => e.position > 0 && !e.played).toList();
+        break;
+      case PodcastEpisodeFilter.played:
+        filtered = filtered.where((e) => e.played).toList();
+        break;
+      case PodcastEpisodeFilter.notPlayed:
+        filtered = filtered.where((e) => !e.played).toList();
+        break;
+      case PodcastEpisodeFilter.downloaded:
+        filtered = filtered.where((e) => e.downloadState == DownloadState.downloaded).toList();
+        break;
+      case PodcastEpisodeFilter.none:
+      default:
+        break;
     }
+    _episodesStream.add(filtered);
   }
 
   @override

@@ -140,6 +140,12 @@ class _EpisodeFilterSliderState extends State<EpisodeFilterSlider> {
                   selectedFilter: widget.podcast.filter,
                 ),
                 const Divider(),
+                EpisodeFilterSelectorEntry(
+                  label: L.of(context)!.episode_filter_downloaded_label,
+                  filter: PodcastEpisodeFilter.downloaded,
+                  selectedFilter: widget.podcast.filter,
+                ),
+                const Divider(),
               ],
             ),
           )
@@ -178,6 +184,9 @@ class EpisodeFilterSelectorEntry extends StatelessWidget {
             break;
           case PodcastEpisodeFilter.notPlayed:
             podcastBloc.podcastEvent(PodcastEvent.episodeFilterNotFinished);
+            break;
+          case PodcastEpisodeFilter.downloaded:
+            podcastBloc.podcastEvent(PodcastEvent.episodeFilterDownloaded);
             break;
         }
 
