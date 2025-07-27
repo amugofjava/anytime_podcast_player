@@ -21,7 +21,39 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'it';
 
-  static m2(minutes) => "${minutes} minuti";
+  static m0(days) => "${Intl.plural(days, one: 'Un giorno fa', other: '${days} giorni fa')}";
+
+  static m1(hours) => "${Intl.plural(hours, one: '${hours} ora fa', other: '${hours} ore fa')}";
+
+  static m2(minutes) => "${minutes} minuti rimanenti";
+
+  static m3(minutes) => "${Intl.plural(minutes, one: '1 minuto fa', other: '${minutes} minuti fa')}";
+
+  static m4(seconds) => "${seconds} secondi rimanenti";
+
+  static m5(weeks) => "${Intl.plural(weeks, one: 'Una settimana fa', other: '${weeks} settimane fa')}";
+
+  static m6(days) => "${Intl.plural(days, one: '1g fa', other: '${days}g fa')}";
+
+  static m7(hours) => "${Intl.plural(hours, one: '1o fa', other: '${hours}o fa')}";
+
+  static m8(minutes) => "${minutes} min rimanenti";
+
+  static m9(minutes) => "${Intl.plural(minutes, one: '1m fa', other: '${minutes}m fa')}";
+
+  static m10(seconds) => "${seconds} sec rimanenti";
+
+  static m11(weeks) => "${Intl.plural(weeks, one: '1s fa', other: '${weeks}s fa')}";
+
+  static m12(minutes) => "${minutes} minuti";
+
+  static m13(minutes) => "${minutes} min";
+
+  static m14(seconds) => "${seconds} sec";
+
+  static m15(minutes) => "${minutes} minuti";
+
+  static m16(seconds) => "${seconds} secondi";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -65,17 +97,33 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_filter_started_label': MessageLookupByLibrary.simpleMessage('Avviato'),
     'episode_filter_unplayed_label': MessageLookupByLibrary.simpleMessage('Non riprodotto'),
     'episode_label': MessageLookupByLibrary.simpleMessage('Episodio'),
+    'episode_semantic_time_days_ago': m0,
+    'episode_semantic_time_hours_ago': m1,
+    'episode_semantic_time_minute_remaining': m2,
+    'episode_semantic_time_minutes_ago': m3,
+    'episode_semantic_time_second_remaining': m4,
+    'episode_semantic_time_weeks_ago': m5,
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('Ordine Alfabetico A-Z'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('Ordine Alfabetico Z-A'),
     'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('I più vecchi'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Gli ultimi'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Default'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Ordina gli episodi'),
+    'episode_time_days_ago': m6,
+    'episode_time_hours_ago': m7,
+    'episode_time_minute_remaining': m8,
+    'episode_time_minutes_ago': m9,
+    'episode_time_now': MessageLookupByLibrary.simpleMessage('Ora'),
+    'episode_time_second_remaining': m10,
+    'episode_time_weeks_ago': m11,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Impossibile riprodurre l\'episodio. Per favore, verifica la tua connessione e prova di nuovo.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('Sì è verificato un errore inatteso durante la riproduzione. Per favore, verifica la tua connessione e prova di nuovo.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('Manda avanti di 30 secondi'),
     'feedback_menu_item_label': MessageLookupByLibrary.simpleMessage('Feedback'),
     'go_back_button_label': MessageLookupByLibrary.simpleMessage('Torna indietro'),
+    'label_episode_actions': MessageLookupByLibrary.simpleMessage('Azioni Episodio'),
+    'label_megabytes': MessageLookupByLibrary.simpleMessage('megabytes'),
+    'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Importazione in corso'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Layout'),
     'library': MessageLookupByLibrary.simpleMessage('Libreria'),
@@ -189,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Condividi podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Visualizza le note'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Fine dell\'episodio'),
-    'sleep_minute_label': m2,
+    'sleep_minute_label': m12,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Timer di Riposo'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
@@ -197,6 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Stop Download'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Segui'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Segui'),
+    'time_minutes': m13,
+    'time_seconds': m14,
+    'time_semantic_minutes': m15,
+    'time_semantic_seconds': m16,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Trascrizioni'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Perché no?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),

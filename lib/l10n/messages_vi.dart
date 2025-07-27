@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'vi';
 
-  static m2(minutes) => "${minutes} phút";
+  static m12(minutes) => "${minutes} phút";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -189,7 +189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Chia sẻ podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Hiển thị ghi chú'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Kết thúc tập'),
-    'sleep_minute_label': m2,
+    'sleep_minute_label': m12,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Tắt'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Hẹn giờ ngủ'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Dừng'),

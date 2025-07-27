@@ -2,6 +2,7 @@
 
 - Support for Russian language (thank you @yurtpage).
 - Support for Vietnamese language (thank you @daoductrung).
+- Support for Galicia language (thank you @xmgz).
 - Improve RSS checking efficiency by checking modified-date in header where possible.
 - Bug fixes.
 - Accessibility fixes & improvements.

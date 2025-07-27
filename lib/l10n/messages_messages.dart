@@ -21,31 +21,31 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'messages';
 
-  static m3(days) => "${Intl.plural(days, one: 'One day ago', other: '${days} days ago')}";
+  static m0(days) => "${Intl.plural(days, one: 'One day ago', other: '${days} days ago')}";
 
-  static m4(hours) => "${Intl.plural(hours, one: '${hours} hour ago', other: '${hours} hours ago')}";
+  static m1(hours) => "${Intl.plural(hours, one: '${hours} hour ago', other: '${hours} hours ago')}";
 
-  static m5(minutes) => "${minutes} min left";
+  static m2(minutes) => "${minutes} min left";
 
-  static m6(minutes) => "${Intl.plural(minutes, one: '1 minute ago', other: '${minutes} minutes ago')}";
+  static m3(minutes) => "${Intl.plural(minutes, one: '1 minute ago', other: '${minutes} minutes ago')}";
 
-  static m7(seconds) => "${seconds} sec left";
+  static m4(seconds) => "${seconds} sec left";
 
-  static m8(weeks) => "${Intl.plural(weeks, one: 'One week ago', other: '${weeks} weeks ago')}";
+  static m5(weeks) => "${Intl.plural(weeks, one: 'One week ago', other: '${weeks} weeks ago')}";
 
-  static m9(days) => "${Intl.plural(days, one: '1d ago', other: '${days}d ago')}";
+  static m6(days) => "${Intl.plural(days, one: '1d ago', other: '${days}d ago')}";
 
-  static m10(hours) => "${Intl.plural(hours, one: '1h ago', other: '${hours}h ago')}";
+  static m7(hours) => "${Intl.plural(hours, one: '1h ago', other: '${hours}h ago')}";
 
-  static m0(minutes) => "${minutes} min left";
+  static m8(minutes) => "${minutes} min left";
 
-  static m11(minutes) => "${Intl.plural(minutes, one: '1m ago', other: '${minutes}m ago')}";
+  static m9(minutes) => "${Intl.plural(minutes, one: '1m ago', other: '${minutes}m ago')}";
 
-  static m1(seconds) => "${seconds} sec left";
+  static m10(seconds) => "${seconds} sec left";
 
-  static m12(weeks) => "${Intl.plural(weeks, one: '1w ago', other: '${weeks}w ago')}";
+  static m11(weeks) => "${Intl.plural(weeks, one: '1w ago', other: '${weeks}w ago')}";
 
-  static m2(minutes) => "${minutes} minutes";
+  static m12(minutes) => "${minutes} minutes";
 
   static m13(minutes) => "${minutes} min";
 
@@ -97,25 +97,25 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_filter_started_label': MessageLookupByLibrary.simpleMessage('Started'),
     'episode_filter_unplayed_label': MessageLookupByLibrary.simpleMessage('Unplayed'),
     'episode_label': MessageLookupByLibrary.simpleMessage('Episode'),
-    'episode_semantic_time_days_ago': m3,
-    'episode_semantic_time_hours_ago': m4,
-    'episode_semantic_time_minute_remaining': m5,
-    'episode_semantic_time_minutes_ago': m6,
-    'episode_semantic_time_second_remaining': m7,
-    'episode_semantic_time_weeks_ago': m8,
+    'episode_semantic_time_days_ago': m0,
+    'episode_semantic_time_hours_ago': m1,
+    'episode_semantic_time_minute_remaining': m2,
+    'episode_semantic_time_minutes_ago': m3,
+    'episode_semantic_time_second_remaining': m4,
+    'episode_semantic_time_weeks_ago': m5,
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('Alphabetical A-Z'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('Alphabetical Z-A'),
     'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Earliest first'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Latest first'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Default'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Episode sort'),
-    'episode_time_days_ago': m9,
-    'episode_time_hours_ago': m10,
-    'episode_time_minute_remaining': m0,
-    'episode_time_minutes_ago': m11,
+    'episode_time_days_ago': m6,
+    'episode_time_hours_ago': m7,
+    'episode_time_minute_remaining': m8,
+    'episode_time_minutes_ago': m9,
     'episode_time_now': MessageLookupByLibrary.simpleMessage('Now'),
-    'episode_time_second_remaining': m1,
-    'episode_time_weeks_ago': m12,
+    'episode_time_second_remaining': m10,
+    'episode_time_weeks_ago': m11,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Unable to play episode. Please check your connection and try again.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('An unexpected error occurred during playback. Please check your connection and try again.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('Fast-forward episode 30 seconds'),
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Share podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Show notes'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('End of episode'),
-    'sleep_minute_label': m2,
+    'sleep_minute_label': m12,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),

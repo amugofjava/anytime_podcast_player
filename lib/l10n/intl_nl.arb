@@ -1119,5 +1119,157 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_time_minute_remaining": "{minutes} min resterend",
+  "@episode_time_minute_remaining": {
+    "description": "Shows number of minutes of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_second_remaining": "{seconds} sec resterend",
+  "@episode_time_second_remaining": {
+    "description": "Shows number of seconds of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_semantic_time_minute_remaining": "{minutes} minuten resterend",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "{seconds} seconden resterend",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{1w geleden}other{{weeks}w geleden}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{Eén week geleden}other{{weeks} weken geleden}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{1d geleden}other{{days}d geleden}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{Eén dag geleden}other{{days} dagen geleden}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{1u geleden}other{{hours}u geleden}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} uur geleden}other{{hours} uren geleden}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{1m geleden}other{{minutes}m geleden}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{1 minuut geleden}other{{minutes} minuten geleden}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "Nu",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time_seconds": "{seconds} sec",
+  "@time_seconds": {
+    "description": "Episode length in seconds",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_semantic_seconds": "{seconds} seconden",
+  "@time_semantic_seconds": {
+    "description": "Episode length in seconds - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_minutes": "{minutes} min",
+  "@time_minutes": {
+    "description": "Episode length in minutes",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "time_semantic_minutes": "{minutes} minuten",
+  "@time_semantic_minutes": {
+    "description": "Episode length in minutes - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "label_megabytes": "megabytes",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "mb",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Afleveringsacties",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
   "@@locale": "nl"
 }

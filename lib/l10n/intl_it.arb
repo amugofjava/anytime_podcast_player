@@ -1119,5 +1119,157 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_time_minute_remaining": "{minutes} min rimanenti",
+  "@episode_time_minute_remaining": {
+    "description": "Shows number of minutes of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_second_remaining": "{seconds} sec rimanenti",
+  "@episode_time_second_remaining": {
+    "description": "Shows number of seconds of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_semantic_time_minute_remaining": "{minutes} minuti rimanenti",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "{seconds} secondi rimanenti",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{1s fa}other{{weeks}s fa}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{Una settimana fa}other{{weeks} settimane fa}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{1g fa}other{{days}g fa}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{Un giorno fa}other{{days} giorni fa}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{1o fa}other{{hours}o fa}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} ora fa}other{{hours} ore fa}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{1m fa}other{{minutes}m fa}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{1 minuto fa}other{{minutes} minuti fa}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "Ora",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time_seconds": "{seconds} sec",
+  "@time_seconds": {
+    "description": "Episode length in seconds",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_semantic_seconds": "{seconds} secondi",
+  "@time_semantic_seconds": {
+    "description": "Episode length in seconds - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_minutes": "{minutes} min",
+  "@time_minutes": {
+    "description": "Episode length in minutes",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "time_semantic_minutes": "{minutes} minuti",
+  "@time_semantic_minutes": {
+    "description": "Episode length in minutes - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "label_megabytes": "megabytes",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "mb",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Azioni Episodio",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
   "@@locale": "it"
 }

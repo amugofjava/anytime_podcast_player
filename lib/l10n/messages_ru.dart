@@ -21,7 +21,39 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'ru';
 
-  static m2(minutes) => "${minutes} минут";
+  static m0(days) => "${Intl.plural(days, one: 'О��ин день назад', other: '${days} дня назад')}";
+
+  static m1(hours) => "${Intl.plural(hours, one: '${hours} час назад', other: '${hours} часов назад')}";
+
+  static m2(minutes) => "${minutes} минут осталось";
+
+  static m3(minutes) => "${Intl.plural(minutes, one: '1 минуту назад', other: '${minutes} минут назад')}";
+
+  static m4(seconds) => "${seconds} секунд осталось";
+
+  static m5(weeks) => "${Intl.plural(weeks, one: 'Одна неделя назад', other: '${weeks} недели назад')}";
+
+  static m6(days) => "${Intl.plural(days, one: '1д назад', other: '${days}д назад')}";
+
+  static m7(hours) => "${Intl.plural(hours, one: '1ч назад', other: '${hours}ч назад')}";
+
+  static m8(minutes) => "${minutes} мин осталось";
+
+  static m9(minutes) => "${Intl.plural(minutes, one: '1м назад', other: '${minutes}м назад')}";
+
+  static m10(seconds) => "${seconds} сек осталось";
+
+  static m11(weeks) => "${Intl.plural(weeks, one: '1н назад', other: '${weeks}н назад')}";
+
+  static m12(minutes) => "${minutes} минут";
+
+  static m13(minutes) => "${minutes} мин";
+
+  static m14(seconds) => "${seconds} сек";
+
+  static m15(minutes) => "${minutes} минут";
+
+  static m16(seconds) => "${seconds} секунд";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -51,7 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'delete_label': MessageLookupByLibrary.simpleMessage('Удалить'),
     'discover': MessageLookupByLibrary.simpleMessage('Обзор'),
     'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('Все,Искусство,Предпринимательство,Комедия,Образование,Художественная литература,Государство,Здоровье и фитнес,История,Дети и семья,Досуг,Музыка,Новости,Религия и духовность,Наука,Общество и культура,Спорт,ТВ и кино,Технологии,Следствие вели'),
-    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('Все,После шоу,Альтернатива,Животные,Анимация,Искусство,Астрономия,Автомобили,Авиация,Бейсбол,Баскетбол,Красота,Книги,Буддизм,Предпринимательство,Карьера,Химия,Христианство,Климат,Комедия,Комментарии,Курсы,Ремёсла,Крикет,Криптовалюта,Культура,Ежедневные,Дизайн,Документальные,Драма,Земля,Образование,Развлечения,Предпринимательство,Семья,Фэнтези,Мода,Художественная литература,Фильм,Фитнес,Еда,Футбол,Игры,Сад,Гольф,Государство,Здоровье,Индуизм,История,Хобби,Хоккей,Дом,Советы,Импровизации,Интервью,Инвестиции,Ислам,Журналы,Иудаизм,Дети,Языки,Обучение,Досуг,Жизнь,Менеджмент,Манга,Маркетинг,Математика,Медицина,Умственный,Музыка,Естественный,Природа,Новости,Сообщества,Питание,Воспитание детей,Выступление,Личное,Домашние животные,Философия,Физика,Места,Политика,Отношения,Религия,Обзоры,Ролевые игры,Регби,Бег,Наука,Самосовершенствование,Сексуальность,Футбол,Социальное,Общество,Духовность,Спорт,Стендап,Истории,Плавание,ТВ,Настолки,Технологии,Теннис,Путешествия,Следствие вели,Видеоигры,Визуальные,Волейбол,Погода,Дикая местность,Борьба'),
+    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('Все,После шоу,Альтернатива,Животные,Анимация,Искусство,Астрономия,Автомобили,Авиация,Бейсбол,Баскетбол,Красота,Книги,Буддизм,Предпринимательство,Карьера,Химия,Христианство,Климат,Комедия,Комментарии,Курсы,Ремёсла,Крикет,Криптовалюта,Культура,Ежедневные,Дизайн,Документальные,Драма,Земля,Образование,Развлечения,Предпринимательство,Семья,Фэнтези,Мода,Художественная литература,Фильм,Фитнес,Еда,Футбол,Игры,Сад,Гольф,Государство,Здоровье,Индуизм,История,Хобби,Хоккей,Дом,Советы,Импровизации,Интервью,Инвестиции,Ислам,Журналы,Иудаизм,Дети,Языки,Обучение,Досуг,Жизнь,Менеджмент,Манга,М��ркетинг,Математика,Медицина,Умственный,Музыка,Естественный,Природа,Новости,Сообщества,Питание,Воспитание детей,Выступление,Личное,Домашние животные,Философия,Физика,Места,Политика,Отношения,Религия,Обзоры,Ролевые игры,Регби,Бег,Наука,Самосовершенствование,Сексуальность,Футбол,Социальное,Общество,Духовность,Спорт,Стендап,Истории,Плавание,ТВ,Настолки,Технологии,Теннис,Путешествия,Следствие вели,Видеоигры,Визуальные,Волейбол,Погода,Дикая местность,Борьба'),
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Скачать выпуск'),
     'downloads': MessageLookupByLibrary.simpleMessage('Скачивания'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Ваша очередь пуста'),
@@ -65,17 +97,33 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_filter_started_label': MessageLookupByLibrary.simpleMessage('Начался'),
     'episode_filter_unplayed_label': MessageLookupByLibrary.simpleMessage('Непрослушано'),
     'episode_label': MessageLookupByLibrary.simpleMessage('Выпуск'),
+    'episode_semantic_time_days_ago': m0,
+    'episode_semantic_time_hours_ago': m1,
+    'episode_semantic_time_minute_remaining': m2,
+    'episode_semantic_time_minutes_ago': m3,
+    'episode_semantic_time_second_remaining': m4,
+    'episode_semantic_time_weeks_ago': m5,
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('По алфавиту А-Я'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('По алфавиту Я-А'),
     'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Сначала ранние'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Сначала последние'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('По умолчанию'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Сортировать выпуски'),
+    'episode_time_days_ago': m6,
+    'episode_time_hours_ago': m7,
+    'episode_time_minute_remaining': m8,
+    'episode_time_minutes_ago': m9,
+    'episode_time_now': MessageLookupByLibrary.simpleMessage('Сейчас'),
+    'episode_time_second_remaining': m10,
+    'episode_time_weeks_ago': m11,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Не могу воспроизвести эпизод. Проверьте соединение и попробуйте ещё раз.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('При воспроизведении произошла неожиданная ошибка. Проверьте соединение и попробуйте еще раз.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('Промотать выпуск на 30 секунд'),
     'feedback_menu_item_label': MessageLookupByLibrary.simpleMessage('Обратная связь'),
     'go_back_button_label': MessageLookupByLibrary.simpleMessage('Перейти назад'),
+    'label_episode_actions': MessageLookupByLibrary.simpleMessage('Действия'),
+    'label_megabytes': MessageLookupByLibrary.simpleMessage('мегабайт'),
+    'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Импортирование'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Макет'),
     'library': MessageLookupByLibrary.simpleMessage('Библиотека'),
@@ -171,7 +219,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_delete_played_label': MessageLookupByLibrary.simpleMessage('Удалять скачанные выпуски после прослушивания'),
     'settings_download_sd_card_label': MessageLookupByLibrary.simpleMessage('Скачивать выпуски на SD карту'),
     'settings_download_switch_card': MessageLookupByLibrary.simpleMessage('Новые скачивания будут сохраняться на SD-карте. Уже существующие так и останутся на внутреннем хранилище.'),
-    'settings_download_switch_internal': MessageLookupByLibrary.simpleMessage('Новые скачивания будут сохраняться на внутреннем хранилище. Уже существующие так и останутся на SD-карте.'),
+    'settings_download_switch_internal': MessageLookupByLibrary.simpleMessage('Новые скачивания будут сохраняться на внутреннем хранилище. Уже существующие так и останутся на SD-ка��те.'),
     'settings_download_switch_label': MessageLookupByLibrary.simpleMessage('Изменить местоположение хранения'),
     'settings_episodes_divider_label': MessageLookupByLibrary.simpleMessage('ВЫПУСКИ'),
     'settings_export_opml': MessageLookupByLibrary.simpleMessage('Экспорт в файл OPML'),
@@ -189,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Поделиться подкастом'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Показать заметки'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Конец выпуска'),
-    'sleep_minute_label': m2,
+    'sleep_minute_label': m12,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Отключено'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Таймер сна'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Остановить'),
@@ -197,12 +245,16 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Остановить скачивание'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Подписаться'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Подписаться'),
+    'time_minutes': m13,
+    'time_seconds': m14,
+    'time_semantic_minutes': m15,
+    'time_semantic_seconds': m16,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Субтитры'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Почему нет?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Отписаться'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Отписаться'),
-    'unsubscribe_message': MessageLookupByLibrary.simpleMessage('При отмене подписки будут удалены все загруженные эпизоды этого подкаста.'),
+    'unsubscribe_message': MessageLookupByLibrary.simpleMessage('При отмене ��одписки будут удалены все загруженные эпизоды этого подкаста.'),
     'up_next_queue_label': MessageLookupByLibrary.simpleMessage('До следующего')
   };
 }

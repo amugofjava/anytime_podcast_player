@@ -925,11 +925,11 @@ class EpisodeSubtitle extends StatelessWidget {
 
     if (length.inSeconds > 0) {
       if (length.inSeconds < 60) {
-        title = '$dateLabel • ${L.of(context)!.time_semantic_seconds(length.inSeconds)}';
-        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_seconds(length.inSeconds)}';
+        title = '$dateLabel • ${L.of(context)!.time_seconds(length.inSeconds)}';
+        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_semantic_seconds(length.inSeconds)}';
       } else {
-        title = '$dateLabel • ${L.of(context)!.time_semantic_minutes(length.inMinutes)}';
-        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_minutes(length.inMinutes)}';
+        title = '$dateLabel • ${L.of(context)!.time_minutes(length.inMinutes)}';
+        semanticTitle = '$dateSemanticLabel, ${L.of(context)!.time_semantic_minutes(length.inMinutes)}';
       }
     } else {
       title = dateLabel;
@@ -940,11 +940,11 @@ class EpisodeSubtitle extends StatelessWidget {
       if (timeRemaining.inSeconds < 60) {
         title = '$title / ${L.of(context)!.episode_time_second_remaining(timeRemaining.inSeconds.toString())}';
         semanticTitle =
-            '$semanticTitle / ${L.of(context)!.episode_time_second_remaining(timeRemaining.inSeconds.toString())}';
+            '$semanticTitle / ${L.of(context)!.episode_semantic_time_second_remaining(timeRemaining.inSeconds.toString())}';
       } else {
         title = '$title / ${L.of(context)!.episode_time_minute_remaining(timeRemaining.inMinutes.toString())}';
         semanticTitle =
-            '$semanticTitle / ${L.of(context)!.episode_time_minute_remaining(timeRemaining.inMinutes.toString())}';
+            '$semanticTitle / ${L.of(context)!.episode_semantic_time_minute_remaining(timeRemaining.inMinutes.toString())}';
       }
     }
 

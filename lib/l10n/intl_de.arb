@@ -1135,5 +1135,141 @@
       "seconds": {}
     }
   },
+  "episode_semantic_time_minute_remaining": "Noch {minutes} Minuten",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "Noch {seconds} Sekunden",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{Vor 1W}other{Vor {weeks}W}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{Vor einer Woche}other{Vor {weeks} Wochen}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{Vor 1T}other{Vor {days}T}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{Vor einem Tag}other{Vor {days} Tagen}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{Vor 1h}other{Vor {hours}h}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{Vor einer Stunde}other{Vor {hours} Stunden}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{Vor 1m}other{Vor {minutes}m}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{Vor 1 Minute}other{Vor {minutes} Minuten}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "Jetzt",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time_seconds": "{seconds} sek",
+  "@time_seconds": {
+    "description": "Episode length in seconds",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_semantic_seconds": "{seconds} Sekunden",
+  "@time_semantic_seconds": {
+    "description": "Episode length in seconds - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_minutes": "{minutes} min",
+  "@time_minutes": {
+    "description": "Episode length in minutes",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "time_semantic_minutes": "{minutes} Minuten",
+  "@time_semantic_minutes": {
+    "description": "Episode length in minutes - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "label_megabytes": "Megabyte",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "mb",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Episoden-Aktionen",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
   "@@locale": "de"
 }
