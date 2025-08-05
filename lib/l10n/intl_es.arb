@@ -108,6 +108,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_filter_downloaded_label": "Descargado",
+  "@episode_filter_downloaded_label": {
+    "description": "Only show episodes that have been downloaded",
+    "type": "text",
+    "placeholders": {}
+  },
   "delete_episode_confirmation": "¿Estás seguro de que deseas eliminar este episodio?",
   "@delete_episode_confirmation": {
     "description": "User is asked to confirm when they attempt to delete an episode",

@@ -57,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Hàng chờ của bạn đang trống'),
     'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Hiển thị thông tin tập'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Xóa bộ lọc'),
+    'episode_filter_downloaded_label': MessageLookupByLibrary.simpleMessage('Đã tải xuống'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Podcast này không có tập nào khớp với tiêu chí tìm kiếm và bộ lọc của bạn'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Không tìm thấy tập nào'),
     'episode_filter_none_label': MessageLookupByLibrary.simpleMessage('Không'),

@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Ваша очередь пуста'),
     'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Показать информацию выпуска'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Очистить фильтры'),
+    'episode_filter_downloaded_label': MessageLookupByLibrary.simpleMessage('Скачано'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('В этом подкасте нет выпусков по вашим критериям поиска и фильтру'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Не найдено выпусков'),
     'episode_filter_none_label': MessageLookupByLibrary.simpleMessage('Никаких'),

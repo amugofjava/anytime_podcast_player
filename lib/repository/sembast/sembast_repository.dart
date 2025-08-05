@@ -518,6 +518,9 @@ class SembastRepository extends Repository {
       case PodcastEpisodeFilter.notPlayed:
         episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('played', 'false')]);
         break;
+      case PodcastEpisodeFilter.downloaded:
+        episodeFilter = Filter.and([Filter.equals('pguid', pguid), Filter.equals('downloaded', '100')]);
+        break;
     }
     return episodeFilter;
   }
