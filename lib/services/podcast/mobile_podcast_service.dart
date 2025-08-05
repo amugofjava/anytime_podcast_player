@@ -90,7 +90,17 @@ class MobilePodcastService extends PodcastService {
 
     _intlCategories = categoryList.split(',');
     _intlCategoriesSorted = categoryList.split(',');
+
+    // The very first item in the list should be 'All' (in the appropriate language).
+    var firstItem = _intlCategories[0] ?? 'All';
+
+    // Sort the rest of the list and then insert All at the start.
+    _intlCategoriesSorted = _intlCategories.sublist(1).nonNulls.toList();
+
     _intlCategoriesSorted.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+    _intlCategoriesSorted.insert(0, firstItem);
+
+    assert(_intlCategoriesSorted.length == _intlCategories.length);
   }
 
   @override
