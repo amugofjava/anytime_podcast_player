@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Je wachtrij is leeg'),
     'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Toon afleveringinformatie'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Filters wissen'),
+    'episode_filter_downloaded_label': MessageLookupByLibrary.simpleMessage('Gedownload'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Er zijn geen afleveringen van deze podcast die voldoen aan uw zoekcriteria en filter.'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Geen Afleveringen Gevonden'),
     'episode_filter_none_label': MessageLookupByLibrary.simpleMessage('Geen'),

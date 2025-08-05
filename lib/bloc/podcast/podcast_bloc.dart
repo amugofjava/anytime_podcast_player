@@ -443,8 +443,8 @@ class PodcastBloc extends Bloc {
     });
   }
 
-  void applySearchFilter() {
-    List<Episode> filtered = _episodes;
+  List<Episode> applyEpisodeFilter(List<Episode> episodes) {
+    List<Episode> filtered = episodes;
 
     switch (_podcast?.filter) {
       case PodcastEpisodeFilter.started:
@@ -463,7 +463,18 @@ class PodcastBloc extends Bloc {
       default:
         break;
     }
-    _episodesStream.add(filtered);
+
+    return filtered;
+  }
+
+  void applySearchFilter() {
+    if (_searchTerm.isEmpty) {
+      _episodesStream.add(_episodes);
+    } else {
+      var searchFilteredEpisodes =
+          _episodes.where((e) => e.title!.toLowerCase().contains(_searchTerm.trim().toLowerCase())).toList();
+      _episodesStream.add(searchFilteredEpisodes);
+    }
   }
 
   @override

@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('La tua coda è vuota'),
     'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Mostra le informazioni sull\'episodio'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Pulisci i Filtri'),
+    'episode_filter_downloaded_label': MessageLookupByLibrary.simpleMessage('Downloaded'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Questo podcast non ha episodi che corrispondono ai tuoi criteri di ricerca e filtro'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Nessun episodio trovato'),
     'episode_filter_none_label': MessageLookupByLibrary.simpleMessage('Nessuno'),

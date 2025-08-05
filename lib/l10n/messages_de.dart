@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Ihre Warteschlange ist leer'),
     'episode_details_button_label': MessageLookupByLibrary.simpleMessage('Episodeninformationen anzeigen'),
     'episode_filter_clear_filters_button_label': MessageLookupByLibrary.simpleMessage('Filter zurücksetzen'),
+    'episode_filter_downloaded_label': MessageLookupByLibrary.simpleMessage('Heruntergeladen'),
     'episode_filter_no_episodes_title_description': MessageLookupByLibrary.simpleMessage('Dieser Podcast hat keine Episoden, die Ihren Suchkriterien und Filtern entsprechen'),
     'episode_filter_no_episodes_title_label': MessageLookupByLibrary.simpleMessage('Keine Episoden Gefunden'),
     'episode_filter_none_label': MessageLookupByLibrary.simpleMessage('Keiner'),
