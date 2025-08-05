@@ -21,7 +21,39 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'vi';
 
+  static m0(days) => "${Intl.plural(days, one: 'Một ngày trước', other: '${days} ngày trước')}";
+
+  static m1(hours) => "${Intl.plural(hours, one: 'Một giờ trước', other: '${hours} giờ trước')}";
+
+  static m2(minutes) => "Còn lại ${minutes} phút";
+
+  static m3(minutes) => "${Intl.plural(minutes, one: 'Một phút trước', other: '${minutes} phút trước')}";
+
+  static m4(seconds) => "Còn lại ${seconds} giây";
+
+  static m5(weeks) => "${Intl.plural(weeks, one: 'Một tuần trước', other: '${weeks} tuần trước')}";
+
+  static m6(days) => "${days}ng trước";
+
+  static m7(hours) => "${hours}g trước";
+
+  static m8(minutes) => "Còn ${minutes}p";
+
+  static m9(minutes) => "${minutes}p trước";
+
+  static m10(seconds) => "Còn ${seconds}g";
+
+  static m11(weeks) => "${weeks}t trước";
+
   static m12(minutes) => "${minutes} phút";
+
+  static m13(minutes) => "${minutes} phút";
+
+  static m14(seconds) => "${seconds} giây";
+
+  static m15(minutes) => "${minutes} phút";
+
+  static m16(seconds) => "${seconds} giây";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -65,17 +97,33 @@ class MessageLookup extends MessageLookupByLibrary {
     'episode_filter_started_label': MessageLookupByLibrary.simpleMessage('Đã bắt đầu'),
     'episode_filter_unplayed_label': MessageLookupByLibrary.simpleMessage('Chưa nghe'),
     'episode_label': MessageLookupByLibrary.simpleMessage('Tập'),
+    'episode_semantic_time_days_ago': m0,
+    'episode_semantic_time_hours_ago': m1,
+    'episode_semantic_time_minute_remaining': m2,
+    'episode_semantic_time_minutes_ago': m3,
+    'episode_semantic_time_second_remaining': m4,
+    'episode_semantic_time_weeks_ago': m5,
     'episode_sort_alphabetical_ascending_label': MessageLookupByLibrary.simpleMessage('Theo bảng chữ cái A-Z'),
     'episode_sort_alphabetical_descending_label': MessageLookupByLibrary.simpleMessage('Theo bảng chữ cái Z-A'),
     'episode_sort_earliest_first_label': MessageLookupByLibrary.simpleMessage('Cũ nhất trước'),
     'episode_sort_latest_first_label': MessageLookupByLibrary.simpleMessage('Mới nhất trước'),
     'episode_sort_none_label': MessageLookupByLibrary.simpleMessage('Mặc định'),
     'episode_sort_semantic_label': MessageLookupByLibrary.simpleMessage('Sắp xếp các tập'),
+    'episode_time_days_ago': m6,
+    'episode_time_hours_ago': m7,
+    'episode_time_minute_remaining': m8,
+    'episode_time_minutes_ago': m9,
+    'episode_time_now': MessageLookupByLibrary.simpleMessage('Vừa xong'),
+    'episode_time_second_remaining': m10,
+    'episode_time_weeks_ago': m11,
     'error_no_connection': MessageLookupByLibrary.simpleMessage('Không thể phát tập. Vui lòng kiểm tra kết nối mạng và thử lại.'),
     'error_playback_fail': MessageLookupByLibrary.simpleMessage('Đã xảy ra lỗi không mong muốn khi phát. Vui lòng kiểm tra kết nối mạng và thử lại.'),
     'fast_forward_button_label': MessageLookupByLibrary.simpleMessage('Tua tới 30 giây'),
     'feedback_menu_item_label': MessageLookupByLibrary.simpleMessage('Phản hồi'),
     'go_back_button_label': MessageLookupByLibrary.simpleMessage('Quay lại'),
+    'label_episode_actions': MessageLookupByLibrary.simpleMessage('Hành động với tập'),
+    'label_megabytes': MessageLookupByLibrary.simpleMessage('megabyte'),
+    'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('MB'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Đang nhập'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Bố cục'),
     'library': MessageLookupByLibrary.simpleMessage('Thư viện'),
@@ -197,6 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Dừng tải về'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Theo dõi'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Theo dõi'),
+    'time_minutes': m13,
+    'time_seconds': m14,
+    'time_semantic_minutes': m15,
+    'time_semantic_seconds': m16,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Lời thoại'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Tại sao không?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
