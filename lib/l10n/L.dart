@@ -1498,6 +1498,16 @@ class L {
         );
   }
 
+  String get episode_filter_downloaded_label {
+    return message('episode_filter_downloaded_label') ??
+        Intl.message(
+          'Downloaded',
+          name: 'episode_filter_downloaded_label',
+          desc: 'Only show episodes that have been downloaded',
+          locale: localeName,
+        );
+  }
+
   String get episode_filter_no_episodes_title_label {
     return message('episode_filter_no_episodes_title_label') ??
         Intl.message(

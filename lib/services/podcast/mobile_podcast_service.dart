@@ -764,6 +764,8 @@ class MobilePodcastService extends PodcastService {
       case PodcastEpisodeFilter.notPlayed:
         filteredEpisodes = podcast.episodes.where((e) => e.highlight || !e.played).toList();
         break;
+      case PodcastEpisodeFilter.downloaded:
+        filteredEpisodes = podcast.episodes.where((e) => e.highlight || e.downloaded).toList();
     }
 
     switch (podcast.sort) {

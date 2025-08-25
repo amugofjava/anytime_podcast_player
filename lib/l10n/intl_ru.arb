@@ -172,6 +172,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "episode_filter_downloaded_label": "Скачано",
+  "@episode_filter_downloaded_label": {
+    "description": "Only show episodes that have been downloaded",
+    "type": "text",
+    "placeholders": {}
+  },
   "delete_episode_confirmation": "Вы уверены, что хотите удалить этот выпуск?",
   "@delete_episode_confirmation": {
     "description": "User is asked to confirm when they attempt to delete an episode",
