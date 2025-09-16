@@ -35,9 +35,15 @@ class PodcastEpisodeList extends StatelessWidget {
       return StreamBuilder<QueueState>(
           stream: queueBloc.queue,
           builder: (context, snapshot) {
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+            return SliverPrototypeExtentList.builder(
+              prototypeItem: EpisodeTile(
+                episode: episodes![0]!,
+                download: true,
+                play: true,
+                playing: false,
+                queued: false,
+              ),
+              itemBuilder: (BuildContext context, int index) {
                 var queued = false;
                 var playing = false;
                 var episode = episodes![index]!;
@@ -58,9 +64,9 @@ class PodcastEpisodeList extends StatelessWidget {
                   queued: queued,
                 );
               },
-              childCount: episodes!.length,
+              itemCount: episodes!.length,
               addAutomaticKeepAlives: false,
-            ));
+            );
           });
     } else {
       return SliverFillRemaining(
