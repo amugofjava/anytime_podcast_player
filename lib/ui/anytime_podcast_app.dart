@@ -250,6 +250,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   final log = Logger('_AnytimeHomePageState');
   bool handledInitialLink = false;
   Widget? library;
+  final GlobalKey<PopupMenuButtonState<String>> _overflowMenuKey = GlobalKey<PopupMenuButtonState<String>>();
 
   @override
   void initState() {
@@ -352,6 +353,9 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
+    final searchLabel = L.of(context)!.search_for_podcasts_hint;
+    final menuLabel = L.of(context)!.podcast_options_overflow_menu_semantic_label;
+    final openSearch = () => _openSearch(context);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: Theme.of(context).appBarTheme.systemOverlayStyle!,
@@ -373,108 +377,112 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       pinned: true,
                       snap: false,
                       actions: <Widget>[
-                        IconButton(
-                          tooltip: L.of(context)!.search_for_podcasts_hint,
-                          icon: Icon(
-                            Icons.search,
-                            semanticLabel: L.of(context)!.search_for_podcasts_hint,
+                        Tooltip(
+                          message: searchLabel,
+                          excludeFromSemantics: true,
+                          child: Semantics(
+                            label: searchLabel,
+                            button: true,
+                            onTap: openSearch,
+                            child: ExcludeSemantics(
+                              child: IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: openSearch,
+                              ),
+                            ),
                           ),
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              defaultTargetPlatform == TargetPlatform.iOS
-                                  ? MaterialPageRoute<void>(
-                                      fullscreenDialog: false,
-                                      settings: const RouteSettings(name: 'search'),
-                                      builder: (context) => const Search())
-                                  : SlideRightRoute(
-                                      widget: const Search(),
-                                      settings: const RouteSettings(name: 'search'),
-                                    ),
-                            );
-                          },
                         ),
-                        PopupMenuButton<String>(
-                          onSelected: _menuSelect,
-                          icon: Icon(
-                            Icons.more_vert,
-                            semanticLabel: L.of(context)!.podcast_options_overflow_menu_semantic_label,
-                          ),
-                          itemBuilder: (BuildContext context) {
-                            return <PopupMenuEntry<String>>[
-                              if (feedbackUrl.isNotEmpty)
-                                PopupMenuItem<String>(
-                                  textStyle: Theme.of(context).textTheme.titleMedium,
-                                  value: 'feedback',
-                                  child: Focus(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 8.0),
-                                          child: Icon(Icons.feedback_outlined, size: 18.0),
+                        Tooltip(
+                          message: menuLabel,
+                          excludeFromSemantics: true,
+                          child: Semantics(
+                            label: menuLabel,
+                            button: true,
+                            onTap: _showOverflowMenu,
+                            child: ExcludeSemantics(
+                              child: PopupMenuButton<String>(
+                                key: _overflowMenuKey,
+                                tooltip: null,
+                                onSelected: _menuSelect,
+                                icon: const Icon(Icons.more_vert),
+                                itemBuilder: (BuildContext context) {
+                                  return <PopupMenuEntry<String>>[
+                                    if (feedbackUrl.isNotEmpty)
+                                      PopupMenuItem<String>(
+                                        textStyle: Theme.of(context).textTheme.titleMedium,
+                                        value: 'feedback',
+                                        child: Focus(
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              const Padding(
+                                                padding: EdgeInsets.only(right: 8.0),
+                                                child: Icon(Icons.feedback_outlined, size: 18.0),
+                                              ),
+                                              Text(L.of(context)!.feedback_menu_item_label),
+                                            ],
+                                          ),
                                         ),
-                                        Text(L.of(context)!.feedback_menu_item_label),
-                                      ],
+                                      ),
+                                    PopupMenuItem<String>(
+                                      textStyle: Theme.of(context).textTheme.titleMedium,
+                                      value: 'layout',
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Icon(Icons.dashboard, size: 18.0),
+                                          ),
+                                          Text(L.of(context)!.layout_label),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
-                                value: 'layout',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.dashboard, size: 18.0),
+                                    PopupMenuItem<String>(
+                                      textStyle: Theme.of(context).textTheme.titleMedium,
+                                      value: 'rss',
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Icon(Icons.rss_feed, size: 18.0),
+                                          ),
+                                          Text(L.of(context)!.add_rss_feed_option),
+                                        ],
+                                      ),
                                     ),
-                                    Text(L.of(context)!.layout_label),
-                                  ],
-                                ),
+                                    PopupMenuItem<String>(
+                                      textStyle: Theme.of(context).textTheme.titleMedium,
+                                      value: 'settings',
+                                      child: Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Icon(Icons.settings, size: 18.0),
+                                          ),
+                                          Text(L.of(context)!.settings_label),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuItem<String>(
+                                      textStyle: Theme.of(context).textTheme.titleMedium,
+                                      value: 'about',
+                                      child: Row(
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Icon(Icons.info_outline, size: 18.0),
+                                          ),
+                                          Text(L.of(context)!.about_label),
+                                        ],
+                                      ),
+                                    ),
+                                  ];
+                                },
                               ),
-                              PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
-                                value: 'rss',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.rss_feed, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.add_rss_feed_option),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
-                                value: 'settings',
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.settings, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.settings_label),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
-                                value: 'about',
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.info_outline, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.about_label),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -542,6 +550,26 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     } else {
       return const Downloads();
     }
+  }
+
+  Future<void> _openSearch(BuildContext context) async {
+    await Navigator.push(
+      context,
+      defaultTargetPlatform == TargetPlatform.iOS
+          ? MaterialPageRoute<void>(
+              fullscreenDialog: false,
+              settings: const RouteSettings(name: 'search'),
+              builder: (context) => const Search(),
+            )
+          : SlideRightRoute(
+              widget: const Search(),
+              settings: const RouteSettings(name: 'search'),
+            ),
+    );
+  }
+
+  void _showOverflowMenu() {
+    _overflowMenuKey.currentState?.showButtonMenu();
   }
 
   void _menuSelect(String choice) async {
