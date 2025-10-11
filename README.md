@@ -140,6 +140,12 @@ GitHub [sponsors](https://github.com/sponsors/amugofjava) link or my [ko-fi](htt
 If you have an issue or discover a bug, please raise a GitHub issue. Pull requests are also welcome.
 Full details can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+You can help to translate the app on [Weblate](https://toolate.othing.xyz/projects/anytime-podcast/)
+
+[![Translation status](https://toolate.othing.xyz/widget/anytime-podcast/multi-auto.svg)](https://toolate.othing.xyz/projects/anytime-podcast/)
+
+See [TRANSLATION.md](./TRANSLATION.md) for details.
+
 ## Have a question?
 
 If you wish to reach out to me directly you can find me
