@@ -1,1 +1,252 @@
-{}
+{
+    "subscribe_button_label": "关注",
+    "@subscribe_button_label": {
+        "description": "Subscribe button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "unsubscribe_button_label": "取消关注",
+    "@unsubscribe_button_label": {
+        "description": "Unsubscribe button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "cancel_button_label": "取消",
+    "@cancel_button_label": {
+        "description": "Cancel button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "ok_button_label": "确定",
+    "@ok_button_label": {
+        "description": "OK button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "subscribe_label": "关注",
+    "@subscribe_label": {
+        "description": "Subscribe label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "unsubscribe_label": "取消关注",
+    "@unsubscribe_label": {
+        "description": "Unsubscribe label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_label": "删除",
+    "@delete_label": {
+        "description": "Delete label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_button_label": "删除",
+    "@delete_button_label": {
+        "description": "Delete label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "close_button_label": "关闭",
+    "@close_button_label": {
+        "description": "Close button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_button_label": "搜索",
+    "@search_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_back_button_label": "后退",
+    "@search_back_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "about_label": "关于",
+    "@about_label": {
+        "description": "About menu item",
+        "type": "text",
+        "placeholders": {}
+    },
+    "stop_download_button_label": "停止",
+    "@stop_download_button_label": {
+        "description": "Stop label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "cancel_option_label": "取消",
+    "@cancel_option_label": {
+        "description": "Cancel option label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_theme": "主题",
+    "@settings_theme": {
+        "description": "Display theme",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_theme_heading": "选择主题",
+    "@settings_theme_heading": {
+        "description": "Choose theme behaviour",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_theme_value_light": "选用浅色主题",
+    "@settings_theme_value_light": {
+        "description": "Light theme",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_theme_value_dark": "深色主题",
+    "@settings_theme_value_dark": {
+        "description": "Dark theme",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_label": "设置",
+    "@settings_label": {
+        "description": "Settings label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "go_back_button_label": "返回",
+    "@go_back_button_label": {
+        "description": "Go-back button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "continue_button_label": "继续",
+    "@continue_button_label": {
+        "description": "Continue button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "chapters_label": "章节",
+    "@chapters_label": {
+        "description": "Tab label on now playing screen.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_label": "备注",
+    "@notes_label": {
+        "description": "Tab label on now playing screen.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "label_opml_importing": "导入中…",
+    "@label_opml_importing": {
+        "description": "Label for importing OPML dialog",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_never": "从不",
+    "@settings_auto_update_episodes_never": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_always": "总是",
+    "@settings_auto_update_episodes_always": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "more_label": "更多",
+    "@more_label": {
+        "description": "More label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_add_label": "添加",
+    "@queue_add_label": {
+        "description": "Queue add label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_remove_label": "删除",
+    "@queue_remove_label": {
+        "description": "Queue remove label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "opml_import_button_label": "导入",
+    "@opml_import_button_label": {
+        "description": "OPML Import button label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "opml_export_button_label": "导出",
+    "@opml_export_button_label": {
+        "description": "OPML Export button label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_clear_button_label": "清除",
+    "@queue_clear_button_label": {
+        "description": "Shown on dialog box when clearing queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_clear_label_title": "清空队列",
+    "@queue_clear_label_title": {
+        "description": "Shown on dialog box when clearing queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "transcript_label": "记录",
+    "@transcript_label": {
+        "description": "Transcript label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "sleep_off_label": "关闭",
+    "@sleep_off_label": {
+        "description": "Describes off sleep label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "feedback_menu_item_label": "留言反馈",
+    "@feedback_menu_item_label": {
+        "description": "Feedback option in main menu",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "episode_filter_none_label": "无",
+    "@episode_filter_none_label": {
+        "description": "Episodes not filtered",
+        "type": "text",
+        "placeholders": {}
+    },
+    "episode_sort_none_label": "默认",
+    "@episode_sort_none_label": {
+        "description": "Episode default sort",
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantic_current_value_label": "当前值",
+    "@semantic_current_value_label": {
+        "description": "For current sleep setting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "semantic_announce_loading": "加载中，请稍候…",
+    "@semantic_announce_loading": {
+        "description": "Spoken when search in progress.",
+        "type": "text",
+        "placeholders": {}
+    }
+}
