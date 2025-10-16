@@ -95,7 +95,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "settings_theme_value_light": "选用浅色主题",
+    "settings_theme_value_light": "浅色主题",
     "@settings_theme_value_light": {
         "description": "Light theme",
         "type": "text",
@@ -137,7 +137,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "label_opml_importing": "导入中…",
+    "label_opml_importing": "导入中",
     "@label_opml_importing": {
         "description": "Label for importing OPML dialog",
         "type": "text",
@@ -204,7 +204,7 @@
         "placeholders_order": [],
         "placeholders": {}
     },
-    "transcript_label": "记录",
+    "transcript_label": "抄本",
     "@transcript_label": {
         "description": "Transcript label",
         "type": "text",
@@ -218,7 +218,7 @@
         "placeholders_order": [],
         "placeholders": {}
     },
-    "feedback_menu_item_label": "留言反馈",
+    "feedback_menu_item_label": "反馈",
     "@feedback_menu_item_label": {
         "description": "Feedback option in main menu",
         "type": "text",
@@ -243,9 +243,27 @@
         "type": "text",
         "placeholders": {}
     },
-    "semantic_announce_loading": "加载中，请稍候…",
+    "semantic_announce_loading": "加载中，请稍候。",
     "@semantic_announce_loading": {
         "description": "Spoken when search in progress.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "app_title": "Anytime 播客播放器",
+    "@app_title": {
+        "description": "Full title for the application",
+        "type": "text",
+        "placeholders": {}
+    },
+    "app_title_short": "Anytime 播放器",
+    "@app_title_short": {
+        "description": "Title for the application",
+        "type": "text",
+        "placeholders": {}
+    },
+    "library": "库",
+    "@library": {
+        "description": "Library tab label",
         "type": "text",
         "placeholders": {}
     }
