@@ -204,7 +204,7 @@
         "placeholders_order": [],
         "placeholders": {}
     },
-    "transcript_label": "抄本",
+    "transcript_label": "转写",
     "@transcript_label": {
         "description": "Transcript label",
         "type": "text",
