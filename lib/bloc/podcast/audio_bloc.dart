@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/transcript_state_event.dart';
@@ -33,6 +34,12 @@ class AudioBloc extends Bloc {
 
   /// Listen for new episode play requests.
   final BehaviorSubject<Episode?> _play = BehaviorSubject<Episode?>();
+
+  /// Listen for new episode play latest episodes requests.
+  final BehaviorSubject<Podcast?> _playLatestEpisode = BehaviorSubject<Podcast?>();
+
+  /// Listen for new episode play next unplayed episodes requests.
+  final BehaviorSubject<Podcast?> _playNextUnplayedEpisode = BehaviorSubject<Podcast?>();
 
   /// Move from one playing state to another such as from paused to play
   final PublishSubject<TransitionState> _transitionPlayingState = PublishSubject<TransitionState>();
@@ -119,6 +126,14 @@ class AudioBloc extends Bloc {
     _play.listen((episode) {
       audioPlayerService.playEpisode(episode: episode!, resume: true);
     });
+
+    _playLatestEpisode.listen((podcast) {
+      audioPlayerService.playLatestEpisode(podcast: podcast!, resume: true);
+    });
+
+    _playNextUnplayedEpisode.listen((podcast) {
+      audioPlayerService.playNextUnplayedEpisode(podcast: podcast!, resume: true);
+    });
   }
 
   /// Listen for requests to change the position of the current episode.
@@ -187,6 +202,12 @@ class AudioBloc extends Bloc {
   /// Play the specified track now
   void Function(Episode?) get play => _play.add;
 
+  /// Play the latest episode for the podcast
+  void Function(Podcast?) get playLatestEpisode => _playLatestEpisode.add;
+
+  /// Play the next unplayed episode for the podcast
+  void Function(Podcast?) get playNextUnplayedEpisode => _playNextUnplayedEpisode.add;
+
   /// Transition the state from connecting, to play, pause, stop etc.
   void Function(TransitionState) get transitionState => _transitionPlayingState.add;
 
@@ -232,6 +253,8 @@ class AudioBloc extends Bloc {
     _playbackSpeedSubject.close();
     _trimSilence.close();
     _volumeBoost.close();
+    _playNextUnplayedEpisode.close();
+    _playLatestEpisode.close();
 
     super.dispose();
   }

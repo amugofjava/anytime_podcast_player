@@ -20,8 +20,10 @@ class PodcastImage extends StatefulWidget {
   final String url;
   final double height;
   final double width;
+  final double fontSize;
   final BoxFit fit;
   final bool highlight;
+  final int count;
   final double borderRadius;
   final Widget? placeholder;
   final Widget? errorPlaceholder;
@@ -31,10 +33,12 @@ class PodcastImage extends StatefulWidget {
     required this.url,
     this.height = double.infinity,
     this.width = double.infinity,
+    this.fontSize = 12,
     this.fit = BoxFit.cover,
     this.placeholder,
     this.errorPlaceholder,
     this.highlight = false,
+    this.count = 0,
     this.borderRadius = 0.0,
   });
 
@@ -101,51 +105,64 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
               return Stack(
                 clipBehavior: Clip.none,
                 alignment: Alignment.center,
-                children: widget.highlight
-                    ? [
-                        PositionedDirectional(
-                          key: bottomChildKey,
-                          child: bottomChild,
+                children: [
+                  PositionedDirectional(
+                    key: bottomChildKey,
+                    child: bottomChild,
+                  ),
+                  PositionedDirectional(
+                    key: topChildKey,
+                    child: topChild,
+                  ),
+                  if (widget.highlight)
+                    Positioned(
+                      top: -1.5,
+                      right: -1.5,
+                      child: Container(
+                        width: 13,
+                        height: 13,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).canvasColor,
                         ),
-                        PositionedDirectional(
-                          key: topChildKey,
-                          child: topChild,
+                      ),
+                    ),
+                  if (widget.highlight)
+                    Positioned(
+                      top: 0.0,
+                      right: 0.0,
+                      child: Container(
+                        width: 10.0,
+                        height: 10.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).indicatorColor,
                         ),
-                        Positioned(
-                          top: -1.5,
-                          right: -1.5,
-                          child: Container(
-                            width: 13,
-                            height: 13,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).canvasColor,
-                            ),
+                      ),
+                    ),
+                  if (widget.count > 0)
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          backgroundBlendMode: BlendMode.luminosity,
+                          color: Colors.blueGrey,
+                        ),
+                        child: Text(
+                          widget.count.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: widget.fontSize,
                           ),
                         ),
-                        Positioned(
-                          top: 0.0,
-                          right: 0.0,
-                          child: Container(
-                            width: 10.0,
-                            height: 10.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).indicatorColor,
-                            ),
-                          ),
-                        ),
-                      ]
-                    : [
-                        PositionedDirectional(
-                          key: bottomChildKey,
-                          child: bottomChild,
-                        ),
-                        PositionedDirectional(
-                          key: topChildKey,
-                          child: topChild,
-                        ),
-                      ],
+                      ),
+                    ),
+                ],
               );
             },
           );

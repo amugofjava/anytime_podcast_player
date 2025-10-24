@@ -4,30 +4,31 @@
   ~ found in the LICENSE file.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        package="uk.me.amugofjava.anytime">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="uk.me.amugofjava.anytime">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-            android:icon="@mipmap/ic_launcher"
-            android:label="Anytime Player"
-            android:largeHeap="true"
-            android:networkSecurityConfig="@xml/network_security_config">
+        tools:replace="android:label"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Anytime Player"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
-                android:name="com.ryanheise.audioservice.AudioServiceActivity"
-                android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
-                android:hardwareAccelerated="true"
-                android:launchMode="singleTop"
-                android:theme="@style/LaunchTheme"
-                android:windowSoftInputMode="adjustResize"
-                android:exported="true"
-                tools:ignore="Instantiatable">
+            android:name="com.ryanheise.audioservice.AudioServiceActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@style/LaunchTheme"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -58,61 +59,61 @@
         </activity>
 
         <service
-                android:name="com.ryanheise.audioservice.AudioService"
-                android:foregroundServiceType="mediaPlayback"
-                android:exported="true"
-                tools:ignore="Instantiatable">
+            android:name="com.ryanheise.audioservice.AudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
         <receiver
-                android:name="com.ryanheise.audioservice.MediaButtonReceiver"
-                android:exported="true"
-                tools:ignore="Instantiatable">
+            android:name="com.ryanheise.audioservice.MediaButtonReceiver"
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
         <provider
-                android:name="androidx.work.impl.WorkManagerInitializer"
-                android:authorities="${applicationId}.workmanager-init"
-                android:enabled="false"
-                android:exported="false" />
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            android:enabled="false"
+            android:exported="false" />
 
         <!-- Begin FlutterDownloader customization -->
         <!-- disable default Initializer -->
         <provider
-                android:name="androidx.startup.InitializationProvider"
-                android:authorities="${applicationId}.androidx-startup"
-                android:exported="false"
-                tools:node="merge">
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
             <meta-data
-                    android:name="androidx.work.WorkManagerInitializer"
-                    android:value="androidx.startup"
-                    tools:node="remove" />
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
         </provider>
 
         <!-- declare customized Initializer -->
         <provider
-                android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
-                android:authorities="${applicationId}.flutter-downloader-init"
-                android:exported="false">
+            android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
+            android:authorities="${applicationId}.flutter-downloader-init"
+            android:exported="false">
             <!-- changes this number to configure the maximum number of concurrent tasks -->
             <meta-data
-                    android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
-                    android:value="1" />
+                android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
+                android:value="1" />
         </provider>
         <!-- End FlutterDownloader customization -->
         <meta-data
-                android:name="flutterEmbedding"
-                android:value="2" />
+            android:name="flutterEmbedding"
+            android:value="2" />
 
         <!-- Opt out of Flutter's deep link system as we use app_links -->
         <meta-data
-                android:name="flutter_deeplinking_enabled"
-                android:value="false" />
+            android:name="flutter_deeplinking_enabled"
+            android:value="false" />
     </application>
 </manifest>

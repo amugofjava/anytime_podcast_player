@@ -8,8 +8,10 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:anytime/state/library_state.dart';
 import 'package:podcast_search/podcast_search.dart' as pcast;
 
 /// The [PodcastService] handles interactions around podcasts including searching, fetching
@@ -18,6 +20,7 @@ import 'package:podcast_search/podcast_search.dart' as pcast;
 abstract class PodcastService {
   final PodcastApi api;
   final Repository repository;
+  final NotificationService notificationService;
   final SettingsService settingsService;
 
   static const itunesGenres = [
@@ -162,6 +165,7 @@ abstract class PodcastService {
   PodcastService({
     required this.api,
     required this.repository,
+    required this.notificationService,
     required this.settingsService,
   });
 
@@ -187,7 +191,7 @@ abstract class PodcastService {
   Future<Podcast?> loadPodcast({
     required Podcast podcast,
     bool highlightNewEpisodes = false,
-    bool refresh = false,
+    bool ignoreCache = false,
   });
 
   Future<Podcast?> loadPodcastById({
@@ -224,7 +228,13 @@ abstract class PodcastService {
 
   Future<List<Episode>> loadQueue();
 
+  Future<void> refreshFeeds({
+    bool manual = false,
+    background = false,
+  });
+
   /// Event listeners
   late Stream<Podcast?> podcastListener;
   late Stream<EpisodeState> episodeListener;
+  late Stream<LibraryState> libraryListener;
 }

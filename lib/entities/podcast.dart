@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/annotations.dart';
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
@@ -88,7 +89,13 @@ class Podcast {
   /// List of persons associated at the podcast level.
   final List<Person>? persons;
 
-  bool newEpisodes;
+  /// Does this podcast contain new episodes since we last loaded it?
+  int newEpisodes = 0;
+
+  int episodeCount = 0;
+
+  /// Does this podcast contain updated episodes since we last loaded it?
+  @Transient()
   bool updatedEpisodes = false;
 
   Podcast({
@@ -106,7 +113,8 @@ class Podcast {
     this.filter = PodcastEpisodeFilter.none,
     this.sort = PodcastEpisodeSort.none,
     this.episodes = const <Episode>[],
-    this.newEpisodes = false,
+    this.newEpisodes = 0,
+    this.episodeCount = 0,
     this.persons,
     DateTime? rssFeedLastUpdated,
     DateTime? lastUpdated,
@@ -155,6 +163,7 @@ class Podcast {
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'filter': filter.id,
       'sort': sort.id,
+      'newEpisodes': newEpisodes,
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
       'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
       'rssFeedLastUpdated': _rssFeedLastUpdated?.millisecondsSinceEpoch ?? DateTime(1970, 1, 1).millisecondsSinceEpoch,
@@ -168,6 +177,7 @@ class Podcast {
     final fus = podcast['rssFeedLastUpdated'] as int?;
     final funding = <Funding>[];
     final persons = <Person>[];
+
     var filter = PodcastEpisodeFilter.none;
     var sort = PodcastEpisodeSort.none;
 
@@ -241,6 +251,7 @@ class Podcast {
       funding: funding,
       persons: persons,
       subscribedDate: sd,
+      newEpisodes: (podcast['newEpisodes'] as int?) ?? 0,
       rssFeedLastUpdated: rssFeedLastUpdated,
       lastUpdated: lastUpdated,
     );

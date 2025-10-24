@@ -134,14 +134,14 @@ class MobileSettingsService extends SettingsService {
 
   @override
   set autoUpdateEpisodePeriod(int period) {
-    _sharedPreferences.setInt('autoUpdateEpisodePeriod', period);
+    _sharedPreferences.setInt('autoUpdateEpisodePeriod_v2', period);
     settingsNotifier.sink.add('autoUpdateEpisodePeriod');
   }
 
   @override
   int get autoUpdateEpisodePeriod {
     /// Default to 3 hours.
-    return _sharedPreferences.getInt('autoUpdateEpisodePeriod') ?? 180;
+    return _sharedPreferences.getInt('autoUpdateEpisodePeriod_v2') ?? 180;
   }
 
   @override
@@ -178,6 +178,39 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set layoutOrder(String order) {
+    _sharedPreferences.setString('layoutOrder', order);
+    settingsNotifier.sink.add('layoutOrder');
+  }
+
+  @override
+  String get layoutOrder {
+    return _sharedPreferences.getString('layoutOrder') ?? 'alphabetical';
+  }
+
+  @override
+  set layoutHighlight(bool highlight) {
+    _sharedPreferences.setBool('layoutHighlight', highlight);
+    settingsNotifier.sink.add('layoutHighlight');
+  }
+
+  @override
+  bool get layoutHighlight {
+    return _sharedPreferences.getBool('layoutHighlight') ?? false;
+  }
+
+  @override
+  set layoutCount(bool count) {
+    _sharedPreferences.setBool('layoutCount', count);
+    settingsNotifier.sink.add('layoutCount');
+  }
+
+  @override
+  bool get layoutCount {
+    return _sharedPreferences.getBool('layoutCount') ?? false;
+  }
+
+  @override
   set autoPlay(bool autoPlay) {
     _sharedPreferences.setBool('autoplay', autoPlay);
     settingsNotifier.sink.add('autoplay');
@@ -186,6 +219,53 @@ class MobileSettingsService extends SettingsService {
   @override
   bool get autoPlay {
     return _sharedPreferences.getBool('autoplay') ?? false;
+  }
+
+  @override
+  set backgroundUpdate(bool backgroundUpdate) {
+    _sharedPreferences.setBool('backgroundUpdate', backgroundUpdate);
+    settingsNotifier.sink.add('backgroundUpdate');
+  }
+
+  @override
+  bool get backgroundUpdate {
+    return _sharedPreferences.getBool('backgroundUpdate') ?? false;
+  }
+
+  @override
+  set backgroundUpdateMobileData(bool backgroundUpdate) {
+    _sharedPreferences.setBool('backgroundUpdateMobileData', backgroundUpdate);
+    settingsNotifier.sink.add('backgroundUpdateMobileData');
+  }
+
+  @override
+  bool get backgroundUpdateMobileData {
+    return _sharedPreferences.getBool('backgroundUpdateMobileData') ?? false;
+  }
+
+  @override
+  set updateNotification(bool updateNotification) {
+    _sharedPreferences.setBool('updateNotification', updateNotification);
+    settingsNotifier.sink.add('updateNotification');
+  }
+
+  @override
+  bool get updateNotification {
+    return _sharedPreferences.getBool('updateNotification') ?? false;
+  }
+
+  @override
+  set lastFeedRefresh(DateTime lastFeedRefresh) {
+    _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
+    settingsNotifier.sink.add('lastFeedRefresh');
+  }
+
+  @override
+  DateTime get lastFeedRefresh {
+    final int lastUpdate =
+        _sharedPreferences.getInt('lastFeedRefresh') ?? DateTime.utc(1970, 1, 1).millisecondsSinceEpoch;
+
+    return DateTime.fromMillisecondsSinceEpoch(lastUpdate);
   }
 
   @override

@@ -127,6 +127,9 @@ class Episode {
   /// Current chapter we are listening to if this episode has chapters.  Transient.
   Chapter? currentChapter;
 
+  /// Is this a new episode since last update?
+  bool newEpisode = false;
+
   /// Set to true if chapter data is currently being loaded.
   @Transient()
   bool chaptersLoading = false;
@@ -166,6 +169,7 @@ class Episode {
     this.position = 0,
     this.downloadPercentage = 0,
     this.played = false,
+    this.newEpisode = false,
     this.highlight = false,
     String? chaptersUrl,
     this.chapters = const <Chapter>[],
@@ -204,6 +208,7 @@ class Episode {
       'position': position.toString(),
       'downloadPercentage': downloadPercentage.toString(),
       'played': played ? 'true' : 'false',
+      'ne': newEpisode ? 1 : 0,
       'chaptersUrl': chaptersUrl,
       'chapters': (chapters).map((chapter) => chapter.toMap()).toList(growable: false),
       'tid': transcriptId ?? 0,
@@ -272,6 +277,7 @@ class Episode {
       position: int.parse(episode['position'] as String? ?? '0'),
       downloadPercentage: int.parse(episode['downloadPercentage'] as String? ?? '0'),
       played: episode['played'] == 'true' ? true : false,
+      newEpisode: (episode['ne'] ?? 0) == 1 ? true : false,
       chaptersUrl: episode['chaptersUrl'] as String?,
       chapters: chapters,
       transcriptUrls: transcriptUrls,

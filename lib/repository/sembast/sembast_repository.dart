@@ -242,6 +242,64 @@ class SembastRepository extends Repository {
     return episodeList;
   }
 
+  // TODO: Remove nullable on pguid as this does not make sense.
+  @override
+  Future<int> findEpisodeCountByPodcastGuid(
+    String pguid, {
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+    PodcastEpisodeSort sort = PodcastEpisodeSort.none,
+  }) async {
+    var episodeFilter = Filter.equals('played', 'false');
+    var count = 0;
+
+    final finder = Finder(
+      filter: episodeFilter,
+    );
+
+    count = await _episodeStore.query(finder: finder).count(await _db);
+
+    return count;
+  }
+
+  @override
+  Future<Map<String, int>> findEpisodeCountByPodcast({
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+  }) async {
+    var counts = <String, int>{};
+
+    await for (var snapshot in _episodeStore.stream(await _db)) {
+      String category = snapshot['pguid'] as String;
+
+      switch (filter) {
+        case PodcastEpisodeFilter.none:
+          break;
+        case PodcastEpisodeFilter.played:
+          String played = snapshot['played'] as String;
+
+          if (played == 'true') {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+        case PodcastEpisodeFilter.notPlayed:
+          String played = snapshot['played'] as String;
+
+          if (played == 'false') {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+        case PodcastEpisodeFilter.started:
+          int position = snapshot['position'] as int;
+
+          if (position > 0) {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+      }
+    }
+
+    return counts;
+  }
+
   @override
   Future<List<Episode>> findDownloadsByPodcastGuid(String pguid) async {
     final finder = Finder(
@@ -593,6 +651,34 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<Episode?> findLatestPlayableEpisode(Podcast podcast) async {
+    Episode? episode;
+
+    final episodes = await findEpisodesByPodcastGuid(podcast.guid,
+        filter: PodcastEpisodeFilter.none, sort: PodcastEpisodeSort.latestFirst);
+
+    if (episodes.isNotEmpty) {
+      episode = episodes[0];
+    }
+
+    return episode;
+  }
+
+  @override
+  Future<Episode?> findNextUnplayedEpisode(Podcast podcast) async {
+    Episode? episode;
+
+    final episodes = await findEpisodesByPodcastGuid(podcast.guid,
+        filter: PodcastEpisodeFilter.notPlayed, sort: PodcastEpisodeSort.earliestFirst);
+
+    if (episodes.isNotEmpty) {
+      episode = episodes[0];
+    }
+
+    return episode;
+  }
+
+  @override
   Future<Episode?> findNextPlayableEpisode(Episode episode) async {
     /// Lookup the podcast and its episodes
     if (episode.pguid != null) {
@@ -600,7 +686,7 @@ class SembastRepository extends Repository {
 
       if (podcast != null) {
         /// If we do not have a filter applied, find the next un-played episode in the series.
-        /// If we have a filter applied, text the first episode which will be the next in the
+        /// If we have a filter applied, take the first episode which will be the next in the
         /// filtered series.
         if (podcast.filter == PodcastEpisodeFilter.none) {
           log.fine('Searching for episode ${episode.guid} - ${episode.id}');

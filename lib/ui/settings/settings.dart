@@ -123,7 +123,39 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              SettingsDividerLabel(label: L.of(context)!.settings_podcast_management_divider_label),
               const EpisodeRefreshWidget(),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_background_refresh_option),
+                  subtitle: Text(L.of(context)!.settings_background_refresh_option_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.backgroundUpdate,
+                    onChanged: (value) => setState(() => settingsBloc.backgroundUpdates(value)),
+                  ),
+                ),
+              ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_background_refresh_mobile_data_option),
+                  subtitle: Text(L.of(context)!.settings_background_refresh_mobile_data_option_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.backgroundUpdateMobileData,
+                    onChanged: (value) => setState(() => settingsBloc.backgroundUpdatesMobileData(value)),
+                  ),
+                ),
+              ),
+              SettingsDividerLabel(label: L.of(context)!.settings_notification_divider_label),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_refresh_notification_option),
+                  subtitle: Text(L.of(context)!.settings_refresh_notification_option_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.updatesNotification,
+                    onChanged: (value) => setState(() => settingsBloc.updateNotification(value)),
+                  ),
+                ),
+              ),
               SettingsDividerLabel(label: L.of(context)!.settings_data_divider_label),
               ListTile(
                 title: Text(L.of(context)!.settings_import_opml),

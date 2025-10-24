@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
+import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
@@ -14,6 +15,7 @@ import 'package:anytime/state/opml_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
+import '../mocks/mock_notification_service.dart';
 import '../mocks/mock_path_provider.dart';
 import '../mocks/mock_podcast_api.dart';
 import '../mocks/mock_settings_service.dart';
@@ -24,16 +26,19 @@ void main() {
   const dbName = 'anytime-opml.db';
   late OPMLService opmlService;
   late PodcastService podcastService;
+  late NotificationService notificationService;
   Repository repository;
 
   setUp(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
     PathProviderPlatform.instance = mockPath;
     repository = SembastRepository(databaseName: dbName);
+    notificationService = MockNotificationService();
 
     podcastService = MobilePodcastService(
       api: api,
       repository: repository,
+      notificationService: notificationService,
       settingsService: MockSettingsService(),
     );
 
