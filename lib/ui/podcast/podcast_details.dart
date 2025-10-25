@@ -574,7 +574,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
 
     setState(() {
       description = PodcastHtml(
-        key: ValueKey(widget.podcast.url!),
+        key: ValueKey(widget.podcast.url),
         content: widget.podcast.description!,
         fontSize: FontSize.medium,
         clipboard: false,

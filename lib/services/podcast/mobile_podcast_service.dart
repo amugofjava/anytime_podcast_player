@@ -16,6 +16,7 @@ import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/state/episode_state.dart';
+import 'package:anytime/state/library_state.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -27,7 +28,6 @@ import 'package:path/path.dart';
 import 'package:podcast_search/podcast_search.dart' as podcast_search;
 import 'package:rxdart/rxdart.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:anytime/state/library_state.dart';
 
 class MobilePodcastService extends PodcastService {
   final _log = Logger('MobilePodcastService');
@@ -213,10 +213,14 @@ class MobilePodcastService extends PodcastService {
 
       while (tries-- > 0) {
         try {
-          _log.fine('Loading podcast from feed $url. $tries attempts remaining.');
+          _log.fine('Loading podcast from feed $url.');
+
           loadedPodcast = await _loadPodcastFeed(url: url);
           tries = 0;
         } catch (e) {
+          _log.fine('Failed to load podcast.  $tries attempts remaining.');
+          _log.fine(e);
+
           if (tries > 0) {
             //TODO: Needs improving to only fall back if original URL was http and we forced it up to https.
             if ((e is podcast_search.PodcastCertificateException || e is podcast_search.PodcastFailedException) &&
@@ -793,7 +797,8 @@ class MobilePodcastService extends PodcastService {
           settingsService.lastFeedRefresh = DateTime.now();
         } else {
           _log.fine('We do not have suitable connectivity available. Skipping update:');
-          _log.fine(' - Connectivity: ${!connectivityResult.contains(ConnectivityResult.none)}, Wifi: WIFI: ${connectivityResult.contains(ConnectivityResult.wifi)}, Mobile: ${connectivityResult.contains(ConnectivityResult.mobile)}');
+          _log.fine(
+              ' - Connectivity: ${!connectivityResult.contains(ConnectivityResult.none)}, Wifi: WIFI: ${connectivityResult.contains(ConnectivityResult.wifi)}, Mobile: ${connectivityResult.contains(ConnectivityResult.mobile)}');
         }
       } else {
         _log.fine('Feed update not due until $updateDue');
