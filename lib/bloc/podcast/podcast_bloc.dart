@@ -256,9 +256,11 @@ class PodcastBloc extends Bloc {
           }
         }
       } else {
+        _podcastStream.sink.add(BlocLoadingState<Podcast>(feed.podcast));
         await _loadPodcastFromDisk(feed.podcast.id ?? 0);
       }
     } else {
+      _podcastStream.sink.add(BlocLoadingState<Podcast>(feed.podcast));
       await _loadPodcastFromDisk(feed.podcast.id ?? 0);
     }
   }

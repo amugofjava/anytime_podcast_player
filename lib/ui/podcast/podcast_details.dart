@@ -394,6 +394,7 @@ class PodcastTitle extends StatefulWidget {
 class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderStateMixin {
   final GlobalKey descriptionKey = GlobalKey();
   final maxHeight = 100.0;
+  PodcastHtml? description;
   bool showOverflow = false;
   bool showEpisodeSearch = false;
   final StreamController<bool> isDescriptionExpandedStream = StreamController<bool>.broadcast();
@@ -484,12 +485,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
           ),
           PodcastDescription(
             key: descriptionKey,
-            content: PodcastHtml(
-              key: ValueKey(widget.podcast.url),
-              content: widget.podcast.description!,
-              fontSize: FontSize.medium,
-              clipboard: false,
-            ),
+            content: description,
             isDescriptionExpandedStream: isDescriptionExpandedStream,
           ),
           Padding(
@@ -570,6 +566,13 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
   void initState() {
     super.initState();
 
+    description = PodcastHtml(
+      key: ValueKey(widget.podcast.url),
+      content: widget.podcast.description!,
+      fontSize: FontSize.medium,
+      clipboard: false,
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (descriptionKey.currentContext!.size!.height == maxHeight) {
         setState(() {
@@ -586,6 +589,8 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     _searchFocus.dispose();
     _controller.dispose();
     _animation.dispose();
+
+    description = null;
 
     super.dispose();
   }
