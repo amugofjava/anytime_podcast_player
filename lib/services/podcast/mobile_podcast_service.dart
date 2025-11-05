@@ -154,7 +154,7 @@ class MobilePodcastService extends PodcastService {
     DateTime? rssLastUpdated;
     var fetch = false;
 
-    _log.fine('loadPodcast. ID ${podcast.id} (refresh $ignoreCache)');
+    _log.fine('loadPodcast. ID:${podcast.id} (ignore cache:$ignoreCache)');
 
     // Do we have this podcast in our cache?
     final cachedPodcast = _cache.item(podcast.url);
@@ -164,7 +164,7 @@ class MobilePodcastService extends PodcastService {
 
       return cachedPodcast;
     } else if (podcast.id != null && podcast.etag.isEmpty) {
-      _log.fine('We are checking the feed for an existing podcast,');
+      _log.fine('We are checking the feed for an existing podcast.');
 
       final storedPodcast = await repository.findPodcastById(podcast.id!);
       var headUrl = podcast.url;
@@ -298,8 +298,6 @@ class MobilePodcastService extends PodcastService {
       persons: persons,
       episodes: <Episode>[],
     );
-
-    print('Got etag ${loadedPodcast.etag} for ${loadedPodcast.title}');
 
     /// We could be following this podcast already. Let's check.
     var follow = await repository.findPodcastByGuid(sourceUrl);
