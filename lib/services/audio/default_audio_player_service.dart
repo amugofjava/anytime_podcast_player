@@ -737,7 +737,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   void _startPositionTicker() async {
     if (_positionSubscription == null) {
       _positionSubscription = _durationTicker.listen((_) async {
-        print('Position ticker...');
         await _onUpdatePosition();
       });
     } else if (_positionSubscription!.isPaused) {
@@ -755,7 +754,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// We only want to start the sleep timer ticker when the user has requested a sleep.
   void _startSleepTicker() async {
     _sleepSubscription ??= _sleepTicker.listen((int period) async {
-      print('Sleep ticker...');
       if (_sleep.type == SleepType.time && DateTime.now().isAfter(_sleep.endTime)) {
         await pause();
         _sleep = Sleep(type: SleepType.none);

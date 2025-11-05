@@ -2169,6 +2169,16 @@ class L {
         );
   }
 
+  String get library_sort_latest_episodes_label {
+    return message('library_sort_latest_episodes_label') ??
+        Intl.message(
+          'Latest episodes',
+          name: 'library_sort_latest_episodes_label',
+          desc: 'Option label for sorting the library by latest count',
+          locale: localeName,
+        );
+  }
+
   String semantic_unplayed_episodes_count(int episodes) {
     return message('semantic_unplayed_episodes_count') ??
         Intl.message(

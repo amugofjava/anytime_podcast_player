@@ -266,10 +266,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   csslib:
     dependency: transitive
     description:
@@ -534,10 +534,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "2c11f3f94c687ee9bad77c171151672986360b2b001d109814ee7140b2cf261b"
+      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   http_client_helper:
     dependency: transitive
     description:
@@ -893,12 +893,11 @@ packages:
   podcast_search:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "hotfix/flutter_accessibility_regression"
-      resolved-ref: "14ed3714bd27f6773341136cc84a610d7189e116"
-      url: "https://github.com/amugofjava/podcast_search.git"
-    source: git
-    version: "0.7.11+1"
+      name: podcast_search
+      sha256: "7399658ceafbf7c672ee3d60afd161e8f7edd3675d32e6cb13a93346ff76ac5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.12"
   posix:
     dependency: transitive
     description:
@@ -935,10 +934,10 @@ packages:
     dependency: transitive
     description:
       name: rss_dart
-      sha256: "81d45b53c88eac17991edf2ecdd468423c542c0290fa2950a3bea9affa0e956b"
+      sha256: "09c0123427e9557d74562e07f9d22effe3fd493893602e8a8d24b961490f2c30"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.12"
+    version: "1.0.14"
   rxdart:
     dependency: "direct main"
     description:

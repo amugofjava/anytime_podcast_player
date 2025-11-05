@@ -145,6 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'library': MessageLookupByLibrary.simpleMessage('Library'),
     'library_sort_alphabetical_label': MessageLookupByLibrary.simpleMessage('Alphabetical'),
     'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Date followed'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Latest episodes'),
     'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Unplayed episodes'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Mark all episodes as unplayed'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Mark all episodes as played'),

@@ -4,7 +4,7 @@ description: Anytime Podcast Player
 version: 1.4.0+223
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
   # Pinned to an older version of Flutter due to accessibility bug: https://github.com/flutter/flutter/issues/164483
   flutter: 3.27.4
 
@@ -42,12 +42,7 @@ dependencies:
   path_provider_platform_interface: ^2.0.4
   percent_indicator: 4.2.5
   permission_handler: ^12.0.0+1
-  # Use a temporary, patched version of podcast_search which allows us to use it with an older
-  # version of Flutter. This is required due to an accessibility bug in 3.3x and above.
-  podcast_search:
-    git:
-      url: https://github.com/amugofjava/podcast_search.git
-      ref: hotfix/flutter_accessibility_regression
+  podcast_search: ^0.7.12
   provider: ^6.0.3
   rxdart: ^0.28.0
   scrollable_positioned_list: ^0.3.7

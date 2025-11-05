@@ -1355,6 +1355,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "library_sort_latest_episodes_label": "Latest episodes",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
   "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 unplayed episode}other{{episodes} unplayed episodes}}",
   "@semantic_unplayed_episodes_count": {
     "description": "Semantic label for unplayed episodes count.",

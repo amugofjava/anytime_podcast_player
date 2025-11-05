@@ -59,6 +59,9 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
               case 'unplayed':
                 sortOrder = 'Unplayed episodes';
                 break;
+              case 'episodes':
+                sortOrder = 'Latest episodes';
+                break;
               default:
                 sortOrder = 'Alphabetical';
             }
@@ -219,108 +222,131 @@ class _LayoutSelectorWidgetState extends State<LayoutSelectorWidget> {
                                 context: context,
                                 useRootNavigator: false,
                                 builder: (BuildContext context) {
-                                  return (defaultTargetPlatform == TargetPlatform.iOS) ?
-                                  CupertinoActionSheet(
-                                    actions: <Widget>[
-                                        CupertinoActionSheetAction(
-                                          isDefaultAction: true,
-                                          onPressed: () {
-                                            setState(() {
-                                              settingsBloc.layoutOrder('alphabetical');
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          child: Text(L.of(context)!.library_sort_alphabetical_label),
-                                        ),
-                                        CupertinoActionSheetAction(
-                                          isDefaultAction: true,
-                                          onPressed: () {
-                                            setState(() {
-                                              settingsBloc.layoutOrder('followed');
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          child: Text(L.of(context)!.library_sort_date_followed_label),
-                                        ),
-                                        CupertinoActionSheetAction(
-                                          isDefaultAction: true,
-                                          onPressed: () {
-                                            setState(() {
-                                              settingsBloc.layoutOrder('unplayed');
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          child: Text(L.of(context)!.library_sort_unplayed_count_label),
-                                        ),
-                                    ],
-                                    cancelButton: CupertinoActionSheetAction(
-                                      isDefaultAction: false,
-                                      onPressed: () {
-                                        Navigator.pop(context, 'Close');
-                                      },
-                                      child: Text(L.of(context)!.close_button_label),
-                                    ),
-                                  )
-                                  : AlertDialog(
-                                    title: Text(
-                                      L.of(context)!.layout_selector_sort_by,
-                                      style: Theme.of(context).textTheme.titleMedium,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    scrollable: true,
-                                    content: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                                      return Column(children: <Widget>[
-                                        RadioListTile<String>(
-                                            title: Text(L.of(context)!.library_sort_alphabetical_label),
-                                            dense: true,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                            value: 'alphabetical',
-                                            groupValue: snapshot.data!.layoutOrder,
-                                            onChanged: (String? value) {
-                                              setState(() {
-                                                settingsBloc.layoutOrder(value ?? '');
-                                                Navigator.pop(context);
-                                              });
-                                            }),
-                                        RadioListTile<String>(
-                                            title: Text(L.of(context)!.library_sort_date_followed_label),
-                                            dense: true,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                            value: 'followed',
-                                            groupValue: snapshot.data!.layoutOrder,
-                                            onChanged: (String? value) {
-                                              setState(() {
-                                                settingsBloc.layoutOrder(value ?? '');
-                                                Navigator.pop(context);
-                                              });
-                                            }),
-                                        RadioListTile<String>(
-                                            title: Text(L.of(context)!.library_sort_unplayed_count_label),
-                                            dense: true,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                            value: 'unplayed',
-                                            groupValue: snapshot.data!.layoutOrder,
-                                            onChanged: (String? value) {
-                                              setState(() {
-                                                settingsBloc.layoutOrder(value ?? '');
-                                                Navigator.pop(context);
-                                              });
-                                            }),
-                                        SimpleDialogOption(
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: TextButton(
-                                              child: ActionText(L.of(context)!.close_button_label),
+                                  return (defaultTargetPlatform == TargetPlatform.iOS)
+                                      ? CupertinoActionSheet(
+                                          actions: <Widget>[
+                                            CupertinoActionSheetAction(
+                                              isDefaultAction: true,
                                               onPressed: () {
-                                                Navigator.pop(context, '');
+                                                setState(() {
+                                                  settingsBloc.layoutOrder('alphabetical');
+                                                  Navigator.pop(context);
+                                                });
                                               },
+                                              child: Text(L.of(context)!.library_sort_alphabetical_label),
                                             ),
+                                            CupertinoActionSheetAction(
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                setState(() {
+                                                  settingsBloc.layoutOrder('followed');
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              child: Text(L.of(context)!.library_sort_date_followed_label),
+                                            ),
+                                            CupertinoActionSheetAction(
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                setState(() {
+                                                  settingsBloc.layoutOrder('unplayed');
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              child: Text(L.of(context)!.library_sort_unplayed_count_label),
+                                            ),
+                                            CupertinoActionSheetAction(
+                                              isDefaultAction: true,
+                                              onPressed: () {
+                                                setState(() {
+                                                  settingsBloc.layoutOrder('episodes');
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              child: Text(L.of(context)!.library_sort_latest_episodes_label),
+                                            ),
+                                          ],
+                                          cancelButton: CupertinoActionSheetAction(
+                                            isDefaultAction: false,
+                                            onPressed: () {
+                                              Navigator.pop(context, 'Close');
+                                            },
+                                            child: Text(L.of(context)!.close_button_label),
                                           ),
-                                        ),
-                                      ]);
-                                    }),
-                                  );
+                                        )
+                                      : AlertDialog(
+                                          title: Text(
+                                            L.of(context)!.layout_selector_sort_by,
+                                            style: Theme.of(context).textTheme.titleMedium,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          scrollable: true,
+                                          content:
+                                              StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                                            return Column(children: <Widget>[
+                                              RadioListTile<String>(
+                                                  title: Text(L.of(context)!.library_sort_alphabetical_label),
+                                                  dense: true,
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                                  value: 'alphabetical',
+                                                  groupValue: snapshot.data!.layoutOrder,
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      settingsBloc.layoutOrder(value ?? '');
+                                                      Navigator.pop(context);
+                                                    });
+                                                  }),
+                                              RadioListTile<String>(
+                                                  title: Text(L.of(context)!.library_sort_date_followed_label),
+                                                  dense: true,
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                                  value: 'followed',
+                                                  groupValue: snapshot.data!.layoutOrder,
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      settingsBloc.layoutOrder(value ?? '');
+                                                      Navigator.pop(context);
+                                                    });
+                                                  }),
+                                              RadioListTile<String>(
+                                                  title: Text(L.of(context)!.library_sort_unplayed_count_label),
+                                                  dense: true,
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                                  value: 'unplayed',
+                                                  groupValue: snapshot.data!.layoutOrder,
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      settingsBloc.layoutOrder(value ?? '');
+                                                      Navigator.pop(context);
+                                                    });
+                                                  }),
+                                              RadioListTile<String>(
+                                                  title: Text(L.of(context)!.library_sort_latest_episodes_label),
+                                                  dense: true,
+                                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                                  value: 'episodes',
+                                                  groupValue: snapshot.data!.layoutOrder,
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      settingsBloc.layoutOrder(value ?? '');
+                                                      Navigator.pop(context);
+                                                    });
+                                                  }),
+                                              SimpleDialogOption(
+                                                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                                                child: Align(
+                                                  alignment: Alignment.centerRight,
+                                                  child: TextButton(
+                                                    child: ActionText(L.of(context)!.close_button_label),
+                                                    onPressed: () {
+                                                      Navigator.pop(context, '');
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ]);
+                                          }),
+                                        );
                                 });
                           },
                           child: Text(sortOrder),

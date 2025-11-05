@@ -351,6 +351,11 @@ class MobilePodcastService extends PodcastService {
           episodePersons.addAll(persons);
         }
 
+        /// Store the latest episode date against the podcast for later sorting.
+        if (episode.publicationDate != null && episode.publicationDate!.isAfter(pc.latestEpisodeDate)) {
+          pc.latestEpisodeDate = episode.publicationDate;
+        }
+
         if (existingEpisode == null) {
           if (highlightNewEpisodes && pc.id != null) {
             pc.newEpisodes++;
@@ -612,7 +617,6 @@ class MobilePodcastService extends PodcastService {
   Future<List<Podcast>> subscriptions() async {
     final subs = await repository.subscriptions();
     final orderBy = settingsService.layoutOrder;
-
     final unreadMap = await repository.findEpisodeCountByPodcast(filter: PodcastEpisodeFilter.notPlayed);
 
     for (var s in subs.where((p) => p.id != null)) {
@@ -629,6 +633,9 @@ class MobilePodcastService extends PodcastService {
         break;
       case 'unplayed':
         subs.sort((a, b) => b.episodeCount.compareTo(a.episodeCount));
+        break;
+      case 'episodes':
+        subs.sort((a, b) => b.latestEpisodeDate.compareTo(a.latestEpisodeDate));
         break;
     }
 

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2025-10-23T08:45:21.958272",
+  "@@last_modified": "2025-11-04T08:37:41.903832",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -1297,6 +1297,12 @@
   "library_sort_unplayed_count_label": "Unplayed episodes",
   "@library_sort_unplayed_count_label": {
     "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Latest episodes",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
     "type": "text",
     "placeholders": {}
   },
