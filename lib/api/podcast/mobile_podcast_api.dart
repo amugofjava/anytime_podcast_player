@@ -76,8 +76,8 @@ class MobilePodcastApi extends PodcastApi {
   }
 
   @override
-  Future<podcast_search.Podcast> loadFeed(String url) async {
-    return _loadFeed(url);
+  Future<podcast_search.Podcast> loadFeed(String url, String etag) async {
+    return _loadFeed(url, etag);
   }
 
   @override
@@ -149,9 +149,10 @@ class MobilePodcastApi extends PodcastApi {
         .timeout(const Duration(seconds: 30));
   }
 
-  Future<podcast_search.Podcast> _loadFeed(String url) {
+  Future<podcast_search.Podcast> _loadFeed(String url, String etag) {
     _setupSecurityContext();
-    return podcast_search.Feed.loadFeed(url: url, userAgent: Environment.userAgent());
+
+    return podcast_search.Feed.loadFeed(url: url, etag: etag, userAgent: Environment.userAgent());
   }
 
   void _setupSecurityContext() {

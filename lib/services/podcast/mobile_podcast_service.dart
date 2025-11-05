@@ -161,9 +161,11 @@ class MobilePodcastService extends PodcastService {
 
     if (cachedPodcast != null && !ignoreCache) {
       _log.fine('Returning cached podcast');
+
       return cachedPodcast;
-    } else if (podcast.id != null) {
+    } else if (podcast.id != null && podcast.etag.isEmpty) {
       _log.fine('We are checking the feed for an existing podcast,');
+
       final storedPodcast = await repository.findPodcastById(podcast.id!);
       var headUrl = podcast.url;
 
@@ -200,260 +202,278 @@ class MobilePodcastService extends PodcastService {
       fetch = true;
     }
 
-    /// TODO: Refactor out into separate method
     if (fetch) {
-      var imageUrl = podcast.imageUrl;
-      var thumbImageUrl = podcast.thumbImageUrl;
-      var sourceUrl = podcast.url;
-
-      podcast_search.Podcast? loadedPodcast;
-
-      var tries = 3;
-      var url = podcast.url;
-
-      while (tries-- > 0) {
-        try {
-          _log.fine('Loading podcast from feed $url.');
-
-          loadedPodcast = await _loadPodcastFeed(url: url);
-          tries = 0;
-        } catch (e) {
-          _log.fine('Failed to load podcast.  $tries attempts remaining.');
-          _log.fine(e);
-
-          if (tries > 0) {
-            //TODO: Needs improving to only fall back if original URL was http and we forced it up to https.
-            if ((e is podcast_search.PodcastCertificateException || e is podcast_search.PodcastFailedException) &&
-                url.startsWith('https')) {
-              _log.fine('Certificate error whilst fetching podcast. Fallback to http and try again');
-
-              url = url.replaceFirst('https', 'http');
-            }
-          } else {
-            rethrow;
-          }
-        }
-      }
-
-      if (loadedPodcast == null) return null;
-
-      final funding = <Funding>[];
-      final persons = <Person>[];
-      final existingEpisodes = await repository.findEpisodesByPodcastGuid(sourceUrl);
-
-      // If imageUrl is null we have not loaded the podcast as a result of a search.
-      if (imageUrl == null || imageUrl.isEmpty || ignoreCache) {
-        imageUrl = loadedPodcast.image;
-        thumbImageUrl = loadedPodcast.image;
-      }
-
-      for (var f in loadedPodcast.funding) {
-        if (f.url != null) {
-          funding.add(Funding(url: f.url!, value: f.value ?? ''));
-        }
-      }
-
-      for (var p in loadedPodcast.persons) {
-        persons.add(Person(
-          name: p.name,
-          role: p.role ?? '',
-          group: p.group ?? '',
-          image: p.image ?? '',
-          link: p.link ?? '',
-        ));
-      }
-
-      Podcast pc = Podcast(
-        guid: sourceUrl,
-        url: sourceUrl,
-        link: loadedPodcast.link,
-        title: _format(loadedPodcast.title),
-        description: _format(loadedPodcast.description),
-        imageUrl: imageUrl,
-        thumbImageUrl: thumbImageUrl,
-        copyright: _format(loadedPodcast.copyright),
-        rssFeedLastUpdated: loadedPodcast.dateTimeModified,
-        funding: funding,
-        persons: persons,
-        episodes: <Episode>[],
-      );
-
-      /// We could be following this podcast already. Let's check.
-      var follow = await repository.findPodcastByGuid(sourceUrl);
-
-      if (follow != null) {
-        // We are, so swap in the stored ID so we update the saved version later.
-        pc.id = follow.id;
-
-        // And preserve any filter & sort applied
-        pc.filter = follow.filter;
-        pc.sort = follow.sort;
-      }
-
-      // Usually, episodes are order by reverse publication date - but not always.
-      // Enforce that ordering. To prevent unnecessary sorting, we'll sample the
-      // first two episodes to see what order they are in.
-      if (loadedPodcast.episodes.length > 1) {
-        if (loadedPodcast.episodes[0].publicationDate!.millisecondsSinceEpoch <
-            loadedPodcast.episodes[1].publicationDate!.millisecondsSinceEpoch) {
-          loadedPodcast.episodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
-        }
-      }
-
-      // Loop through all episodes in the feed and check to see if we already have that episode
-      // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
-      for (final episode in loadedPodcast.episodes) {
-        final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep.guid == episode.guid);
-        final author = episode.author?.replaceAll('\n', '').trim() ?? '';
-        final title = _format(episode.title);
-        final description = _format(episode.description);
-        final content = episode.content;
-
-        final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.imageUrl : episode.imageUrl;
-        final episodeThumbImage =
-            episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
-        final duration = episode.duration?.inSeconds ?? 0;
-        final transcriptUrls = <TranscriptUrl>[];
-        final episodePersons = <Person>[];
-
-        for (var t in episode.transcripts) {
-          late TranscriptFormat type;
-
-          switch (t.type) {
-            case podcast_search.TranscriptFormat.subrip:
-              type = TranscriptFormat.subrip;
-              break;
-            case podcast_search.TranscriptFormat.json:
-              type = TranscriptFormat.json;
-              break;
-            case podcast_search.TranscriptFormat.vtt:
-              type = TranscriptFormat.vtt;
-              break;
-            case podcast_search.TranscriptFormat.unsupported:
-              type = TranscriptFormat.unsupported;
-              break;
-          }
-
-          transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
-        }
-
-        if (episode.persons.isNotEmpty) {
-          for (var p in episode.persons) {
-            episodePersons.add(Person(
-              name: p.name,
-              role: p.role ?? '',
-              group: p.group ?? '',
-              image: p.image ?? '',
-              link: p.link ?? '',
-            ));
-          }
-        } else if (persons.isNotEmpty) {
-          episodePersons.addAll(persons);
-        }
-
-        /// Store the latest episode date against the podcast for later sorting.
-        if (episode.publicationDate != null && episode.publicationDate!.isAfter(pc.latestEpisodeDate)) {
-          pc.latestEpisodeDate = episode.publicationDate;
-        }
-
-        if (existingEpisode == null) {
-          if (highlightNewEpisodes && pc.id != null) {
-            pc.newEpisodes++;
-          }
-
-          pc.episodes.add(Episode(
-            highlight: pc.newEpisodes > 0,
-            pguid: pc.guid,
-            guid: episode.guid,
-            podcast: pc.title,
-            title: title,
-            description: description,
-            content: content,
-            author: author,
-            season: episode.season ?? 0,
-            episode: episode.episode ?? 0,
-            contentUrl: episode.contentUrl,
-            link: episode.link,
-            imageUrl: episodeImage,
-            thumbImageUrl: episodeThumbImage,
-            duration: duration,
-            length: episode.length,
-            mimeType: episode.mimeType,
-            publicationDate: episode.publicationDate,
-            chaptersUrl: episode.chapters?.url,
-            transcriptUrls: transcriptUrls,
-            persons: episodePersons,
-            chapters: <Chapter>[],
-          ));
-        } else {
-          /// Check if the ancillary episode data has changed.
-          if (!listEquals(existingEpisode.persons, episodePersons) ||
-              !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
-            pc.updatedEpisodes = true;
-          }
-
-          existingEpisode.title = title;
-          existingEpisode.description = description;
-          existingEpisode.content = content;
-          existingEpisode.author = author;
-          existingEpisode.season = episode.season ?? 0;
-          existingEpisode.episode = episode.episode ?? 0;
-          existingEpisode.contentUrl = episode.contentUrl;
-          existingEpisode.length = episode.length;
-          existingEpisode.mimeType = episode.mimeType;
-          existingEpisode.link = episode.link;
-          existingEpisode.imageUrl = episodeImage;
-          existingEpisode.thumbImageUrl = episodeThumbImage;
-          existingEpisode.publicationDate = episode.publicationDate;
-          existingEpisode.chaptersUrl = episode.chapters?.url;
-          existingEpisode.transcriptUrls = transcriptUrls;
-          existingEpisode.persons = episodePersons;
-
-          // If the source duration is 0 do not update any saved, calculated duration.
-          if (duration > 0) {
-            existingEpisode.duration = duration;
-          }
-
-          pc.episodes.add(existingEpisode);
-
-          // Clear this episode from our existing list
-          existingEpisodes.remove(existingEpisode);
-        }
-      }
-
-      // Add any downloaded episodes that are no longer in the feed - they
-      // may have expired but we still want them.
-      var expired = <Episode>[];
-
-      for (final episode in existingEpisodes) {
-        var feedEpisode = loadedPodcast.episodes.firstWhereOrNull((ep) => ep.guid == episode.guid);
-
-        if (feedEpisode == null && episode.downloaded) {
-          pc.episodes.add(episode);
-        } else {
-          expired.add(episode);
-        }
-      }
-
-      // If we are subscribed to this podcast and are simply refreshing we need to save the updated subscription.
-      // A non-null ID indicates this podcast is subscribed too. We also need to delete any expired episodes.
-      if (podcast.id != null) {
-        await repository.deleteEpisodes(expired);
-
-        pc = await repository.savePodcast(pc);
-
-        // Phew! Now, after all that, we have have a podcast filter in place. All episodes will have
-        // been saved, but we might not want to display them all. Let's filter.
-        pc.episodes = _sortAndFilterEpisodes(pc);
-      }
-
-      // All done, now cache the podcast in case we need to fetch this again shortly.
-      _cache.store(pc);
-
-      return pc;
+      return await _fetchPodcastFromFeed(podcast, ignoreCache, highlightNewEpisodes);
     }
 
     return null;
+  }
+
+  Future<Podcast?> _fetchPodcastFromFeed(Podcast podcast, bool ignoreCache, bool highlightNewEpisodes) async {
+    var imageUrl = podcast.imageUrl;
+    var thumbImageUrl = podcast.thumbImageUrl;
+    var sourceUrl = podcast.url;
+
+    podcast_search.Podcast? loadedPodcast;
+
+    var tries = 3;
+    var url = podcast.url;
+
+    while (tries-- > 0) {
+      try {
+        _log.fine('Loading podcast from feed $url with etag ${podcast.etag}.');
+
+        loadedPodcast = await _loadPodcastFeed(url: url, etag: podcast.etag);
+        tries = 0;
+      } catch (e) {
+        if (tries > 0) {
+          //TODO: Needs improving to only fall back if original URL was http and we forced it up to https.
+          if ((e is podcast_search.PodcastCertificateException || e is podcast_search.PodcastFailedException) &&
+              url.startsWith('https')) {
+            _log.fine('Certificate error whilst fetching podcast. Fallback to http and try again');
+
+            url = url.replaceFirst('https', 'http');
+          } else if (e is podcast_search.PodcastNotChangedException) {
+            /// The podcast has not been updated since we last checked, just return the stored copy.
+            _log.fine('This podcast has not updated since we last checked.');
+
+            final storedPodcast = await repository.findPodcastById(podcast.id!);
+
+            // Just update the last updated value.
+            if (storedPodcast != null) {
+              save(storedPodcast, withEpisodes: false);
+            }
+
+            return storedPodcast;
+          } else {
+            _log.fine('Failed to load podcast.  $tries attempts remaining.');
+            _log.fine(e);
+          }
+        } else {
+          rethrow;
+        }
+      }
+    }
+
+    if (loadedPodcast == null) return null;
+
+    final funding = <Funding>[];
+    final persons = <Person>[];
+    final existingEpisodes = await repository.findEpisodesByPodcastGuid(sourceUrl);
+
+    // If imageUrl is null we have not loaded the podcast as a result of a search.
+    if (imageUrl == null || imageUrl.isEmpty || ignoreCache) {
+      imageUrl = loadedPodcast.image;
+      thumbImageUrl = loadedPodcast.image;
+    }
+
+    for (var f in loadedPodcast.funding) {
+      if (f.url != null) {
+        funding.add(Funding(url: f.url!, value: f.value ?? ''));
+      }
+    }
+
+    for (var p in loadedPodcast.persons) {
+      persons.add(Person(
+        name: p.name,
+        role: p.role ?? '',
+        group: p.group ?? '',
+        image: p.image ?? '',
+        link: p.link ?? '',
+      ));
+    }
+
+    Podcast pc = Podcast(
+      guid: sourceUrl,
+      url: sourceUrl,
+      link: loadedPodcast.link,
+      etag: loadedPodcast.etag,
+      title: _format(loadedPodcast.title),
+      description: _format(loadedPodcast.description),
+      imageUrl: imageUrl,
+      thumbImageUrl: thumbImageUrl,
+      copyright: _format(loadedPodcast.copyright),
+      rssFeedLastUpdated: loadedPodcast.dateTimeModified,
+      funding: funding,
+      persons: persons,
+      episodes: <Episode>[],
+    );
+
+    print('Got etag ${loadedPodcast.etag} for ${loadedPodcast.title}');
+
+    /// We could be following this podcast already. Let's check.
+    var follow = await repository.findPodcastByGuid(sourceUrl);
+
+    if (follow != null) {
+      // We are, so swap in the stored ID so we update the saved version later.
+      pc.id = follow.id;
+
+      // And preserve any filter & sort applied
+      pc.filter = follow.filter;
+      pc.sort = follow.sort;
+    }
+
+    // Usually, episodes are order by reverse publication date - but not always.
+    // Enforce that ordering. To prevent unnecessary sorting, we'll sample the
+    // first two episodes to see what order they are in.
+    if (loadedPodcast.episodes.length > 1) {
+      if (loadedPodcast.episodes[0].publicationDate!.millisecondsSinceEpoch <
+          loadedPodcast.episodes[1].publicationDate!.millisecondsSinceEpoch) {
+        loadedPodcast.episodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+      }
+    }
+
+    // Loop through all episodes in the feed and check to see if we already have that episode
+    // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
+    for (final episode in loadedPodcast.episodes) {
+      final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep.guid == episode.guid);
+      final author = episode.author?.replaceAll('\n', '').trim() ?? '';
+      final title = _format(episode.title);
+      final description = _format(episode.description);
+      final content = episode.content;
+
+      final episodeImage = episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.imageUrl : episode.imageUrl;
+      final episodeThumbImage =
+          episode.imageUrl == null || episode.imageUrl!.isEmpty ? pc.thumbImageUrl : episode.imageUrl;
+      final duration = episode.duration?.inSeconds ?? 0;
+      final transcriptUrls = <TranscriptUrl>[];
+      final episodePersons = <Person>[];
+
+      for (var t in episode.transcripts) {
+        late TranscriptFormat type;
+
+        switch (t.type) {
+          case podcast_search.TranscriptFormat.subrip:
+            type = TranscriptFormat.subrip;
+            break;
+          case podcast_search.TranscriptFormat.json:
+            type = TranscriptFormat.json;
+            break;
+          case podcast_search.TranscriptFormat.vtt:
+            type = TranscriptFormat.vtt;
+            break;
+          case podcast_search.TranscriptFormat.unsupported:
+            type = TranscriptFormat.unsupported;
+            break;
+        }
+
+        transcriptUrls.add(TranscriptUrl(url: t.url, type: type));
+      }
+
+      if (episode.persons.isNotEmpty) {
+        for (var p in episode.persons) {
+          episodePersons.add(Person(
+            name: p.name,
+            role: p.role ?? '',
+            group: p.group ?? '',
+            image: p.image ?? '',
+            link: p.link ?? '',
+          ));
+        }
+      } else if (persons.isNotEmpty) {
+        episodePersons.addAll(persons);
+      }
+
+      /// Store the latest episode date against the podcast for later sorting.
+      if (episode.publicationDate != null && episode.publicationDate!.isAfter(pc.latestEpisodeDate)) {
+        pc.latestEpisodeDate = episode.publicationDate;
+      }
+
+      if (existingEpisode == null) {
+        if (highlightNewEpisodes && pc.id != null) {
+          pc.newEpisodes++;
+        }
+
+        pc.episodes.add(Episode(
+          highlight: pc.newEpisodes > 0,
+          pguid: pc.guid,
+          guid: episode.guid,
+          podcast: pc.title,
+          title: title,
+          description: description,
+          content: content,
+          author: author,
+          season: episode.season ?? 0,
+          episode: episode.episode ?? 0,
+          contentUrl: episode.contentUrl,
+          link: episode.link,
+          imageUrl: episodeImage,
+          thumbImageUrl: episodeThumbImage,
+          duration: duration,
+          length: episode.length,
+          mimeType: episode.mimeType,
+          publicationDate: episode.publicationDate,
+          chaptersUrl: episode.chapters?.url,
+          transcriptUrls: transcriptUrls,
+          persons: episodePersons,
+          chapters: <Chapter>[],
+        ));
+      } else {
+        /// Check if the ancillary episode data has changed.
+        if (!listEquals(existingEpisode.persons, episodePersons) ||
+            !listEquals(existingEpisode.transcriptUrls, transcriptUrls)) {
+          pc.updatedEpisodes = true;
+        }
+
+        existingEpisode.title = title;
+        existingEpisode.description = description;
+        existingEpisode.content = content;
+        existingEpisode.author = author;
+        existingEpisode.season = episode.season ?? 0;
+        existingEpisode.episode = episode.episode ?? 0;
+        existingEpisode.contentUrl = episode.contentUrl;
+        existingEpisode.length = episode.length;
+        existingEpisode.mimeType = episode.mimeType;
+        existingEpisode.link = episode.link;
+        existingEpisode.imageUrl = episodeImage;
+        existingEpisode.thumbImageUrl = episodeThumbImage;
+        existingEpisode.publicationDate = episode.publicationDate;
+        existingEpisode.chaptersUrl = episode.chapters?.url;
+        existingEpisode.transcriptUrls = transcriptUrls;
+        existingEpisode.persons = episodePersons;
+
+        // If the source duration is 0 do not update any saved, calculated duration.
+        if (duration > 0) {
+          existingEpisode.duration = duration;
+        }
+
+        pc.episodes.add(existingEpisode);
+
+        // Clear this episode from our existing list
+        existingEpisodes.remove(existingEpisode);
+      }
+    }
+
+    // Add any downloaded episodes that are no longer in the feed - they
+    // may have expired but we still want them.
+    var expired = <Episode>[];
+
+    for (final episode in existingEpisodes) {
+      var feedEpisode = loadedPodcast.episodes.firstWhereOrNull((ep) => ep.guid == episode.guid);
+
+      if (feedEpisode == null && episode.downloaded) {
+        pc.episodes.add(episode);
+      } else {
+        expired.add(episode);
+      }
+    }
+
+    // If we are subscribed to this podcast and are simply refreshing we need to save the updated subscription.
+    // A non-null ID indicates this podcast is subscribed too. We also need to delete any expired episodes.
+    if (podcast.id != null) {
+      await repository.deleteEpisodes(expired);
+
+      pc = await repository.savePodcast(pc);
+
+      // Phew! Now, after all that, we have have a podcast filter in place. All episodes will have
+      // been saved, but we might not want to display them all. Let's filter.
+      pc.episodes = _sortAndFilterEpisodes(pc);
+    }
+
+    // All done, now cache the podcast in case we need to fetch this again shortly.
+    _cache.store(pc);
+
+    return pc;
   }
 
   @override
@@ -863,15 +883,16 @@ class MobilePodcastService extends PodcastService {
   /// can end up blocking the UI thread. We perform our feed load in a
   /// separate isolate so that the UI can continue to present a loading
   /// indicator whilst the data is fetched without locking the UI.
-  Future<podcast_search.Podcast> _loadPodcastFeed({required String url}) {
-    return compute<_FeedComputer, podcast_search.Podcast>(_loadPodcastFeedCompute, _FeedComputer(api: api, url: url));
+  Future<podcast_search.Podcast> _loadPodcastFeed({required String url, required String etag}) {
+    return compute<_FeedComputer, podcast_search.Podcast>(
+        _loadPodcastFeedCompute, _FeedComputer(api: api, url: url, etag: etag));
   }
 
   /// We have to separate the process of calling compute as you cannot use
   /// named parameters with compute. The podcast feed load API uses named
   /// parameters so we need to change it to a single, positional parameter.
   static Future<podcast_search.Podcast> _loadPodcastFeedCompute(_FeedComputer c) {
-    return c.api.loadFeed(c.url);
+    return c.api.loadFeed(c.url, c.etag);
   }
 
   /// The service providers expect the genre to be passed in English. This function takes
@@ -1022,8 +1043,13 @@ class _CacheItem {
 class _FeedComputer {
   final PodcastApi api;
   final String url;
+  final String etag;
 
-  _FeedComputer({required this.api, required this.url});
+  _FeedComputer({
+    required this.api,
+    required this.url,
+    this.etag = '',
+  });
 }
 
 class _TranscriptComputer {

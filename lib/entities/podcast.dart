@@ -83,8 +83,11 @@ class Podcast {
   /// Date and time podcast feed was last updated.
   DateTime? _rssFeedLastUpdated;
 
-  /// Date and time podcast feed was last updated.
+  /// Date and time of the most recent episode for the podcast.
   DateTime? _latestEpisodeDate;
+
+  /// The ETAG ID if available.
+  String etag;
 
   /// One or more episodes for this podcast.
   List<Episode> episodes;
@@ -121,6 +124,7 @@ class Podcast {
     this.newEpisodes = 0,
     this.episodeCount = 0,
     this.persons,
+    this.etag = '',
     DateTime? rssFeedLastUpdated,
     DateTime? latestEpisodeDate,
     DateTime? lastUpdated,
@@ -165,6 +169,7 @@ class Podcast {
       'description': description ?? '',
       'url': url,
       'link': link ?? '',
+      'etag': etag,
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
@@ -254,6 +259,7 @@ class Podcast {
       id: key,
       guid: podcast['guid'] as String,
       link: podcast['link'] as String?,
+      etag: podcast['etag'] as String? ?? '',
       title: podcast['title'] as String,
       copyright: podcast['copyright'] as String?,
       description: podcast['description'] as String?,

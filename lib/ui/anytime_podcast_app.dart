@@ -439,7 +439,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                         ),
                         PopupMenuButton<String>(
                           onSelected: _menuSelect,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
                           ),
                           itemBuilder: (BuildContext context) {
