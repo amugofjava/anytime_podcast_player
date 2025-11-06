@@ -154,7 +154,7 @@ class MobilePodcastService extends PodcastService {
     DateTime? rssLastUpdated;
     var fetch = false;
 
-    _log.fine('loadPodcast. ID:${podcast.id} (ignore cache:$ignoreCache)');
+    _log.fine('loadPodcast: ${podcast.title}, ignore cache $ignoreCache');
 
     // Do we have this podcast in our cache?
     final cachedPodcast = _cache.item(podcast.url);
@@ -221,7 +221,8 @@ class MobilePodcastService extends PodcastService {
 
     while (tries-- > 0) {
       try {
-        _log.fine('Loading podcast from feed $url with etag ${podcast.etag}.');
+        _log.fine(
+            'Loading podcast from feed $url ${podcast.etag.isNotEmpty ? 'with etag ${podcast.etag}' : 'without etag'}');
 
         loadedPodcast = await _loadPodcastFeed(url: url, etag: podcast.etag);
         tries = 0;

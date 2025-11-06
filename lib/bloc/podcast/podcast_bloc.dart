@@ -236,16 +236,15 @@ class PodcastBloc extends Bloc {
             _refresh();
             _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
           } else {
-            _log.fine('Any updates?');
             if (_podcast!.newEpisodes > 0) {
-              _log.fine('We have new episodes to display');
+              _log.fine('We have ${_podcast!.newEpisodes} new episodes.');
               _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
             } else if (_podcast!.updatedEpisodes) {
-              _log.fine('We have updated episodes to re-display');
+              _log.fine('We have ${_podcast!.updatedEpisodes} updated episodes.');
               _refresh();
               _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
             } else if (feed.forceFetch) {
-              _log.fine('Force fetch...');
+              _log.fine('Force refresh.');
               _refresh();
               _podcastStream.sink.add(BlocPopulatedState<Podcast>(results: _podcast));
             } else {
