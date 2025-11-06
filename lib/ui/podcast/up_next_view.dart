@@ -63,7 +63,7 @@ class UpNextView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (playing)
+              if (playing && snapshot.data!.playing != null)
                 Row(
                   children: [
                     Padding(
