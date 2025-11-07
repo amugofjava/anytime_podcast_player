@@ -803,34 +803,35 @@ class SembastRepository extends Repository {
   }
 
   Future<void> _upgradeV3(Database db) async {
-    _log.info('Upgrading Sembast store to V2');
+    _log.info('Upgrading Sembast store to V3');
 
     List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
     final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
-    final defaultTime = DateTime(1970, 1, 1);
 
     for (var podcast in podcasts) {
-      if (podcast.latestEpisodeDate == defaultTime) {
-        final idFinder = Finder(filter: Filter.byKey(podcast.id));
-        final episodeFinder = Finder(
-          filter: Filter.equals('pguid', podcast.guid),
-          sortOrders: [SortOrder('publicationDate', false)],
-        );
+      _log.fine('Processing podcast ${podcast.title}');
 
-        final RecordSnapshot<int, Map<String, Object?>>? episodeData =
-            await _episodeStore.findFirst(db, finder: episodeFinder);
+      final idFinder = Finder(filter: Filter.byKey(podcast.id));
+      final episodeFinder = Finder(
+        filter: Filter.equals('pguid', podcast.guid),
+        sortOrders: [SortOrder('publicationDate', false)],
+      );
 
-        final episode = episodeData == null ? null : Episode.fromMap(episodeData.key, episodeData.value);
+      final RecordSnapshot<int, Map<String, Object?>>? episodeData =
+          await _episodeStore.findFirst(db, finder: episodeFinder);
 
-        if (episode != null) {
-          final episodeDate = episode.publicationDate;
+      final episode = episodeData == null ? null : Episode.fromMap(episodeData.key, episodeData.value);
 
-          _log.fine('Upgrading latest episode: ${podcast.title} - to $episodeDate');
+      if (episode != null) {
+        final episodeDate = episode.publicationDate;
 
-          podcast.latestEpisodeDate = episodeDate;
+        _log.fine('Upgrading latest episode: ${podcast.title} - to $episodeDate');
 
-          await _podcastStore.update(db, podcast.toMap(), finder: idFinder);
-        }
+        podcast.latestEpisodeDate = episodeDate;
+
+        await _podcastStore.update(db, podcast.toMap(), finder: idFinder);
+      } else {
+        _log.fine('Could not find any episodes for ${podcast.title}');
       }
     }
   }
