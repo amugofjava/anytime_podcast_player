@@ -11,6 +11,7 @@ import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/persistable.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
@@ -68,13 +69,13 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   /// Ticks whilst playing. Updates our current position within an episode.
   final _durationTicker = Stream<int>.periodic(
-    const Duration(milliseconds: 500),
+    const Duration(milliseconds: 1000),
     (count) => count,
   ).asBroadcastStream();
 
   /// Ticks twice every second if a time-based sleep has been started.
   final _sleepTicker = Stream<int>.periodic(
-    const Duration(milliseconds: 500),
+    const Duration(milliseconds: 1000),
     (count) => count,
   ).asBroadcastStream();
 
@@ -138,6 +139,42 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> playEpisode({required Episode episode, bool? resume}) async {
     return _playNextEpisode(episode: episode, resume: resume, fresh: true);
+  }
+
+  @override
+  Future<void> playLatestEpisode({required Podcast podcast, bool? resume}) async {
+    final latestEpisode = await repository.findLatestPlayableEpisode(podcast);
+
+    if (latestEpisode != null) {
+      return _playNextEpisode(episode: latestEpisode, resume: resume, fresh: true);
+    }
+  }
+
+  @override
+  Future<void> playNextUnplayedEpisode({required Podcast podcast, bool? resume}) async {
+    final nextEpisode = await repository.findNextUnplayedEpisode(podcast);
+
+    if (nextEpisode != null) {
+      return _playNextEpisode(episode: nextEpisode, resume: resume, fresh: true);
+    }
+  }
+
+  @override
+  Future<void> addUpNextLatestEpisode({required Podcast podcast}) async {
+    final latestEpisode = await repository.findLatestPlayableEpisode(podcast);
+
+    if (latestEpisode != null && !_queue.contains(latestEpisode)) {
+      return addUpNextEpisode(latestEpisode);
+    }
+  }
+
+  @override
+  Future<void> addUpNextUnplayedEpisode({required Podcast podcast, bool? resume}) async {
+    final nextEpisode = await repository.findNextUnplayedEpisode(podcast);
+
+    if (nextEpisode != null) {
+      return _playNextEpisode(episode: nextEpisode, resume: resume, fresh: true);
+    }
   }
 
   /// Called by the client (UI), or when we move to a different episode within the queue, to play an episode.
@@ -298,6 +335,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> stop() async {
     _currentEpisode = null;
+    _updateEpisodeState();
     await _audioHandler.stop();
   }
 
@@ -406,13 +444,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     var uri = episode.contentUrl;
 
     if (episode.downloadState == DownloadState.downloaded) {
-      if (await hasStoragePermission()) {
-        uri = await resolvePath(episode);
+      uri = await resolvePath(episode);
 
-        episode.streaming = false;
-      } else {
-        throw Exception('Insufficient storage permissions');
-      }
+      episode.streaming = false;
     }
 
     return uri;
@@ -575,6 +609,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         _currentEpisode = null;
         _playingState.add(AudioState.stopped);
 
+        _updateEpisodeState();
+
         await _audioHandler.customAction('queueend');
       }
     } else {
@@ -700,7 +736,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   /// to inform our listeners.
   void _startPositionTicker() async {
     if (_positionSubscription == null) {
-      _positionSubscription = _durationTicker.listen((int period) async {
+      _positionSubscription = _durationTicker.listen((_) async {
         await _onUpdatePosition();
       });
     } else if (_positionSubscription!.isPaused) {

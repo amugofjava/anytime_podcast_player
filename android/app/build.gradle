@@ -60,7 +60,7 @@ android {
 
     defaultConfig {
         applicationId "uk.me.amugofjava.anytime"
-        minSdkVersion 22
+        minSdkVersion 23
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

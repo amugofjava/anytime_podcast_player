@@ -126,6 +126,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  awesome_notifications:
+    dependency: "direct main"
+    description:
+      name: awesome_notifications
+      sha256: d051ffb694a53da216ff13d02c8ec645d75320048262f7e6b3c1d95a4f54c902
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0"
+  awesome_notifications_core:
+    dependency: "direct main"
+    description:
+      name: awesome_notifications_core
+      sha256: f8a227159f70e30d0f4c1d8996cf7e3865fec7c9030df752dfa51d177dc08b38
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
+  background_fetch:
+    dependency: "direct main"
+    description:
+      name: background_fetch
+      sha256: e767745c31f71660063985c982497995d0a71755d3f1b0c8e8c96988d64d3003
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -242,10 +266,10 @@ packages:
     dependency: transitive
     description:
       name: crypto
-      sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
+      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.6"
+    version: "3.0.7"
   csslib:
     dependency: transitive
     description:
@@ -510,10 +534,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "2c11f3f94c687ee9bad77c171151672986360b2b001d109814ee7140b2cf261b"
+      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   http_client_helper:
     dependency: transitive
     description:
@@ -722,6 +746,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.1"
   path:
     dependency: "direct main"
     description:
@@ -869,12 +909,11 @@ packages:
   podcast_search:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "hotfix/flutter_accessibility_regression"
-      resolved-ref: "14ed3714bd27f6773341136cc84a610d7189e116"
-      url: "https://github.com/amugofjava/podcast_search.git"
-    source: git
-    version: "0.7.11+1"
+      name: podcast_search
+      sha256: "7399658ceafbf7c672ee3d60afd161e8f7edd3675d32e6cb13a93346ff76ac5c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.12"
   posix:
     dependency: transitive
     description:
@@ -911,10 +950,10 @@ packages:
     dependency: transitive
     description:
       name: rss_dart
-      sha256: "81d45b53c88eac17991edf2ecdd468423c542c0290fa2950a3bea9affa0e956b"
+      sha256: "09c0123427e9557d74562e07f9d22effe3fd493893602e8a8d24b961490f2c30"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.12"
+    version: "1.0.14"
   rxdart:
     dependency: "direct main"
     description:
@@ -1113,7 +1152,7 @@ packages:
     source: hosted
     version: "1.3.0"
   synchronized:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: synchronized
       sha256: "69fe30f3a8b04a0be0c15ae6490fc859a78ef4c43ae2dd5e8a623d45bfcf9225"
@@ -1256,6 +1295,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.0"
+  wakelock_plus:
+    dependency: "direct main"
+    description:
+      name: wakelock_plus
+      sha256: "9296d40c9adbedaba95d1e704f4e0b434be446e2792948d0e4aa977048104228"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
+  wakelock_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: wakelock_plus_platform_interface
+      sha256: "036deb14cd62f558ca3b73006d52ce049fabcdcb2eddfe0bf0fe4e8a943b5cf2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   watcher:
     dependency: transitive
     description:

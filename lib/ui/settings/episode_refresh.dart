@@ -42,7 +42,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                       return AlertDialog(
                           title: Text(
                             L.of(context)!.settings_auto_update_episodes_heading,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.titleLarge,
                             textAlign: TextAlign.center,
                           ),
                           scrollable: true,
@@ -50,7 +50,10 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                             builder: (BuildContext context, StateSetter setState) {
                               return Column(children: <Widget>[
                                 RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_never),
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_never,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                   value: -1,
@@ -64,35 +67,10 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   },
                                 ),
                                 RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_always),
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                  value: 0,
-                                  groupValue: snapshot.data!.autoUpdateEpisodePeriod,
-                                  onChanged: (int? value) {
-                                    setState(() {
-                                      settingsBloc.autoUpdatePeriod(value ?? 0);
-
-                                      Navigator.pop(context);
-                                    });
-                                  },
-                                ),
-                                RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_30min),
-                                  dense: true,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                  value: 30,
-                                  groupValue: snapshot.data!.autoUpdateEpisodePeriod,
-                                  onChanged: (int? value) {
-                                    setState(() {
-                                      settingsBloc.autoUpdatePeriod(value ?? 30);
-
-                                      Navigator.pop(context);
-                                    });
-                                  },
-                                ),
-                                RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_1hour),
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_1hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                   value: 60,
@@ -106,7 +84,10 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   },
                                 ),
                                 RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_3hour),
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_3hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                   value: 180,
@@ -120,7 +101,10 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   },
                                 ),
                                 RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_6hour),
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_6hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                   value: 360,
@@ -134,7 +118,10 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   },
                                 ),
                                 RadioListTile<int>(
-                                  title: Text(L.of(context)!.settings_auto_update_episodes_12hour),
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_12hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
                                   value: 720,
@@ -142,6 +129,40 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   onChanged: (int? value) {
                                     setState(() {
                                       settingsBloc.autoUpdatePeriod(value ?? 720);
+
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                ),
+                                RadioListTile<int>(
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_24hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  dense: true,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                  value: 720,
+                                  groupValue: snapshot.data!.autoUpdateEpisodePeriod,
+                                  onChanged: (int? value) {
+                                    setState(() {
+                                      settingsBloc.autoUpdatePeriod(value ?? 1440);
+
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                ),
+                                RadioListTile<int>(
+                                  title: Text(
+                                    L.of(context)!.settings_auto_update_episodes_48hour,
+                                    style: Theme.of(context).textTheme.titleMedium,
+                                  ),
+                                  dense: true,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
+                                  value: 720,
+                                  groupValue: snapshot.data!.autoUpdateEpisodePeriod,
+                                  onChanged: (int? value) {
+                                    setState(() {
+                                      settingsBloc.autoUpdatePeriod(value ?? 2880);
 
                                       Navigator.pop(context);
                                     });

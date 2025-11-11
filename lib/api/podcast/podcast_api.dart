@@ -37,7 +37,7 @@ abstract class PodcastApi {
   );
 
   /// URL representing the RSS feed for a podcast.
-  Future<pslib.Podcast> loadFeed(String url);
+  Future<pslib.Podcast> loadFeed(String url, String etag);
 
   Future<DateTime?> feedLastUpdated(String url);
 

@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
 import 'package:anytime/entities/app_settings.dart';
@@ -24,6 +26,31 @@ class Library extends StatefulWidget {
 }
 
 class _LibraryState extends State<Library> {
+  StreamSubscription? _settingsSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    var currentOrder = settingsBloc.currentSettings.layoutOrder;
+
+    /// Listen to library order change.
+    _settingsSubscription = settingsBloc.settings.listen((event) {
+      if (event.layoutOrder != currentOrder) {
+        podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
+        currentOrder = event.layoutOrder;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _settingsSubscription?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final podcastBloc = Provider.of<PodcastBloc>(context);
@@ -61,7 +88,7 @@ class _LibraryState extends State<Library> {
                   stream: settingsBloc.settings,
                   builder: (context, settingsSnapshot) {
                     if (settingsSnapshot.hasData) {
-                      var mode = settingsSnapshot.data!.layout;
+                      var mode = settingsSnapshot.data!.layoutMode;
                       var size = mode == 1 ? 100.0 : 160.0;
 
                       if (mode == 0) {

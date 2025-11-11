@@ -18,7 +18,7 @@ import 'package:sembast/sembast.dart';
 /// An implementation of [Repository] that is backed by
 /// [Sembast](https://github.com/tekartik/sembast.dart/tree/master/sembast)
 class SembastRepository extends Repository {
-  final log = Logger('SembastRepository');
+  final _log = Logger('SembastRepository');
 
   final _podcastSubject = BehaviorSubject<Podcast>();
   final _episodeSubject = BehaviorSubject<EpisodeState>();
@@ -38,11 +38,11 @@ class SembastRepository extends Repository {
     bool cleanup = true,
     String databaseName = 'anytime.db',
   }) {
-    _databaseService = DatabaseService(databaseName, version: 2, upgraderCallback: dbUpgrader);
+    _databaseService = DatabaseService(databaseName, version: 3, upgraderCallback: dbUpgrader);
 
     if (cleanup) {
       _cleanupEpisodes().then((value) {
-        log.fine('Orphan episodes cleanup complete');
+        _log.fine('Orphan episodes cleanup complete');
       });
     }
   }
@@ -53,7 +53,7 @@ class SembastRepository extends Repository {
   /// subscription date.
   @override
   Future<Podcast> savePodcast(Podcast podcast, {bool withEpisodes = true}) async {
-    log.fine('Saving podcast (${podcast.id ?? -1}) ${podcast.url}');
+    _log.fine('Saving podcast (${podcast.id ?? -1}) ${podcast.url}');
 
     final finder = podcast.id == null
         ? Finder(filter: Filter.equals('guid', podcast.guid))
@@ -240,6 +240,64 @@ class SembastRepository extends Repository {
     final episodeList = Future.wait(results);
 
     return episodeList;
+  }
+
+  // TODO: Remove nullable on pguid as this does not make sense.
+  @override
+  Future<int> findEpisodeCountByPodcastGuid(
+    String pguid, {
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+    PodcastEpisodeSort sort = PodcastEpisodeSort.none,
+  }) async {
+    var episodeFilter = Filter.equals('played', 'false');
+    var count = 0;
+
+    final finder = Finder(
+      filter: episodeFilter,
+    );
+
+    count = await _episodeStore.query(finder: finder).count(await _db);
+
+    return count;
+  }
+
+  @override
+  Future<Map<String, int>> findEpisodeCountByPodcast({
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+  }) async {
+    var counts = <String, int>{};
+
+    await for (var snapshot in _episodeStore.stream(await _db)) {
+      String category = snapshot['pguid'] as String;
+
+      switch (filter) {
+        case PodcastEpisodeFilter.none:
+          break;
+        case PodcastEpisodeFilter.played:
+          String played = snapshot['played'] as String;
+
+          if (played == 'true') {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+        case PodcastEpisodeFilter.notPlayed:
+          String played = snapshot['played'] as String;
+
+          if (played == 'false') {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+        case PodcastEpisodeFilter.started:
+          int position = snapshot['position'] as int;
+
+          if (position > 0) {
+            counts[category] = (counts[category] ?? 0) + 1;
+          }
+          break;
+      }
+    }
+
+    return counts;
   }
 
   @override
@@ -593,6 +651,34 @@ class SembastRepository extends Repository {
   }
 
   @override
+  Future<Episode?> findLatestPlayableEpisode(Podcast podcast) async {
+    Episode? episode;
+
+    final episodes = await findEpisodesByPodcastGuid(podcast.guid,
+        filter: PodcastEpisodeFilter.none, sort: PodcastEpisodeSort.latestFirst);
+
+    if (episodes.isNotEmpty) {
+      episode = episodes[0];
+    }
+
+    return episode;
+  }
+
+  @override
+  Future<Episode?> findNextUnplayedEpisode(Podcast podcast) async {
+    Episode? episode;
+
+    final episodes = await findEpisodesByPodcastGuid(podcast.guid,
+        filter: PodcastEpisodeFilter.notPlayed, sort: PodcastEpisodeSort.earliestFirst);
+
+    if (episodes.isNotEmpty) {
+      episode = episodes[0];
+    }
+
+    return episode;
+  }
+
+  @override
   Future<Episode?> findNextPlayableEpisode(Episode episode) async {
     /// Lookup the podcast and its episodes
     if (episode.pguid != null) {
@@ -600,15 +686,15 @@ class SembastRepository extends Repository {
 
       if (podcast != null) {
         /// If we do not have a filter applied, find the next un-played episode in the series.
-        /// If we have a filter applied, text the first episode which will be the next in the
+        /// If we have a filter applied, take the first episode which will be the next in the
         /// filtered series.
         if (podcast.filter == PodcastEpisodeFilter.none) {
-          log.fine('Searching for episode ${episode.guid} - ${episode.id}');
+          _log.fine('Searching for episode ${episode.guid} - ${episode.id}');
 
           final matchedEpisode = podcast.episodes.indexWhere((e) => e.guid == episode.guid);
 
           if (matchedEpisode != -1 && podcast.episodes.length > (matchedEpisode + 1)) {
-            log.fine('Found match at index $matchedEpisode');
+            _log.fine('Found match at index $matchedEpisode');
 
             final nextInSeries = podcast.episodes.indexWhere(
               (e) => !e.played,
@@ -616,7 +702,7 @@ class SembastRepository extends Repository {
             );
 
             if (nextInSeries != -1) {
-              log.fine('Found next in series at index $nextInSeries');
+              _log.fine('Found next in series at index $nextInSeries');
 
               return podcast.episodes[nextInSeries];
             }
@@ -651,8 +737,14 @@ class SembastRepository extends Repository {
   }
 
   Future<void> dbUpgrader(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion == 1) {
-      await _upgradeV2(db);
+    if (oldVersion > 0) {
+      if (oldVersion < 2) {
+        await _upgradeV2(db);
+      }
+
+      if (oldVersion < 3) {
+        await _upgradeV3(db);
+      }
     }
   }
 
@@ -664,7 +756,7 @@ class SembastRepository extends Repository {
     List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
     final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
 
-    log.info('Upgrading Sembast store to V2');
+    _log.info('Upgrading Sembast store to V2');
 
     for (var podcast in podcasts) {
       if (podcast.guid!.startsWith('http:')) {
@@ -674,7 +766,7 @@ class SembastRepository extends Repository {
           filter: Filter.equals('pguid', podcast.guid),
         );
 
-        log.fine('Upgrading GUID ${podcast.guid} - to $guid');
+        _log.fine('Upgrading GUID ${podcast.guid} - to $guid');
 
         var upgradedPodcast = Podcast(
           id: podcast.id,
@@ -698,7 +790,7 @@ class SembastRepository extends Repository {
         // Now upgrade episodes
         for (var e in episodes) {
           e.pguid = guid;
-          log.fine('Updating episode guid for ${e.title} from ${e.pguid} to $guid');
+          _log.fine('Updating episode guid for ${e.title} from ${e.pguid} to $guid');
 
           final epf = Finder(filter: Filter.byKey(e.id));
           await _episodeStore.update(db, e.toMap(), finder: epf);
@@ -706,6 +798,40 @@ class SembastRepository extends Repository {
 
         upgradedPodcast.episodes = episodes;
         await _podcastStore.update(db, upgradedPodcast.toMap(), finder: idFinder);
+      }
+    }
+  }
+
+  Future<void> _upgradeV3(Database db) async {
+    _log.info('Upgrading Sembast store to V3');
+
+    List<RecordSnapshot<int, Map<String, Object?>>> data = await _podcastStore.find(db);
+    final podcasts = data.map((e) => Podcast.fromMap(e.key, e.value)).toList();
+
+    for (var podcast in podcasts) {
+      _log.fine('Processing podcast ${podcast.title}');
+
+      final idFinder = Finder(filter: Filter.byKey(podcast.id));
+      final episodeFinder = Finder(
+        filter: Filter.equals('pguid', podcast.guid),
+        sortOrders: [SortOrder('publicationDate', false)],
+      );
+
+      final RecordSnapshot<int, Map<String, Object?>>? episodeData =
+          await _episodeStore.findFirst(db, finder: episodeFinder);
+
+      final episode = episodeData == null ? null : Episode.fromMap(episodeData.key, episodeData.value);
+
+      if (episode != null) {
+        final episodeDate = episode.publicationDate;
+
+        _log.fine('Upgrading latest episode: ${podcast.title} - to $episodeDate');
+
+        podcast.latestEpisodeDate = episodeDate;
+
+        await _podcastStore.update(db, podcast.toMap(), finder: idFinder);
+      } else {
+        _log.fine('Could not find any episodes for ${podcast.title}');
       }
     }
   }

@@ -167,6 +167,16 @@ class L {
         );
   }
 
+  String get open_up_next_hint {
+    return message('open_up_next_hint') ??
+        Intl.message(
+          'Open the up next queue',
+          name: 'open_up_next_hint',
+          desc: 'Hint displayed on open up next queue from main window',
+          locale: localeName,
+        );
+  }
+
   String get no_subscriptions_message {
     return message('no_subscriptions_message') ??
         Intl.message(
@@ -740,7 +750,7 @@ class L {
   String get settings_auto_update_episodes {
     return message('settings_auto_update_episodes') ??
         Intl.message(
-          'Auto update episodes',
+          'Refresh podcasts',
           name: 'settings_auto_update_episodes',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
@@ -780,7 +790,7 @@ class L {
   String get settings_auto_update_episodes_10min {
     return message('settings_auto_update_episodes_10min') ??
         Intl.message(
-          '10 minutes since last update',
+          'Every 10 minutes',
           name: 'settings_auto_update_episodes_10min',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
@@ -790,7 +800,7 @@ class L {
   String get settings_auto_update_episodes_30min {
     return message('settings_auto_update_episodes_30min') ??
         Intl.message(
-          '30 minutes since last update',
+          'Every 30 minutes',
           name: 'settings_auto_update_episodes_30min',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
@@ -800,7 +810,7 @@ class L {
   String get settings_auto_update_episodes_1hour {
     return message('settings_auto_update_episodes_1hour') ??
         Intl.message(
-          '1 hour since last update',
+          'Every hour',
           name: 'settings_auto_update_episodes_1hour',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
@@ -820,7 +830,7 @@ class L {
   String get settings_auto_update_episodes_6hour {
     return message('settings_auto_update_episodes_6hour') ??
         Intl.message(
-          '6 hours since last update',
+          'Every 6 hours',
           name: 'settings_auto_update_episodes_6hour',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
@@ -830,8 +840,28 @@ class L {
   String get settings_auto_update_episodes_12hour {
     return message('settings_auto_update_episodes_12hour') ??
         Intl.message(
-          '12 hours since last update',
+          'Every 12 hours',
           name: 'settings_auto_update_episodes_12hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_24hour {
+    return message('settings_auto_update_episodes_24hour') ??
+        Intl.message(
+          'Every 24 hours',
+          name: 'settings_auto_update_episodes_24hour',
+          desc: 'Option label for auto updating of episodes',
+          locale: localeName,
+        );
+  }
+
+  String get settings_auto_update_episodes_48hour {
+    return message('settings_auto_update_episodes_48hour') ??
+        Intl.message(
+          'Every 2 days',
+          name: 'settings_auto_update_episodes_48hour',
           desc: 'Option label for auto updating of episodes',
           locale: localeName,
         );
@@ -963,6 +993,16 @@ class L {
           'Up Next',
           name: 'up_next_queue_label',
           desc: 'Up next label on queue',
+          locale: localeName,
+        );
+  }
+
+  String get playing_next_queue_label {
+    return message('playing_next_queue_label') ??
+        Intl.message(
+          'Playing Next',
+          name: 'playing_next_queue_label',
+          desc: 'Playing next label on queue',
           locale: localeName,
         );
   }
@@ -2024,6 +2064,319 @@ class L {
           'Episode Actions',
           name: 'label_episode_actions',
           desc: 'Episode Actions title',
+          locale: localeName,
+        );
+  }
+
+  String get settings_podcast_management_divider_label {
+    return message('settings_podcast_management_divider_label') ??
+        Intl.message(
+          'PODCAST MANAGEMENT',
+          name: 'settings_podcast_management_divider_label',
+          desc: 'Settings divider label for podcast management options',
+          locale: localeName,
+        );
+  }
+
+  String get settings_notification_divider_label {
+    return message('settings_notification_divider_label') ??
+        Intl.message(
+          'NOTIFICATIONS',
+          name: 'settings_notification_divider_label',
+          desc: 'Settings divider label for notification options',
+          locale: localeName,
+        );
+  }
+
+  String get settings_background_refresh_option {
+    return message('settings_background_refresh_option') ??
+        Intl.message(
+          'Background refresh',
+          name: 'settings_background_refresh_option',
+          desc: 'Background episode update toggle switch label',
+          locale: localeName,
+        );
+  }
+
+  String get settings_background_refresh_option_subtitle {
+    return message('settings_background_refresh_option_subtitle') ??
+        Intl.message(
+          'Refresh episodes when the screen is off. This will increase battery usage.',
+          name: 'settings_background_refresh_option_subtitle',
+          desc: 'Background episode update toggle switch subtitle',
+          locale: localeName,
+        );
+  }
+
+  String get settings_refresh_notification_option {
+    return message('settings_refresh_notification_option') ??
+        Intl.message(
+          'Refresh notification',
+          name: 'settings_refresh_notification_option',
+          desc: 'Enable update notification setting',
+          locale: localeName,
+        );
+  }
+
+  String get settings_refresh_notification_option_subtitle {
+    return message('settings_refresh_notification_option_subtitle') ??
+        Intl.message(
+          'Show a notification icon when episodes are being refreshed.',
+          name: 'settings_refresh_notification_option_subtitle',
+          desc: 'Background episode update toggle switch subtitle',
+          locale: localeName,
+        );
+  }
+
+  /// TODO: Translate into remaining languages
+  String get update_library_option {
+    return message('update_library_option') ??
+        Intl.message(
+          'Refresh Library',
+          name: 'update_library_option',
+          desc: 'Option label for manually triggering library refresh',
+          locale: localeName,
+        );
+  }
+
+  String get library_sort_alphabetical_label {
+    return message('library_sort_alphabetical_label') ??
+        Intl.message(
+          'Alphabetical',
+          name: 'library_sort_alphabetical_label',
+          desc: 'Option label for sorting the library alphabetically',
+          locale: localeName,
+        );
+  }
+
+  String get library_sort_date_followed_label {
+    return message('library_sort_date_followed_label') ??
+        Intl.message(
+          'Date followed',
+          name: 'library_sort_date_followed_label',
+          desc: 'Option label for sorting the library by date followed',
+          locale: localeName,
+        );
+  }
+
+  String get library_sort_unplayed_count_label {
+    return message('library_sort_unplayed_count_label') ??
+        Intl.message(
+          'Unplayed episodes',
+          name: 'library_sort_unplayed_count_label',
+          desc: 'Option label for sorting the library by unplayed count',
+          locale: localeName,
+        );
+  }
+
+  String get library_sort_latest_episodes_label {
+    return message('library_sort_latest_episodes_label') ??
+        Intl.message(
+          'Latest episodes',
+          name: 'library_sort_latest_episodes_label',
+          desc: 'Option label for sorting the library by latest count',
+          locale: localeName,
+        );
+  }
+
+  String semantic_unplayed_episodes_count(int episodes) {
+    return message('semantic_unplayed_episodes_count') ??
+        Intl.message(
+          '''${Intl.plural(episodes, one: '1 unplayed episode', other: '$episodes unplayed episodes')}''',
+          args: [episodes],
+          name: 'semantic_unplayed_episodes_count',
+          desc: 'Semantic label for unplayed episodes count.',
+          locale: localeName,
+        );
+  }
+
+  String semantic_new_episodes_count(int episodes) {
+    return message('semantic_new_episodes_count') ??
+        Intl.message(
+          '''${Intl.plural(episodes, one: '1 new episode', other: '$episodes new episodes')}''',
+          args: [episodes],
+          name: 'semantic_new_episodes_count',
+          desc: 'Semantic label for new episodes count.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_highlight_new_episodes {
+    return message('layout_selector_highlight_new_episodes') ??
+        Intl.message(
+          'Highlight new episodes',
+          name: 'layout_selector_highlight_new_episodes',
+          desc: 'Layout selector. Highlight new episodes option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_unplayed_episodes {
+    return message('layout_selector_unplayed_episodes') ??
+        Intl.message(
+          'Show unplayed count',
+          name: 'layout_selector_unplayed_episodes',
+          desc: 'Layout selector. Highlight unplayed episodes option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_sort_by {
+    return message('layout_selector_sort_by') ??
+        Intl.message(
+          'Sort by',
+          name: 'layout_selector_sort_by',
+          desc: 'Layout selector. Sort by option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_sort_by_alphabetical {
+    return message('layout_selector_sort_by_alphabetical') ??
+        Intl.message(
+          'Alphabetical',
+          name: 'layout_selector_sort_by_alphabetical',
+          desc: 'Layout selector. Sort by alphabetical option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_sort_by_followed {
+    return message('layout_selector_sort_by_followed') ??
+        Intl.message(
+          'Followed',
+          name: 'layout_selector_sort_by_followed',
+          desc: 'Layout selector. Sort by followed option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_sort_by_unplayed {
+    return message('layout_selector_sort_by_unplayed') ??
+        Intl.message(
+          'Unplayed',
+          name: 'layout_selector_sort_by_unplayed',
+          desc: 'Layout selector. Sort by unplayed option.',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_list_view {
+    return message('layout_selector_list_view') ??
+        Intl.message(
+          'List view',
+          name: 'layout_selector_list_view',
+          desc: 'Layout selector, list view icon',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_grid_view {
+    return message('layout_selector_grid_view') ??
+        Intl.message(
+          'Grid view',
+          name: 'layout_selector_grid_view',
+          desc: 'Layout selector, grid view icon',
+          locale: localeName,
+        );
+  }
+
+  String get layout_selector_compact_grid_view {
+    return message('layout_selector_compact_grid_view') ??
+        Intl.message(
+          'Compact grid view',
+          name: 'layout_selector_compact_grid_view',
+          desc: 'Layout selector, compact grid view icon',
+          locale: localeName,
+        );
+  }
+
+  String get alert_sync_title_label {
+    return message('alert_sync_title_label') ??
+        Intl.message(
+          'Library Update',
+          name: 'alert_sync_title_label',
+          desc: 'Alert title during library sync.',
+          locale: localeName,
+        );
+  }
+
+  String get alert_sync_title_body {
+    return message('alert_sync_title_body') ??
+        Intl.message(
+          'Anytime is updating your podcast library',
+          name: 'alert_sync_title_body',
+          desc: 'Alert body during library sync.',
+          locale: localeName,
+        );
+  }
+
+  String get podcast_context_play_latest_episode_label {
+    return message('podcast_context_play_latest_episode_label') ??
+        Intl.message(
+          'Play latest episode',
+          name: 'podcast_context_play_latest_episode_label',
+          desc: 'Context menu and semantic label for playing next episode',
+          locale: localeName,
+        );
+  }
+
+  String get podcast_context_queue_latest_episode_label {
+    return message('podcast_context_queue_latest_episode_label') ??
+        Intl.message(
+          'Add most recent episode to the queue',
+          name: 'podcast_context_queue_latest_episode_label',
+          desc: 'Context menu and semantic label for queueing next episode',
+          locale: localeName,
+        );
+  }
+
+  String get label_podcast_actions {
+    return message('label_podcast_actions') ??
+        Intl.message(
+          'Podcast Actions',
+          name: 'label_podcast_actions',
+          desc: 'Podcast Actions title',
+          locale: localeName,
+        );
+  }
+
+  String get podcast_context_play_next_episode_label {
+    return message('podcast_context_play_next_episode_label') ??
+        Intl.message(
+          'Play next unplayed episode',
+          name: 'podcast_context_play_next_episode_label',
+          desc: 'Context menu and semantic label for playing next unplayed episode',
+          locale: localeName,
+        );
+  }
+
+  String get podcast_context_queue_next_episode_label {
+    return message('podcast_context_queue_next_episode_label') ??
+        Intl.message(
+          'Queue next unplayed episode',
+          name: 'podcast_context_queue_next_episode_label',
+          desc: 'Context menu and semantic label for queueing next unplayed episode',
+          locale: localeName,
+        );
+  }
+
+  String get settings_background_refresh_mobile_data_option {
+    return message('settings_background_refresh_mobile_data_option') ??
+        Intl.message(
+          'Refresh when on mobile data',
+          name: 'settings_background_refresh_mobile_data_option',
+          desc: 'Background episode update when on mobile data toggle switch label',
+          locale: localeName,
+        );
+  }
+
+  String get settings_background_refresh_mobile_data_option_subtitle {
+    return message('settings_background_refresh_mobile_data_option_subtitle') ??
+        Intl.message(
+          'Allow the library to be refreshed when on mobile data',
+          name: 'settings_background_refresh_mobile_data_option_subtitle',
+          desc: 'Background episode update toggle when on mobile switch subtitle',
           locale: localeName,
         );
   }

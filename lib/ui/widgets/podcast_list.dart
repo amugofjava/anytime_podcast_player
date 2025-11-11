@@ -29,7 +29,7 @@ class PodcastList extends StatelessWidget {
           stream: settingsBloc.settings,
           builder: (context, settingsSnapshot) {
             if (settingsSnapshot.hasData) {
-              var mode = settingsSnapshot.data!.layout;
+              var mode = settingsSnapshot.data!.layoutMode;
               var size = mode == 1 ? 100.0 : 160.0;
 
               if (mode == 0) {

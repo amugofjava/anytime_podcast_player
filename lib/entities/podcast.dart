@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/core/annotations.dart';
 import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/funding.dart';
 import 'package:anytime/entities/person.dart';
@@ -82,13 +83,27 @@ class Podcast {
   /// Date and time podcast feed was last updated.
   DateTime? _rssFeedLastUpdated;
 
+  /// Date and time of the most recent episode for the podcast.
+  DateTime? _latestEpisodeDate;
+
+  /// The ETAG ID if available.
+  String etag;
+
   /// One or more episodes for this podcast.
   List<Episode> episodes;
 
   /// List of persons associated at the podcast level.
   final List<Person>? persons;
 
-  bool newEpisodes;
+  /// Does this podcast contain new episodes since we last loaded it?
+  int newEpisodes = 0;
+
+  /// Total number of episodes for this podcast.
+  @Transient()
+  int episodeCount = 0;
+
+  /// Does this podcast contain updated episodes since we last loaded it?
+  @Transient()
   bool updatedEpisodes = false;
 
   Podcast({
@@ -106,15 +121,19 @@ class Podcast {
     this.filter = PodcastEpisodeFilter.none,
     this.sort = PodcastEpisodeSort.none,
     this.episodes = const <Episode>[],
-    this.newEpisodes = false,
+    this.newEpisodes = 0,
+    this.episodeCount = 0,
     this.persons,
+    this.etag = '',
     DateTime? rssFeedLastUpdated,
+    DateTime? latestEpisodeDate,
     DateTime? lastUpdated,
   })  : url = url.forceHttps,
         imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps {
     _lastUpdated = lastUpdated;
     _rssFeedLastUpdated = rssFeedLastUpdated;
+    _latestEpisodeDate = latestEpisodeDate;
   }
 
   factory Podcast.fromUrl({required String url}) => Podcast(
@@ -150,14 +169,17 @@ class Podcast {
       'description': description ?? '',
       'url': url,
       'link': link ?? '',
+      'etag': etag,
       'imageUrl': imageUrl ?? '',
       'thumbImageUrl': thumbImageUrl ?? '',
       'subscribedDate': subscribedDate?.millisecondsSinceEpoch.toString() ?? '',
       'filter': filter.id,
       'sort': sort.id,
+      'newEpisodes': newEpisodes,
       'funding': (funding ?? <Funding>[]).map((funding) => funding.toMap()).toList(growable: false),
       'person': (persons ?? <Person>[]).map((persons) => persons.toMap()).toList(growable: false),
       'rssFeedLastUpdated': _rssFeedLastUpdated?.millisecondsSinceEpoch ?? DateTime(1970, 1, 1).millisecondsSinceEpoch,
+      'latestEpisodeDate': _latestEpisodeDate?.millisecondsSinceEpoch ?? DateTime(1970, 1, 1).millisecondsSinceEpoch,
       'lastUpdated': _lastUpdated?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
     };
   }
@@ -166,14 +188,17 @@ class Podcast {
     final sds = podcast['subscribedDate'] as String?;
     final lus = podcast['lastUpdated'] as int?;
     final fus = podcast['rssFeedLastUpdated'] as int?;
+    final led = podcast['latestEpisodeDate'] as int?;
     final funding = <Funding>[];
     final persons = <Person>[];
+
     var filter = PodcastEpisodeFilter.none;
     var sort = PodcastEpisodeSort.none;
 
     var sd = DateTime.now();
     var lastUpdated = DateTime(1971, 1, 1);
     var rssFeedLastUpdated = DateTime(1971, 1, 1);
+    var latestEpisodeDate = DateTime(1971, 1, 1);
 
     if (sds != null && sds.isNotEmpty && int.tryParse(sds) != null) {
       sd = DateTime.fromMillisecondsSinceEpoch(int.parse(sds));
@@ -185,6 +210,10 @@ class Podcast {
 
     if (fus != null) {
       rssFeedLastUpdated = DateTime.fromMillisecondsSinceEpoch(fus);
+    }
+
+    if (led != null) {
+      latestEpisodeDate = DateTime.fromMillisecondsSinceEpoch(led);
     }
 
     if (podcast['funding'] != null) {
@@ -230,6 +259,7 @@ class Podcast {
       id: key,
       guid: podcast['guid'] as String,
       link: podcast['link'] as String?,
+      etag: podcast['etag'] as String? ?? '',
       title: podcast['title'] as String,
       copyright: podcast['copyright'] as String?,
       description: podcast['description'] as String?,
@@ -241,7 +271,9 @@ class Podcast {
       funding: funding,
       persons: persons,
       subscribedDate: sd,
+      newEpisodes: (podcast['newEpisodes'] as int?) ?? 0,
       rssFeedLastUpdated: rssFeedLastUpdated,
+      latestEpisodeDate: latestEpisodeDate,
       lastUpdated: lastUpdated,
     );
   }
@@ -258,6 +290,12 @@ class Podcast {
 
   set rssFeedLastUpdated(DateTime? value) {
     _rssFeedLastUpdated = value;
+  }
+
+  DateTime get latestEpisodeDate => _latestEpisodeDate ?? DateTime(1970, 1, 1);
+
+  set latestEpisodeDate(DateTime? value) {
+    _latestEpisodeDate = value;
   }
 
   @override

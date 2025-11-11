@@ -20,6 +20,15 @@ class MockSettingsService extends SettingsService {
   int layoutMode = 1;
 
   @override
+  String layoutOrder = 'followed';
+
+  @override
+  bool layoutHighlight = false;
+
+  @override
+  bool layoutCount = false;
+
+  @override
   bool markDeletedEpisodesAsPlayed = false;
 
   @override
@@ -50,8 +59,20 @@ class MockSettingsService extends SettingsService {
   bool volumeBoost = false;
 
   @override
-  Stream<String> get settingsListener => PublishSubject<String>().stream;
+  bool autoPlay = false;
 
   @override
-  bool autoPlay = false;
+  bool backgroundUpdate = false;
+
+  @override
+  bool backgroundUpdateMobileData = false;
+
+  @override
+  bool updateNotification = false;
+
+  @override
+  DateTime lastFeedRefresh = DateTime.utc(1970, 1, 1);
+
+  @override
+  Stream<String> get settingsListener => PublishSubject<String>().stream;
 }

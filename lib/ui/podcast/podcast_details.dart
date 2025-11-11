@@ -24,7 +24,6 @@ import 'package:anytime/ui/widgets/platform_back_button.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
-import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -128,6 +127,8 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   void dispose() {
+    _sliverScrollController.dispose();
+
     super.dispose();
   }
 
@@ -404,7 +405,8 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     duration: const Duration(milliseconds: 200),
     vsync: this,
   );
-  late final Animation<double> _animation = CurvedAnimation(
+
+  late final _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.fastOutSlowIn,
   );
@@ -412,7 +414,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final settings = Provider.of<SettingsBloc>(context).currentSettings;
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 
     return Padding(
@@ -514,17 +516,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                 ),
                 SortButton(widget.podcast),
                 FilterButton(widget.podcast),
-                settings.showFunding
-                    ? FundingMenu(widget.podcast.funding)
-                    : const SizedBox(
-                        width: 0.0,
-                        height: 0.0,
-                      ),
-                const Expanded(
-                    child: Align(
-                  alignment: Alignment.centerRight,
-                  child: SyncSpinner(),
-                )),
+                if (settings.showFunding) FundingMenu(widget.podcast.funding)
               ],
             ),
           ),
@@ -575,6 +567,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     super.initState();
 
     description = PodcastHtml(
+      key: ValueKey(widget.podcast.url),
       content: widget.podcast.description!,
       fontSize: FontSize.medium,
       clipboard: false,
@@ -591,8 +584,14 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
 
   @override
   void dispose() {
+    isDescriptionExpandedStream.close();
     _episodeSearchController.dispose();
     _searchFocus.dispose();
+    _controller.dispose();
+    _animation.dispose();
+
+    description = null;
+
     super.dispose();
   }
 }
