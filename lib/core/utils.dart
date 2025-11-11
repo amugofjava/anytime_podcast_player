@@ -150,10 +150,10 @@ Future<String> resolveUrl(String url, {bool forceHttps = false}) async {
 Future<void> sharePodcast({required Podcast podcast}) async {
   var url = base64UrlEncode(utf8.encode(podcast.url));
 
-  /// Manually remove padding. Required to work with episodes.fm
+  /// Manually remove padding. Required to work with pod.link
   url = url.replaceAll('=', '');
 
-  final link = '${podcast.title}\n\nhttps://episodes.fm/$url';
+  final link = '${podcast.title}\n\nhttps://pod.link/$url';
 
   await SharePlus.instance.share(
     ShareParams(text: link),
@@ -164,11 +164,11 @@ Future<void> shareEpisode({required Episode episode}) async {
   var podcastId = base64UrlEncode(utf8.encode(episode.pguid ?? ''));
   var episodeId = base64UrlEncode(utf8.encode(episode.guid));
 
-  /// Manually remove padding. Required to work with episodes.fm
+  /// Manually remove padding. Required to work with pod.link
   podcastId = podcastId.replaceAll('=', '');
   episodeId = episodeId.replaceAll('=', '');
 
-  final link = '${episode.title}\n\nhttps://episodes.fm/$podcastId/episode/$episodeId';
+  final link = '${episode.title}\n\nhttps://pod.link/$podcastId/episode/$episodeId';
 
   await SharePlus.instance.share(
     ShareParams(text: link),
