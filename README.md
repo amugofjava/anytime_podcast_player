@@ -33,6 +33,7 @@ current developments.
 &nbsp;
 <a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="61" alt="Anytime Play Store Link" target="_blank"></a>
 <a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="61" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
+<a href="https://f-droid.org/en/packages/uk.me.amugofjava.anytime"><img src="docs/f-droid.png" height="61" style="padding-left: 8px;" alt="Anytime F-Droid Link" target="_blank"></a>
 
 I would really appreciate all feedback - positive and negative - as it both helps improve Anytime
 and prioritise new features. You can reach me
