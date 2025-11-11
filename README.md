@@ -29,11 +29,13 @@ or Amazon App Store.
 You can download the current stable release or sign up to the Beta channel and help test
 current developments.
 
-<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="61" src="docs/google-play-badge.png"/></a>
+<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="56" src="docs/google-play-badge.png"/></a>
 &nbsp;
-<a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="61" alt="Anytime Play Store Link" target="_blank"></a>
-<a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="61" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
-<a href="https://f-droid.org/en/packages/uk.me.amugofjava.anytime"><img src="docs/f-droid.png" height="61" style="padding-left: 8px;" alt="Anytime F-Droid Link" target="_blank"></a>
+<a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="56" alt="Anytime Play Store Link" target="_blank"></a>
+&nbsp;
+<a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="56" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
+&nbsp;
+<a href="https://f-droid.org/en/packages/uk.me.amugofjava.anytime"><img src="docs/f-droid.png" height="56" style="padding-left: 8px;" alt="Anytime F-Droid Link" target="_blank"></a>
 
 I would really appreciate all feedback - positive and negative - as it both helps improve Anytime
 and prioritise new features. You can reach me
