@@ -29,6 +29,8 @@ class PodcastEpisodeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (episodes != null && episodes!.isNotEmpty) {
       var queueBloc = Provider.of<QueueBloc>(context);
 
@@ -73,11 +75,11 @@ class PodcastEpisodeList extends StatelessWidget {
               Icon(
                 icon,
                 size: 75,
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor,
               ),
               Text(
                 emptyMessage,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: theme.textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
             ],

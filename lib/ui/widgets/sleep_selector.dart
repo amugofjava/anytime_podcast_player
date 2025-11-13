@@ -124,6 +124,7 @@ class SleepSlider extends StatefulWidget {
 class _SleepSliderState extends State<SleepSlider> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return StreamBuilder<Sleep>(
@@ -144,7 +145,7 @@ class _SleepSliderState extends State<SleepSlider> {
                     header: true,
                     child: Text(
                       L.of(context)!.sleep_timer_label,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge,
                     ),
                   ),
                 ),
@@ -152,21 +153,21 @@ class _SleepSliderState extends State<SleepSlider> {
                   Text(
                     '(${L.of(context)!.sleep_off_label})',
                     semanticsLabel: '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_off_label}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.time)
                   Text(
                     '(${SleepSlider.formatDuration(s.timeRemaining)})',
                     semanticsLabel:
                         '${L.of(context)!.semantic_current_value_label} ${SleepSlider.formatDuration(s.timeRemaining)}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge,
                   ),
                 if (s != null && s.type == SleepType.episode)
                   Text(
                     '(${L.of(context)!.sleep_episode_label})',
                     semanticsLabel:
                         '${L.of(context)!.semantic_current_value_label} ${L.of(context)!.sleep_episode_label}',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: theme.textTheme.bodyLarge,
                   ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -252,6 +253,7 @@ class SleepSelectorEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
 
     return GestureDetector(
@@ -276,17 +278,17 @@ class SleepSelectorEntry extends StatelessWidget {
             if (sleep.type == SleepType.none)
               Text(
                 L.of(context)!.sleep_off_label,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
             if (sleep.type == SleepType.time)
               Text(
                 L.of(context)!.sleep_minute_label(sleep.duration.inMinutes.toString()),
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
             if (sleep.type == SleepType.episode)
               Text(
                 L.of(context)!.sleep_episode_label,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: theme.textTheme.bodyLarge,
               ),
             if (sleep == current)
               const Icon(

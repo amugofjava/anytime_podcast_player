@@ -35,6 +35,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context);
     final screenReader = MediaQuery.of(context).accessibleNavigation;
 
@@ -122,7 +123,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           min: 0.0,
                           max: episodeLength.toDouble(),
                           divisions: divisions,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: theme.primaryColor,
                           semanticFormatterCallback: (double newValue) {
                             return _formatDuration(Duration(seconds: currentPosition));
                           })
@@ -131,7 +132,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           value: 0,
                           min: 0.0,
                           max: 1.0,
-                          activeColor: Theme.of(context).primaryColor,
+                          activeColor: theme.primaryColor,
                         ),
                 ),
                 FittedBox(

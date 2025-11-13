@@ -40,6 +40,7 @@ class EpisodeDetails extends StatefulWidget {
 class _EpisodeDetailsState extends State<EpisodeDetails> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final episode = widget.episode;
 
     /// Ensure we do not highlight this as a new episode
@@ -71,7 +72,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       softWrap: false,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: theme.textTheme.bodyMedium,
                     )),
                 const Divider(),
                 EpisodeToolBar(
@@ -84,7 +85,7 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       episode.title!,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
+                      style: theme.textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

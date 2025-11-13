@@ -377,12 +377,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: Theme.of(context).appBarTheme.systemOverlayStyle!,
+      value: theme.appBarTheme.systemOverlayStyle!,
       child: Scaffold(
         backgroundColor: backgroundColour,
         body: Column(
@@ -446,7 +447,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                             return <PopupMenuEntry<String>>[
                               if (feedbackUrl.isNotEmpty)
                                 PopupMenuItem<String>(
-                                  textStyle: Theme.of(context).textTheme.titleMedium,
+                                  textStyle: theme.textTheme.titleMedium,
                                   value: 'feedback',
                                   child: Focus(
                                     child: Row(
@@ -462,7 +463,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                   ),
                                 ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'layout',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -476,7 +477,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'rss',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -490,7 +491,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'library',
                                 enabled: !libraryRefreshing,
                                 child: Row(
@@ -505,7 +506,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'settings',
                                 child: Row(
                                   children: [
@@ -518,7 +519,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'about',
                                 child: Row(
                                   children: [
@@ -555,13 +556,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
               return BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
-                selectedIconTheme: Theme.of(context).iconTheme,
-                selectedItemColor: Theme.of(context).iconTheme.color,
+                backgroundColor: theme.bottomAppBarTheme.color,
+                selectedIconTheme: theme.iconTheme,
+                selectedItemColor: theme.iconTheme.color,
                 selectedFontSize: 11.0,
                 unselectedFontSize: 11.0,
                 unselectedItemColor:
-                    HSLColor.fromColor(Theme.of(context).bottomAppBarTheme.color!).withLightness(0.8).toColor(),
+                    HSLColor.fromColor(theme.bottomAppBarTheme.color!).withLightness(0.8).toColor(),
                 currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
@@ -628,7 +629,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   'hello@anytimeplayer.app',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Theme.of(context).indicatorColor,
+                    color: theme.indicatorColor,
                   ),
                 ),
               ),

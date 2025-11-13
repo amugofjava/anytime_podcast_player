@@ -66,7 +66,9 @@ class EpisodeBloc extends Bloc {
         await audioPlayerService.stop();
       }
 
-      await podcastService.deleteDownload(episode!);
+      /// If this episode is queued up, clear it from the queue before deleting it.
+      await audioPlayerService.removeUpNextEpisode(episode!);
+      await podcastService.deleteDownload(episode);
 
       fetchDownloads(true);
     });
