@@ -19,10 +19,11 @@ class MobileNotificationService extends NotificationService {
         'resource://drawable/ic_refresh',
         [
           NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
+            channelGroupKey: 'anytime.notifications.groupkey',
+            channelKey: 'anytime.notifications.key',
+            channelName: 'Anytime notifications',
+            channelDescription: 'Notification channel for Anytime library sync notifications',
+            groupAlertBehavior: GroupAlertBehavior.Children,
             playSound: false,
             enableVibration: false,
             enableLights: false,
@@ -30,25 +31,18 @@ class MobileNotificationService extends NotificationService {
             ledColor: Colors.white,
           )
         ],
-        channelGroups: [
-          NotificationChannelGroup(
-            channelGroupKey: 'basic_channel_group',
-            channelGroupName: 'Basic group',
-          )
-        ],
         debug: true);
   }
 
   @override
   Future<bool> requestPermissionsIfNotGranted() async {
-    final isAllowed = await AwesomeNotifications().isNotificationAllowed();
-    bool allowed = false;
+    var isAllowed = await AwesomeNotifications().isNotificationAllowed();
 
     if (!isAllowed) {
-      allowed = await AwesomeNotifications().requestPermissionToSendNotifications();
+      isAllowed = await AwesomeNotifications().requestPermissionToSendNotifications();
     }
 
-    return allowed;
+    return isAllowed;
   }
 
   @override
@@ -70,7 +64,7 @@ class MobileNotificationService extends NotificationService {
     return await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 10,
-        channelKey: 'basic_channel',
+        channelKey: 'anytime.notifications.key',
         customSound: null,
         actionType: ActionType.SilentBackgroundAction,
         wakeUpScreen: false,
