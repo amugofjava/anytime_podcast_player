@@ -44,7 +44,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
-    final windowHeight = MediaQuery.of(context).size.height;
+    final windowHeight = MediaQuery.sizeOf(context).height;
     final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
 
     return DraggableScrollableSheet(

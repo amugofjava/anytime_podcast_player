@@ -37,7 +37,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context);
-    final screenReader = MediaQuery.of(context).accessibleNavigation;
+    final screenReader = MediaQuery.accessibleNavigationOf(context);
 
     return StreamBuilder<PositionState>(
         stream: audioBloc.playPosition,

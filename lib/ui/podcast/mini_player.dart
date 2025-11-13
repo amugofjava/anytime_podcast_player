@@ -73,7 +73,8 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
+    final padding = MediaQuery.paddingOf(context);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return Dismissible(
@@ -100,7 +101,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
               isScrollControlled: true,
               builder: (BuildContext modalContext) {
                 return Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  padding: EdgeInsets.only(top: padding.top),
                   child: const NowPlaying(),
                 );
               },

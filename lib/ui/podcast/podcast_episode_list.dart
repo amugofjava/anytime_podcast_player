@@ -115,9 +115,9 @@ class AccessibleSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQueryData = MediaQuery.of(context);
+    final accessibleNavigation = MediaQuery.accessibleNavigationOf(context);
 
-    return mediaQueryData.accessibleNavigation
+    return accessibleNavigation
         ? SliverPrototypeExtentList.builder(
             prototypeItem: EpisodeTile(
               episode: episode,

@@ -42,9 +42,9 @@ class EpisodeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQueryData = MediaQuery.of(context);
+    final screenReaderEnabled = MediaQuery.accessibleNavigationOf(context);
 
-    if (mediaQueryData.accessibleNavigation) {
+    if (screenReaderEnabled) {
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         return _CupertinoAccessibleEpisodeTile(
           episode: episode,
