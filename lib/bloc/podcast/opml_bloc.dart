@@ -31,7 +31,7 @@ class OPMLBloc extends Bloc {
           opmlService.loadOPMLFile(event.file!).listen((state) {
             if (state is OPMLParsingState) {
               WakelockPlus.enable();
-            } else if (state is! OPMLCompletedState && state is! OPMLLoadingState) {
+            } else if (state is! OPMLLoadingState) {
               WakelockPlus.disable();
             }
 
