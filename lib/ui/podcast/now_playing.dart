@@ -83,7 +83,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
 
   bool isMobilePortrait(BuildContext context) {
     final orientation = MediaQuery.orientationOf(context);
-    final width = MediaQuery.widthOf(context);
+    final width = MediaQuery.sizeOf(context).width;
 
     return (orientation == Orientation.portrait || width <= 1000);
   }
@@ -423,8 +423,8 @@ class NowPlayingShowNotes extends StatelessWidget {
                 child: Text(
                   episode!.title!,
                   style: theme.textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -478,10 +478,7 @@ class NowPlayingTabs extends StatelessWidget {
         length: episode.hasChapters ? 3 : 2,
         initialIndex: episode.hasChapters ? 1 : 0,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme
-              .appBarTheme
-              .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
+          value: theme.appBarTheme.systemOverlayStyle!.copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: theme.scaffoldBackgroundColor,
