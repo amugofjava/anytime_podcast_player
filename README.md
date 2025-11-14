@@ -41,6 +41,14 @@ I would really appreciate all feedback - positive and negative - as it both help
 and prioritise new features. You can reach me
 at [hello@anytimeplayer.app](mailto:hello@anytimeplayer.app).
 
+### Flutter Version Compatibility
+
+Due to a significant accessibility [bug](https://github.com/flutter/flutter/issues/164483) on iOS for Flutter versions after 3.27.4, and the need to run
+a much later version of Flutter on Android for the 16KB alignment support, I have had to create a seprate
+[branch](https://github.com/amugofjava/anytime_podcast_player/tree/feature/ios-f374-patch) for iOS. To make maintaining both simpler,
+I intend to keep the overall code as compatible with Flutter 3.27.4 as possible until the bug is fixed; therefore, you'll
+notice the analyser complaining about deprecated values. Please ignore these for now.
+
 ### Building from source
 
 If you do not already have the Flutter SDK installed, follow the instructions from the
