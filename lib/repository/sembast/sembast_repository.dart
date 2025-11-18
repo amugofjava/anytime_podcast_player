@@ -41,7 +41,7 @@ class SembastRepository extends Repository {
     _databaseService = DatabaseService(databaseName, version: 3, upgraderCallback: dbUpgrader);
 
     if (cleanup) {
-      _cleanupEpisodes().then((value) {
+      cleanupEpisodes().then((value) {
         _log.fine('Orphan episodes cleanup complete');
       });
     }
@@ -288,7 +288,7 @@ class SembastRepository extends Repository {
           }
           break;
         case PodcastEpisodeFilter.started:
-          int position = snapshot['position'] as int;
+          int position = int.parse(snapshot['position'] as String? ?? '0');
 
           if (position > 0) {
             counts[category] = (counts[category] ?? 0) + 1;
@@ -507,13 +507,12 @@ class SembastRepository extends Repository {
     return transcript;
   }
 
-  Future<void> _cleanupEpisodes() async {
+  Future<List<Episode>> cleanupEpisodes() async {
     final threshold = DateTime.now().subtract(const Duration(days: 60)).millisecondsSinceEpoch;
 
-    /// Find all streamed episodes over the threshold.
+    /// Find all streamed episodes.
     final filter = Filter.and([
       Filter.equals('downloadState', 0),
-      Filter.lessThan('lastUpdated', threshold),
     ]);
 
     final orphaned = <Episode>[];
@@ -527,15 +526,25 @@ class SembastRepository extends Repository {
     }
 
     for (var episode in episodes) {
+      final lastUpdated = DateTime.fromMillisecondsSinceEpoch(int.parse(episode['lastUpdated'] as String));
       final pguid = episode.value['pguid'] as String?;
-      final podcast = pguids.contains(pguid);
 
-      if (!podcast) {
-        orphaned.add(Episode.fromMap(episode.key, episode.value));
+      if (!pguids.contains(pguid)) {
+        if (lastUpdated.millisecondsSinceEpoch < threshold) {
+          /// As we have recently discovered this routine hasn't been working, we could potentially have users
+          /// with a large number of orphaned episodes. We'll limit it to 20 episodes per run.
+          orphaned.add(Episode.fromMap(episode.key, episode.value));
+
+          if (orphaned.length >= 20) {
+            break;
+          }
+        }
       }
     }
 
     await deleteEpisodes(orphaned);
+
+    return orphaned;
   }
 
   SortOrder<Object?> _applyEpisodeSort(PodcastEpisodeSort sort, SortOrder<Object?> sortOrder) {
