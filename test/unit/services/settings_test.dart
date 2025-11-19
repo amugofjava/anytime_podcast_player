@@ -127,4 +127,58 @@ void main() {
     mobileSettingsService?.autoPlay = true;
     expect(mobileSettingsService?.autoPlay, true);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test layout order', () async {
+    expect(mobileSettingsService?.layoutOrder, 'alphabetical');
+    expectLater(settingsListener, emits('layoutOrder'));
+    mobileSettingsService?.layoutOrder = 'followed';
+    expect(mobileSettingsService?.layoutOrder, 'followed');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test layout highlight', () async {
+    expect(mobileSettingsService?.layoutHighlight, false);
+    expectLater(settingsListener, emits('layoutHighlight'));
+    mobileSettingsService?.layoutHighlight = true;
+    expect(mobileSettingsService?.layoutHighlight, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test layout count', () async {
+    expect(mobileSettingsService?.layoutCount, false);
+    expectLater(settingsListener, emits('layoutCount'));
+    mobileSettingsService?.layoutCount = true;
+    expect(mobileSettingsService?.layoutCount, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test background update', () async {
+    expect(mobileSettingsService?.backgroundUpdate, false);
+    expectLater(settingsListener, emits('backgroundUpdate'));
+    mobileSettingsService?.backgroundUpdate = true;
+    expect(mobileSettingsService?.backgroundUpdate, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test background update on mobile data', () async {
+    expect(mobileSettingsService?.backgroundUpdateMobileData, false);
+    expectLater(settingsListener, emits('backgroundUpdateMobileData'));
+    mobileSettingsService?.backgroundUpdateMobileData = true;
+    expect(mobileSettingsService?.backgroundUpdateMobileData, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test background update notification', () async {
+    expect(mobileSettingsService?.updateNotification, false);
+    expectLater(settingsListener, emits('updateNotification'));
+    mobileSettingsService?.updateNotification = true;
+    expect(mobileSettingsService?.updateNotification, true);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test last feed refresh', () async {
+    final controlUtc = DateTime.utc(1970, 1, 1).millisecondsSinceEpoch;
+    final control = DateTime.fromMillisecondsSinceEpoch(controlUtc);
+    final latestUtc = DateTime.utc(2025, 1, 1).millisecondsSinceEpoch;
+    final latest = DateTime.fromMillisecondsSinceEpoch(latestUtc);
+
+    expect(mobileSettingsService?.lastFeedRefresh, control);
+    expectLater(settingsListener, emits('lastFeedRefresh'));
+    mobileSettingsService?.lastFeedRefresh = latest;
+    expect(mobileSettingsService?.lastFeedRefresh, latest);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }
