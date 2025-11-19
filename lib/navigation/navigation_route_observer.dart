@@ -44,5 +44,8 @@ class NavigationRouteObserver extends NavigatorObserver {
     _routeStack.replaceRange(oldRouteIndex, oldRouteIndex + 1, [newRoute]);
   }
 
-  Route<dynamic>? get top => _routeStack.last;
+  /// Useful for testing
+  void clear() => _routeStack.clear();
+
+  Route<dynamic>? get top => _routeStack.isEmpty ? null : _routeStack.last;
 }
