@@ -45,15 +45,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${weeks}t trước";
 
-  static m12(minutes) => "${minutes} phút";
-
-  static m13(minutes) => "${minutes} phút";
-
-  static m14(seconds) => "${seconds} giây";
+  static m14(minutes) => "${minutes} phút";
 
   static m15(minutes) => "${minutes} phút";
 
   static m16(seconds) => "${seconds} giây";
+
+  static m17(minutes) => "${minutes} phút";
+
+  static m18(seconds) => "${seconds} giây";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Chia sẻ podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Hiển thị ghi chú'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Kết thúc tập'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Tắt'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Hẹn giờ ngủ'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Dừng'),
@@ -245,10 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Dừng tải về'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Theo dõi'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Theo dõi'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Lời thoại'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Tại sao không?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),

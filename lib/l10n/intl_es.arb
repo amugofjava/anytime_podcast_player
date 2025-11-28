@@ -240,7 +240,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_mark_deleted_played_label": "Marcar episodios vorrados como reproducidos",
+  "settings_mark_deleted_played_label": "Marcar episodios borrados cono reproducidos.",
   "@settings_mark_deleted_played_label": {
     "description": "Mark deleted episodes as played setting",
     "type": "text",

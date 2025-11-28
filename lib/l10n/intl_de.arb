@@ -1362,7 +1362,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "semantic_unplayed_episodes_count": "{episoden,plural, =1{1 ungespielte folge}other{{episodes} ungespielte folgen}}",
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 ungespielte folge}other{{episodes} ungespielte folgen}}",
   "@semantic_unplayed_episodes_count": {
     "description": "Semantic label for unplayed episodes count.",
     "type": "text",
@@ -1370,7 +1370,7 @@
       "episodes": {}
     }
   },
-  "semantic_new_episodes_count": "{episoden,plural, =1{1 neue folgen}other{{episodes} neue folgen}}",
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 neue folgen}other{{episodes} neue folgen}}",
   "@semantic_new_episodes_count": {
     "description": "Semantic label for new episodes count.",
     "type": "text",

@@ -45,15 +45,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1н назад', other: '${weeks}н назад')}";
 
-  static m12(minutes) => "${minutes} минут";
+  static m14(minutes) => "${minutes} минут";
 
-  static m13(minutes) => "${minutes} мин";
+  static m15(minutes) => "${minutes} мин";
 
-  static m14(seconds) => "${seconds} сек";
+  static m16(seconds) => "${seconds} сек";
 
-  static m15(minutes) => "${minutes} минут";
+  static m17(minutes) => "${minutes} минут";
 
-  static m16(seconds) => "${seconds} секунд";
+  static m18(seconds) => "${seconds} секунд";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Поделиться подкастом'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Показать заметки'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Конец выпуска'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Отключено'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Таймер сна'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Остановить'),
@@ -245,10 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Остановить скачивание'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Подписаться'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Подписаться'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Субтитры'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Почему нет?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),

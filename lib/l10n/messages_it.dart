@@ -45,15 +45,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1s fa', other: '${weeks}s fa')}";
 
-  static m12(minutes) => "${minutes} minuti";
+  static m14(minutes) => "${minutes} minuti";
 
-  static m13(minutes) => "${minutes} min";
+  static m15(minutes) => "${minutes} min";
 
-  static m14(seconds) => "${seconds} sec";
+  static m16(seconds) => "${seconds} sec";
 
-  static m15(minutes) => "${minutes} minuti";
+  static m17(minutes) => "${minutes} minuti";
 
-  static m16(seconds) => "${seconds} secondi";
+  static m18(seconds) => "${seconds} secondi";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Condividi podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Visualizza le note'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Fine dell\'episodio'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Timer di Riposo'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
@@ -245,10 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Stop Download'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Segui'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Segui'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Trascrizioni'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Perché no?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),

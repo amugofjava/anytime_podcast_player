@@ -45,15 +45,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: 'hace 1 sem', other: 'hace ${weeks} sem')}";
 
-  static m12(minutes) => "${minutes} minutos";
+  static m14(minutes) => "${minutes} minutos";
 
-  static m13(minutes) => "${minutes} min";
+  static m15(minutes) => "${minutes} min";
 
-  static m14(seconds) => "${seconds} seg";
+  static m16(seconds) => "${seconds} seg";
 
-  static m15(minutes) => "${minutes} minutos";
+  static m17(minutes) => "${minutes} minutos";
 
-  static m16(seconds) => "${seconds} segundos";
+  static m18(seconds) => "${seconds} segundos";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -225,7 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_export_opml': MessageLookupByLibrary.simpleMessage('Exportar OPML'),
     'settings_import_opml': MessageLookupByLibrary.simpleMessage('Importar OPML'),
     'settings_label': MessageLookupByLibrary.simpleMessage('Ajustes'),
-    'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Marcar episodios vorrados como reproducidos'),
+    'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Marcar episodios borrados cono reproducidos.'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('PERSONALIZACIÓN'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('REPRODUCIR'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Tema'),
@@ -237,7 +237,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Compartir podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Mostrar notas'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Fin del episodio'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Apagado.'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Temporizador de sueño'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Parar'),
@@ -245,10 +245,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Parar descarga'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Seguir'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Seguir'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcripción'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('¿Por qué no?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),

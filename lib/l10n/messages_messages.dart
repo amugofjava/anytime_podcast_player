@@ -45,19 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1w ago', other: '${weeks}w ago')}";
 
-  static m17(episodes) => "${Intl.plural(episodes, one: '1 new episode', other: '${episodes} new episodes')}";
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 new episode', other: '${episodes} new episodes')}";
 
-  static m18(episodes) => "${Intl.plural(episodes, one: '1 unplayed episode', other: '${episodes} unplayed episodes')}";
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 unplayed episode', other: '${episodes} unplayed episodes')}";
 
-  static m12(minutes) => "${minutes} minutes";
+  static m14(minutes) => "${minutes} minutes";
 
-  static m13(minutes) => "${minutes} min";
+  static m15(minutes) => "${minutes} min";
 
-  static m14(seconds) => "${seconds} sec";
+  static m16(seconds) => "${seconds} sec";
 
-  static m15(minutes) => "${minutes} minutes";
+  static m17(minutes) => "${minutes} minutes";
 
-  static m16(seconds) => "${seconds} seconds";
+  static m18(seconds) => "${seconds} seconds";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -206,11 +206,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Chapter web link'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Current chapter'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Current value'),
-    'semantic_new_episodes_count': m17,
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Close playing options slider'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Open playing options slider'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Podcast artwork'),
-    'semantic_unplayed_episodes_count': m18,
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Add episode to queue'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Collapse podcast description'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Decrease playback speed'),
@@ -275,7 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Share podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Show notes'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('End of episode'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
@@ -283,10 +283,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Stop Download'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Follow'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Follow'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcript'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Why not?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
