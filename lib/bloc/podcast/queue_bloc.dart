@@ -36,7 +36,7 @@ class QueueBloc extends Bloc {
       } else if (event is QueueAddNextUnplayedEpisodeEvent) {
         var e = event.podcast;
         if (e != null) {
-          await audioPlayerService.addUpNextLatestEpisode(podcast: e);
+          await audioPlayerService.addUpNextUnplayedEpisode(podcast: e);
         }
       } else if (event is QueueRemoveEvent) {
         var e = event.episode;

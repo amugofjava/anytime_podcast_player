@@ -172,8 +172,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> addUpNextUnplayedEpisode({required Podcast podcast, bool? resume}) async {
     final nextEpisode = await repository.findNextUnplayedEpisode(podcast);
 
-    if (nextEpisode != null) {
-      return _playNextEpisode(episode: nextEpisode, resume: resume, fresh: true);
+    if (nextEpisode != null && !_queue.contains(nextEpisode)) {
+      return addUpNextEpisode(nextEpisode);
     }
   }
 
