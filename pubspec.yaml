@@ -1,7 +1,7 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.4.0+231
+version: 1.4.0+234
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -41,7 +41,7 @@ dependencies:
   path_provider_platform_interface: ^2.0.4
   percent_indicator: 4.2.5
   permission_handler: ^12.0.0+1
-  podcast_search: ^0.7.12
+  podcast_search: ^0.7.13
   provider: ^6.0.3
   rxdart: ^0.28.0
   scrollable_positioned_list: ^0.3.7
