@@ -46,12 +46,16 @@ class PodcastTile extends StatelessWidget {
 
     return Semantics(
       customSemanticsActions: {
+        if (podcast.id != null)
         CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
             audioBloc.playLatestEpisode(podcast),
+        if (podcast.id != null)
         CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
             queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
+        if (podcast.id != null)
         CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
             audioBloc.playNextUnplayedEpisode(podcast),
+        if (podcast.id != null)
         CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
             queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
       },
@@ -68,7 +72,9 @@ class PodcastTile extends StatelessWidget {
           });
         },
         onLongPress: () {
-          showContextMenu(context);
+          if (podcast.id != null) {
+            showContextMenu(context);
+          }
         },
         minVerticalPadding: 9,
         leading: ExcludeSemantics(
