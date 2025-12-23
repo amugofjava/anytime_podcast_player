@@ -71,11 +71,7 @@ class PodcastTile extends StatelessWidget {
             podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
           });
         },
-        onLongPress: () {
-          if (podcast.id != null) {
-            showContextMenu(context);
-          }
-        },
+        onLongPress: podcast.id == null ? null : () => showContextMenu(context),
         minVerticalPadding: 9,
         leading: ExcludeSemantics(
           child: Hero(

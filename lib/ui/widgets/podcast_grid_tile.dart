@@ -56,11 +56,7 @@ class PodcastGridTile extends StatelessWidget {
           podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
         });
       },
-      onLongPress: () {
-        if (podcast.id != null) {
-          showContextMenu(context);
-        }
-      },
+      onLongPress: podcast.id == null ? null : () => showContextMenu(context),
       child: Semantics(
         customSemanticsActions: {
           if (podcast.id != null)
