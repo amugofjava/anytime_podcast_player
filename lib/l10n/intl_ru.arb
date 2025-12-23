@@ -1,4 +1,5 @@
 {
+  "@@locale": "ru",
   "app_title": "Плеер подкастов Anytime",
   "@app_title": {
     "description": "Full title for the application",
@@ -77,7 +78,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_6hour": "6 часов с момента последнего обновления",
+  "settings_auto_update_episodes_6hour": "Каждые шесть часов",
   "@settings_auto_update_episodes_6hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -430,19 +431,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_1hour": "1 час с последнего обновления",
+  "settings_auto_update_episodes_1hour": "Каждый час",
   "@settings_auto_update_episodes_1hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_3hour": "3 часа с момента последнего обновления",
+  "settings_auto_update_episodes_3hour": "Каждые три часа",
   "@settings_auto_update_episodes_3hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_12hour": "12 часов с последнего обновления",
+  "settings_auto_update_episodes_12hour": "Каждые 12 часов",
   "@settings_auto_update_episodes_12hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -796,7 +797,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_30min": "30 минут после последнего обновления",
+  "settings_auto_update_episodes_30min": "Каждые 30 минут",
   "@settings_auto_update_episodes_30min": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -845,7 +846,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_heading": "Обновить выпуски на странице сведений после",
+  "settings_auto_update_episodes_heading": "Обновление подкастов",
   "@settings_auto_update_episodes_heading": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -1270,5 +1271,218 @@
     "type": "text",
     "placeholders": {}
   },
-  "@@locale": "ru"
+  "open_up_next_hint": "Открыть очередь",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "Каждые 24 часа",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "Каждые 2 дня",
+  "@settings_auto_update_episodes_48hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playing_next_queue_label": "Следующее играть",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "УПРАВЛЕНИЕ ПОДКАСТАМИ",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "УВЕДОМЛЕНИЯ",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Фоновое обновление",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Обновлять выпуски когда экран отключен. Это подразрядит батарею.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Освежить уведомление",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Последние выпуски",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Алфавитный",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Подписано",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Непрослушано",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "Списочный вид",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Сеточный вид",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Сжатый сеточный вид",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Обновление библиотеки",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Отображать значок уведомления когда обновляются выпуски",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Обновить библиотеку",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Алфавитный",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Дата подписки",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Непрослушаные выпуски",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 непрослушаный выпуск}other{{episodes} непрослушаных выпусков}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 новый выпуск}other{{episodes} новых выпусков}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Отмечать новые выпуски",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Показывать число непрослушаных",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Сортировать по",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Anytime обновляет вашу библиотеку подкастов",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Слушать последний выпуск",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "Последний выпуск в очередь",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Действия подкаста",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Играть следующий непрослушаный выпуск",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Следующий непрослушаный выпуск в очередь",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Обновлять когда на мобильной сети",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Позволить обновлять библиотеку когда используются мобильные данные",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  }
 }
