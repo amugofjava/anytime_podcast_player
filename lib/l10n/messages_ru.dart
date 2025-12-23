@@ -45,6 +45,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1н назад', other: '${weeks}н назад')}";
 
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 новый выпуск', other: '${episodes} новых выпусков')}";
+
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 непрослушаный выпуск', other: '${episodes} непрослушаных выпусков')}";
+
   static m14(minutes) => "${minutes} минут";
 
   static m15(minutes) => "${minutes} мин";
@@ -61,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
       'about_label': MessageLookupByLibrary.simpleMessage('О приложении'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('Добавить RSS ленту'),
+    'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime обновляет вашу библиотеку подкастов'),
+    'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Обновление библиотеки'),
     'app_title': MessageLookupByLibrary.simpleMessage('Плеер подкастов Anytime'),
     'app_title_short': MessageLookupByLibrary.simpleMessage('Плеер Anytime'),
     'audio_effect_trim_silence_label': MessageLookupByLibrary.simpleMessage('Обрезать тишину'),
@@ -125,8 +131,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'label_megabytes': MessageLookupByLibrary.simpleMessage('мегабайт'),
     'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Импортирование'),
+    'label_podcast_actions': MessageLookupByLibrary.simpleMessage('Действия подкаста'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Макет'),
+    'layout_selector_compact_grid_view': MessageLookupByLibrary.simpleMessage('Сжатый сеточный вид'),
+    'layout_selector_grid_view': MessageLookupByLibrary.simpleMessage('Сеточный вид'),
+    'layout_selector_highlight_new_episodes': MessageLookupByLibrary.simpleMessage('Отмечать новые выпуски'),
+    'layout_selector_list_view': MessageLookupByLibrary.simpleMessage('Списочный вид'),
+    'layout_selector_sort_by': MessageLookupByLibrary.simpleMessage('Сортировать по'),
+    'layout_selector_sort_by_alphabetical': MessageLookupByLibrary.simpleMessage('Алфавитный'),
+    'layout_selector_sort_by_followed': MessageLookupByLibrary.simpleMessage('Подписано'),
+    'layout_selector_sort_by_unplayed': MessageLookupByLibrary.simpleMessage('Непрослушано'),
+    'layout_selector_unplayed_episodes': MessageLookupByLibrary.simpleMessage('Показывать число непрослушаных'),
     'library': MessageLookupByLibrary.simpleMessage('Библиотека'),
+    'library_sort_alphabetical_label': MessageLookupByLibrary.simpleMessage('Алфавитный'),
+    'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Дата подписки'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Последние выпуски'),
+    'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Непрослушаные выпуски'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Отметить все выпуски как ещё непрослушанные'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Отметить все выпуски как прослушанные'),
     'mark_played_label': MessageLookupByLibrary.simpleMessage('Отметить прослушанным'),
@@ -146,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('Сейчас слушаете'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('Ладно'),
     'open_show_website_label': MessageLookupByLibrary.simpleMessage('Открыть вебсайт шоу'),
+    'open_up_next_hint': MessageLookupByLibrary.simpleMessage('Открыть очередь'),
     'opml_export_button_label': MessageLookupByLibrary.simpleMessage('Экспортировать'),
     'opml_import_button_label': MessageLookupByLibrary.simpleMessage('Импортировать'),
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('Экспорт OPML и импорт'),
@@ -153,6 +174,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'play_button_label': MessageLookupByLibrary.simpleMessage('Слушать выпуск'),
     'play_download_button_label': MessageLookupByLibrary.simpleMessage('Прослушать скачанный выпуск'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Скорость воспроизведения'),
+    'playing_next_queue_label': MessageLookupByLibrary.simpleMessage('Следующее играть'),
+    'podcast_context_play_latest_episode_label': MessageLookupByLibrary.simpleMessage('Слушать последний выпуск'),
+    'podcast_context_play_next_episode_label': MessageLookupByLibrary.simpleMessage('Играть следующий непрослушаный выпуск'),
+    'podcast_context_queue_latest_episode_label': MessageLookupByLibrary.simpleMessage('Последний выпуск в очередь'),
+    'podcast_context_queue_next_episode_label': MessageLookupByLibrary.simpleMessage('Следующий непрослушаный выпуск в очередь'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Финансирование подкастов'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Меню опций'),
     'queue_add_label': MessageLookupByLibrary.simpleMessage('Добавить'),
@@ -180,9 +206,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Веб ссылка на главу'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Текущая глава'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Текущее значение'),
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Закрыть опции проигрывания с прокруткой'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Открыть опции проигрывания с прокруткой'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Изображения подкаста'),
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Добавить выпуск в очередь'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Свернуть описание подкаста'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Замедлить'),
@@ -205,14 +233,20 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_open_now_playing': MessageLookupByLibrary.simpleMessage('Полноэкранный режим проигрывателя при начале выпуска'),
     'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Автообновление выпусков'),
     'settings_auto_update_episodes_10min': MessageLookupByLibrary.simpleMessage('10 минут после последнего обновления'),
-    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('12 часов с последнего обновления'),
-    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('1 час с последнего обновления'),
-    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('30 минут после последнего обновления'),
-    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('3 часа с момента последнего обновления'),
-    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('6 часов с момента последнего обновления'),
+    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('Каждые 12 часов'),
+    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('Каждый час'),
+    'settings_auto_update_episodes_24hour': MessageLookupByLibrary.simpleMessage('Каждые 24 часа'),
+    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('Каждые 30 минут'),
+    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('Каждые три часа'),
+    'settings_auto_update_episodes_48hour': MessageLookupByLibrary.simpleMessage('Каждые 2 дня'),
+    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('Каждые шесть часов'),
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Всегда'),
-    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Обновить выпуски на странице сведений после'),
+    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Обновление подкастов'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Никогда'),
+    'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Обновлять когда на мобильной сети'),
+    'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Позволить обновлять библиотеку когда используются мобильные данные'),
+    'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Фоновое обновление'),
+    'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Обновлять выпуски когда экран отключен. Это подразрядит батарею.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Непрерывное проигрывание'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Автоматически воспроизводить следующий эпизод в подкасте, если очередь пуста'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('ДАННЫЕ'),
@@ -226,8 +260,12 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_import_opml': MessageLookupByLibrary.simpleMessage('Импортировать из файла OPML'),
     'settings_label': MessageLookupByLibrary.simpleMessage('Настройки'),
     'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Отметить удалённые выпуски как прослушанные'),
+    'settings_notification_divider_label': MessageLookupByLibrary.simpleMessage('УВЕДОМЛЕНИЯ'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('ПЕРСОНАЛИЗАЦИЯ'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('ВОСПРОИЗВЕДЕНИЕ'),
+    'settings_podcast_management_divider_label': MessageLookupByLibrary.simpleMessage('УПРАВЛЕНИЕ ПОДКАСТАМИ'),
+    'settings_refresh_notification_option': MessageLookupByLibrary.simpleMessage('Освежить уведомление'),
+    'settings_refresh_notification_option_subtitle': MessageLookupByLibrary.simpleMessage('Отображать значок уведомления когда обновляются выпуски'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Тема оформления'),
     'settings_theme_heading': MessageLookupByLibrary.simpleMessage('Выберите тему'),
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('Как в системе'),
@@ -255,6 +293,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Отписаться'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Отписаться'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('При отмене ��одписки будут удалены все загруженные эпизоды этого подкаста.'),
-    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('До следующего')
+    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('До следующего'),
+    'update_library_option': MessageLookupByLibrary.simpleMessage('Обновить библиотеку')
   };
 }
