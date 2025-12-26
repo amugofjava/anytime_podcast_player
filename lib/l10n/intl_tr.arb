@@ -1,1 +1,1487 @@
-{}
+{
+  "app_title": "Anytime Podcast Oynatıcı",
+  "@app_title": {
+    "description": "Full title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "app_title_short": "Anytime Player",
+  "@app_title_short": {
+    "description": "Title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library": "Kütüphane",
+  "@library": {
+    "description": "Library tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "discover": "Keşfet",
+  "@discover": {
+    "description": "Discover tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads": "İndirmeler",
+  "@downloads": {
+    "description": "Downloads tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_button_label": "Takip et",
+  "@subscribe_button_label": {
+    "description": "Subscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_button_label": "Takibi bırak",
+  "@unsubscribe_button_label": {
+    "description": "Unsubscribe button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_button_label": "İptal",
+  "@cancel_button_label": {
+    "description": "Cancel button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok_button_label": "Tamam",
+  "@ok_button_label": {
+    "description": "OK button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "subscribe_label": "Takip et",
+  "@subscribe_label": {
+    "description": "Subscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_label": "Takibi bırak",
+  "@unsubscribe_label": {
+    "description": "Unsubscribe label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unsubscribe_message": "Takibi bırakmak, bu podcastin indirilen tüm bölümlerini siler.",
+  "@unsubscribe_message": {
+    "description": "Displayed when the user unsubscribes from a podcast.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_for_podcasts_hint": "Podcast ara",
+  "@search_for_podcasts_hint": {
+    "description": "Hint displayed on search bar when the user clicks the search icon.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_up_next_hint": "Sonrakine geç",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_subscriptions_message": "Aşağıdaki Keşfet butonunu kullanarak veya yukarıdaki arama çubuğu ile ilk podcastini bulabilirsin",
+  "@no_subscriptions_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_label": "Sil",
+  "@delete_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_button_label": "Sil",
+  "@delete_button_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_confirmation": "Bu bölümü silmek istediğinizden emin misiniz?",
+  "@delete_episode_confirmation": {
+    "description": "User is asked to confirm when they attempt to delete an episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_title": "Bölümü sil",
+  "@delete_episode_title": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_downloads_message": "İndirilmiş bölümünüz yok",
+  "@no_downloads_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_search_results_message": "Podcast bulunamadı",
+  "@no_search_results_message": {
+    "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no_podcast_details_message": "Podcast bölümleri yüklenemedi. Lütfen bağlantınızı kontrol edin.",
+  "@no_podcast_details_message": {
+    "description": "Displayed on the podcast details page when the details could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_button_label": "Bölümü oynat",
+  "@play_button_label": {
+    "description": "Semantic label for the play button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pause_button_label": "Bölümü durdur",
+  "@pause_button_label": {
+    "description": "Semantic label for the pause button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_episode_button_label": "Bölümü indir",
+  "@download_episode_button_label": {
+    "description": "Semantic label for the download episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_episode_button_label": "İndirilmiş bölümü sil",
+  "@delete_episode_button_label": {
+    "description": "Semantic label for the delete episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close_button_label": "Kapat",
+  "@close_button_label": {
+    "description": "Close button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_button_label": "Ara",
+  "@search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clear_search_button_label": "Arama metnini temizle",
+  "@clear_search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_back_button_label": "Geri",
+  "@search_back_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimise_player_window_button_label": "Oynatıcıyı penceresini küçült",
+  "@minimise_player_window_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewind_button_label": "Bölümü 10 saniye geri sar",
+  "@rewind_button_label": {
+    "description": "Rewind button tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fast_forward_button_label": "Bölümü 30 saniye ileri sar",
+  "@fast_forward_button_label": {
+    "description": "Fast forward tooltip",
+    "type": "text",
+    "placeholders": {}
+  },
+  "about_label": "Hakkında",
+  "@about_label": {
+    "description": "About menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_played_label": "Tüm bölümleri oynatılmış olarak işaretle",
+  "@mark_episodes_played_label": {
+    "description": "Mark all episodes played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_episodes_not_played_label": "Tüm bölümleri oynatılmamış olarak işaretle",
+  "@mark_episodes_not_played_label": {
+    "description": "Mark all episodes not-played menu item",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_confirmation": "Bu indirmeyi durdurup bölümü silmek istediğinizden emin misiniz?",
+  "@stop_download_confirmation": {
+    "description": "User is asked to confirm when they wish to stop the active download.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_button_label": "Durdur",
+  "@stop_download_button_label": {
+    "description": "Stop label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "stop_download_title": "İndirmeyi durdur",
+  "@stop_download_title": {
+    "description": "Stop download label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_delete_played_label": "İzlendikten sonra indirilen bölümleri sil",
+  "@settings_delete_played_label": {
+    "description": "Delete downloaded episodes once played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_sd_card_label": "Bölümleri SD karta indir",
+  "@settings_download_sd_card_label": {
+    "description": "Download episodes to SD card setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_card": "Yeni indirmeler SD karta kaydedilecektir. Mevcut indirmeler dahili depolama alanında kalacaktır.",
+  "@settings_download_switch_card": {
+    "description": "Displayed when user switches from internal storage to SD card",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_internal": "Yeni indirmeler dahili depolama alanına kaydedilecektir. Mevcut indirmeler SD kartta kalacaktır.",
+  "@settings_download_switch_internal": {
+    "description": "Displayed when user switches from internal SD card to internal storage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_mark_deleted_played_label": "Silinen bölümleri izlendi olarak işaretle",
+  "@settings_mark_deleted_played_label": {
+    "description": "Mark deleted episodes as played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_download_switch_label": "Depolama konumunu değiştir",
+  "@settings_download_switch_label": {
+    "description": "Dialog label for storage switch",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_option_label": "İptal",
+  "@cancel_option_label": {
+    "description": "Cancel option label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme": "Tema",
+  "@settings_theme": {
+    "description": "Display theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_heading": "Tema seç",
+  "@settings_theme_heading": {
+    "description": "Choose theme behaviour",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_auto": "Sistem Teması",
+  "@settings_theme_value_auto": {
+    "description": "Based on System theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_light": "Açık tema",
+  "@settings_theme_value_light": {
+    "description": "Light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_dark": "Koyu tema",
+  "@settings_theme_value_dark": {
+    "description": "Dark theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playback_speed_label": "Oynatma Hızı",
+  "@playback_speed_label": {
+    "description": "Set playback speed icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "show_notes_label": "Notları göster",
+  "@show_notes_label": {
+    "description": "Set show notes icon label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_provider_label": "Arama Sağlayıcısı",
+  "@search_provider_label": {
+    "description": "Set search provider label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_label": "Ayarlar",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "Geri Dön",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "Devam",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "consent_message": "Bu fon bağlantısı sizi, programı doğrudan destekleyebileceğiniz harici bir siteye yönlendirecektir. Bağlantılar podcast yazarları tarafından sağlanmaktadır ve Anytime tarafından kontrol edilmemektedir.",
+  "@consent_message": {
+    "description": "Display when first accessing external funding link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_label": "Bölüm",
+  "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "Bölümler",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "Notlar",
+  "@notes_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_funding_dialog_header": "Podcast fonlama",
+  "@podcast_funding_dialog_header": {
+    "description": "Header on podcast funding consent dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_open_now_playing": "Bölüm başladığında tam ekran yap",
+  "@settings_auto_open_now_playing": {
+    "description": "Displayed when user switches to use full screen player automatically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_no_connection": "Bölüm oynatılamıyor. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.",
+  "@error_no_connection": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error_playback_fail": "Oynatma sırasında beklenmedik bir hata oluştu. Lütfen bağlantınızı kontrol edin ve tekrar deneyin.",
+  "@error_playback_fail": {
+    "description": "Displayed when attempting to start streaming an episode with no data connection",
+    "type": "text",
+    "placeholders": {}
+  },
+  "add_rss_feed_option": "RSS feed ekle",
+  "@add_rss_feed_option": {
+    "description": "Option label for adding manual RSS feed url",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_import_opml": "OPML İçe Aktar",
+  "@settings_import_opml": {
+    "description": "Option label importing OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_opml": "OPML olarak dışa aktar",
+  "@settings_export_opml": {
+    "description": "Option label exporting OPML file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_opml_importing": "İçe aktarılıyor",
+  "@label_opml_importing": {
+    "description": "Label for importing OPML dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_heading": "Podcastları Yenile",
+  "@settings_auto_update_episodes_heading": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes": "Podcastları Yenile",
+  "@settings_auto_update_episodes": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_never": "Hiçbir Zaman",
+  "@settings_auto_update_episodes_never": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_always": "Her zaman",
+  "@settings_auto_update_episodes_always": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_10min": "son güncelleme 10 dakika önce",
+  "@settings_auto_update_episodes_10min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_30min": "Her 30 dakikada bir",
+  "@settings_auto_update_episodes_30min": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_1hour": "Her saat",
+  "@settings_auto_update_episodes_1hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_3hour": "3 saatte bir",
+  "@settings_auto_update_episodes_3hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_6hour": "6 saatte bir",
+  "@settings_auto_update_episodes_6hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_12hour": "Her 12 saat",
+  "@settings_auto_update_episodes_12hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "Her 24 saatte",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "Her 2 günde bir",
+  "@settings_auto_update_episodes_48hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_label": "Yeni bölümler mevcut",
+  "@new_episodes_label": {
+    "description": "Option label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_played_label": "Oynatıldı olarak işaretle",
+  "@mark_played_label": {
+    "description": "Mark as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mark_unplayed_label": "Oynatılmadı olarak işaretle",
+  "@mark_unplayed_label": {
+    "description": "Mark as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "new_episodes_view_now_label": "ŞİMDİ GÖSTER",
+  "@new_episodes_view_now_label": {
+    "description": "Option action label for new episodes snackbar",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_personalisation_divider_label": "KİŞİSELLEŞTİRME",
+  "@settings_personalisation_divider_label": {
+    "description": "Settings divider label for personalisation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_episodes_divider_label": "BÖLÜMLER",
+  "@settings_episodes_divider_label": {
+    "description": "Settings divider label for episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_playback_divider_label": "TEKRAR OYNAT",
+  "@settings_playback_divider_label": {
+    "description": "Settings divider label for playback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_data_divider_label": "VERİ",
+  "@settings_data_divider_label": {
+    "description": "Settings divider label for data",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_effect_trim_silence_label": "Sessiz kısımları kes",
+  "@audio_effect_trim_silence_label": {
+    "description": "Label for trim silence toggle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_effect_volume_boost_label": "Ses yükseltme",
+  "@audio_effect_volume_boost_label": {
+    "description": "Label for volume boost toggle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "audio_settings_playback_speed_label": "Oynatım Hızı",
+  "@audio_settings_playback_speed_label": {
+    "description": "Label for playback settings widget",
+    "type": "text",
+    "placeholders": {}
+  },
+  "empty_queue_message": "Kuyruk boş",
+  "@empty_queue_message": {
+    "description": "Displayed when there are no items left in the queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "clear_queue_button_label": "Kuyruğu temizle",
+  "@clear_queue_button_label": {
+    "description": "Clear queue button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "now_playing_queue_label": "Şuan oynatılıyor",
+  "@now_playing_queue_label": {
+    "description": "Now playing label on queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "up_next_queue_label": "Sonraki",
+  "@up_next_queue_label": {
+    "description": "Up next label on queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "playing_next_queue_label": "Sonraki oynatılıyor",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "more_label": "Daha fazla",
+  "@more_label": {
+    "description": "More label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_add_label": "Ekle",
+  "@queue_add_label": {
+    "description": "Queue add label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_remove_label": "Kaldır",
+  "@queue_remove_label": {
+    "description": "Queue remove label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_import_button_label": "İçe Aktar",
+  "@opml_import_button_label": {
+    "description": "OPML Import button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_export_button_label": "Dışa Aktar",
+  "@opml_export_button_label": {
+    "description": "OPML Export button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_import_export_label": "OPML İçe aktar / Dışa aktar",
+  "@opml_import_export_label": {
+    "description": "OPML Import/Export label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label": "Kuyruğu temizlemek istediğine emin misin?",
+  "@queue_clear_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_button_label": "Temizle",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "Kuyruğu Temizle",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "layout_label": "Düzen",
+  "@layout_label": {
+    "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_itunes": "Hepsi,Sanat,İş,Komedi,Eğitim,Kurgu,Devlet,Sağlık ve Vücut Geliştirme,Tarih,Çocuklar ve Aile,Boş Zaman,Müzik,Haberler,Din ve Maneviyat,Bilim,Toplum ve Kültür,Spor,TV ve Film,Teknoloji,Polisiye",
+  "@discovery_categories_itunes": {
+    "description": "Comma separated list of iTunes categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_label": "Transkript",
+  "@transcript_label": {
+    "description": "Transcript label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "no_transcript_available_label": "Bu podcast için transkript mevcut değil",
+  "@no_transcript_available_label": {
+    "description": "Displayed in transcript view when no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "search_transcript_label": "Transkript ara",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "auto_scroll_transcript_label": "Transkripti takip et",
+  "@auto_scroll_transcript_label": {
+    "description": "Auto scroll switch label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_label": "Neden olmasın?",
+  "@transcript_why_not_label": {
+    "description": "Link to why no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "@transcript_why_not_url": {
+    "description": "Language specific link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_podcast_details_header": "Podcast ayrıntıları ve bölüm sayfası",
+  "@semantics_podcast_details_header": {
+    "description": "Describes podcast details page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_list": "Liste düzeni",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Kompakt ızgara düzeni",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Izgara düzeni",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mini_player_header": "Mini oynatıcı. Oynat/duraklat düğmesine sağa kaydırın. Ana oynatıcı penceresini açmak için etkinleştirin",
+  "@semantics_mini_player_header": {
+    "description": "Describes the mini player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_main_player_header": "Ana oynatıcı penceresi",
+  "@semantics_main_player_header": {
+    "description": "Describes the main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_play_pause_toggle": "Oynat/duraklat düğmesi",
+  "@semantics_play_pause_toggle": {
+    "description": "Describes play/pause toggle button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_decrease_playback_speed": "Oynatma hızını azalt",
+  "@semantics_decrease_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_increase_playback_speed": "Oynatma hızını arttır",
+  "@semantics_increase_playback_speed": {
+    "description": "Describes speed adjustment control",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_expand_podcast_description": "Podcast açıklamasını genişlet",
+  "@semantics_expand_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_collapse_podcast_description": "Podcast açıklamasını daralt",
+  "@semantics_collapse_podcast_description": {
+    "description": "Describes podcast collapse/expand button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_add_to_queue": "Bölümü kuyruğa ekle",
+  "@semantics_add_to_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_remove_from_queue": "Bölümü kuyruktan kaldır",
+  "@semantics_remove_from_queue": {
+    "description": "Describes add to queue button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_played": "Bölümü oynatılmış olarak işaretle",
+  "@semantics_mark_episode_played": {
+    "description": "Describes mark played button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mark_episode_unplayed": "Bölümü oynatılmamış olarak işaretle",
+  "@semantics_mark_episode_unplayed": {
+    "description": "Describes mark unplayed button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed": "Bölüm listesi öğesi. Resim, özet ve ana kontroller gösteriliyor.",
+  "@semantics_episode_tile_collapsed": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded": "Bölüm listesi öğesi. Açıklama, ana kontroller ve ek kontroller gösteriliyor.",
+  "@semantics_episode_tile_expanded": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed_hint": "genişlet ve daha fazla ayrıntı ve ek seçenekleri göster",
+  "@semantics_episode_tile_collapsed_hint": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded_hint": "özeti göster ve daralt, indir ve oynat kontrolü",
+  "@semantics_episode_tile_expanded_hint": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_off_label": "Kapalı",
+  "@sleep_off_label": {
+    "description": "Describes off sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_episode_label": "Bölüm sonu",
+  "@sleep_episode_label": {
+    "description": "Describes end of episode sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_minute_label": "{minutes} dakika",
+  "@sleep_minute_label": {
+    "description": "Describes the number of minutes to sleep",
+    "type": "text",
+    "placeholders_order": [
+      "minutes"
+    ],
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "sleep_timer_label": "Uyku Zamanlayıcı",
+  "@sleep_timer_label": {
+    "description": "Describes sleep timer label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "feedback_menu_item_label": "Geribildirim",
+  "@feedback_menu_item_label": {
+    "description": "Feedback option in main menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "podcast_options_overflow_menu_semantic_label": "Ayar menüsü",
+  "@podcast_options_overflow_menu_semantic_label": {
+    "description": "Podcast details overflow menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_announce_searching": "Aranıyor, lütfen bekleyin.",
+  "@semantic_announce_searching": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_expand_label": "Oynatma seçenekleri kaydırıcısını aç",
+  "@semantic_playing_options_expand_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_collapse_label": "Oynatma seçenekleri kaydırıcısını kapat",
+  "@semantic_playing_options_collapse_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "Ana oynatıcıda podcast görüntüsünün etrafına yerleştirildi",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "Bölüm web bağlantısı",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_current_chapter_label": "Geçerli bölüm",
+  "@semantic_current_chapter_label": {
+    "description": "Placed around chapter",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "episode_filter_none_label": "Bölümler filtrelenmedi",
+  "@episode_filter_none_label": {
+    "description": "Episodes not filtered",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_started_label": "Başladı",
+  "@episode_filter_started_label": {
+    "description": "Only show episodes that have been started",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_played_label": "Oynatıldı",
+  "@episode_filter_played_label": {
+    "description": "Only show episodes that have been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_unplayed_label": "Oynatılmadı",
+  "@episode_filter_unplayed_label": {
+    "description": "Only show episodes that have not been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_label": "Bölüm bulunamadı",
+  "@episode_filter_no_episodes_title_label": {
+    "description": "No Episodes title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_description": "Bu podcastte aradığınız kriter ve filtreye uyan bölüm bulunmuyor",
+  "@episode_filter_no_episodes_title_description": {
+    "description": "No episodes found description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_clear_filters_button_label": "Filtreyi Temizle",
+  "@episode_filter_clear_filters_button_label": {
+    "description": "Clear filters button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_semantic_label": "Bölümleri filtrele",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "Bölümleri sırala",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "Varsayılan",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "En yeni",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "En eski",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "Alfabetik A-Z",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "Alfabetik Z-A",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "Gösterinin web sitesini aç",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "refresh_feed_label": "Bölümleri yenile",
+  "@refresh_feed_label": {
+    "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_layout_selector": "Düzen seçiciyi kapat",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_position": "Bölüm konumu",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "Kalan süre",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resume_button_label": "Bölümü devam ettir",
+  "@resume_button_label": {
+    "description": "Semantic label for the resume button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_download_button_label": "İndirilen bölümü oynat",
+  "@play_download_button_label": {
+    "description": "Semantic label for the play downloaded episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_download_button_label": "İndirmeyi iptal et",
+  "@cancel_download_button_label": {
+    "description": "Semantic label for the play cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_details_button_label": "Bölüm bilgilerini göster",
+  "@episode_details_button_label": {
+    "description": "Semantic label for the show info button.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "Uyku zamanlayıcı seçiciyi kapat",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "Oynatma hızı seçiciyi kapat",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "Geçerli değer",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Bölüm ayrıntılarını kapat",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_sort_selector": "Bölüm sıralamasını kapat",
+  "@scrim_episode_sort_selector": {
+    "description": "Replaces default scrim label for episode sort bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_filter_selector": "Bölüm filtresini kapat",
+  "@scrim_episode_filter_selector": {
+    "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "Bölüm ara",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_option": "Sürekli oynatma",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "Kuyruk boşsa podcastteki bir sonraki bölümü otomatik olarak oynat",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_podcast_option_label": "Podcasti paylaş",
+  "@share_podcast_option_label": {
+    "description": "Context menu option to share the current podcast",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_announce_loading": "Yükleniyor, lütfen bekleyin.",
+  "@semantic_announce_loading": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_time_minute_remaining": "{minutes} dakika kaldı",
+  "@episode_time_minute_remaining": {
+    "description": "Shows number of minutes of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_second_remaining": "{seconds} saniye kaldı",
+  "@episode_time_second_remaining": {
+    "description": "Shows number of seconds of episode time remaining",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_semantic_time_minute_remaining": "{minutes} dakika kaldı",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "{seconds} saniye kaldı",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{h önce}other{{weeks}h önce}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{1 hafta önce}other{{weeks} hafta önce}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{1g önce}other{{days}g önce}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{1 gün önce}other{{days} gün önce}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{1s önce}other{{hours}s önce}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{{hours} saat önce}other{{hours} saat önce}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{1 dk önce}other{{minutes} dk önce}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{1 dakika önce}other{{minutes} dakika önce}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "Şimdi",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
+  },
+  "time_seconds": "{seconds} sn",
+  "@time_seconds": {
+    "description": "Episode length in seconds",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_semantic_seconds": "{seconds} saniye",
+  "@time_semantic_seconds": {
+    "description": "Episode length in seconds - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "time_minutes": "{minutes} dk",
+  "@time_minutes": {
+    "description": "Episode length in minutes",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "time_semantic_minutes": "{minutes} dakika",
+  "@time_semantic_minutes": {
+    "description": "Episode length in minutes - long form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "label_megabytes": "megabyte",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "mb",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "Bölüm Eylemleri",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "PODCAST YÖNETİMİ",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "BİLDİRİMLER",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Arka planda yenileme",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Ekran kapalıyken bölümleri yenile. Bu pil kullanımını artıracaktır.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Bildirimi yenile",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Bölümler yenilenirken bildirim simgesi göster",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Kütüphaneyi Yenile",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Alfabetik",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Takip edilen tarih",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Oynatılmamış bölümler",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Son bölümler",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 oynatılmamış bölüm}other{{episodes} oynatılmamış bölüm}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 yeni bölüm}other{{episodes} yeni bölümler}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Yeni bölümleri öne çıkar",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Oynanmamış sayısını göster",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Sıralama",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Alfabetik",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Takip edilen",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Oynatılmamış",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "Liste görünümü",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Izgara görünümü",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Kompakt ızgara görünümü",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Kütüphane Güncellemesi",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Podcast kitaplığınızı istediğiniz zaman güncelleyebilirsiniz",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Son bölümü oynat",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "En son bölümü sıraya ekle",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Podcast Eylemleri",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Bir sonraki oynatılmamış bölümü oynat",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Sıradaki oynatılmamış bölümü sıraya ekle",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Mobil veri kullanırken yenile",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Mobil veri kullanırken kütüphanenin yenilenmesine izin ver",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_episode_option_label": "Bölümü paylaş",
+  "@share_episode_option_label": {
+    "description": "Context menu option to share the current podcast episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "discovery_categories_pindex": "Hepsi,After-Show,Alternatif,Hayvanlar,Animasyon,Sanat,Astronomi,Otomotiv,Havacılık,Beyzbol,Basketbol,Güzellik,Kitaplar,Budizm,İş,Kariyer,Kimya,Hristiyanlık,İklim,Komedi,Yorum,Kurslar,El Sanatları,Kriket,Kripto Para,Kültür,Günlük,Tasarım,Belgesel,Drama,Dünya,Eğitim,Eğlence,Girişimcilik,Aile,Fantastik,Moda,Kurgu,Film,Vücut Geliştirme,Yemek,Futbol,Oyunlar,Bahçe,Golf,Devlet,Sağlık,Hinduizm,Tarih,Hobiler,Hokey,Ev,Nasıl Yapılır,Doğaçlama,Röportajlar,Yatırım,İslam,Dergiler,Yahudilik,Çocuklar,Dil,Öğrenme,Boş Zaman,Yaşam,Yönetim,Manga,Pazarlama,Matematik,Tıp,Zihinsel,Müzik,Doğal,Doğa,Haberler,Kâr Amacı Gütmeyen,Beslenme,Ebeveynlik,Performans,Kişisel,Evcil Hayvanlar,Felsefe,Fizik,Yerler,Siyaset,İlişkiler,Din,İncelemeler,Rol Yapma,Rugby,Koşu,Bilim,Kişisel Gelişim,Cinsellik,Futbol,Sosyal,Toplum,Maneviyat,Spor,Stand-Up,Hikayeler,Yüzme,TV,Masaüstü,Teknoloji,Tenis,Seyahat,Polisiye,Video Oyunları,Görsel,Voleybol,Hava Durumu,Vahşi Doğa,Güreş",
+  "@discovery_categories_pindex": {
+    "description": "Comma separated list of Podcast Index categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
+}
