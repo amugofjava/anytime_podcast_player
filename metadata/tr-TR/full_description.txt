@@ -1,0 +1,20 @@
+Anytime Podcast Player, basit ve kullanımı kolay olacak şekilde tasarlanmış ücretsiz ve açık kaynaklı bir podcast oynatıcıdır. Anytime, Podcasting 2.0 uyumludur ve uygulama geliştirildikçe daha fazla özelliği destekleyecektir.
+
+<b>Podcast'leri keşfedin:</b>
+- 4 milyondan fazla ücretsiz podcast arasından arama yapın.
+- Podcast listelerinde yeni şeyler keşfedin.
+- En sevdiğiniz podcastleri takip edin, böylece hiçbir bölümü kaçırmayın.
+- Bölümleri dinleyin veya daha sonra çevrimdışı olarak dinlemek için indirin.
+
+<b>Özellikler:</b>
+- Bölüm bölümlerini görüntüleyin ve ilgilendiğiniz bölüme atlayın*
+- Finansman destek bağlantıları aracılığıyla programı doğrudan destekleyin*
+- Transkriptleri okuyun, arayın veya takip edin (varsa)*
+- Daha hızlı veya daha yavaş hızlarda dinleyin.
+- Bölümleri sıralayın ve filtreleyin.
+- Dinlediğiniz veya indirdiğiniz bir bölümü duraklatın ve daha sonra kaldığınız yerden devam edin.
+- Bildirim penceresinden oynatmayı kontrol edin.
+- WearOS cihazından oynatmayı kontrol edin.
+- OPML içe ve dışa aktarma.
+
+* Bölümler, finansman destek bağlantıları ve transkriptler, Podcasting 2.0'ı destekleyen podcast'lerde görünür.
