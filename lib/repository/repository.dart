@@ -31,13 +31,27 @@ abstract class Repository {
 
   Future<Episode?> findEpisodeByGuid(String guid);
 
-  Future<List<Episode?>> findEpisodesByPodcastGuid(
+  Future<List<Episode>> findEpisodesByPodcastGuid(
+    String pguid, {
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+    PodcastEpisodeSort sort = PodcastEpisodeSort.none,
+  });
+
+  Future<Map<String, int>> findEpisodeCountByPodcast({
+    PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
+  });
+
+  Future<int> findEpisodeCountByPodcastGuid(
     String pguid, {
     PodcastEpisodeFilter filter = PodcastEpisodeFilter.none,
     PodcastEpisodeSort sort = PodcastEpisodeSort.none,
   });
 
   Future<Episode?> findEpisodeByTaskId(String taskId);
+
+  Future<Episode?> findLatestPlayableEpisode(Podcast podcast);
+
+  Future<Episode?> findNextUnplayedEpisode(Podcast podcast);
 
   Future<Episode?> findNextPlayableEpisode(Episode episode);
 

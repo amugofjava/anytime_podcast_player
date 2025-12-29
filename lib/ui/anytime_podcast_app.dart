@@ -27,16 +27,20 @@ import 'package:anytime/services/audio/default_audio_player_service.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
+import 'package:anytime/services/notifications/mobile_notification_service.dart';
+import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/state/library_state.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
 import 'package:anytime/ui/podcast/mini_player.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
+import 'package:anytime/ui/podcast/up_next_view.dart';
 import 'package:anytime/ui/search/search.dart';
 import 'package:anytime/ui/settings/settings.dart';
 import 'package:anytime/ui/themes.dart';
@@ -65,6 +69,7 @@ class AnytimePodcastApp extends StatefulWidget {
   final Repository repository;
   late PodcastApi podcastApi;
   late DownloadService downloadService;
+  late NotificationService notificationService;
   late AudioPlayerService audioPlayerService;
   late OPMLService opmlService;
   PodcastService? podcastService;
@@ -78,10 +83,12 @@ class AnytimePodcastApp extends StatefulWidget {
     required this.certificateAuthorityBytes,
   }) : repository = SembastRepository() {
     podcastApi = MobilePodcastApi();
+    notificationService = MobileNotificationService();
 
     podcastService = MobilePodcastService(
       api: podcastApi,
       repository: repository,
+      notificationService: notificationService,
       settingsService: mobileSettingsService,
     );
 
@@ -99,7 +106,10 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService!,
     );
 
-    settingsBloc = SettingsBloc(mobileSettingsService);
+    settingsBloc = SettingsBloc(
+      settingsService: mobileSettingsService,
+      notificationService: notificationService,
+    );
 
     opmlService = MobileOPMLService(
       podcastService: podcastService!,
@@ -173,6 +183,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
               podcastService: widget.podcastService!,
               audioPlayerService: widget.audioPlayerService,
               downloadService: widget.downloadService,
+              notificationService: widget.notificationService,
               settingsService: widget.mobileSettingsService),
           dispose: (_, value) => value.dispose(),
         ),
@@ -220,6 +231,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           Locale('nl', ''),
           Locale('ru', ''),
           Locale('vi', ''),
+          Locale('zh_Hans', ''),
         ],
         theme: theme,
         // Uncomment builder below to enable accessibility checker tool.
@@ -249,6 +261,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   final log = Logger('_AnytimeHomePageState');
   bool handledInitialLink = false;
+  bool libraryRefreshing = false;
   Widget? library;
 
   @override
@@ -256,13 +269,23 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     super.initState();
 
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 
     WidgetsBinding.instance.addObserver(this);
 
+    /// TODO: These should auto register and trigger.
     audioBloc.transitionLifecycleState(LifecycleState.resume);
+    podcastBloc.transitionLifecycleState(LifecycleState.resume);
 
     /// Handle deep links
     _setupLinkListener();
+
+    /// Handle library updates and enable/disable the manual refresh menu item as appropriate.
+    Provider.of<PodcastBloc>(context, listen: false).libraryListener.listen((d) {
+      setState(() {
+        libraryRefreshing = (d is LibraryRefreshingState);
+      });
+    });
   }
 
   /// We listen to external links from outside the app. For example, someone may navigate
@@ -318,7 +341,10 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   @override
   void dispose() {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    audioBloc.transitionLifecycleState(LifecycleState.pause);
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+
+    audioBloc.transitionLifecycleState(LifecycleState.detach);
+    podcastBloc.transitionLifecycleState(LifecycleState.detach);
 
     deepLinkSubscription?.cancel();
 
@@ -329,11 +355,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     var settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
 
     switch (state) {
       case AppLifecycleState.resumed:
         audioBloc.transitionLifecycleState(LifecycleState.resume);
+        podcastBloc.transitionLifecycleState(LifecycleState.resume);
         if (context.mounted) {
           SettingsService? settings = await MobileSettingsService.instance();
           settingsBloc.theme(settings!.theme);
@@ -341,6 +369,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
         break;
       case AppLifecycleState.paused:
         audioBloc.transitionLifecycleState(LifecycleState.pause);
+        podcastBloc.transitionLifecycleState(LifecycleState.pause);
         break;
       default:
         break;
@@ -349,12 +378,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: Theme.of(context).appBarTheme.systemOverlayStyle!,
+      value: theme.appBarTheme.systemOverlayStyle!,
       child: Scaffold(
         backgroundColor: backgroundColour,
         body: Column(
@@ -374,7 +404,6 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                       snap: false,
                       actions: <Widget>[
                         IconButton(
-                          tooltip: L.of(context)!.search_for_podcasts_hint,
                           icon: Icon(
                             Icons.search,
                             semanticLabel: L.of(context)!.search_for_podcasts_hint,
@@ -394,17 +423,32 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                             );
                           },
                         ),
+                        IconButton(
+                          icon: Icon(
+                            Icons.featured_play_list_outlined,
+                            semanticLabel: L.of(context)!.open_up_next_hint,
+                          ),
+                          onPressed: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                fullscreenDialog: false,
+                                settings: const RouteSettings(name: 'queue'),
+                                builder: (context) => const UpNextPage(),
+                              ),
+                            );
+                          },
+                        ),
                         PopupMenuButton<String>(
                           onSelected: _menuSelect,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.more_vert,
-                            semanticLabel: L.of(context)!.podcast_options_overflow_menu_semantic_label,
                           ),
                           itemBuilder: (BuildContext context) {
                             return <PopupMenuEntry<String>>[
                               if (feedbackUrl.isNotEmpty)
                                 PopupMenuItem<String>(
-                                  textStyle: Theme.of(context).textTheme.titleMedium,
+                                  textStyle: theme.textTheme.titleMedium,
                                   value: 'feedback',
                                   child: Focus(
                                     child: Row(
@@ -420,7 +464,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                   ),
                                 ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'layout',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -434,7 +478,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'rss',
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -448,7 +492,22 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
+                                value: 'library',
+                                enabled: !libraryRefreshing,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.refresh, size: 18.0),
+                                    ),
+                                    Text(L.of(context)!.update_library_option),
+                                  ],
+                                ),
+                              ),
+                              PopupMenuItem<String>(
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'settings',
                                 child: Row(
                                   children: [
@@ -461,7 +520,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                                 ),
                               ),
                               PopupMenuItem<String>(
-                                textStyle: Theme.of(context).textTheme.titleMedium,
+                                textStyle: theme.textTheme.titleMedium,
                                 value: 'about',
                                 child: Row(
                                   children: [
@@ -498,13 +557,13 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 
               return BottomNavigationBar(
                 type: BottomNavigationBarType.fixed,
-                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
-                selectedIconTheme: Theme.of(context).iconTheme,
-                selectedItemColor: Theme.of(context).iconTheme.color,
+                backgroundColor: theme.bottomAppBarTheme.color,
+                selectedIconTheme: theme.iconTheme,
+                selectedItemColor: theme.iconTheme.color,
                 selectedFontSize: 11.0,
                 unselectedFontSize: 11.0,
                 unselectedItemColor:
-                    HSLColor.fromColor(Theme.of(context).bottomAppBarTheme.color!).withLightness(0.8).toColor(),
+                    HSLColor.fromColor(theme.bottomAppBarTheme.color!).withLightness(0.8).toColor(),
                 currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[
@@ -571,7 +630,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   'hello@anytimeplayer.app',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Theme.of(context).indicatorColor,
+                    color: theme.indicatorColor,
                   ),
                 ),
               ),
@@ -653,7 +712,16 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
           ),
         );
         break;
+      case 'library':
+        _updateLibrary();
+        break;
     }
+  }
+
+  void _updateLibrary() async {
+    var podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+
+    podcastBloc.podcastEvent(PodcastEvent.refreshSubscriptions);
   }
 
   void _launchFeedback() async {

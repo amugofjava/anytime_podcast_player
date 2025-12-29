@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
@@ -11,13 +13,41 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
 
+class UpNextPage extends StatelessWidget {
+  const UpNextPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final audioBloc = Provider.of<AudioBloc>(context);
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: Text(L.of(context)!.up_next_queue_label)),
+      body: StreamBuilder<Episode?>(
+          stream: audioBloc.nowPlaying,
+          builder: (context, snapshot) {
+            var playing = snapshot.hasData && snapshot.data != null;
+            return Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: UpNextView(
+                playing: playing,
+              ),
+            );
+          }),
+    );
+  }
+}
+
 /// This class is responsible for rendering the Up Next queue feature.
 ///
 /// The user can see the currently playing item and the current queue. The user can
 /// re-arrange items in the queue, remove individual items or completely clear the queue.
 class UpNextView extends StatelessWidget {
+  final bool playing;
+
   const UpNextView({
     super.key,
+    this.playing = true,
   });
 
   @override
@@ -33,25 +63,27 @@ class UpNextView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
-                    child: Text(
-                      L.of(context)!.now_playing_queue_label,
-                      style: Theme.of(context).textTheme.titleLarge,
+              if (playing && snapshot.data!.playing != null)
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 24.0, 8.0),
+                      child: Text(
+                        L.of(context)!.now_playing_queue_label,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
-                child: DraggableEpisodeTile(
-                  key: const Key('detileplaying'),
-                  episode: snapshot.data!.playing!,
-                  draggable: false,
+                  ],
                 ),
-              ),
+              if (playing && snapshot.data!.playing != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+                  child: DraggableEpisodeTile(
+                    key: const Key('detileplaying'),
+                    episode: snapshot.data!.playing!,
+                    draggable: false,
+                  ),
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +91,7 @@ class UpNextView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16.0, 0.0, 24.0, 8.0),
                     child: Text(
-                      L.of(context)!.up_next_queue_label,
+                      L.of(context)!.playing_next_queue_label,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
@@ -125,7 +157,7 @@ class UpNextView extends StatelessWidget {
               ),
               snapshot.hasData && snapshot.data!.queue.isEmpty
                   ? Padding(
-                      padding: const EdgeInsets.all(24.0),
+                      padding: const EdgeInsets.fromLTRB(24.0, 36.0, 24.0, 24.0),
                       child: Container(
                         decoration: BoxDecoration(
                             color: Theme.of(context).dividerColor,

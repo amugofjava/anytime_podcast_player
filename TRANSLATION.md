@@ -41,8 +41,7 @@ This will add the new messages to the master `intl_messages.arb` file.
 #### Translate ARB files.
 
 Copy the new entries in the `intl_messages.arb` file to the `intl_en.arb` file and the locale file
-you are translating
-to. Translate the new messages in the locale ARB file.
+you are translating to. Translate the new messages in the locale ARB file.
 
 Once translation is complete, run the following command to generate the language bindings:
 

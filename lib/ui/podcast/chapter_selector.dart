@@ -77,6 +77,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context);
 
     return StreamBuilder<Episode?>(
@@ -95,7 +96,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     final index = i < 0 ? 0 : i;
                     final chapter = widget.chapters[index];
                     final chapterSelected = chapter == snapshot.data!.currentChapter;
-                    final textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    final textStyle = theme.textTheme.bodyLarge!.copyWith(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
                         );
@@ -107,7 +108,7 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0.0),
                       child: ListTile(
-                        selectedTileColor: Theme.of(context).cardTheme.color,
+                        selectedTileColor: theme.cardTheme.color,
                         onTap: () {
                           audioBloc.transitionPosition(chapter.startTime);
                         },

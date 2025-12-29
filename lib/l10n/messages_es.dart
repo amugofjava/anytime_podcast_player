@@ -45,15 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: 'hace 1 sem', other: 'hace ${weeks} sem')}";
 
-  static m12(minutes) => "${minutes} minutos";
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 nuevo episodio', other: '${episodes} nuevos episodios')}";
 
-  static m13(minutes) => "${minutes} min";
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 episodio no reproducido', other: '${episodes} episodios no reproducidos')}";
 
-  static m14(seconds) => "${seconds} seg";
+  static m14(minutes) => "${minutes} minutos";
 
-  static m15(minutes) => "${minutes} minutos";
+  static m15(minutes) => "${minutes} min";
 
-  static m16(seconds) => "${seconds} segundos";
+  static m16(seconds) => "${seconds} seg";
+
+  static m17(minutes) => "${minutes} minutos";
+
+  static m18(seconds) => "${seconds} segundos";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -61,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
       'about_label': MessageLookupByLibrary.simpleMessage('Acercca de'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('Añadir Feed RSS'),
+    'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime está actualizando tu biblioteca de podcasts'),
+    'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Actualización de la Biblioteca'),
     'app_title': MessageLookupByLibrary.simpleMessage('Anytime Podcast Player'),
     'app_title_short': MessageLookupByLibrary.simpleMessage('Anytime Player'),
     'audio_effect_trim_silence_label': MessageLookupByLibrary.simpleMessage('Suprimir silencio'),
@@ -125,8 +131,18 @@ class MessageLookup extends MessageLookupByLibrary {
     'label_megabytes': MessageLookupByLibrary.simpleMessage('megabytes'),
     'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Importando'),
+    'label_podcast_actions': MessageLookupByLibrary.simpleMessage('Acciones de Podcast'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Diseño'),
+    'layout_selector_compact_grid_view': MessageLookupByLibrary.simpleMessage('Vista de cuadrícula compacta'),
+    'layout_selector_grid_view': MessageLookupByLibrary.simpleMessage('Vista de cuadrícula'),
+    'layout_selector_highlight_new_episodes': MessageLookupByLibrary.simpleMessage('Destacar nuevos episodios'),
+    'layout_selector_list_view': MessageLookupByLibrary.simpleMessage('Vista de lista'),
+    'layout_selector_sort_by': MessageLookupByLibrary.simpleMessage('Ordenar por'),
+    'layout_selector_unplayed_episodes': MessageLookupByLibrary.simpleMessage('Mostrar el recuento de episodios no reproducidos'),
     'library': MessageLookupByLibrary.simpleMessage('Librería'),
+    'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Fecha de adición'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Últimos episodios'),
+    'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Episodios no reproducidos'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Marcar todos los episodios como no reproducidos'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Marcar todos los episodios como reproducidos'),
     'mark_played_label': MessageLookupByLibrary.simpleMessage('Marcar como reproducido'),
@@ -146,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('En Reproducción'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('OK'),
     'open_show_website_label': MessageLookupByLibrary.simpleMessage('Abrir sitio web del programa'),
+    'open_up_next_hint': MessageLookupByLibrary.simpleMessage('Abrir la cola'),
     'opml_export_button_label': MessageLookupByLibrary.simpleMessage('Exportar'),
     'opml_import_button_label': MessageLookupByLibrary.simpleMessage('Importar'),
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('Importar/Exportar OPML'),
@@ -153,6 +170,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'play_button_label': MessageLookupByLibrary.simpleMessage('Reproducir episodio'),
     'play_download_button_label': MessageLookupByLibrary.simpleMessage('Reproducir episodio descargado'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Velocidad de reproducción'),
+    'playing_next_queue_label': MessageLookupByLibrary.simpleMessage('Jugando a Continuación'),
+    'podcast_context_play_latest_episode_label': MessageLookupByLibrary.simpleMessage('Reproducir el episodio más reciente'),
+    'podcast_context_play_next_episode_label': MessageLookupByLibrary.simpleMessage('Reproducir el siguiente episodio no reproducido'),
+    'podcast_context_queue_latest_episode_label': MessageLookupByLibrary.simpleMessage('Añade el último episodio a la cola'),
+    'podcast_context_queue_next_episode_label': MessageLookupByLibrary.simpleMessage('Agregar el siguiente episodio no reproducido a la cola'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Financiación del podcast'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Menu de opciones'),
     'queue_add_label': MessageLookupByLibrary.simpleMessage('Añadir'),
@@ -180,9 +202,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Enlace web del episodio'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Episodio actual.'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Valor actual'),
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Cerrar  control deslizante de opciones de reproducción'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Abrir control deslizante de opciones de reproducción'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Portada del podcast'),
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Añadir episodio a  la lista de reproducción'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Contraer descripción del podcast'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Bajar velocidad de reproducción'),
@@ -203,16 +227,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantics_podcast_details_header': MessageLookupByLibrary.simpleMessage('Página de detalles y episodios del podcast'),
     'semantics_remove_from_queue': MessageLookupByLibrary.simpleMessage('Eliminar episodio de la lista de reproducción'),
     'settings_auto_open_now_playing': MessageLookupByLibrary.simpleMessage('Reproductor a pantalla completa al comenzar el episodio'),
-    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Actualizar episodios automáticamente'),
+    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Actualizar podcasts'),
     'settings_auto_update_episodes_10min': MessageLookupByLibrary.simpleMessage('Actualizado hace 10 minutos'),
-    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('Actualizado hace 12 horas'),
-    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('Actualizado hace 1 hora'),
-    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('Actualizado hace 30 minutos'),
-    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('Actualizado hace 3 horas'),
-    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('Actualizado hace 6 horas'),
+    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('Cada 12 horas'),
+    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('Cada hora'),
+    'settings_auto_update_episodes_24hour': MessageLookupByLibrary.simpleMessage('Cada 24 horas'),
+    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('Cada 30 minutos'),
+    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('Cada 3 horas'),
+    'settings_auto_update_episodes_48hour': MessageLookupByLibrary.simpleMessage('Cada 2 días'),
+    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('Cada 6 horas'),
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Siempre'),
-    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Actualizar episodios en la pantalla de detalles después de...'),
+    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Actualizar podcasts'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Nunca'),
+    'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Actualizar cuando se utilizan datos móviles'),
+    'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Permitir que la biblioteca se actualice cuando se utilizan datos móviles'),
+    'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Actualización de fondo'),
+    'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Actualiza los episodios con la pantalla apagada. Esto aumentará el consumo de batería.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Juego continuo'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Reproducir automáticamente el próximo episodio del podcast si la cola está vacía'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATOS'),
@@ -225,9 +255,13 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_export_opml': MessageLookupByLibrary.simpleMessage('Exportar OPML'),
     'settings_import_opml': MessageLookupByLibrary.simpleMessage('Importar OPML'),
     'settings_label': MessageLookupByLibrary.simpleMessage('Ajustes'),
-    'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Marcar episodios vorrados como reproducidos'),
+    'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Marcar episodios borrados cono reproducidos.'),
+    'settings_notification_divider_label': MessageLookupByLibrary.simpleMessage('NOTIFICACIONES'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('PERSONALIZACIÓN'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('REPRODUCIR'),
+    'settings_podcast_management_divider_label': MessageLookupByLibrary.simpleMessage('GESTIÓN DE PODCAST'),
+    'settings_refresh_notification_option': MessageLookupByLibrary.simpleMessage('Notificación de actualización'),
+    'settings_refresh_notification_option_subtitle': MessageLookupByLibrary.simpleMessage('Mostrar un icono de notificación cuando se actualizan los episodios'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Tema'),
     'settings_theme_heading': MessageLookupByLibrary.simpleMessage('Seleccionar Tema'),
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('Tema del sistema'),
@@ -237,7 +271,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Compartir podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Mostrar notas'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Fin del episodio'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Apagado.'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Temporizador de sueño'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Parar'),
@@ -245,16 +279,17 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Parar descarga'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Seguir'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Seguir'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcripción'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('¿Por qué no?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Dejar de seguir'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Dejar de seguir'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('Dejar de seguir eliminará todos los episodios descargados de este podcast.'),
-    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('A Continuación')
+    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('A Continuación'),
+    'update_library_option': MessageLookupByLibrary.simpleMessage('Actualizar Biblioteca')
   };
 }

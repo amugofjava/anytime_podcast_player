@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
@@ -47,6 +48,12 @@ abstract class AudioPlayerService {
   /// Play a new episode, optionally resume at last save point.
   Future<void> playEpisode({required Episode episode, bool resume = true});
 
+  /// Play the latest episode for a given podcast.
+  Future<void> playLatestEpisode({required Podcast podcast, bool resume = true});
+
+  /// Play the next unplayed episode for a given podcast.
+  Future<void> playNextUnplayedEpisode({required Podcast podcast, bool resume = true});
+
   /// Resume playing of current episode
   Future<void> play();
 
@@ -68,6 +75,12 @@ abstract class AudioPlayerService {
 
   /// Call when the app is resumed to re-establish the audio service.
   Future<Episode?> resume();
+
+  /// Queue the latest episode for a given podcast.
+  Future<void> addUpNextLatestEpisode({required Podcast podcast});
+
+  /// Queue the next unplayed episode for a given podcast.
+  Future<void> addUpNextUnplayedEpisode({required Podcast podcast});
 
   /// Add an episode to the playback queue
   Future<void> addUpNextEpisode(Episode episode);

@@ -44,7 +44,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
-    final windowHeight = MediaQuery.of(context).size.height;
+    final windowHeight = MediaQuery.sizeOf(context).height;
     final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
 
     return DraggableScrollableSheet(
@@ -72,7 +72,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                   color: theme.secondaryHeaderColor,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
-                      color: Theme.of(context).highlightColor,
+                      color: theme.highlightColor,
                       width: 0.0,
                     ),
                     borderRadius: const BorderRadius.only(
@@ -139,14 +139,14 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                 /// Little hack to hide the indicator when closed
                                 indicatorColor: draggableController != null &&
                                         (!draggableController!.isAttached || draggableController!.size <= minSize)
-                                    ? Theme.of(context).secondaryHeaderColor
+                                    ? theme.secondaryHeaderColor
                                     : null,
                                 tabs: [
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                                     child: Text(
                                       L.of(context)!.up_next_queue_label.toUpperCase(),
-                                      style: Theme.of(context).textTheme.labelLarge,
+                                      style: theme.textTheme.labelLarge,
                                     ),
                                   ),
                                   Padding(
@@ -158,11 +158,11 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                             snapshot.data!.playing!.hasTranscripts
                                         ? Text(
                                             L.of(context)!.transcript_label.toUpperCase(),
-                                            style: Theme.of(context).textTheme.labelLarge,
+                                            style: theme.textTheme.labelLarge,
                                           )
                                         : Text(
                                             L.of(context)!.transcript_label.toUpperCase(),
-                                            style: Theme.of(context)
+                                            style: theme
                                                 .textTheme
                                                 .labelLarge!
                                                 .copyWith(color: theme.disabledColor),
@@ -271,7 +271,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                                 padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                                 child: Text(
                                   L.of(context)!.up_next_queue_label.toUpperCase(),
-                                  style: Theme.of(context).textTheme.labelLarge,
+                                  style: theme.textTheme.labelLarge,
                                 ),
                               ),
                               Padding(
@@ -281,11 +281,11 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                                         snapshot.data!.playing!.hasTranscripts
                                     ? Text(
                                         L.of(context)!.transcript_label.toUpperCase(),
-                                        style: Theme.of(context).textTheme.labelLarge,
+                                        style: theme.textTheme.labelLarge,
                                       )
                                     : Text(
                                         L.of(context)!.transcript_label.toUpperCase(),
-                                        style: Theme.of(context)
+                                        style: theme
                                             .textTheme
                                             .labelLarge!
                                             .copyWith(color: theme.disabledColor),

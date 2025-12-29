@@ -1,3 +1,12 @@
+## 1.4.0
+
+- Support for automatic background updating of the library.
+- Unplayed and new episode indicators and library sorting available via Layout panel.
+- Play latest/play next unplayed episode shortcuts in the library view.
+- Up Next queue available from menu bar.
+- Accessibility fixes & improvements.
+- Bug fixes.
+
 ## 1.3.14
 
 - Support for Russian language (thank you @yurtpage).

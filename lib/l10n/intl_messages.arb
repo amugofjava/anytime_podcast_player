@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2025-07-04T06:40:38.603197",
+  "@@last_modified": "2025-11-04T08:37:41.903832",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -75,6 +75,12 @@
   "search_for_podcasts_hint": "Search for podcasts",
   "@search_for_podcasts_hint": {
     "description": "Hint displayed on search bar when the user clicks the search icon.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_up_next_hint": "Open the up next queue",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
     "type": "text",
     "placeholders": {}
   },
@@ -420,7 +426,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes": "Auto update episodes",
+  "settings_auto_update_episodes": "Refresh podcasts",
   "@settings_auto_update_episodes": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -444,19 +450,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_10min": "10 minutes since last update",
+  "settings_auto_update_episodes_10min": "Every 10 minutes",
   "@settings_auto_update_episodes_10min": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_30min": "30 minutes since last update",
+  "settings_auto_update_episodes_30min": "Every 30 minutes",
   "@settings_auto_update_episodes_30min": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_1hour": "1 hour since last update",
+  "settings_auto_update_episodes_1hour": "Every hour",
   "@settings_auto_update_episodes_1hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -468,14 +474,26 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_6hour": "6 hours since last update",
+  "settings_auto_update_episodes_6hour": "Every 6 hours",
   "@settings_auto_update_episodes_6hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_12hour": "12 hours since last update",
+  "settings_auto_update_episodes_12hour": "Every 12 hours",
   "@settings_auto_update_episodes_12hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "Every 24 hours",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "Every 2 days",
+  "@settings_auto_update_episodes_48hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
@@ -558,6 +576,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "playing_next_queue_label": "Playing Next",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
   "more_label": "More",
   "@more_label": {
     "description": "More label",
@@ -618,13 +642,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "discovery_categories_itunes": "<All>,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime",
+  "discovery_categories_itunes": "All,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime",
   "@discovery_categories_itunes": {
     "description": "Comma separated list of iTunes categories",
     "type": "text",
     "placeholders": {}
   },
-  "discovery_categories_pindex": "<All>,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling",
+  "discovery_categories_pindex": "All,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling",
   "@discovery_categories_pindex": {
     "description": "Comma separated list of Podcast Index categories",
     "type": "text",
@@ -1213,6 +1237,196 @@
   "label_episode_actions": "Episode Actions",
   "@label_episode_actions": {
     "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "PODCAST MANAGEMENT",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "NOTIFICATIONS",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Background refresh",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Refresh episodes when the screen is off. This will increase battery usage.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Refresh notification",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Show a notification icon when episodes are being refreshed.",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Refresh Library",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Alphabetical",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Date followed",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Unplayed episodes",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Latest episodes",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 unplayed episode}other{{episodes} unplayed episodes}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 new episode}other{{episodes} new episodes}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Highlight new episodes",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Show unplayed count",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Sort by",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Alphabetical",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Followed",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Unplayed",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "List view",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Grid view",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Compact grid view",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Library Update",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Anytime is updating your podcast library",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Play latest episode",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "Add most recent episode to the queue",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Podcast Actions",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Play next unplayed episode",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Queue next unplayed episode",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Refresh when on mobile data",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Allow the library to be refreshed when on mobile data",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
     "type": "text",
     "placeholders": {}
   }

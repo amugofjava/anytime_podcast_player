@@ -4,15 +4,20 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
+import 'package:anytime/l10n/messages_all_locales.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+
+/// Globals
+String? _currentLocale;
 
 /// Returns the storage directory for the current platform.
 ///
@@ -145,10 +150,10 @@ Future<String> resolveUrl(String url, {bool forceHttps = false}) async {
 Future<void> sharePodcast({required Podcast podcast}) async {
   var url = base64UrlEncode(utf8.encode(podcast.url));
 
-  /// Manually remove padding. Required to work with episodes.fm
+  /// Manually remove padding. Required to work with pod.link
   url = url.replaceAll('=', '');
 
-  final link = '${podcast.title}\n\nhttps://episodes.fm/$url';
+  final link = '${podcast.title}\n\nhttps://pod.link/$url';
 
   await SharePlus.instance.share(
     ShareParams(text: link),
@@ -159,13 +164,43 @@ Future<void> shareEpisode({required Episode episode}) async {
   var podcastId = base64UrlEncode(utf8.encode(episode.pguid ?? ''));
   var episodeId = base64UrlEncode(utf8.encode(episode.guid));
 
-  /// Manually remove padding. Required to work with episodes.fm
+  /// Manually remove padding. Required to work with pod.link
   podcastId = podcastId.replaceAll('=', '');
   episodeId = episodeId.replaceAll('=', '');
 
-  final link = '${episode.title}\n\nhttps://episodes.fm/$podcastId/episode/$episodeId';
+  final link = '${episode.title}\n\nhttps://pod.link/$podcastId/episode/$episodeId';
 
   await SharePlus.instance.share(
     ShareParams(text: link),
   );
+}
+
+Future<String> currentLocale({bool forceReload = false}) async {
+  var currentLocale = Platform.localeName;
+
+  if (_currentLocale == null || forceReload) {
+    final List<Locale> systemLocales = PlatformDispatcher.instance.locales;
+
+    // Attempt to get current locale
+    var supportedLocale = await initializeMessages(Platform.localeName);
+
+    // If we do not support the default, try all supported locales
+    if (!supportedLocale) {
+      for (var l in systemLocales) {
+        supportedLocale = await initializeMessages('${l.languageCode}_${l.countryCode}');
+        if (supportedLocale) {
+          currentLocale = '${l.languageCode}_${l.countryCode}';
+          break;
+        }
+      }
+
+      if (!supportedLocale) {
+        // We give up! Default to English
+        currentLocale = 'en';
+        supportedLocale = await initializeMessages(currentLocale);
+      }
+    }
+  }
+
+  return currentLocale;
 }

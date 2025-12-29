@@ -82,14 +82,17 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   }
 
   bool isMobilePortrait(BuildContext context) {
-    final query = MediaQuery.of(context);
-    return (query.orientation == Orientation.portrait || query.size.width <= 1000);
+    final orientation = MediaQuery.orientationOf(context);
+    final width = MediaQuery.widthOf(context);
+
+    return (orientation == Orientation.portrait || width <= 1000);
   }
 
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final playerBuilder = PlayerControlsBuilder.of(context);
+    final orientation = MediaQuery.orientationOf(context);
 
     return Semantics(
       header: false,
@@ -149,7 +152,7 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                                       )
                                     : null,
                               ),
-                              if (MediaQuery.of(context).orientation == Orientation.portrait)
+                              if (orientation == Orientation.portrait)
                                 const Expanded(
                                   child: NowPlayingOptionsSelector(),
                                 ),
@@ -198,12 +201,14 @@ class NowPlayingEpisode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placeholderBuilder = PlaceholderBuilder.of(context);
+    final orientation = MediaQuery.orientationOf(context);
+    final size = MediaQuery.sizeOf(context);
 
     return OrientationBuilder(
-      builder: (context, orientation) {
+      builder: (context, _) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: MediaQuery.of(context).orientation == Orientation.portrait || MediaQuery.of(context).size.width >= 1000
+          child: orientation == Orientation.portrait || size.width >= 1000
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -214,8 +219,8 @@ class NowPlayingEpisode extends StatelessWidget {
                         child: PodcastImage(
                           key: Key('nowplaying$imageUrl'),
                           url: imageUrl!,
-                          width: MediaQuery.of(context).size.width * .75,
-                          height: MediaQuery.of(context).size.height * .75,
+                          width: size.width * .75,
+                          height: size.height * .75,
                           fit: BoxFit.contain,
                           borderRadius: 6.0,
                           placeholder: placeholderBuilder != null
@@ -294,6 +299,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final chapterTitle = episode?.currentChapter?.title ?? '';
     final chapterUrl = episode?.currentChapter?.url ?? '';
 
@@ -361,7 +367,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                               icon: const Icon(
                                 Icons.link,
                               ),
-                              color: Theme.of(context).primaryIconTheme.color,
+                              color: theme.primaryIconTheme.color,
                               onPressed: () {
                                 _chapterLink(chapterUrl);
                               }),
@@ -399,6 +405,8 @@ class NowPlayingShowNotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox.expand(
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -414,7 +422,7 @@ class NowPlayingShowNotes extends StatelessWidget {
                 ),
                 child: Text(
                   episode!.title!,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  style: theme.textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
@@ -463,23 +471,26 @@ class NowPlayingTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final orientation = MediaQuery.orientationOf(context);
+
     return DefaultTabController(
         length: episode.hasChapters ? 3 : 2,
         initialIndex: episode.hasChapters ? 1 : 0,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: Theme.of(context)
+          value: theme
               .appBarTheme
               .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: Theme.of(context).secondaryHeaderColor),
+              .copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              backgroundColor: theme.scaffoldBackgroundColor,
               elevation: 0.0,
               leading: IconButton(
                 tooltip: L.of(context)!.minimise_player_window_button_label,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  color: Theme.of(context).primaryIconTheme.color,
+                  color: theme.primaryIconTheme.color,
                   semanticLabel: L.of(context)!.minimise_player_window_button_label,
                 ),
                 onPressed: () => {
@@ -512,7 +523,7 @@ class NowPlayingTabs extends StatelessWidget {
                         height: 148.0,
                         child: NowPlayingTransport(),
                       ),
-                if (MediaQuery.of(context).orientation == Orientation.portrait)
+                if (orientation == Orientation.portrait)
                   const Expanded(
                     flex: 1,
                     child: NowPlayingOptionsScaffold(),
@@ -538,10 +549,12 @@ class EpisodeTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return TabBar(
       isScrollable: true,
       indicatorSize: TabBarIndicatorSize.tab,
-      indicator: DotDecoration(colour: Theme.of(context).primaryColor),
+      indicator: DotDecoration(colour: theme.primaryColor),
       tabs: [
         if (chapters)
           Tab(

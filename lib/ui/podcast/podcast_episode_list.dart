@@ -29,15 +29,17 @@ class PodcastEpisodeList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     if (episodes != null && episodes!.isNotEmpty) {
       var queueBloc = Provider.of<QueueBloc>(context);
 
       return StreamBuilder<QueueState>(
           stream: queueBloc.queue,
           builder: (context, snapshot) {
-            return SliverList(
-                delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+            return AccessibleSliverList(
+              episode: episodes![0]!,
+              itemBuilder: (BuildContext context, int index) {
                 var queued = false;
                 var playing = false;
                 var episode = episodes![index]!;
@@ -58,9 +60,8 @@ class PodcastEpisodeList extends StatelessWidget {
                   queued: queued,
                 );
               },
-              childCount: episodes!.length,
-              addAutomaticKeepAlives: false,
-            ));
+              itemCount: episodes!.length,
+            );
           });
     } else {
       return SliverFillRemaining(
@@ -74,11 +75,11 @@ class PodcastEpisodeList extends StatelessWidget {
               Icon(
                 icon,
                 size: 75,
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor,
               ),
               Text(
                 emptyMessage,
-                style: Theme.of(context).textTheme.titleLarge,
+                style: theme.textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -86,5 +87,55 @@ class PodcastEpisodeList extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+/// This class is a wrapper around two sliver list implementations. If the user has a screen reader enabled, we
+/// return a [SliverPrototypeExtentList.builder]. This version can take advantage of using a prototype tile to
+/// calculate the item extend for all episodes. It also fixes a scrolling issue when user VoiceOver on iOS. If
+/// the user is not using a screen reader, we return a standard [SliverList] and let it calculate the item extent
+/// for each episode tile. This ensures that the item details slide action still works correctly (with a fixed
+/// extent the contents would render above the tile below it).
+class AccessibleSliverList extends StatelessWidget {
+  /// The episode used to calculate the item extent when using a screen reader.
+  final Episode episode;
+
+  /// The builder used to build each episode tile.
+  final NullableIndexedWidgetBuilder itemBuilder;
+
+  /// The number of episodes in our list
+  final int itemCount;
+
+  const AccessibleSliverList({
+    super.key,
+    required this.episode,
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final accessibleNavigation = MediaQuery.accessibleNavigationOf(context);
+
+    return accessibleNavigation
+        ? SliverPrototypeExtentList.builder(
+            prototypeItem: EpisodeTile(
+              episode: episode,
+              download: true,
+              play: true,
+              playing: false,
+              queued: false,
+            ),
+            addAutomaticKeepAlives: false,
+            itemBuilder: itemBuilder,
+            itemCount: itemCount,
+          )
+        : SliverList(
+            delegate: SliverChildBuilderDelegate(
+              itemBuilder,
+              childCount: itemCount,
+              addAutomaticKeepAlives: false,
+            ),
+          );
   }
 }

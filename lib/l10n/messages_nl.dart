@@ -45,15 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1w geleden', other: '${weeks}w geleden')}";
 
-  static m12(minutes) => "${minutes} minuten";
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 nieuwe aflevering', other: '${episodes} nieuwe afleveringen')}";
 
-  static m13(minutes) => "${minutes} min";
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 niet-afgespeelde afleveringen', other: '${episodes} niet-afgespeelde afleveringen')}";
 
-  static m14(seconds) => "${seconds} sec";
+  static m14(minutes) => "${minutes} minuten";
 
-  static m15(minutes) => "${minutes} minuten";
+  static m15(minutes) => "${minutes} min";
 
-  static m16(seconds) => "${seconds} seconden";
+  static m16(seconds) => "${seconds} sec";
+
+  static m17(minutes) => "${minutes} minuten";
+
+  static m18(seconds) => "${seconds} seconden";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -61,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
       'about_label': MessageLookupByLibrary.simpleMessage('Over'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('RSS-feed toevoegen'),
+    'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime is bezig met het bijwerken van je podcastbibliotheek'),
+    'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Bibliotheekupdate'),
     'app_title': MessageLookupByLibrary.simpleMessage('Anytime Podcast Player'),
     'app_title_short': MessageLookupByLibrary.simpleMessage('Anytime Player'),
     'audio_effect_trim_silence_label': MessageLookupByLibrary.simpleMessage('Stilte Trimmen'),
@@ -125,8 +131,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'label_megabytes': MessageLookupByLibrary.simpleMessage('megabytes'),
     'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Bezig met importeren'),
+    'label_podcast_actions': MessageLookupByLibrary.simpleMessage('Podcast-opties'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Indeling'),
+    'layout_selector_compact_grid_view': MessageLookupByLibrary.simpleMessage('Compacte rasterweergave'),
+    'layout_selector_grid_view': MessageLookupByLibrary.simpleMessage('Rasterweergave'),
+    'layout_selector_highlight_new_episodes': MessageLookupByLibrary.simpleMessage('Markeer nieuwe afleveringen'),
+    'layout_selector_list_view': MessageLookupByLibrary.simpleMessage('Lijstweergave'),
+    'layout_selector_sort_by': MessageLookupByLibrary.simpleMessage('Sorteren op'),
+    'layout_selector_sort_by_alphabetical': MessageLookupByLibrary.simpleMessage('Alfabetisch'),
+    'layout_selector_sort_by_followed': MessageLookupByLibrary.simpleMessage('Gevolgd'),
+    'layout_selector_sort_by_unplayed': MessageLookupByLibrary.simpleMessage('Onbespeeld'),
+    'layout_selector_unplayed_episodes': MessageLookupByLibrary.simpleMessage('Teller voor niet-afgespeelde afleveringen'),
     'library': MessageLookupByLibrary.simpleMessage('Bibliotheek'),
+    'library_sort_alphabetical_label': MessageLookupByLibrary.simpleMessage('Alfabetisch'),
+    'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Datum gevolgd'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Laatste afleveringen'),
+    'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Niet afgespeelde afleveringen'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Markeer alle afleveringen als niet afgespeeld'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Markeer alle afleveringen als afgespeeld'),
     'mark_played_label': MessageLookupByLibrary.simpleMessage('Markeer als afgespeeld'),
@@ -146,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('Nu aan het afspelen'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('OK'),
     'open_show_website_label': MessageLookupByLibrary.simpleMessage('Open podcastwebsite'),
+    'open_up_next_hint': MessageLookupByLibrary.simpleMessage('Open de wachtrij'),
     'opml_export_button_label': MessageLookupByLibrary.simpleMessage('Exporteren'),
     'opml_import_button_label': MessageLookupByLibrary.simpleMessage('Importeren'),
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Importeren/Exporteren'),
@@ -153,6 +174,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'play_button_label': MessageLookupByLibrary.simpleMessage('Speel aflevering af'),
     'play_download_button_label': MessageLookupByLibrary.simpleMessage('Gedownloade aflevering afspelen'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Afspeelsnelheid'),
+    'playing_next_queue_label': MessageLookupByLibrary.simpleMessage('Volgende afleveringen'),
+    'podcast_context_play_latest_episode_label': MessageLookupByLibrary.simpleMessage('Speel de nieuwste aflevering af'),
+    'podcast_context_play_next_episode_label': MessageLookupByLibrary.simpleMessage('Speel volgende niet-afgespeelde aflevering af'),
+    'podcast_context_queue_latest_episode_label': MessageLookupByLibrary.simpleMessage('Wachtrij nieuwste aflevering'),
+    'podcast_context_queue_next_episode_label': MessageLookupByLibrary.simpleMessage('Volgende niet-afgespeelde aflevering in de wachtrij zetten'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Podcast Donaties'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Optiemenu'),
     'queue_add_label': MessageLookupByLibrary.simpleMessage('Toevoegen'),
@@ -180,9 +206,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Hoofdstukweblink'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Huidig hoofdstuk'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Huidige waarde'),
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Sluit afspeelopties schuifregelaar'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Open afspeelopties schuifregelaar'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Podcastillustratie'),
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Aflevering aan wachtrij toevoegen'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Podcastbeschrijving inklappen'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Verlaag afspeelsnelheid'),
@@ -203,16 +231,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantics_podcast_details_header': MessageLookupByLibrary.simpleMessage('Details van de podcast en afleveringenpagina'),
     'semantics_remove_from_queue': MessageLookupByLibrary.simpleMessage('Aflevering uit wachtrij verwijderen'),
     'settings_auto_open_now_playing': MessageLookupByLibrary.simpleMessage('Speler op volledig scherm bij start van aflevering'),
-    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Afleveringen automatisch bijwerken'),
+    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Podcasts bijwerken'),
     'settings_auto_update_episodes_10min': MessageLookupByLibrary.simpleMessage('10 minuten sinds laatste update'),
-    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('12 uur sinds laatste update'),
-    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('1 uur sinds laatste update'),
-    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('30 minuten sinds laatste update'),
-    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('3 uur sinds laatste update'),
-    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('6 uur sinds laatste update'),
+    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('Elke 12 uur'),
+    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('Elk uur'),
+    'settings_auto_update_episodes_24hour': MessageLookupByLibrary.simpleMessage('Elke 24 uur'),
+    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('Elke 30 minuten'),
+    'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('Elke 3 uur'),
+    'settings_auto_update_episodes_48hour': MessageLookupByLibrary.simpleMessage('Elke 2 dagen'),
+    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('Elke 6 uur'),
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Altijd'),
-    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Afleveringen op het detailscherm verversen na'),
+    'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Podcasts bijwerken'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Nooit'),
+    'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Update bij gebruik van mobiele data'),
+    'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Sta toe dat de bibliotheek wordt bijgewerkt wanneer u gebruikmaakt van mobiele data'),
+    'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Achtergrond vernieuwen'),
+    'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Ververs afleveringen wanneer het scherm uit staat. Dit verhoogt het batterijverbruik.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Aaneengesloten afspelen'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Speel automatisch de volgende aflevering van de podcast af als de wachtrij leeg is'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATA'),
@@ -228,6 +262,9 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Markeer verwijderde afleveringen als afgespeeld'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('PERSONALISATIE'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('AFSPELEN'),
+    'settings_podcast_management_divider_label': MessageLookupByLibrary.simpleMessage('PODCASTBEHEER'),
+    'settings_refresh_notification_option': MessageLookupByLibrary.simpleMessage('Vernieuwingsmelding'),
+    'settings_refresh_notification_option_subtitle': MessageLookupByLibrary.simpleMessage('Toon een meldingspictogram wanneer afleveringen worden vernieuwd'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Thema'),
     'settings_theme_heading': MessageLookupByLibrary.simpleMessage('Selecteer thema'),
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('Systeemthema'),
@@ -237,7 +274,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Podcast delen'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Podcast omschrijving'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('Einde van de aflevering'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Uit'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Slaaptimer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
@@ -245,16 +282,17 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Downloaden stoppen'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Volg'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Volg'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcriptie'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Waarom niet?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Ontvolg'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Ontvolg'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('Als je deze podcast niet meer volgt, worden alle gedownloade afleveringen verwijderd'),
-    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Hierna')
+    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Hierna'),
+    'update_library_option': MessageLookupByLibrary.simpleMessage('Update Library')
   };
 }

@@ -3,12 +3,15 @@
 // found in the LICENSE file.
 
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/podcast.dart';
 
 abstract class QueueEvent {
+  Podcast? podcast;
   Episode? episode;
   int? position;
 
   QueueEvent({
+    this.podcast,
     this.episode,
     this.position,
   });
@@ -20,6 +23,14 @@ class QueueAddEvent extends QueueEvent {
 
 class QueueRemoveEvent extends QueueEvent {
   QueueRemoveEvent({required Episode episode}) : super(episode: episode);
+}
+
+class QueueAddLatestEpisodeEvent extends QueueEvent {
+  QueueAddLatestEpisodeEvent({required Podcast podcast}) : super(podcast: podcast);
+}
+
+class QueueAddNextUnplayedEpisodeEvent extends QueueEvent {
+  QueueAddNextUnplayedEpisodeEvent({required Podcast podcast}) : super(podcast: podcast);
 }
 
 class QueueMoveEvent extends QueueEvent {

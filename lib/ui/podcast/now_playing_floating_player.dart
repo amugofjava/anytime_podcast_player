@@ -70,13 +70,13 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return Container(
       height: 64,
-      color: Theme.of(context).canvasColor,
+      color: theme.canvasColor,
       child: StreamBuilder<Episode?>(
           stream: audioBloc.nowPlaying,
           builder: (context, snapshot) {
@@ -115,14 +115,14 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                               Text(
                                 snapshot.data?.title ?? '',
                                 overflow: TextOverflow.ellipsis,
-                                style: textTheme.bodyMedium,
+                                style: theme.textTheme.bodyMedium,
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 4.0),
                                 child: Text(
                                   snapshot.data?.author ?? '',
                                   overflow: TextOverflow.ellipsis,
-                                  style: textTheme.bodySmall,
+                                  style: theme.textTheme.bodySmall,
                                 ),
                               ),
                             ],
@@ -134,7 +134,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0.0),
                             shape: CircleBorder(
-                                side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
+                                side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                           ),
                           onPressed: () {
                             if (playing) {
@@ -154,7 +154,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0.0),
                             shape: CircleBorder(
-                                side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
+                                side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                           ),
                           onPressed: () {
                             if (playing) {
@@ -168,7 +168,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                                 playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
                             size: 48.0,
                             icon: AnimatedIcons.play_pause,
-                            color: Theme.of(context).iconTheme.color,
+                            color: theme.iconTheme.color,
                             progress: _playPauseController,
                           ),
                         ),

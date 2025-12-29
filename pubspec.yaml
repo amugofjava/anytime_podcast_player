@@ -1,23 +1,26 @@
 name: anytime
 description: Anytime Podcast Player
 
-version: 1.3.14+199
+version: 1.4.0+235
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
-  flutter: 3.32.6
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: 3.38.0
 
 dependencies:
   accessibility_tools: ^2.4.1
   app_links: ^6.3.0
+  awesome_notifications_core: ^0.10.0
+  awesome_notifications: ^0.10.0
   auto_size_text: ^3.0.0
   audio_service: ^0.18.18
   audio_session: ^0.2.1
+  background_fetch: ^1.3.8
   collection: ^1.18.0
   connectivity_plus: ^6.0.11
   cupertino_icons: ^1.0.6
-  device_info_plus: ^11.5.0
-  extended_image: ^10.0.1
+  device_info_plus: ^11.3.0
+  extended_image: ^9.1.0
   file_picker: ^10.0.0
   flutter_dialogs: ^3.0.0
   flutter_downloader: ^1.12.0
@@ -27,7 +30,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_spinkit: ^5.0.0
   html: ^0.15.6
-  intl: ^0.20.2
+  intl: '>=0.19.0 <0.21.0'
   intl_translation: ^0.20.0
   just_audio: ^0.10.4
   logging: ^1.3.0
@@ -38,7 +41,7 @@ dependencies:
   path_provider_platform_interface: ^2.0.4
   percent_indicator: 4.2.5
   permission_handler: ^12.0.0+1
-  podcast_search: ^0.7.11
+  podcast_search: ^0.7.13
   provider: ^6.0.3
   rxdart: ^0.28.0
   scrollable_positioned_list: ^0.3.7
@@ -46,7 +49,9 @@ dependencies:
   share_plus: ^11.0.0
   shared_preferences: ^2.3.4
   sliver_tools: ^0.2.12
+  synchronized: ^3.3.0+3
   url_launcher: ^6.3.1
+  wakelock_plus: ^1.4.0
   xml: 6.5.0
 
   flutter:

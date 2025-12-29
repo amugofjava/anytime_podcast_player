@@ -10,7 +10,7 @@ import 'package:podcast_search/podcast_search.dart';
 /// loading without requiring an Internet connection.
 class MockPodcastApi extends MobilePodcastApi {
   @override
-  Future<Podcast> loadFeed(String? url) async {
+  Future<Podcast> loadFeed(String? url, String etag) async {
     return _loadFeed(url!);
   }
 

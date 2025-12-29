@@ -24,7 +24,6 @@ import 'package:anytime/ui/widgets/platform_back_button.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
-import 'package:anytime/ui/widgets/sync_spinner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
@@ -128,6 +127,8 @@ class _PodcastDetailsState extends State<PodcastDetails> {
 
   @override
   void dispose() {
+    _sliverScrollController.dispose();
+
     super.dispose();
   }
 
@@ -161,6 +162,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
   /// TODO: This really needs a refactor. There are too many nested streams on this now and it needs simplifying.
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
@@ -176,7 +178,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
         child: ScaffoldMessenger(
           key: scaffoldMessengerKey,
           child: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: theme.scaffoldBackgroundColor,
             body: RefreshIndicator(
               displacement: 60.0,
               onRefresh: _handleRefresh,
@@ -191,8 +193,8 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                           duration: const Duration(milliseconds: 500),
                           child: Text(widget.podcast.title)),
                       leading: PlatformBackButton(
-                        iconColour: toolbarCollapsed && Theme.of(context).brightness == Brightness.light
-                            ? Theme.of(context).appBarTheme.foregroundColor!
+                        iconColour: toolbarCollapsed && theme.brightness == Brightness.light
+                            ? theme.appBarTheme.foregroundColor!
                             : Colors.white,
                         decorationColour: toolbarCollapsed ? const Color(0x00000000) : const Color(0x22000000),
                         onPressed: () {
@@ -266,7 +268,7 @@ class _PodcastDetailsState extends State<PodcastDetails> {
                                   ),
                                   Text(
                                     L.of(context)!.no_podcast_details_message,
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                    style: theme.textTheme.bodyMedium,
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -404,15 +406,16 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     duration: const Duration(milliseconds: 200),
     vsync: this,
   );
-  late final Animation<double> _animation = CurvedAnimation(
+
+  late final _animation = CurvedAnimation(
     parent: _controller,
     curve: Curves.fastOutSlowIn,
   );
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final settings = Provider.of<SettingsBloc>(context).currentSettings;
+    final theme = Theme.of(context);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
 
     return Padding(
@@ -433,11 +436,11 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 2.0),
-                        child: Text(widget.podcast.title, style: textTheme.titleLarge),
+                        child: Text(widget.podcast.title, style: theme.textTheme.titleLarge),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
-                        child: Text(widget.podcast.copyright ?? '', style: textTheme.bodySmall),
+                        child: Text(widget.podcast.copyright ?? '', style: theme.textTheme.bodySmall),
                       ),
                     ],
                   ),
@@ -514,17 +517,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
                 ),
                 SortButton(widget.podcast),
                 FilterButton(widget.podcast),
-                settings.showFunding
-                    ? FundingMenu(widget.podcast.funding)
-                    : const SizedBox(
-                        width: 0.0,
-                        height: 0.0,
-                      ),
-                const Expanded(
-                    child: Align(
-                  alignment: Alignment.centerRight,
-                  child: SyncSpinner(),
-                )),
+                if (settings.showFunding) FundingMenu(widget.podcast.funding)
               ],
             ),
           ),
@@ -575,6 +568,7 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
     super.initState();
 
     description = PodcastHtml(
+      key: ValueKey(widget.podcast.url),
       content: widget.podcast.description!,
       fontSize: FontSize.medium,
       clipboard: false,
@@ -591,8 +585,14 @@ class _PodcastTitleState extends State<PodcastTitle> with SingleTickerProviderSt
 
   @override
   void dispose() {
+    isDescriptionExpandedStream.close();
     _episodeSearchController.dispose();
     _searchFocus.dispose();
+    _controller.dispose();
+    _animation.dispose();
+
+    description = null;
+
     super.dispose();
   }
 }
@@ -655,6 +655,8 @@ class NoEpisodesFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -664,13 +666,13 @@ class NoEpisodesFound extends StatelessWidget {
         children: [
           Text(
             L.of(context)!.episode_filter_no_episodes_title_label,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: theme.textTheme.titleLarge,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(64.0, 24.0, 64.0, 64.0),
             child: Text(
               L.of(context)!.episode_filter_no_episodes_title_description,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: theme.textTheme.titleSmall,
               textAlign: TextAlign.center,
             ),
           ),

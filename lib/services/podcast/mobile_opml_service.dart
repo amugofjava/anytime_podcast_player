@@ -58,7 +58,7 @@ class MobileOPMLService extends OPMLService {
 
           var result = await podcastService.loadPodcast(
             podcast: Podcast(guid: '', link: '', title: p.text!, url: p.xmlUrl!),
-            refresh: true,
+            ignoreCache: true,
           );
 
           if (result != null) {

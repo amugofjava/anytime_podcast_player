@@ -8,7 +8,6 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
-import 'package:anytime/repository/repository.dart';
 import 'package:anytime/repository/sembast/sembast_repository.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,7 +17,7 @@ import '../mocks/mock_path_provider.dart';
 
 void main() {
   MockPathProvder mockPath;
-  Repository? persistenceService;
+  SembastRepository? persistenceService;
 
   late Podcast podcast1;
   late Podcast podcast2;
@@ -31,21 +30,21 @@ void main() {
 
     podcast1 = Podcast(
         title: 'Podcast 1',
-        description: '1st podcast',
+        description: '1st p1',
         guid: 'http://p1.com',
         link: 'http://p1.com',
         url: 'http://p1.com');
 
     podcast2 = Podcast(
         title: 'Podcast 2',
-        description: '2nd podcast',
+        description: '2nd p1',
         guid: 'http://p2.com',
         link: 'http://p2.com',
         url: 'http://p2.com');
 
     podcast3 = Podcast(
         title: 'Podcast 3',
-        description: '3rd podcast',
+        description: '3rd p1',
         guid: 'http://p3.com',
         link: 'http://p3.com',
         url: 'http://p3.com');
@@ -65,7 +64,7 @@ void main() {
     }
   });
 
-  test('Fetch podcast with non-existent ID', () async {
+  test('Fetch p1 with non-existent ID', () async {
     var result = await persistenceService!.findPodcastById(123);
 
     expect(result, null);
@@ -119,7 +118,7 @@ void main() {
     test('Retrieve an existing Podcast without episodes', () async {
       var podcast1 = Podcast(
           title: 'Podcast 1B',
-          description: '1st podcast',
+          description: '1st p1',
           guid: 'http://p1.com',
           link: 'http://p1.com',
           url: 'http://p1.com');
@@ -136,7 +135,7 @@ void main() {
     test('Retrieve an existing Podcast with episodes', () async {
       var podcast3 = Podcast(
           title: 'Podcast 3',
-          description: '3rd podcast',
+          description: '3rd p1',
           guid: 'http://p3.com',
           link: 'http://p3.com',
           url: 'http://p3.com');
@@ -180,7 +179,7 @@ void main() {
     test('Retrieve an existing Podcast with episodes and update episodes', () async {
       var podcast4 = Podcast(
           title: 'Podcast 3',
-          description: '3rd podcast',
+          description: '3rd p1',
           guid: 'http://p3.com',
           link: 'http://p3.com',
           url: 'http://p3.com');
@@ -229,6 +228,147 @@ void main() {
       expect(podcast.episodes[0].played, true);
       expect(podcast.episodes[1].played, true);
       expect(podcast.episodes[2].played, true);
+    });
+
+    test('Retrieve an existing Podcast with episodes and unplayed count', () async {
+      var podcast4 = Podcast(
+          title: 'Podcast 3',
+          description: '3rd p1',
+          guid: 'http://p3.com',
+          link: 'http://p3.com',
+          url: 'http://p3.com');
+
+      podcast4.episodes = <Episode>[
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 1))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 2))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast4.guid,
+            podcast: podcast4.title,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 3))),
+      ];
+
+      await persistenceService!.savePodcast(podcast4);
+
+      var podcast = (await persistenceService!.findPodcastById(podcast4.id!))!;
+
+      expect(podcast == podcast4, true);
+      expect(listEquals(podcast.episodes, podcast4.episodes), true);
+
+      // Update episodes and save batch
+      expect(true, podcast.episodes.length == 3);
+
+      // Mark 1 as played
+      podcast.episodes[1].played = true;
+
+      await persistenceService!.savePodcast(podcast);
+
+      // Re-fetch and ensure all episodes played.
+      final count = (await persistenceService!.findEpisodeCountByPodcastGuid(podcast.guid!));
+
+      expect(count, 2);
+    });
+
+    test('Retrieve existing Podcasts with episodes and unplayed count', () async {
+      var podcast1 = Podcast(
+          title: 'Podcast 1',
+          description: '1st p1',
+          guid: 'http://p1.com',
+          link: 'http://p1.com',
+          url: 'http://p1.com');
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 1))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 100,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 2))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            played: true,
+            publicationDate: DateTime.now().subtract(const Duration(hours: 3))),
+      ];
+
+      var podcast2 = Podcast(
+          title: 'Podcast 2',
+          description: '2nd p2',
+          guid: 'http://p2.com',
+          link: 'http://p2.com',
+          url: 'http://p2.com');
+
+      podcast2.episodes = <Episode>[
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            position: 100,
+            publicationDate: DateTime.now().subtract(const Duration(days: 1))),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 2))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            played: true,
+            publicationDate: DateTime.now().subtract(const Duration(days: 3))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast2.guid,
+            podcast: podcast2.title,
+            played: true,
+            publicationDate: DateTime.now().subtract(const Duration(days: 4))),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+      await persistenceService!.savePodcast(podcast2);
+
+      var p1 = (await persistenceService!.findPodcastById(podcast1.id!))!;
+      var p2 = (await persistenceService!.findPodcastById(podcast2.id!))!;
+
+      expect(p1 == podcast1, true);
+      expect(p2 == podcast2, true);
+      expect(listEquals(p1.episodes, podcast1.episodes), true);
+      expect(listEquals(p2.episodes, podcast2.episodes), true);
+
+      // Re-fetch and ensure all episodes played.
+      final unplayedCount = (await persistenceService!.findEpisodeCountByPodcast(filter: PodcastEpisodeFilter.played));
+
+      expect(unplayedCount[podcast1.guid], 1);
+      expect(unplayedCount[podcast2.guid], 2);
+
+      final startedCount = (await persistenceService!.findEpisodeCountByPodcast(filter: PodcastEpisodeFilter.started));
+
+      expect(startedCount[podcast1.guid], 1);
+      expect(startedCount[podcast2.guid], 1);
     });
   });
 
@@ -349,6 +489,48 @@ void main() {
       expect(podcast3.subscribed, true);
     });
 
+    test('Save a batch of episodes', () async {
+      var podcast5 = Podcast(
+          title: 'Podcast 5',
+          description: '5th p5',
+          guid: 'http://p5.com',
+          link: 'http://p5.com',
+          url: 'http://p5.com');
+
+      final episodes = <Episode>[
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast5.guid,
+            podcast: podcast5.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 1))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast5.guid,
+            podcast: podcast5.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 2))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast5.guid,
+            podcast: podcast5.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 3))),
+      ];
+
+      await persistenceService!.savePodcast(podcast5, withEpisodes: false);
+
+      var podcast = (await persistenceService!.findPodcastByGuid(podcast5.guid!))!;
+
+      expect(listEquals(podcast.episodes, <Episode>[]), true);
+
+      await persistenceService!.saveEpisodes(episodes);
+
+      podcast = (await persistenceService!.findPodcastByGuid(podcast5.guid!))!;
+
+      expect(listEquals(podcast.episodes, episodes), true);
+    });
+
     test('Fetch all episodes for all podcasts', () async {
       podcast1.episodes = <Episode>[
         Episode(
@@ -400,7 +582,78 @@ void main() {
       expect(episodes.length, 6);
     });
 
-    test('Delete all episodes for a podcast', () async {
+    test('Fetch latest playable episode', () async {
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 0,
+            played: true,
+            publicationDate: DateTime.now().subtract(const Duration(days: 1))),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 0,
+            played: false,
+            publicationDate: DateTime.now().subtract(const Duration(days: 2))),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 100,
+            played: false,
+            publicationDate: DateTime.now().subtract(const Duration(days: 3))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            played: true,
+            position: 0,
+            publicationDate: DateTime.now().subtract(const Duration(days: 4))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            played: true,
+            position: 0,
+            publicationDate: DateTime.now().subtract(const Duration(days: 5))),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+
+      var episode = await persistenceService!.findLatestPlayableEpisode(podcast1);
+
+      expect(episode!.guid, 'EP005');
+
+      episode = await persistenceService!.findNextUnplayedEpisode(podcast1);
+
+      expect(episode!.guid, 'EP003');
+
+      episode = await persistenceService!.findNextPlayableEpisode(podcast1.episodes[0]);
+
+      expect(episode!.guid, 'EP004');
+
+      podcast1.filter = PodcastEpisodeFilter.started;
+      await persistenceService!.savePodcast(podcast1);
+
+      episode = await persistenceService!.findNextPlayableEpisode(podcast1.episodes[0]);
+
+      expect(episode!.guid, 'EP003');
+
+      // Reset
+      podcast1.filter = PodcastEpisodeFilter.none;
+      await persistenceService!.savePodcast(podcast1);
+    });
+
+
+    test('Delete all episodes for a p1', () async {
       /// Save > 100 episodes (to test chunking)
       var episodes = <Episode>[];
 
@@ -422,6 +675,82 @@ void main() {
       expect(e.length, 150);
 
       await persistenceService!.deleteEpisodes(episodes);
+    });
+
+    test('Delete orphaned episodes', () async {
+      var podcast6 = Podcast(
+          title: 'Podcast 6',
+          description: '6th p6',
+          guid: 'http://p6.com',
+          link: 'http://p6.com',
+          url: 'http://p6.com');
+
+      podcast6.episodes = <Episode>[
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast6.guid,
+            podcast: podcast6.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 1))),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast6.guid,
+            podcast: podcast6.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 2))),
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast6.guid,
+            podcast: podcast6.title,
+            publicationDate: DateTime.now().subtract(const Duration(days: 3))),
+      ];
+
+      final adhocEpisodes = <Episode>[
+        Episode(
+            guid: 'AD001',
+            title: 'Episode 1',
+            podcast: 'https://adhoc1.fm',
+            pguid: 'https://adhoc1.fm',
+            lastUpdated: DateTime.now().subtract(const Duration(days: 14)),
+            publicationDate: DateTime.now().subtract(const Duration(days: 14))),
+        Episode(
+            guid: 'AD002',
+            title: 'Episode 2',
+            podcast: 'https://adhoc2.fm',
+            pguid: 'https://adhoc2.fm',
+            lastUpdated: DateTime.now().subtract(const Duration(days: 28)),
+            publicationDate: DateTime.now().subtract(const Duration(days: 28))),
+        Episode(
+            guid: 'AD003',
+            title: 'Episode 3',
+            podcast: 'https://adhoc3.fm',
+            pguid: 'https://adhoc3.fm',
+            lastUpdated: DateTime.now().subtract(const Duration(days: 56)),
+            publicationDate: DateTime.now().subtract(const Duration(days: 56))),
+        Episode(
+            guid: 'AD004',
+            title: 'Episode 4',
+            podcast: 'https://adhoc4.fm',
+            pguid: 'https://adhoc4.fm',
+            lastUpdated: DateTime.now().subtract(const Duration(days: 112)),
+            publicationDate: DateTime.now().subtract(const Duration(days: 112))),
+        Episode(
+            guid: 'AD005',
+            title: 'Episode 5',
+            podcast: 'https://adhoc5.fm',
+            pguid: 'https://adhoc5.fm',
+            lastUpdated: DateTime.now().subtract(const Duration(days: 224)),
+            publicationDate: DateTime.now().subtract(const Duration(days: 224))),
+      ];
+
+      await persistenceService!.savePodcast(podcast6);
+      await persistenceService!.saveEpisodes(adhocEpisodes);
+
+      final orphans = await persistenceService!.cleanupEpisodes();
+
+      /// The last updated value is overridden upon save. For now, just make sure we get an empty list back.
+      expect(orphans.length, 0);
     });
 
     test('Queue handling - existing episodes', () async {
@@ -525,7 +854,7 @@ void main() {
   });
 
   group('Saving, updating and retrieving downloaded episodes', () {
-    test('Episodes ordered by reverse publication-date', () async {
+    test('Episodes ordering test', () async {
       var pubDate5 = DateTime.now();
       var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
       var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
@@ -606,6 +935,94 @@ void main() {
       var episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!);
 
       expect(listEquals(episodes, orderedEpisodes), true);
+
+      /// Earliest first
+      orderedEpisodes.sort((a, b) => a.publicationDate!.compareTo(b.publicationDate!));
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.earliestFirst);
+
+      expect(listEquals(episodes, orderedEpisodes), true);
+
+      /// Alphabetical
+      orderedEpisodes.sort((a, b) => a.title!.compareTo(b.title!));
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalAscending);
+
+      expect(listEquals(episodes, orderedEpisodes), true);
+
+      /// Alphabetical descending
+      orderedEpisodes.sort((a, b) => b.title!.compareTo(a.title!));
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalDescending);
+
+      expect(listEquals(episodes, orderedEpisodes), true);
+    });
+
+    test('Episodes filtering test', () async {
+      var pubDate5 = DateTime.now();
+      var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 3));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 4));
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            played: true,
+            position: 0,
+            publicationDate: pubDate1),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            played: true,
+            position: 0,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP005',
+            title: 'Episode 5',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 0,
+            publicationDate: pubDate5),
+        Episode(
+            guid: 'EP004',
+            title: 'Episode 4',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 100,
+            publicationDate: pubDate4),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            position: 0,
+            publicationDate: pubDate3),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+
+      // Played episodes
+      var episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.played);
+
+      expect(episodes.length, 2);
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.notPlayed);
+
+      expect(episodes.length, 3);
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.started);
+
+      expect(episodes.length, 1);
+
+      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.none);
+
+      expect(episodes.length, 5);
     });
 
     test('Fetch downloaded episodes', () async {
@@ -881,7 +1298,7 @@ void main() {
       expect(ep5.downloadPercentage == 100, true);
     });
 
-    test('Fetch downloads for podcast', () async {
+    test('Fetch downloads for p1', () async {
       var pubDate5 = DateTime.now();
       var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
       var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
@@ -1086,7 +1503,7 @@ void main() {
       // Save the podcasts.
       await persistenceService!.savePodcast(podcast1);
 
-      // Fetch the downloaded podcast
+      // Fetch the downloaded p1
       var episode = (await persistenceService!.findEpisodeByGuid('EP001'))!;
 
       expect(episode.downloaded, false);
@@ -1133,7 +1550,7 @@ void main() {
       // Save the podcasts.
       await persistenceService!.savePodcast(podcast1);
 
-      // Fetch the downloaded podcast
+      // Fetch the downloaded p1
       var episode = (await persistenceService!.findEpisodeByGuid('EP001'))!;
 
       expect(episode.timeRemaining.inSeconds == 60, true);
@@ -1176,6 +1593,7 @@ void main() {
 
       expect(deletedTranscript == null, true);
     });
+
     test('Test episode transcript read/write', () async {
       var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
         Subtitle(
@@ -1313,7 +1731,7 @@ void main() {
       // Save the podcasts.
       await persistenceService!.savePodcast(podcast1);
 
-      // Fetch the downloaded podcast
+      // Fetch the downloaded p1
       var episode1 = await persistenceService!.findEpisodeByGuid('EP001');
       var episode2 = await persistenceService!.findEpisodeByGuid('EP002');
 

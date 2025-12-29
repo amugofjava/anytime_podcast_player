@@ -26,6 +26,8 @@ class DiscoveryResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return StreamBuilder<DiscoveryState>(
       stream: data,
       builder: (BuildContext context, AsyncSnapshot<DiscoveryState> snapshot) {
@@ -57,11 +59,11 @@ class DiscoveryResults extends StatelessWidget {
                     Icon(
                       Icons.search,
                       size: 75,
-                      color: Theme.of(context).primaryColor,
+                      color: theme.primaryColor,
                     ),
                     Text(
                       L.of(context)!.no_search_results_message,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: theme.textTheme.titleLarge,
                       textAlign: TextAlign.center,
                     ),
                   ],

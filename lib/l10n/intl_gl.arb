@@ -1,4 +1,5 @@
 {
+  "@@locale": "gl",
   "app_title_short": "Anytime Player",
   "@app_title_short": {
     "description": "Title for the application",
@@ -371,7 +372,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes": "Auto actualizar episodios",
+  "settings_auto_update_episodes": "Actualizar podcasts",
   "@settings_auto_update_episodes": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -395,25 +396,25 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_30min": "30 min. desde a última actualización",
+  "settings_auto_update_episodes_30min": "Cada 30 minutos",
   "@settings_auto_update_episodes_30min": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_1hour": "1 hora desde a última actualización",
+  "settings_auto_update_episodes_1hour": "Cada hora",
   "@settings_auto_update_episodes_1hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_3hour": "3 h. desde a última actualización",
+  "settings_auto_update_episodes_3hour": "Cada 3 horas",
   "@settings_auto_update_episodes_3hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_6hour": "6 h. desde a última actualización",
+  "settings_auto_update_episodes_6hour": "Cada 6 horas",
   "@settings_auto_update_episodes_6hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -1186,7 +1187,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_auto_update_episodes_heading": "Actualizar a lista de episodios cada",
+  "settings_auto_update_episodes_heading": "Actualizar podcasts",
   "@settings_auto_update_episodes_heading": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -1207,7 +1208,7 @@
       "seconds": {}
     }
   },
-  "settings_auto_update_episodes_12hour": "12 h. desde a última actualización",
+  "settings_auto_update_episodes_12hour": "Cada 12 horas",
   "@settings_auto_update_episodes_12hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
@@ -1270,5 +1271,218 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "@@locale": "gl"
+  "open_up_next_hint": "Abrir o seguinte na cola",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "Cada 24 horas",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "Cada 2 días",
+  "@settings_auto_update_episodes_48hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playing_next_queue_label": "Reproducindo Seguinte",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "XESTIÓN DOS PODCASTS",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "NOTIFICACIÓNS",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Actualizar minizada",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Actualizar os episodios cando a pantalla está apagada. Isto consume máis batería.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Notificación de actualización",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Mostra icona de notificación cando se están actualizando os episodios",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Actualizar biblioteca",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Alfabética",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Data da subscrición",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Episodios sen reproducir",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Episodios recentes",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 episodio pendente}other{{episodes} episodios pendentes}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 novo episodio}other{{episodes} novos episodios}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Destacar novos episodios",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Mostrar número dos non reproducidos",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Orde por",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Alfabética",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Seguido",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Sen reproducir",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "Ver como lista",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Ver como grella",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Ver grella compacta",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Actualización da biblioteca",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Anytime está actualizando a biblioteca de podcasts",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Reproducir último episodio",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "Pór na cola o último episodio",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Accións do podcast",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Reproducir o seguinte non escoitado",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Pór na cola o seguinte non escoitado",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Actualizar con datos do móbil",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Permitir que se actulice a biblioteca usando datos do móbil",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  }
 }

@@ -45,15 +45,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${Intl.plural(weeks, one: '1w ago', other: '${weeks}w ago')}";
 
-  static m12(minutes) => "${minutes} minutes";
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 new episode', other: '${episodes} new episodes')}";
 
-  static m13(minutes) => "${minutes} min";
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 unplayed episode', other: '${episodes} unplayed episodes')}";
 
-  static m14(seconds) => "${seconds} sec";
+  static m14(minutes) => "${minutes} minutes";
 
-  static m15(minutes) => "${minutes} minutes";
+  static m15(minutes) => "${minutes} min";
 
-  static m16(seconds) => "${seconds} seconds";
+  static m16(seconds) => "${seconds} sec";
+
+  static m17(minutes) => "${minutes} minutes";
+
+  static m18(seconds) => "${seconds} seconds";
 
   @override
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
@@ -61,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
       'about_label': MessageLookupByLibrary.simpleMessage('About'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('Add RSS Feed'),
+    'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime is updating your podcast library'),
+    'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Library Update'),
     'app_title': MessageLookupByLibrary.simpleMessage('Anytime Podcast Player'),
     'app_title_short': MessageLookupByLibrary.simpleMessage('Anytime Player'),
     'audio_effect_trim_silence_label': MessageLookupByLibrary.simpleMessage('Trim Silence'),
@@ -82,8 +88,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'delete_episode_title': MessageLookupByLibrary.simpleMessage('Delete Episode'),
     'delete_label': MessageLookupByLibrary.simpleMessage('Delete'),
     'discover': MessageLookupByLibrary.simpleMessage('Discover'),
-    'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('<All>,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime'),
-    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('<All>,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling'),
+    'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('All,Arts,Business,Comedy,Education,Fiction,Government,Health & Fitness,History,Kids & Family,Leisure,Music,News,Religion & Spirituality,Science,Society & Culture,Sports,TV & Film,Technology,True Crime'),
+    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('All,After-Shows,Alternative,Animals,Animation,Arts,Astronomy,Automotive,Aviation,Baseball,Basketball,Beauty,Books,Buddhism,Business,Careers,Chemistry,Christianity,Climate,Comedy,Commentary,Courses,Crafts,Cricket,Cryptocurrency,Culture,Daily,Design,Documentary,Drama,Earth,Education,Entertainment,Entrepreneurship,Family,Fantasy,Fashion,Fiction,Film,Fitness,Food,Football,Games,Garden,Golf,Government,Health,Hinduism,History,Hobbies,Hockey,Home,HowTo,Improv,Interviews,Investing,Islam,Journals,Judaism,Kids,Language,Learning,Leisure,Life,Management,Manga,Marketing,Mathematics,Medicine,Mental,Music,Natural,Nature,News,NonProfit,Nutrition,Parenting,Performing,Personal,Pets,Philosophy,Physics,Places,Politics,Relationships,Religion,Reviews,Role-Playing,Rugby,Running,Science,Self-Improvement,Sexuality,Soccer,Social,Society,Spirituality,Sports,Stand-Up,Stories,Swimming,TV,Tabletop,Technology,Tennis,Travel,True Crime,Video-Games,Visual,Volleyball,Weather,Wilderness,Wrestling'),
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Download episode'),
     'downloads': MessageLookupByLibrary.simpleMessage('Downloads'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Your queue is empty'),
@@ -125,8 +131,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'label_megabytes': MessageLookupByLibrary.simpleMessage('megabytes'),
     'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('mb'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Importing'),
+    'label_podcast_actions': MessageLookupByLibrary.simpleMessage('Podcast Actions'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Layout'),
+    'layout_selector_compact_grid_view': MessageLookupByLibrary.simpleMessage('Compact grid view'),
+    'layout_selector_grid_view': MessageLookupByLibrary.simpleMessage('Grid view'),
+    'layout_selector_highlight_new_episodes': MessageLookupByLibrary.simpleMessage('Highlight new episodes'),
+    'layout_selector_list_view': MessageLookupByLibrary.simpleMessage('List view'),
+    'layout_selector_sort_by': MessageLookupByLibrary.simpleMessage('Sort by'),
+    'layout_selector_sort_by_alphabetical': MessageLookupByLibrary.simpleMessage('Alphabetical'),
+    'layout_selector_sort_by_followed': MessageLookupByLibrary.simpleMessage('Followed'),
+    'layout_selector_sort_by_unplayed': MessageLookupByLibrary.simpleMessage('Unplayed'),
+    'layout_selector_unplayed_episodes': MessageLookupByLibrary.simpleMessage('Show unplayed count'),
     'library': MessageLookupByLibrary.simpleMessage('Library'),
+    'library_sort_alphabetical_label': MessageLookupByLibrary.simpleMessage('Alphabetical'),
+    'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Date followed'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Latest episodes'),
+    'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Unplayed episodes'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Mark all episodes as unplayed'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Mark all episodes as played'),
     'mark_played_label': MessageLookupByLibrary.simpleMessage('Mark Played'),
@@ -146,6 +166,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'now_playing_queue_label': MessageLookupByLibrary.simpleMessage('Now Playing'),
     'ok_button_label': MessageLookupByLibrary.simpleMessage('OK'),
     'open_show_website_label': MessageLookupByLibrary.simpleMessage('Open show website'),
+    'open_up_next_hint': MessageLookupByLibrary.simpleMessage('Open the up next queue'),
     'opml_export_button_label': MessageLookupByLibrary.simpleMessage('Export'),
     'opml_import_button_label': MessageLookupByLibrary.simpleMessage('Import'),
     'opml_import_export_label': MessageLookupByLibrary.simpleMessage('OPML Import/Export'),
@@ -153,6 +174,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'play_button_label': MessageLookupByLibrary.simpleMessage('Play episode'),
     'play_download_button_label': MessageLookupByLibrary.simpleMessage('Play downloaded episode'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Playback speed'),
+    'playing_next_queue_label': MessageLookupByLibrary.simpleMessage('Playing Next'),
+    'podcast_context_play_latest_episode_label': MessageLookupByLibrary.simpleMessage('Play latest episode'),
+    'podcast_context_play_next_episode_label': MessageLookupByLibrary.simpleMessage('Play next unplayed episode'),
+    'podcast_context_queue_latest_episode_label': MessageLookupByLibrary.simpleMessage('Add most recent episode to the queue'),
+    'podcast_context_queue_next_episode_label': MessageLookupByLibrary.simpleMessage('Queue next unplayed episode'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Podcast Funding'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Options menu'),
     'queue_add_label': MessageLookupByLibrary.simpleMessage('Add'),
@@ -180,9 +206,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Chapter web link'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Current chapter'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Current value'),
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Close playing options slider'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Open playing options slider'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Podcast artwork'),
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Add episode to queue'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Collapse podcast description'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Decrease playback speed'),
@@ -203,16 +231,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantics_podcast_details_header': MessageLookupByLibrary.simpleMessage('Podcast details and episodes page'),
     'semantics_remove_from_queue': MessageLookupByLibrary.simpleMessage('Remove episode from queue'),
     'settings_auto_open_now_playing': MessageLookupByLibrary.simpleMessage('Full screen player mode on episode start'),
-    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Auto update episodes'),
-    'settings_auto_update_episodes_10min': MessageLookupByLibrary.simpleMessage('10 minutes since last update'),
-    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('12 hours since last update'),
-    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('1 hour since last update'),
-    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('30 minutes since last update'),
+    'settings_auto_update_episodes': MessageLookupByLibrary.simpleMessage('Refresh podcasts'),
+    'settings_auto_update_episodes_10min': MessageLookupByLibrary.simpleMessage('Every 10 minutes'),
+    'settings_auto_update_episodes_12hour': MessageLookupByLibrary.simpleMessage('Every 12 hours'),
+    'settings_auto_update_episodes_1hour': MessageLookupByLibrary.simpleMessage('Every hour'),
+    'settings_auto_update_episodes_24hour': MessageLookupByLibrary.simpleMessage('Every 24 hours'),
+    'settings_auto_update_episodes_30min': MessageLookupByLibrary.simpleMessage('Every 30 minutes'),
     'settings_auto_update_episodes_3hour': MessageLookupByLibrary.simpleMessage('3 hours since last update'),
-    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('6 hours since last update'),
+    'settings_auto_update_episodes_48hour': MessageLookupByLibrary.simpleMessage('Every 2 days'),
+    'settings_auto_update_episodes_6hour': MessageLookupByLibrary.simpleMessage('Every 6 hours'),
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Always'),
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Refresh episodes on details screen after'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Never'),
+    'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Refresh when on mobile data'),
+    'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Allow the library to be refreshed when on mobile data'),
+    'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Background refresh'),
+    'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Refresh episodes when the screen is off. This will increase battery usage.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Continuous play'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Automatically play the next episode in the podcast if the queue is empty'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DATA'),
@@ -226,8 +260,12 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_import_opml': MessageLookupByLibrary.simpleMessage('Import OPML'),
     'settings_label': MessageLookupByLibrary.simpleMessage('Settings'),
     'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Mark deleted episodes as played'),
+    'settings_notification_divider_label': MessageLookupByLibrary.simpleMessage('NOTIFICATIONS'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('PERSONALISATION'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('PLAYBACK'),
+    'settings_podcast_management_divider_label': MessageLookupByLibrary.simpleMessage('PODCAST MANAGEMENT'),
+    'settings_refresh_notification_option': MessageLookupByLibrary.simpleMessage('Refresh notification'),
+    'settings_refresh_notification_option_subtitle': MessageLookupByLibrary.simpleMessage('Show a notification icon when episodes are being refreshed.'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Theme'),
     'settings_theme_heading': MessageLookupByLibrary.simpleMessage('Choose theme behaviour'),
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('System theme'),
@@ -237,7 +275,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'share_podcast_option_label': MessageLookupByLibrary.simpleMessage('Share podcast'),
     'show_notes_label': MessageLookupByLibrary.simpleMessage('Show notes'),
     'sleep_episode_label': MessageLookupByLibrary.simpleMessage('End of episode'),
-    'sleep_minute_label': m12,
+    'sleep_minute_label': m14,
     'sleep_off_label': MessageLookupByLibrary.simpleMessage('Off'),
     'sleep_timer_label': MessageLookupByLibrary.simpleMessage('Sleep Timer'),
     'stop_download_button_label': MessageLookupByLibrary.simpleMessage('Stop'),
@@ -245,16 +283,17 @@ class MessageLookup extends MessageLookupByLibrary {
     'stop_download_title': MessageLookupByLibrary.simpleMessage('Stop Download'),
     'subscribe_button_label': MessageLookupByLibrary.simpleMessage('Follow'),
     'subscribe_label': MessageLookupByLibrary.simpleMessage('Follow'),
-    'time_minutes': m13,
-    'time_seconds': m14,
-    'time_semantic_minutes': m15,
-    'time_semantic_seconds': m16,
+    'time_minutes': m15,
+    'time_seconds': m16,
+    'time_semantic_minutes': m17,
+    'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcript'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('Why not?'),
     'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Unfollow'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Unfollow'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('Unfollowing will delete all downloaded episodes of this podcast.'),
-    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Up Next')
+    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Up Next'),
+    'update_library_option': MessageLookupByLibrary.simpleMessage('Refresh Library')
   };
 }

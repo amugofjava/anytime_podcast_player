@@ -1,5 +1,6 @@
 {
   "@@last_modified": "2020-02-20T10:40:43.008209",
+  "@@locale": "de",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -652,13 +653,13 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "no_transcript_available_label": "Für diesen Podcast ist kein Transkript verfügbar",
-   "@no_transcript_available_label": {
-     "description": "Displayed in transcript view when no transcript is available",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "no_transcript_available_label": "Für diesen Podcast ist kein Transkript verfügbar",
+  "@no_transcript_available_label": {
+    "description": "Displayed in transcript view when no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "search_transcript_label": "Transkript suchen",
   "@search_transcript_label": {
@@ -687,34 +688,34 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
- },
+  },
   "semantics_podcast_details_header": "Podcast-Details und Episodenseite",
   "@semantics_podcast_details_header": {
     "description": "Describes podcast details page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "semantics_layout_option_list": "Listenlayout",
-   "@semantics_layout_option_list": {
-     "description": "Describes list layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_compact_grid": "Kompaktes Rasterlayout",
-   "@semantics_layout_option_compact_grid": {
-     "description": "Describes compact grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_grid": "Gitterstruktur",
-   "@semantics_layout_option_grid": {
-     "description": "Describes grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "semantics_layout_option_list": "Listenlayout",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Kompaktes Rasterlayout",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Gitterstruktur",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "semantics_mini_player_header": "Mini-Player. Wischen Sie nach rechts, um die Schaltfläche „Wiedergabe/Pause“ anzuzeigen. Aktivieren, um das Hauptfenster des Players zu öffnen",
   "@semantics_mini_player_header": {
@@ -1064,12 +1065,12 @@
     "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
-   },
-   "scrim_episode_details_selector": "Episodendetails schließen",
-   "@scrim_episode_details_selector": {
-     "description": "Replaces default scrim label for episode details bottom sheet.",
-     "type": "text",
-     "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Episodendetails schließen",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
   },
   "scrim_episode_sort_selector": "Episodensortierung schließen",
   "@scrim_episode_sort_selector": {
@@ -1271,5 +1272,218 @@
     "type": "text",
     "placeholders": {}
   },
-  "@@locale": "de"
+  "open_up_next_hint": "Öffne die Warteschlange",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "Alle 24 Stunden",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "Alle 2 Tage",
+  "@settings_auto_update_episodes_48hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "playing_next_queue_label": "Als Nächstes wird abgespielt",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "PODCAST-MANAGEMENT",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "BENACHRICHTIGUNGEN",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Hintergrundaktualisierung",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Die Bibliothek wird aktualisiert, wenn der Bildschirm ausgeschaltet ist. Dies erhöht den Akkuverbrauch.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Aktualisierungsbenachrichtigung",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Zeigt ein Benachrichtigungssymbol an, wenn die Bibliothek aktualisiert wird",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Bibliothek aktualisieren",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Alphabetisch",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Datum folgte",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Nicht abgespielte Folgen",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Neueste Folgen",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 ungespielte folge}other{{episodes} ungespielte folgen}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 neue folgen}other{{episodes} neue folgen}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Highlights neuer Folgen",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Zähler für nicht abgespielte Folgen",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Sortieren nach",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Alphabetisch",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Gefolgt",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Ungespielt",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "Listenansicht",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Rasteransicht",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Kompakte Rasteransicht",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Bibliotheksaktualisierung",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Ihre Bibliothek wird aktualisiert",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Spiele die neueste Folge ab",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "Füge die neueste Folge zur Warteschlange hinzu",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Podcast-Aktionen",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Nächste noch nicht abgespielte Folge abspielen",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Nächste noch nicht abgespielte Folge in die Warteschlange stellen",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Aktualisieren, wenn mobile Daten verwendet werden",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Erlauben Sie, dass die Bibliothek bei der Nutzung mobiler Daten aktualisiert wird",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  }
 }

@@ -66,7 +66,9 @@ class EpisodeBloc extends Bloc {
         await audioPlayerService.stop();
       }
 
-      await podcastService.deleteDownload(episode!);
+      /// If this episode is queued up, clear it from the queue before deleting it.
+      await audioPlayerService.removeUpNextEpisode(episode!);
+      await podcastService.deleteDownload(episode);
 
       fetchDownloads(true);
     });
@@ -82,7 +84,9 @@ class EpisodeBloc extends Bloc {
 
   void _listenEpisodeEvents() {
     // Listen for episode updates. If the episode is downloaded, we need to update.
-    podcastService.episodeListener.where((event) => event.episode.downloaded || event.episode.played).listen((event) => fetchDownloads(true));
+    podcastService.episodeListener
+        .where((event) => event.episode.downloaded || event.episode.played)
+        .listen((event) => fetchDownloads(true));
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {

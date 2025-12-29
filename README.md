@@ -1,6 +1,7 @@
 ## Anytime Podcast Player
 
-This is the official repository for Anytime Podcast Player - the simple and easy to use Podcast playing 
+This is the official repository for Anytime Podcast Player - the simple and easy to use Podcast
+playing
 app for Android & iOS, built with Dart & Flutter.
 ***
 Latest build status
@@ -15,7 +16,7 @@ Latest build status
 
 ## Getting Started
 
-Anytime is currently at v1.3.x and is built against Flutter 3.29.2+. View
+Anytime is currently at v1.4.x and is built against Flutter 3.27.4+. View
 the [project](https://github.com/amugofjava/anytime_podcast_player/projects/1) to see what is
 currently being worked on.
 
@@ -28,14 +29,25 @@ or Amazon App Store.
 You can download the current stable release or sign up to the Beta channel and help test
 current developments.
 
-<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="61" src="docs/google-play-badge.png"/></a>
+<a href='https://play.google.com/store/apps/details?id=uk.me.amugofjava.anytime&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt="Get it on Google Play" height="56" src="docs/google-play-badge.png"/></a>
 &nbsp;
-<a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="61" alt="Anytime Play Store Link" target="_blank"></a>
-<a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="61" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
+<a href="https://www.amazon.com/gp/product/B09C4J7NL5"><img src="docs/amazon-appstore-badge-english-black.png" height="56" alt="Anytime Play Store Link" target="_blank"></a>
+&nbsp;
+<a href="https://apps.apple.com/us/app/anytime-podcast-player/id1582300839#?platform=iphone"><img src="docs/apple.png" height="56" style="padding-left: 8px;" alt="Anytime App Store Link" target="_blank"></a>
+&nbsp;
+<a href="https://f-droid.org/en/packages/uk.me.amugofjava.anytime"><img src="docs/f-droid.png" height="56" style="padding-left: 8px;" alt="Anytime F-Droid Link" target="_blank"></a>
 
 I would really appreciate all feedback - positive and negative - as it both helps improve Anytime
 and prioritise new features. You can reach me
 at [hello@anytimeplayer.app](mailto:hello@anytimeplayer.app).
+
+### Flutter Version Compatibility
+
+Due to a significant accessibility [bug](https://github.com/flutter/flutter/issues/164483) on iOS for Flutter versions after 3.27.4, and the need to run
+a much later version of Flutter on Android for the 16KB alignment support, I have had to create a seprate
+[branch](https://github.com/amugofjava/anytime_podcast_player/tree/feature/ios-f374-patch) for iOS. To make maintaining both simpler,
+I intend to keep the overall code as compatible with Flutter 3.27.4 as possible until the bug is fixed; therefore, you'll
+notice the analyser complaining about deprecated values. Please ignore these for now.
 
 ### Building from source
 
@@ -129,9 +141,11 @@ Anytime takes a layered approach:
 
 ## Supporting
 
-Anytime is free and open source software. If you would like to help support the development of Anytime,
-please consider donating a tea. Anytime is fuelled by caffeine! Please checkout the 
-GitHub [sponsors](https://github.com/sponsors/amugofjava) link or my [ko-fi](https://ko-fi.com/amugofjava) page.
+Anytime is free and open source software. If you would like to help support the development of
+Anytime,
+please consider donating a tea. Anytime is fuelled by caffeine! Please checkout the
+GitHub [sponsors](https://github.com/sponsors/amugofjava) link or
+my [ko-fi](https://ko-fi.com/amugofjava) page.
 
 <a href='https://ko-fi.com/amugofjava'><img alt="Support me on ko-fi" height="128" src="docs/kofi.jpg"/></a>
 
@@ -139,6 +153,12 @@ GitHub [sponsors](https://github.com/sponsors/amugofjava) link or my [ko-fi](htt
 
 If you have an issue or discover a bug, please raise a GitHub issue. Pull requests are also welcome.
 Full details can be found in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+You can help to translate the app on [Weblate](https://toolate.othing.xyz/projects/anytime-podcast/)
+
+[![Translation status](https://toolate.othing.xyz/widget/anytime-podcast/multi-auto.svg)](https://toolate.othing.xyz/projects/anytime-podcast/)
+
+See [TRANSLATION.md](./TRANSLATION.md) for details.
 
 ## Have a question?
 

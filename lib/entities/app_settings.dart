@@ -44,11 +44,29 @@ class AppSettings {
   /// If true, volume is boosted. Currently Android only.
   final bool volumeBoost;
 
-  /// If 0, list view; else grid view
-  final int layout;
+  /// If 0, list view; else grid view.
+  final int layoutMode;
+
+  /// If 0, list view; else grid view.
+  final String layoutOrder;
+
+  /// True if we highlight new episodes.
+  final bool layoutHighlight;
+
+  /// True if we display the unplayed episode count.
+  final bool layoutCount;
 
   /// True if auto play is enabled.
   final bool autoPlay;
+
+  /// True if background updating of episodes is enabled.
+  final bool backgroundUpdate;
+
+  /// True if background updating of episodes is enabled when on mobile data.
+  final bool backgroundUpdateMobileData;
+
+  /// True if showing a status icon in the notification bar during fetch is enabled
+  final bool updatesNotification;
 
   AppSettings({
     required this.theme,
@@ -64,8 +82,14 @@ class AppSettings {
     required this.autoUpdateEpisodePeriod,
     required this.trimSilence,
     required this.volumeBoost,
-    required this.layout,
+    required this.layoutMode,
+    required this.layoutOrder,
+    required this.layoutHighlight,
+    required this.layoutCount,
     required this.autoPlay,
+    required this.backgroundUpdate,
+    required this.backgroundUpdateMobileData,
+    required this.updatesNotification,
   });
 
   AppSettings.sensibleDefaults()
@@ -82,8 +106,14 @@ class AppSettings {
         autoUpdateEpisodePeriod = -1,
         trimSilence = false,
         volumeBoost = false,
-        layout = 0,
-        autoPlay = false;
+        layoutMode = 0,
+        layoutOrder = 'alphabetical',
+        layoutHighlight = false,
+        layoutCount = false,
+        autoPlay = false,
+        backgroundUpdate = false,
+        backgroundUpdateMobileData = false,
+        updatesNotification = false;
 
   AppSettings copyWith({
     String? theme,
@@ -100,8 +130,14 @@ class AppSettings {
     int? autoUpdateEpisodePeriod,
     bool? trimSilence,
     bool? volumeBoost,
-    int? layout,
+    int? layoutMode,
+    String? layoutOrder,
+    bool? layoutHighlight,
+    bool? layoutCount,
     bool? autoPlay,
+    bool? backgroundUpdate,
+    bool? backgroundUpdateMobileData,
+    bool? updatesNotification,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -117,7 +153,13 @@ class AppSettings {
         autoUpdateEpisodePeriod: autoUpdateEpisodePeriod ?? this.autoUpdateEpisodePeriod,
         trimSilence: trimSilence ?? this.trimSilence,
         volumeBoost: volumeBoost ?? this.volumeBoost,
-        layout: layout ?? this.layout,
+        layoutMode: layoutMode ?? this.layoutMode,
+        layoutOrder: layoutOrder ?? this.layoutOrder,
+        layoutHighlight: layoutHighlight ?? this.layoutHighlight,
+        layoutCount: layoutCount ?? this.layoutCount,
         autoPlay: autoPlay ?? this.autoPlay,
+        backgroundUpdate: backgroundUpdate ?? this.backgroundUpdate,
+        backgroundUpdateMobileData: backgroundUpdateMobileData ?? this.backgroundUpdateMobileData,
+        updatesNotification: updatesNotification ?? this.updatesNotification,
       );
 }

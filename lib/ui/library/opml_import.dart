@@ -24,7 +24,7 @@ class _OPMLImportState extends State<OPMLImport> {
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<OPMLBloc>(context, listen: false);
-    final width = MediaQuery.of(context).size.width - 60.0;
+    final width = MediaQuery.sizeOf(context).width - 60.0;
 
     return IntrinsicHeight(
       child: SizedBox(

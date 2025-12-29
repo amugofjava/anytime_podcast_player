@@ -71,9 +71,10 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
+    final padding = MediaQuery.paddingOf(context);
     final placeholderBuilder = PlaceholderBuilder.of(context);
 
     return Dismissible(
@@ -85,7 +86,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
       },
       direction: DismissDirection.startToEnd,
       background: Container(
-        color: Theme.of(context).colorScheme.surface,
+        color: theme.colorScheme.surface,
         height: 64.0,
       ),
       child: GestureDetector(
@@ -100,7 +101,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
               isScrollControlled: true,
               builder: (BuildContext modalContext) {
                 return Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+                  padding: EdgeInsets.only(top: padding.top),
                   child: const NowPlaying(),
                 );
               },
@@ -115,10 +116,10 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
           child: Container(
             height: 66,
             decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: theme.colorScheme.surface,
                 border: Border(
-                  top: Divider.createBorderSide(context, width: 1.0, color: Theme.of(context).dividerColor),
-                  bottom: Divider.createBorderSide(context, width: 0.0, color: Theme.of(context).dividerColor),
+                  top: Divider.createBorderSide(context, width: 1.0, color: theme.dividerColor),
+                  bottom: Divider.createBorderSide(context, width: 0.0, color: theme.dividerColor),
                 )),
             child: Padding(
               padding: const EdgeInsets.only(left: 4.0, right: 4.0),
@@ -175,14 +176,14 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                           Text(
                                             snapshot.data?.title ?? '',
                                             overflow: TextOverflow.ellipsis,
-                                            style: textTheme.bodyMedium,
+                                            style: theme.textTheme.bodyMedium,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(top: 4.0),
                                             child: Text(
                                               snapshot.data?.author ?? '',
                                               overflow: TextOverflow.ellipsis,
-                                              style: textTheme.bodySmall,
+                                              style: theme.textTheme.bodySmall,
                                             ),
                                           ),
                                         ],
@@ -194,7 +195,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         shape: CircleBorder(
-                                            side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
+                                            side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                                       ),
                                       onPressed: () {
                                         if (playing) {
@@ -215,7 +216,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                                         shape: CircleBorder(
-                                            side: BorderSide(color: Theme.of(context).colorScheme.surface, width: 0.0)),
+                                            side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                                       ),
                                       onPressed: () {
                                         if (playing) {
@@ -230,7 +231,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                                             : L.of(context)!.play_button_label,
                                         size: 48.0,
                                         icon: AnimatedIcons.play_pause,
-                                        color: Theme.of(context).iconTheme.color,
+                                        color: theme.iconTheme.color,
                                         progress: _playPauseController,
                                       ),
                                     ),
@@ -255,7 +256,7 @@ class _MiniPlayerBuilderState extends State<_MiniPlayerBuilder> with SingleTicke
                         return Container(
                           width: cw,
                           height: 1.0,
-                          color: Theme.of(context).primaryColor,
+                          color: theme.primaryColor,
                         );
                       }),
                 ],

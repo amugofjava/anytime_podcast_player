@@ -61,9 +61,37 @@ abstract class SettingsService {
 
   int get layoutMode;
 
+  set layoutOrder(String order);
+
+  String get layoutOrder;
+
+  set layoutHighlight(bool highlight);
+
+  bool get layoutHighlight;
+
+  set layoutCount(bool count);
+
+  bool get layoutCount;
+
   set autoPlay(bool autoPlay);
 
   bool get autoPlay;
 
+  set backgroundUpdate(bool backgroundUpdate);
+
+  bool get backgroundUpdate;
+
+  set backgroundUpdateMobileData(bool backgroundUpdateMobileData);
+
+  bool get backgroundUpdateMobileData;
+
+  set updateNotification(bool updateNotification);
+
+  bool get updateNotification;
+
   Stream<String> get settingsListener;
+
+  set lastFeedRefresh(DateTime lastFeedRefresh);
+
+  DateTime get lastFeedRefresh;
 }
