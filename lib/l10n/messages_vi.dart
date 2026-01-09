@@ -45,6 +45,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(weeks) => "${weeks}t trước";
 
+  static m12(episodes) => "${Intl.plural(episodes, one: '1 tập mới', other: '${episodes} tập mới')}";
+
+  static m13(episodes) => "${Intl.plural(episodes, one: '1 tập chưa nghe', other: '${episodes} tập chưa nghe')}";
+
   static m14(minutes) => "${minutes} phút";
 
   static m15(minutes) => "${minutes} phút";
@@ -61,6 +65,8 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
       'about_label': MessageLookupByLibrary.simpleMessage('Giới thiệu'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('Thêm nguồn RSS'),
+    'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime đang cập nhật thư viện podcast của bạn'),
+    'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Cập nhật Thư viện'),
     'app_title': MessageLookupByLibrary.simpleMessage('Anytime Podcast Player'),
     'app_title_short': MessageLookupByLibrary.simpleMessage('Anytime Player'),
     'audio_effect_trim_silence_label': MessageLookupByLibrary.simpleMessage('Cắt bỏ khoảng lặng'),
@@ -83,7 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'delete_label': MessageLookupByLibrary.simpleMessage('Xóa'),
     'discover': MessageLookupByLibrary.simpleMessage('Khám phá'),
     'discovery_categories_itunes': MessageLookupByLibrary.simpleMessage('Tất cả,Nghệ thuật,Kinh doanh,Hài kịch,Giáo dục,Viễn tưởng,Chính phủ,Sức khỏe & Thể chất,Lịch sử,Trẻ em & Gia đình,Giải trí,Âm nhạc,Tin tức,Tôn giáo & Tâm linh,Khoa học,Xã hội & Văn hóa,Thể thao,TV & Phim ảnh,Công nghệ,Tội phạm có thật'),
-    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('Tất cả,Bàn luận sau chương trình,Alternative,Động vật,Hoạt hình,Nghệ thuật,Thiên văn học,Ô tô,Hàng không,Bóng chày,Bóng rổ,Sắc đẹp,Sách,Phật giáo,Kinh doanh,Sự nghiệp,Hóa học,Thiên chúa giáo,Khí hậu,Hài kịch,Bình luận,Khóa học,Thủ công,Cricket,Tiền điện tử,Văn hóa,Hàng ngày,Thiết kế,Phim tài liệu,Kịch,Trái đất,Giáo dục,Giải trí,Khởi nghiệp,Gia đình,Kỳ ảo,Thời trang,Viễn tưởng,Phim,Thể chất,Ẩm thực,Bóng đá,Trò chơi,Làm vườn,Golf,Chính phủ,Sức khỏe,Ấn độ giáo,Lịch sử,Sở thích,Khúc côn cầu,Nhà cửa,Hướng dẫn,Ứng biến,Phỏng vấn,Đầu tư,Hồi giáo,Nhật ký,Do thái giáo,Trẻ em,Ngôn ngữ,Học tập,Giải trí,Cuộc sống,Quản lý,Manga,Tiếp thị,Toán học,Y học,Tinh thần,Âm nhạc,Tự nhiên,Thiên nhiên,Tin tức,Phi lợi nhuận,Dinh dưỡng,Làm cha mẹ,Biểu diễn,Cá nhân,Thú cưng,Triết học,Vật lý,Địa điểm,Chính trị,Mối quan hệ,Tôn giáo,Đánh giá,Nhập vai,Bóng bầu dục,Chạy bộ,Khoa học,Phát triển bản thân,Tình dục,Bóng đá,Xã hội,Xã hội,Tâm linh,Thể thao,Hài độc thoại,Câu chuyện,Bơi lội,TV, επιτραπέζιο,Công nghệ,Quần vợt,Du lịch,Tội phạm có thật,Trò chơi điện tử,Hình ảnh,Bóng chuyền,Thời tiết,Hoang dã,Đấu vật'),
+    'discovery_categories_pindex': MessageLookupByLibrary.simpleMessage('Tất cả,Bàn luận sau chương trình,Alternative,Động vật,Hoạt hình,Nghệ thuật,Thiên văn học,Ô tô,Hàng không,Bóng chày,Bóng rổ,Sắc đẹp,Sách,Phật giáo,Kinh doanh,Sự nghiệp,Hóa học,Thiên chúa giáo,Khí hậu,Hài kịch,Bình luận,Khóa học,Thủ công,Cricket,Tiền điện tử,Văn hóa,Hàng ngày,Thiết kế,Phim tài liệu,Kịch,Trái đất,Giáo dục,Giải trí,Khởi nghiệp,Gia đình,Kỳ ảo,Thời trang,Viễn tưởng,Phim,Thể chất,Ẩm thực,Bóng đá,Trò chơi,Làm vườn,Golf,Chính phủ,Sức khỏe,Ấn độ giáo,Lịch sử,Sở thích,Khúc côn cầu,Nhà cửa,Hướng dẫn,Ứng biến,Phỏng vấn,Đầu tư,Hồi giáo,Nhật ký,Do thái giáo,Trẻ em,Ngôn ngữ,Học tập,Giải trí,Cuộc sống,Quản lý,Manga,Tiếp thị,Toán học,Y học,Tinh thần,Âm nhạc,Tự nhiên,Thiên nhiên,Tin tức,Phi lợi nhuận,Dinh dưỡng,Làm cha mẹ,Biểu diễn,Cá nhân,Thú cưng,Triết học,Vật lý,Địa điểm,Chính trị,Mối quan hệ,Tôn giáo,Đánh giá,Nhập vai,Bóng bầu dục,Chạy bộ,Khoa học,Phát triển bản thân,Tình dục,Bóng đá,Xã hội,Xã hội,Tâm linh,Thể thao,Hài độc thoại,Câu chuyện,Bơi lội,TV, Trò chơi trên bàn,Công nghệ,Quần vợt,Du lịch,Tội phạm có thật,Trò chơi điện tử,Hình ảnh,Bóng chuyền,Thời tiết,Hoang dã,Đấu vật'),
     'download_episode_button_label': MessageLookupByLibrary.simpleMessage('Tải tập'),
     'downloads': MessageLookupByLibrary.simpleMessage('Tải về'),
     'empty_queue_message': MessageLookupByLibrary.simpleMessage('Hàng chờ của bạn đang trống'),
@@ -125,8 +131,22 @@ class MessageLookup extends MessageLookupByLibrary {
     'label_megabytes': MessageLookupByLibrary.simpleMessage('megabyte'),
     'label_megabytes_abbr': MessageLookupByLibrary.simpleMessage('MB'),
     'label_opml_importing': MessageLookupByLibrary.simpleMessage('Đang nhập'),
+    'label_podcast_actions': MessageLookupByLibrary.simpleMessage('Hành động Podcast'),
     'layout_label': MessageLookupByLibrary.simpleMessage('Bố cục'),
+    'layout_selector_compact_grid_view': MessageLookupByLibrary.simpleMessage('Xem dạng lưới thu gọn'),
+    'layout_selector_grid_view': MessageLookupByLibrary.simpleMessage('Xem dạng lưới'),
+    'layout_selector_highlight_new_episodes': MessageLookupByLibrary.simpleMessage('Làm nổi bật tập mới'),
+    'layout_selector_list_view': MessageLookupByLibrary.simpleMessage('Xem dạng danh sách'),
+    'layout_selector_sort_by': MessageLookupByLibrary.simpleMessage('Sắp xếp theo'),
+    'layout_selector_sort_by_alphabetical': MessageLookupByLibrary.simpleMessage('Bảng chữ cái'),
+    'layout_selector_sort_by_followed': MessageLookupByLibrary.simpleMessage('Đã theo dõi'),
+    'layout_selector_sort_by_unplayed': MessageLookupByLibrary.simpleMessage('Chưa nghe'),
+    'layout_selector_unplayed_episodes': MessageLookupByLibrary.simpleMessage('Hiển thị số lượng chưa nghe'),
     'library': MessageLookupByLibrary.simpleMessage('Thư viện'),
+    'library_sort_alphabetical_label': MessageLookupByLibrary.simpleMessage('Theo bảng chữ cái'),
+    'library_sort_date_followed_label': MessageLookupByLibrary.simpleMessage('Ngày theo dõi'),
+    'library_sort_latest_episodes_label': MessageLookupByLibrary.simpleMessage('Tập mới nhất'),
+    'library_sort_unplayed_count_label': MessageLookupByLibrary.simpleMessage('Số tập chưa nghe'),
     'mark_episodes_not_played_label': MessageLookupByLibrary.simpleMessage('Đánh dấu tất cả chưa nghe'),
     'mark_episodes_played_label': MessageLookupByLibrary.simpleMessage('Đánh dấu tất cả đã nghe'),
     'mark_played_label': MessageLookupByLibrary.simpleMessage('Đánh dấu đã nghe'),
@@ -153,6 +173,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'play_button_label': MessageLookupByLibrary.simpleMessage('Phát tập'),
     'play_download_button_label': MessageLookupByLibrary.simpleMessage('Phát tập đã tải về'),
     'playback_speed_label': MessageLookupByLibrary.simpleMessage('Tốc độ phát'),
+    'podcast_context_play_latest_episode_label': MessageLookupByLibrary.simpleMessage('Phát tập mới nhất'),
+    'podcast_context_play_next_episode_label': MessageLookupByLibrary.simpleMessage('Phát tập chưa nghe tiếp theo'),
+    'podcast_context_queue_latest_episode_label': MessageLookupByLibrary.simpleMessage('Thêm tập mới nhất vào hàng chờ'),
+    'podcast_context_queue_next_episode_label': MessageLookupByLibrary.simpleMessage('Thêm tập chưa nghe tiếp theo vào hàng chờ'),
     'podcast_funding_dialog_header': MessageLookupByLibrary.simpleMessage('Ủng hộ Podcast'),
     'podcast_options_overflow_menu_semantic_label': MessageLookupByLibrary.simpleMessage('Menu tùy chọn'),
     'queue_add_label': MessageLookupByLibrary.simpleMessage('Thêm'),
@@ -180,9 +204,11 @@ class MessageLookup extends MessageLookupByLibrary {
     'semantic_chapter_link_label': MessageLookupByLibrary.simpleMessage('Liên kết web của chương'),
     'semantic_current_chapter_label': MessageLookupByLibrary.simpleMessage('Chương hiện tại'),
     'semantic_current_value_label': MessageLookupByLibrary.simpleMessage('Giá trị hiện tại'),
+    'semantic_new_episodes_count': m12,
     'semantic_playing_options_collapse_label': MessageLookupByLibrary.simpleMessage('Đóng thanh trượt tùy chọn phát'),
     'semantic_playing_options_expand_label': MessageLookupByLibrary.simpleMessage('Mở thanh trượt tùy chọn phát'),
     'semantic_podcast_artwork_label': MessageLookupByLibrary.simpleMessage('Ảnh bìa podcast'),
+    'semantic_unplayed_episodes_count': m13,
     'semantics_add_to_queue': MessageLookupByLibrary.simpleMessage('Thêm tập vào hàng chờ'),
     'semantics_collapse_podcast_description': MessageLookupByLibrary.simpleMessage('Thu gọn mô tả podcast'),
     'semantics_decrease_playback_speed': MessageLookupByLibrary.simpleMessage('Giảm tốc độ phát'),
@@ -213,6 +239,10 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_auto_update_episodes_always': MessageLookupByLibrary.simpleMessage('Luôn luôn'),
     'settings_auto_update_episodes_heading': MessageLookupByLibrary.simpleMessage('Tải lại các tập trên màn hình chi tiết sau'),
     'settings_auto_update_episodes_never': MessageLookupByLibrary.simpleMessage('Không bao giờ'),
+    'settings_background_refresh_mobile_data_option': MessageLookupByLibrary.simpleMessage('Làm mới khi dùng dữ liệu di động'),
+    'settings_background_refresh_mobile_data_option_subtitle': MessageLookupByLibrary.simpleMessage('Cho phép thư viện được làm mới khi đang sử dụng mạng di động'),
+    'settings_background_refresh_option': MessageLookupByLibrary.simpleMessage('Làm mới trong nền'),
+    'settings_background_refresh_option_subtitle': MessageLookupByLibrary.simpleMessage('Cập nhật các tập khi màn hình tắt. Việc này sẽ tốn pin hơn.'),
     'settings_continuous_play_option': MessageLookupByLibrary.simpleMessage('Phát liên tục'),
     'settings_continuous_play_subtitle': MessageLookupByLibrary.simpleMessage('Tự động phát tập tiếp theo trong podcast nếu hàng chờ trống'),
     'settings_data_divider_label': MessageLookupByLibrary.simpleMessage('DỮ LIỆU'),
@@ -226,8 +256,12 @@ class MessageLookup extends MessageLookupByLibrary {
     'settings_import_opml': MessageLookupByLibrary.simpleMessage('Nhập OPML'),
     'settings_label': MessageLookupByLibrary.simpleMessage('Cài đặt'),
     'settings_mark_deleted_played_label': MessageLookupByLibrary.simpleMessage('Đánh dấu các tập đã xóa là đã nghe'),
+    'settings_notification_divider_label': MessageLookupByLibrary.simpleMessage('THÔNG BÁO'),
     'settings_personalisation_divider_label': MessageLookupByLibrary.simpleMessage('CÁ NHÂN HÓA'),
     'settings_playback_divider_label': MessageLookupByLibrary.simpleMessage('PHÁT'),
+    'settings_podcast_management_divider_label': MessageLookupByLibrary.simpleMessage('QUẢN LÝ PODCAST'),
+    'settings_refresh_notification_option': MessageLookupByLibrary.simpleMessage('Thông báo khi làm mới'),
+    'settings_refresh_notification_option_subtitle': MessageLookupByLibrary.simpleMessage('Hiển thị biểu tượng thông báo khi đang cập nhật các tập'),
     'settings_theme': MessageLookupByLibrary.simpleMessage('Giao diện'),
     'settings_theme_heading': MessageLookupByLibrary.simpleMessage('Chọn Giao diện'),
     'settings_theme_value_auto': MessageLookupByLibrary.simpleMessage('Theo hệ thống'),
@@ -255,6 +289,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Bỏ theo dõi'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Bỏ theo dõi'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('Bỏ theo dõi sẽ xóa tất cả các tập đã tải về của podcast này.'),
-    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Tiếp theo')
+    'up_next_queue_label': MessageLookupByLibrary.simpleMessage('Tiếp theo'),
+    'update_library_option': MessageLookupByLibrary.simpleMessage('Làm mới thư viện')
   };
 }
