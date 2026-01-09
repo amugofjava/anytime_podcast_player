@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2025-06-11T23:30:00.000000",
+  "@@last_modified": "2025-12-30T01:33:00.000000",
   "app_title": "Anytime Podcast Player",
   "@app_title": {
     "description": "Full title for the application",
@@ -639,7 +639,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "discovery_categories_pindex": "Tất cả,Bàn luận sau chương trình,Alternative,Động vật,Hoạt hình,Nghệ thuật,Thiên văn học,Ô tô,Hàng không,Bóng chày,Bóng rổ,Sắc đẹp,Sách,Phật giáo,Kinh doanh,Sự nghiệp,Hóa học,Thiên chúa giáo,Khí hậu,Hài kịch,Bình luận,Khóa học,Thủ công,Cricket,Tiền điện tử,Văn hóa,Hàng ngày,Thiết kế,Phim tài liệu,Kịch,Trái đất,Giáo dục,Giải trí,Khởi nghiệp,Gia đình,Kỳ ảo,Thời trang,Viễn tưởng,Phim,Thể chất,Ẩm thực,Bóng đá,Trò chơi,Làm vườn,Golf,Chính phủ,Sức khỏe,Ấn độ giáo,Lịch sử,Sở thích,Khúc côn cầu,Nhà cửa,Hướng dẫn,Ứng biến,Phỏng vấn,Đầu tư,Hồi giáo,Nhật ký,Do thái giáo,Trẻ em,Ngôn ngữ,Học tập,Giải trí,Cuộc sống,Quản lý,Manga,Tiếp thị,Toán học,Y học,Tinh thần,Âm nhạc,Tự nhiên,Thiên nhiên,Tin tức,Phi lợi nhuận,Dinh dưỡng,Làm cha mẹ,Biểu diễn,Cá nhân,Thú cưng,Triết học,Vật lý,Địa điểm,Chính trị,Mối quan hệ,Tôn giáo,Đánh giá,Nhập vai,Bóng bầu dục,Chạy bộ,Khoa học,Phát triển bản thân,Tình dục,Bóng đá,Xã hội,Xã hội,Tâm linh,Thể thao,Hài độc thoại,Câu chuyện,Bơi lội,TV, επιτραπέζιο,Công nghệ,Quần vợt,Du lịch,Tội phạm có thật,Trò chơi điện tử,Hình ảnh,Bóng chuyền,Thời tiết,Hoang dã,Đấu vật",
+  "discovery_categories_pindex": "Tất cả,Bàn luận sau chương trình,Alternative,Động vật,Hoạt hình,Nghệ thuật,Thiên văn học,Ô tô,Hàng không,Bóng chày,Bóng rổ,Sắc đẹp,Sách,Phật giáo,Kinh doanh,Sự nghiệp,Hóa học,Thiên chúa giáo,Khí hậu,Hài kịch,Bình luận,Khóa học,Thủ công,Cricket,Tiền điện tử,Văn hóa,Hàng ngày,Thiết kế,Phim tài liệu,Kịch,Trái đất,Giáo dục,Giải trí,Khởi nghiệp,Gia đình,Kỳ ảo,Thời trang,Viễn tưởng,Phim,Thể chất,Ẩm thực,Bóng đá,Trò chơi,Làm vườn,Golf,Chính phủ,Sức khỏe,Ấn độ giáo,Lịch sử,Sở thích,Khúc côn cầu,Nhà cửa,Hướng dẫn,Ứng biến,Phỏng vấn,Đầu tư,Hồi giáo,Nhật ký,Do thái giáo,Trẻ em,Ngôn ngữ,Học tập,Giải trí,Cuộc sống,Quản lý,Manga,Tiếp thị,Toán học,Y học,Tinh thần,Âm nhạc,Tự nhiên,Thiên nhiên,Tin tức,Phi lợi nhuận,Dinh dưỡng,Làm cha mẹ,Biểu diễn,Cá nhân,Thú cưng,Triết học,Vật lý,Địa điểm,Chính trị,Mối quan hệ,Tôn giáo,Đánh giá,Nhập vai,Bóng bầu dục,Chạy bộ,Khoa học,Phát triển bản thân,Tình dục,Bóng đá,Xã hội,Xã hội,Tâm linh,Thể thao,Hài độc thoại,Câu chuyện,Bơi lội,TV, Trò chơi trên bàn,Công nghệ,Quần vợt,Du lịch,Tội phạm có thật,Trò chơi điện tử,Hình ảnh,Bóng chuyền,Thời tiết,Hoang dã,Đấu vật",
   "@discovery_categories_pindex": {
     "description": "Comma separated list of Podcast Index categories",
     "type": "text",
@@ -1268,6 +1268,196 @@
   "label_episode_actions": "Hành động với tập",
   "@label_episode_actions": {
     "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+"settings_podcast_management_divider_label": "QUẢN LÝ PODCAST",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "THÔNG BÁO",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "Làm mới trong nền",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "Cập nhật các tập khi màn hình tắt. Việc này sẽ tốn pin hơn.",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "Thông báo khi làm mới",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "Hiển thị biểu tượng thông báo khi đang cập nhật các tập",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "Làm mới thư viện",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "Theo bảng chữ cái",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "Ngày theo dõi",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "Số tập chưa nghe",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "Tập mới nhất",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 tập chưa nghe}other{{episodes} tập chưa nghe}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 tập mới}other{{episodes} tập mới}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "Làm nổi bật tập mới",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_unplayed_episodes": "Hiển thị số lượng chưa nghe",
+  "@layout_selector_unplayed_episodes": {
+    "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "Sắp xếp theo",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "Bảng chữ cái",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "Đã theo dõi",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "Chưa nghe",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "Xem dạng danh sách",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "Xem dạng lưới",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "Xem dạng lưới thu gọn",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "Cập nhật Thư viện",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Anytime đang cập nhật thư viện podcast của bạn",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "Phát tập mới nhất",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "Thêm tập mới nhất vào hàng chờ",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "Hành động Podcast",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "Phát tập chưa nghe tiếp theo",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "Thêm tập chưa nghe tiếp theo vào hàng chờ",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "Làm mới khi dùng dữ liệu di động",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "Cho phép thư viện được làm mới khi đang sử dụng mạng di động",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
     "type": "text",
     "placeholders": {}
   },
