@@ -1,3 +1,8 @@
+## 1.4.1
+
+- Fix lag issue on position slider when dragging position.
+- Fix incorrect chapter being highlighted in chapter selector when timestamp not within a defined chapter.
+
 ## 1.4.0
 
 - Support for automatic background updating of the library.
