@@ -309,8 +309,6 @@ class PodcastBloc extends Bloc {
 
         _refresh();
 
-        await notificationService.requestPermissionsIfNotGranted();
-
         var result = await downloadService.downloadEpisode(e);
 
         // If there was an error downloading the episode, push an error state
