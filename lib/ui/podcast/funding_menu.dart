@@ -148,7 +148,7 @@ class _CupertinoFundingMenu extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context, 'Cancel');
                         },
-                        child: Text(L.of(context)!.cancel_option_label),
+                        child: Text(L.of(context)!.close_button_label),
                       ),
                     );
                   },
