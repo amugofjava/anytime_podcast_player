@@ -386,6 +386,11 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
           if (extras != null && extras['eid'] != null) {
             _currentEpisode = await repository.findEpisodeByGuid(extras['eid'] as String);
+
+            if (_currentEpisode != null) {
+              _currentEpisode!.position = _audioHandler.playbackState.value.position.inMilliseconds;
+            }
+
           }
         }
       } else {
@@ -804,18 +809,28 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       log.fine('Warning. Attempting to update chapter information on a null _episode');
     } else if (_currentEpisode!.hasChapters && _currentEpisode!.chaptersAreLoaded) {
       final chapters = _currentEpisode!.chapters.where((element) => element.toc).toList(growable: false);
+      var matchedChapter = false;
 
       for (var chapterPtr = 0; chapterPtr < chapters.length; chapterPtr++) {
         final startTime = chapters[chapterPtr].startTime;
         final endTime = chapterPtr == (chapters.length - 1) ? duration : chapters[chapterPtr + 1].startTime;
 
         if (seconds >= startTime && seconds < endTime) {
+          matchedChapter = true;
           if (chapters[chapterPtr] != _currentEpisode!.currentChapter) {
             _currentEpisode!.currentChapter = chapters[chapterPtr];
             _episodeEvent.sink.add(_currentEpisode);
             break;
           }
         }
+      }
+
+      /// If we didn't match a chapter, the time may have been moved outside any chapters. This can often happen
+      /// if the first chapter does not start at the start of the episode. Clear the chapter to ensure the chapter
+      /// selector reflects this.
+      if (!matchedChapter && _currentEpisode!.currentChapter != null) {
+        _currentEpisode!.currentChapter = null;
+        _episodeEvent.sink.add(_currentEpisode);
       }
     }
   }

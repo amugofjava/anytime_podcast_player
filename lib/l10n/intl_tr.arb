@@ -1,4 +1,5 @@
 {
+  "@@locale": "tr",
   "app_title": "Anytime Podcast Oynatıcı",
   "@app_title": {
     "description": "Full title for the application",

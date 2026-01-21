@@ -5,6 +5,7 @@
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/widgets/position_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -90,7 +91,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                 ),
                 Expanded(
                   child: snapshot.hasData
-                      ? Slider(
+                      ? PositionSlider(
                           label: _formatDuration(Duration(seconds: currentPosition)),
                           onChanged: (value) {
                             setState(() {
