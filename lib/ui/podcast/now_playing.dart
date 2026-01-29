@@ -539,13 +539,21 @@ class NowPlayingTabs extends StatelessWidget {
 ///
 /// It displays two or three tabs depending upon whether the current episode supports
 /// (and contains) chapters.
-class EpisodeTabBar extends StatelessWidget {
+class EpisodeTabBar extends StatefulWidget {
   final bool chapters;
 
   const EpisodeTabBar({
     super.key,
     this.chapters = false,
   });
+
+  @override
+  State<EpisodeTabBar> createState() => _EpisodeTabBarState();
+}
+
+class _EpisodeTabBarState extends State<EpisodeTabBar> {
+  late AudioBloc audioBloc;
+  StreamSubscription<Episode?>? episodeSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -556,7 +564,7 @@ class EpisodeTabBar extends StatelessWidget {
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: DotDecoration(colour: theme.primaryColor),
       tabs: [
-        if (chapters)
+        if (widget.chapters)
           Tab(
             child: Align(
               alignment: Alignment.center,
@@ -577,6 +585,32 @@ class EpisodeTabBar extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Episode? previousEpisode;
+
+    audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    /// The number of tabs available depends upon whether the episode has chapters or not.
+    /// To ensure that we always start the episode on the main playing tab, we sit and list
+    /// for episode changes and update the tab index accordingly.
+    episodeSubscription = audioBloc.nowPlaying?.listen((Episode? episode) {
+      if (episode != previousEpisode) {
+        final index = (episode?.hasChapters ?? false) ? 1 : 0;
+        DefaultTabController.of(context).animateTo(index, duration: Duration.zero);
+      }
+
+      previousEpisode = episode;
+    });
+  }
+
+  @override
+  void dispose() {
+    episodeSubscription?.cancel();
+    super.dispose();
   }
 }
 
