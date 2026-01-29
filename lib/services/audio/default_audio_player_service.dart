@@ -130,8 +130,14 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> play() {
     if (_cold) {
       _cold = false;
+
+      log.fine('Playing episode from cold ${_currentEpisode?.title}');
+
       return playEpisode(episode: _currentEpisode!, resume: true);
     } else {
+
+      log.fine('Resuming play ${_currentEpisode?.title}');
+
       return _audioHandler.play();
     }
   }
@@ -185,7 +191,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     if (episode.guid != '' && _initialised) {
       var uri = (await _generateEpisodeUri(episode))!;
 
-      log.info('Playing episode ${episode.id} - ${episode.title} from position ${episode.position}');
+      log.info('Playing new episode ${episode.id} - ${episode.title} from position ${episode.position}');
       log.fine(' - $uri');
 
       _playingState.add(AudioState.buffering);
@@ -1009,6 +1015,8 @@ class _DefaultAudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> play() async {
+    log.fine('play() triggered');
+
     await _player.play();
   }
 
