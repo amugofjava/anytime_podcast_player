@@ -1,3 +1,7 @@
+## 1.4.2
+
+- Fix auto display now playing option when using a screen reader.
+
 ## 1.4.1
 
 - Support for Turkish language (thank you @sipahi63).
