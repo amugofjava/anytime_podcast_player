@@ -6,12 +6,15 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/episode_details.dart';
+import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
@@ -54,7 +57,7 @@ class EpisodeTile extends StatelessWidget {
           queued: queued,
         );
       } else {
-        return _AccessibleEpisodeTile(
+        return _AndroidAccessibleEpisodeTile(
           episode: episode,
           download: download,
           play: play,
@@ -411,6 +414,7 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
     final episodeBloc = Provider.of<EpisodeBloc>(context);
     final podcastBloc = Provider.of<PodcastBloc>(context);
     final queueBloc = Provider.of<QueueBloc>(context);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     return StreamBuilder<_PlayerControlState>(
         stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
@@ -496,6 +500,7 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
                             onPressed: () {
                               audioBloc.play(widget.episode);
                               Navigator.pop(context, 'Cancel');
+                              optionalShowNowPlaying(context, settings);
                             },
                             child: widget.episode.downloaded
                                 ? Text(L.of(context)!.play_download_button_label)
@@ -602,19 +607,34 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
           );
         });
   }
+
+  // /// If we have the 'show now playing upon play' option set to true, launch
+  // /// the [NowPlaying] widget automatically.
+  void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
+    if (settings.autoOpenNowPlaying) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => const NowPlaying(),
+          settings: const RouteSettings(name: 'nowplaying'),
+          fullscreenDialog: false,
+        ),
+      );
+    }
+  }
 }
 
 /// This is an accessible version of the episode tile that uses Android theming.
 /// When the tile is tapped, an Android dialog menu will appear with the relevant
 /// options.
-class _AccessibleEpisodeTile extends StatefulWidget {
+class _AndroidAccessibleEpisodeTile extends StatefulWidget {
   final Episode episode;
   final bool download;
   final bool play;
   final bool playing;
   final bool queued;
 
-  const _AccessibleEpisodeTile({
+  const _AndroidAccessibleEpisodeTile({
     required this.episode,
     required this.download,
     required this.play,
@@ -623,10 +643,10 @@ class _AccessibleEpisodeTile extends StatefulWidget {
   });
 
   @override
-  State<_AccessibleEpisodeTile> createState() => _AccessibleEpisodeTileState();
+  State<_AndroidAccessibleEpisodeTile> createState() => _AndroidAccessibleEpisodeTileState();
 }
 
-class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
+class _AndroidAccessibleEpisodeTileState extends State<_AndroidAccessibleEpisodeTile> {
   bool expanded = false;
 
   @override
@@ -637,6 +657,7 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
     final episodeBloc = Provider.of<EpisodeBloc>(context);
     final podcastBloc = Provider.of<PodcastBloc>(context);
     final queueBloc = Provider.of<QueueBloc>(context);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     return StreamBuilder<_PlayerControlState>(
         stream: Rx.combineLatest2(audioBloc.playingState!, audioBloc.nowPlaying!,
@@ -680,23 +701,16 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
                             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                             child: Text(L.of(context)!.resume_button_label),
                           ),
-                        if (!currentlyPlaying && !currentlyPaused && widget.episode.downloaded)
+                        if (!currentlyPlaying && !currentlyPaused)
                           SimpleDialogOption(
                             onPressed: () {
                               audioBloc.play(widget.episode);
-                              Navigator.pop(context, '');
+                              Navigator.pop(context, 'Cancel');
+                              optionalShowNowPlaying(context, settings);
                             },
-                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                            child: Text(L.of(context)!.play_download_button_label),
-                          ),
-                        if (!currentlyPlaying && !currentlyPaused && !widget.episode.downloaded)
-                          SimpleDialogOption(
-                            onPressed: () {
-                              audioBloc.play(widget.episode);
-                              Navigator.pop(context, '');
-                            },
-                            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                            child: Text(L.of(context)!.play_button_label),
+                            child: widget.episode.downloaded
+                                ? Text(L.of(context)!.play_download_button_label)
+                                : Text(L.of(context)!.play_button_label),
                           ),
                         if (widget.episode.downloadState == DownloadState.queued ||
                             widget.episode.downloadState == DownloadState.downloading)
@@ -843,6 +857,21 @@ class _AccessibleEpisodeTileState extends State<_AccessibleEpisodeTile> {
             ),
           );
         });
+  }
+
+  /// If we have the 'show now playing upon play' option set to true, launch
+  /// the [NowPlaying] widget automatically.
+  void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
+    if (settings.autoOpenNowPlaying) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => const NowPlaying(),
+          settings: const RouteSettings(name: 'nowplaying'),
+          fullscreenDialog: false,
+        ),
+      );
+    }
   }
 }
 
