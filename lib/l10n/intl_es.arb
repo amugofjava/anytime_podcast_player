@@ -682,7 +682,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_es.html",
   "@transcript_why_not_url": {
     "description": "Language specific link",
     "type": "text",
