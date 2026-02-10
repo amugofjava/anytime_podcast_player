@@ -63,7 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final Map<String, dynamic> messages = _notInlinedMessages(_notInlinedMessages);
 
   static Map<String, dynamic> _notInlinedMessages(_) => {
-      'about_label': MessageLookupByLibrary.simpleMessage('Acercca de'),
+      'about_label': MessageLookupByLibrary.simpleMessage('Acerca de'),
     'add_rss_feed_option': MessageLookupByLibrary.simpleMessage('Añadir Feed RSS'),
     'alert_sync_title_body': MessageLookupByLibrary.simpleMessage('Anytime está actualizando tu biblioteca de podcasts'),
     'alert_sync_title_label': MessageLookupByLibrary.simpleMessage('Actualización de la Biblioteca'),
@@ -83,7 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'consent_message': MessageLookupByLibrary.simpleMessage('Este enlace de financiación lo llevará a un sitio externo donde podrá apoyar directamente el programa. Los enlaces son proporcionados por los autores del podcast y Anytime no los controla.'),
     'continue_button_label': MessageLookupByLibrary.simpleMessage('Continuar'),
     'delete_button_label': MessageLookupByLibrary.simpleMessage('Borrar'),
-    'delete_episode_button_label': MessageLookupByLibrary.simpleMessage('Borrar wpisodio descargado'),
+    'delete_episode_button_label': MessageLookupByLibrary.simpleMessage('Borrar episodio descargado'),
     'delete_episode_confirmation': MessageLookupByLibrary.simpleMessage('¿Estás seguro de que deseas eliminar este episodio?'),
     'delete_episode_title': MessageLookupByLibrary.simpleMessage('Borrar episodio'),
     'delete_label': MessageLookupByLibrary.simpleMessage('Borrar'),
@@ -285,7 +285,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'time_semantic_seconds': m18,
     'transcript_label': MessageLookupByLibrary.simpleMessage('Transcripción'),
     'transcript_why_not_label': MessageLookupByLibrary.simpleMessage('¿Por qué no?'),
-    'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_en.html'),
+    'transcript_why_not_url': MessageLookupByLibrary.simpleMessage('https://anytimeplayer.app/docs/anytime_transcript_support_es.html'),
     'unsubscribe_button_label': MessageLookupByLibrary.simpleMessage('Dejar de seguir'),
     'unsubscribe_label': MessageLookupByLibrary.simpleMessage('Dejar de seguir'),
     'unsubscribe_message': MessageLookupByLibrary.simpleMessage('Dejar de seguir eliminará todos los episodios descargados de este podcast.'),
