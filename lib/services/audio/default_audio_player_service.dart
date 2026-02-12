@@ -135,7 +135,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       return playEpisode(episode: _currentEpisode!, resume: true);
     } else {
-
       log.fine('Resuming play ${_currentEpisode?.title}');
 
       return _audioHandler.play();
@@ -396,7 +395,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
             if (_currentEpisode != null) {
               _currentEpisode!.position = _audioHandler.playbackState.value.position.inMilliseconds;
             }
-
           }
         }
       } else {
