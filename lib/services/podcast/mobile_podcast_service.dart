@@ -246,6 +246,10 @@ class MobilePodcastService extends PodcastService {
             }
 
             return storedPodcast;
+          } else if (e is podcast_search.PodcastGoneException) {
+            _log.fine('Podcast has been removed');
+            tries = 0;
+            rethrow;
           } else {
             _log.fine('Failed to load podcast.  $tries attempts remaining.');
             _log.fine(e);
@@ -316,16 +320,27 @@ class MobilePodcastService extends PodcastService {
     // Enforce that ordering. To prevent unnecessary sorting, we'll sample the
     // first two episodes to see what order they are in.
     if (loadedPodcast.episodes.length > 1) {
-      if (loadedPodcast.episodes[0].publicationDate!.millisecondsSinceEpoch <
-          loadedPodcast.episodes[1].publicationDate!.millisecondsSinceEpoch) {
-        loadedPodcast.episodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+      final ce1 = loadedPodcast.episodes[0];
+      final ce2 = loadedPodcast.episodes[1];
+
+      if (ce1.publicationDate != null && ce2.publicationDate != null) {
+        if (ce1.publicationDate!.millisecondsSinceEpoch < ce2.publicationDate!.millisecondsSinceEpoch) {
+          loadedPodcast.episodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+        }
       }
     }
+
+    // We need a default publication date in case the RSS feed is missing it.
+    final defaultPublicationDate = DateTime.now();
+
+    // To preserve the order, we'll have an offset in seconds.
+    var defaultDateOffset = 0;
 
     // Loop through all episodes in the feed and check to see if we already have that episode
     // stored. If we don't, it's a new episode so add it; if we do update our copy in case it's changed.
     for (final episode in loadedPodcast.episodes) {
-      final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep.guid == episode.guid);
+      final episodeKey = episode.guid.isEmpty ? episode.contentUrl : episode.guid;
+      final existingEpisode = existingEpisodes.firstWhereOrNull((ep) => ep.guid == episodeKey);
       final author = episode.author?.replaceAll('\n', '').trim() ?? '';
       final title = _format(episode.title);
       final description = _format(episode.description);
@@ -386,7 +401,7 @@ class MobilePodcastService extends PodcastService {
         pc.episodes.add(Episode(
           highlight: pc.newEpisodes > 0,
           pguid: pc.guid,
-          guid: episode.guid,
+          guid: episodeKey ?? '',
           podcast: pc.title,
           title: title,
           description: description,
@@ -401,7 +416,10 @@ class MobilePodcastService extends PodcastService {
           duration: duration,
           length: episode.length,
           mimeType: episode.mimeType,
-          publicationDate: episode.publicationDate,
+          publicationDate: episode.publicationDate ??
+              defaultPublicationDate.subtract(
+                Duration(seconds: defaultDateOffset++),
+              ),
           chaptersUrl: episode.chapters?.url,
           transcriptUrls: transcriptUrls,
           persons: episodePersons,
@@ -426,10 +444,14 @@ class MobilePodcastService extends PodcastService {
         existingEpisode.link = episode.link;
         existingEpisode.imageUrl = episodeImage;
         existingEpisode.thumbImageUrl = episodeThumbImage;
-        existingEpisode.publicationDate = episode.publicationDate;
         existingEpisode.chaptersUrl = episode.chapters?.url;
         existingEpisode.transcriptUrls = transcriptUrls;
         existingEpisode.persons = episodePersons;
+
+        /// If the publication date from the feed is null, we do not want to update the saved publication
+        /// date as this will have been set to a default last time. We will also assume that a null
+        /// publication date means we want the default ordering to be as-is.
+        existingEpisode.publicationDate = episode.publicationDate ?? existingEpisode.publicationDate;
 
         // If the source duration is 0 do not update any saved, calculated duration.
         if (duration > 0) {
@@ -932,9 +954,23 @@ class MobilePodcastService extends PodcastService {
     switch (podcast.sort) {
       case PodcastEpisodeSort.none:
       case PodcastEpisodeSort.latestFirst:
-        filteredEpisodes.sort((e1, e2) => e2.publicationDate!.compareTo(e1.publicationDate!));
+        filteredEpisodes.sort((a, b) {
+          return switch ((b.publicationDate, a.publicationDate)) {
+            (null, null) => 0,
+            (DateTime _, null) => 1,
+            (null, DateTime _) => -1,
+            (DateTime a, DateTime b) => a.compareTo(b),
+          };
+        });
       case PodcastEpisodeSort.earliestFirst:
-        filteredEpisodes.sort((e1, e2) => e1.publicationDate!.compareTo(e2.publicationDate!));
+        filteredEpisodes.sort((a, b) {
+          return switch ((b.publicationDate, a.publicationDate)) {
+            (null, null) => 0,
+            (DateTime _, null) => 1,
+            (null, DateTime _) => -1,
+            (DateTime a, DateTime b) => a.compareTo(b),
+          };
+        });
       case PodcastEpisodeSort.alphabeticalAscending:
         filteredEpisodes.sort((e1, e2) => e1.title!.toLowerCase().compareTo(e2.title!.toLowerCase()));
       case PodcastEpisodeSort.alphabeticalDescending:
