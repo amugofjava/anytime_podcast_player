@@ -97,13 +97,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "mark_played_label": "Markieren gespielt",
+  "mark_played_label": "als abgespielt markieren",
   "@mark_played_label": {
     "description": "Mark as played",
     "type": "text",
     "placeholders": {}
   },
-  "mark_unplayed_label": "Markieren nicht abgespielt",
+  "mark_unplayed_label": "als nicht abgespielt markieren",
   "@mark_unplayed_label": {
     "description": "Mark as unplayed",
     "type": "text",
