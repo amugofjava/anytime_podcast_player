@@ -423,8 +423,8 @@ class NowPlayingShowNotes extends StatelessWidget {
                 child: Text(
                   episode!.title!,
                   style: theme.textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -459,7 +459,7 @@ class NowPlayingShowNotes extends StatelessWidget {
 /// This will be episode details and show notes. If the episode supports chapters
 /// this will be included also. This is the parent widget. The tabs are
 /// rendered via [EpisodeTabBar] and the tab contents via. [EpisodeTabBarView].
-class NowPlayingTabs extends StatelessWidget {
+class NowPlayingTabs extends StatefulWidget {
   const NowPlayingTabs({
     super.key,
     required this.transportBuilder,
@@ -470,68 +470,103 @@ class NowPlayingTabs extends StatelessWidget {
   final Episode episode;
 
   @override
+  State<NowPlayingTabs> createState() => _NowPlayingTabsState();
+}
+
+class _NowPlayingTabsState extends State<NowPlayingTabs> with TickerProviderStateMixin {
+  late TabController tabController;
+  bool startedWithChapters = false;
+
+  @override
+  void initState() {
+    super.initState();
+    startedWithChapters = widget.episode.hasChapters;
+
+    tabController = TabController(
+        length: widget.episode.hasChapters ? 3 : 2, initialIndex: widget.episode.hasChapters ? 1 : 0, vsync: this);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final orientation = MediaQuery.orientationOf(context);
 
-    return DefaultTabController(
-        length: episode.hasChapters ? 3 : 2,
-        initialIndex: episode.hasChapters ? 1 : 0,
-        child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme
-              .appBarTheme
-              .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: theme.scaffoldBackgroundColor,
-              elevation: 0.0,
-              leading: IconButton(
-                tooltip: L.of(context)!.minimise_player_window_button_label,
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: theme.primaryIconTheme.color,
-                  semanticLabel: L.of(context)!.minimise_player_window_button_label,
-                ),
-                onPressed: () => {
-                  Navigator.pop(context),
-                },
-              ),
-              flexibleSpace: PlaybackErrorListener(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    EpisodeTabBar(
-                      chapters: episode.hasChapters,
-                    ),
-                  ],
-                ),
-              ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: theme.appBarTheme.systemOverlayStyle!.copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.scaffoldBackgroundColor,
+          elevation: 0.0,
+          leading: IconButton(
+            tooltip: L.of(context)!.minimise_player_window_button_label,
+            icon: Icon(
+              Icons.keyboard_arrow_down,
+              color: theme.primaryIconTheme.color,
+              semanticLabel: L.of(context)!.minimise_player_window_button_label,
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: EpisodeTabBarView(
-                    episode: episode,
-                    chapters: episode.hasChapters,
-                  ),
+            onPressed: () => {
+              Navigator.pop(context),
+            },
+          ),
+          flexibleSpace: PlaybackErrorListener(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                EpisodeTabBar(
+                  controller: tabController,
+                  chapters: widget.episode.hasChapters,
                 ),
-                transportBuilder != null
-                    ? transportBuilder!(context)
-                    : const SizedBox(
-                        height: 148.0,
-                        child: NowPlayingTransport(),
-                      ),
-                if (orientation == Orientation.portrait)
-                  const Expanded(
-                    flex: 1,
-                    child: NowPlayingOptionsScaffold(),
-                  ),
               ],
             ),
           ),
-        ));
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              flex: 5,
+              child: EpisodeTabBarView(
+                controller: tabController,
+                episode: widget.episode,
+                chapters: widget.episode.hasChapters,
+              ),
+            ),
+            widget.transportBuilder != null
+                ? widget.transportBuilder!(context)
+                : const SizedBox(
+                    height: 148.0,
+                    child: NowPlayingTransport(),
+                  ),
+            if (orientation == Orientation.portrait)
+              const Expanded(
+                flex: 1,
+                child: NowPlayingOptionsScaffold(),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void didUpdateWidget(var oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.episode.hasChapters != startedWithChapters) {
+      final currentIndex = tabController.index;
+      final oldController = tabController;
+
+      setState(() {
+        tabController =
+            TabController(length: widget.episode.hasChapters ? 3 : 2, initialIndex: currentIndex + 1, vsync: this);
+
+        startedWithChapters = widget.episode.hasChapters;
+      });
+
+      // Dispose of the old controller after the build phase is complete
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        oldController.dispose();
+      });
+    }
   }
 }
 
@@ -541,9 +576,11 @@ class NowPlayingTabs extends StatelessWidget {
 /// (and contains) chapters.
 class EpisodeTabBar extends StatefulWidget {
   final bool chapters;
+  final TabController controller;
 
   const EpisodeTabBar({
     super.key,
+    required this.controller,
     this.chapters = false,
   });
 
@@ -553,13 +590,13 @@ class EpisodeTabBar extends StatefulWidget {
 
 class _EpisodeTabBarState extends State<EpisodeTabBar> {
   late AudioBloc audioBloc;
-  StreamSubscription<Episode?>? episodeSubscription;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return TabBar(
+      controller: widget.controller,
       isScrollable: true,
       indicatorSize: TabBarIndicatorSize.tab,
       indicator: DotDecoration(colour: theme.primaryColor),
@@ -586,32 +623,6 @@ class _EpisodeTabBarState extends State<EpisodeTabBar> {
       ],
     );
   }
-
-  @override
-  void initState() {
-    super.initState();
-    Episode? previousEpisode;
-
-    audioBloc = Provider.of<AudioBloc>(context, listen: false);
-
-    /// The number of tabs available depends upon whether the episode has chapters or not.
-    /// To ensure that we always start the episode on the main playing tab, we sit and list
-    /// for episode changes and update the tab index accordingly.
-    episodeSubscription = audioBloc.nowPlaying?.listen((Episode? episode) {
-      if (episode != previousEpisode) {
-        final index = (episode?.hasChapters ?? false) ? 1 : 0;
-        DefaultTabController.of(context).animateTo(index, duration: Duration.zero);
-      }
-
-      previousEpisode = episode;
-    });
-  }
-
-  @override
-  void dispose() {
-    episodeSubscription?.cancel();
-    super.dispose();
-  }
 }
 
 /// This class is responsible for rendering the tab bodies.
@@ -622,9 +633,11 @@ class EpisodeTabBarView extends StatelessWidget {
   final Episode? episode;
   final AutoSizeGroup? textGroup;
   final bool chapters;
+  final TabController controller;
 
   const EpisodeTabBarView({
     super.key,
+    required this.controller,
     this.episode,
     this.textGroup,
     this.chapters = false,
@@ -635,12 +648,14 @@ class EpisodeTabBarView extends StatelessWidget {
     final audioBloc = Provider.of<AudioBloc>(context);
 
     return TabBarView(
+      controller: controller,
       children: [
         if (chapters)
           ChapterSelector(
             episode: episode!,
           ),
         StreamBuilder<Episode?>(
+            key: const PageStorageKey('episode'),
             stream: audioBloc.nowPlaying,
             builder: (context, snapshot) {
               final e = snapshot.hasData ? snapshot.data! : episode!;
@@ -651,7 +666,10 @@ class EpisodeTabBarView extends StatelessWidget {
                 textGroup: textGroup,
               );
             }),
-        NowPlayingShowNotes(episode: episode),
+        NowPlayingShowNotes(
+          key: const PageStorageKey('episode'),
+          episode: episode,
+        ),
       ],
     );
   }

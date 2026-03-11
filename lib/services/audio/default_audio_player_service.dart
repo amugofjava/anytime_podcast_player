@@ -26,6 +26,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
+import 'package:mp3_info/mp3_info.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// This is the default implementation of [AudioPlayerService].
@@ -662,6 +663,35 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       log.fine('We have ${_currentEpisode!.chapters.length} chapters');
       _currentEpisode = await repository.saveEpisode(_currentEpisode!);
+    }
+
+    /// Try and load ID3 chapters
+    if (!_currentEpisode!.hasChapters) {
+      var mp3Info = await MP3Processor.fromUri(_currentEpisode!.contentUrl!);
+
+      if (mp3Info.id3 != null) {
+        if (mp3Info.id3?.chapters != null) {
+          final chapters = <Chapter>[];
+
+          for (var chapter in mp3Info.id3!.chapters) {
+            double startSeconds = chapter.startTime / 1000.0;
+            double endSeconds = 0.0;
+
+            if (chapter.endTime != null) {
+              endSeconds = chapter.endTime! / 1000.0;
+            }
+
+            chapters.add(Chapter(
+              title: chapter.title ?? '',
+              imageUrl: null,
+              startTime: startSeconds,
+              endTime: endSeconds,
+            ));
+          }
+
+          _currentEpisode!.chapters = chapters;
+        }
+      }
     }
 
     if (_currentEpisode!.hasTranscripts) {

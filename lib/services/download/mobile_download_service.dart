@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/transcript.dart';
@@ -153,13 +154,32 @@ class MobileDownloadService extends DownloadService {
         episode.downloadPercentage = progress.percentage;
         episode.downloadState = progress.status;
 
-        if (progress.percentage == 100) {
+        if (progress.status == DownloadState.downloaded && progress.percentage == 100) {
           final filename = await resolvePath(episode);
+
+          var mp3Info = MP3Processor.fromFile(File(filename));
+
+          /// If we do not have PC2.0 chapters, maybe we have ID3 ones.
+          if (!episode.hasChapters) {
+            final tags = mp3Info.id3;
+
+            if (tags != null && tags.chapters.isNotEmpty) {
+              for (var chapter in tags.chapters) {
+                var ms = chapter.startTime;
+                var ss = ms / 1000;
+
+                episode.chapters.add(Chapter(
+                  title: chapter.title ?? '',
+                  imageUrl: null,
+                  startTime: ss.toDouble(),
+                  endTime: 0.0,
+                ));
+              }
+            }
+          }
 
           // If we do not have a duration for this file - let's calculate it
           if (episode.duration == 0) {
-            var mp3Info = MP3Processor.fromFile(File(filename));
-
             episode.duration = mp3Info.duration.inSeconds;
           }
         }
