@@ -157,30 +157,34 @@ class MobileDownloadService extends DownloadService {
         if (progress.status == DownloadState.downloaded && progress.percentage == 100) {
           final filename = await resolvePath(episode);
 
-          var mp3Info = MP3Processor.fromFile(File(filename));
+          try {
+            var mp3Info = MP3Processor.fromFile(File(filename), includeID3: false);
 
-          /// If we do not have PC2.0 chapters, maybe we have ID3 ones.
-          if (!episode.hasChapters) {
-            final tags = mp3Info.id3;
+            /// If we do not have PC2.0 chapters, maybe we have ID3 ones.
+            if (!episode.hasChapters) {
+              final tags = mp3Info.id3;
 
-            if (tags != null && tags.chapters.isNotEmpty) {
-              for (var chapter in tags.chapters) {
-                var ms = chapter.startTime;
-                var ss = ms / 1000;
+              if (tags != null && tags.chapters.isNotEmpty) {
+                for (var chapter in tags.chapters) {
+                  var ms = chapter.startTime;
+                  var ss = ms / 1000;
 
-                episode.chapters.add(Chapter(
-                  title: chapter.title ?? '',
-                  imageUrl: null,
-                  startTime: ss.toDouble(),
-                  endTime: 0.0,
-                ));
+                  episode.chapters.add(Chapter(
+                    title: chapter.title ?? '',
+                    imageUrl: null,
+                    startTime: ss.toDouble(),
+                    endTime: 0.0,
+                  ));
+                }
               }
             }
-          }
 
-          // If we do not have a duration for this file - let's calculate it
-          if (episode.duration == 0) {
-            episode.duration = mp3Info.duration.inSeconds;
+            // If we do not have a duration for this file - let's calculate it
+            if (episode.duration == 0) {
+              episode.duration = mp3Info.duration.inSeconds;
+            }
+          } catch (e, s) {
+            log.warning('Error processing file $filename', e, s);
           }
         }
 
