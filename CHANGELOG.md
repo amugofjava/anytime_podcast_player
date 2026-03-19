@@ -1,6 +1,8 @@
 ## 1.4.2
 
+- Add support for ID3 text chapters.
 - Fix auto display now playing option when using a screen reader.
+- Hide podcast description expand/collapse button from semantic tree.
 
 ## 1.4.1
 

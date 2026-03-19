@@ -158,7 +158,7 @@ class MobileDownloadService extends DownloadService {
           final filename = await resolvePath(episode);
 
           try {
-            var mp3Info = MP3Processor.fromFile(File(filename), includeID3: false);
+            var mp3Info = MP3Processor.fromFile(File(filename));
 
             /// If we do not have PC2.0 chapters, maybe we have ID3 ones.
             if (!episode.hasChapters) {

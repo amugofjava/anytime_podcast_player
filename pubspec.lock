@@ -705,10 +705,10 @@ packages:
     dependency: "direct main"
     description:
       name: mp3_info
-      sha256: "22aed021aaa0c857da176f0c44bb545bffc3bae79ec8e764753658e002974911"
+      sha256: e0ac277f26b54f36666cc47167f542e9ee29414e89dced71ff5d19c5cba1d265
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.2"
+    version: "0.2.3"
   nested:
     dependency: transitive
     description:
