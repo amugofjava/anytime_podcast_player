@@ -157,7 +157,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "delete_episode_button_label": "Borrar wpisodio descargado",
+  "delete_episode_button_label": "Borrar episodio descargado",
   "@delete_episode_button_label": {
     "description": "Semantic label for the delete episode",
     "type": "text",
@@ -205,7 +205,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "about_label": "Acercca de",
+  "about_label": "Acerca de",
   "@about_label": {
     "description": "About menu item",
     "type": "text",
@@ -253,7 +253,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_download_sd_card_label": "Descargar episodios a  tarjeta SD",
+  "settings_download_sd_card_label": "Descargar episodios a tarjeta SD",
   "@settings_download_sd_card_label": {
     "description": "Download episodes to SD card setting",
     "type": "text",
@@ -301,7 +301,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_theme_value_light": "Tema ligero",
+  "settings_theme_value_light": "Tema claro",
   "@settings_theme_value_light": {
     "description": "Light theme",
     "type": "text",
@@ -682,7 +682,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_es.html",
   "@transcript_why_not_url": {
     "description": "Language specific link",
     "type": "text",
@@ -766,7 +766,7 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_add_to_queue": "Añadir episodio a  la lista de reproducción",
+  "semantics_add_to_queue": "Añadir episodio a la lista de reproducción",
   "@semantics_add_to_queue": {
     "description": "Describes add to queue button",
     "type": "text",
@@ -1090,7 +1090,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "settings_continuous_play_option": "Juego continuo",
+  "settings_continuous_play_option": "Reproducción continua",
   "@settings_continuous_play_option": {
     "description": "Continuous play toggle switch label",
     "type": "text",
@@ -1290,7 +1290,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "playing_next_queue_label": "Jugando a Continuación",
+  "playing_next_queue_label": "Reproducir a Continuación",
   "@playing_next_queue_label": {
     "description": "Playing next label on queue",
     "type": "text",
