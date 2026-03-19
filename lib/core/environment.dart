@@ -26,7 +26,7 @@ class Environment {
   static const _applicationName = 'Anytime';
   static const _applicationUrl = 'https://github.com/amugofjava/anytime_podcast_player';
   static const _projectVersion = '1.4.2';
-  static const _build = '241';
+  static const _build = '244';
 
   static var _agentString = userAgentAppString;
 

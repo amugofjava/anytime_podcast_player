@@ -423,7 +423,7 @@ class Episode {
     return _descriptionText;
   }
 
-  bool get hasChapters => chaptersUrl != null && chaptersUrl!.isNotEmpty;
+  bool get hasChapters => chapters.isNotEmpty || (chaptersUrl != null && chaptersUrl!.isNotEmpty);
 
   bool get hasTranscripts => transcriptUrls.isNotEmpty;
 

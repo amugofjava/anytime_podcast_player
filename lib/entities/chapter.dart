@@ -27,7 +27,7 @@ class Chapter {
   final double startTime;
 
   /// The optional end time of the chapter in seconds.
-  final double? endTime;
+  final double endTime;
 
   Chapter({
     required this.title,
@@ -35,7 +35,7 @@ class Chapter {
     required this.startTime,
     String? url,
     this.toc = true,
-    this.endTime,
+    this.endTime = 0.0,
   })  : imageUrl = imageUrl?.forceHttps,
         url = url?.forceHttps;
 
