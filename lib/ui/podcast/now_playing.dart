@@ -655,7 +655,7 @@ class EpisodeTabBarView extends StatelessWidget {
             episode: episode!,
           ),
         StreamBuilder<Episode?>(
-            key: const PageStorageKey('episode'),
+            key: const PageStorageKey('episodestream'),
             stream: audioBloc.nowPlaying,
             builder: (context, snapshot) {
               final e = snapshot.hasData ? snapshot.data! : episode!;
@@ -667,7 +667,7 @@ class EpisodeTabBarView extends StatelessWidget {
               );
             }),
         NowPlayingShowNotes(
-          key: const PageStorageKey('episode'),
+          key: const PageStorageKey('episodenotes'),
           episode: episode,
         ),
       ],
