@@ -355,7 +355,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "episode_label": "Episode",
+  "episode_label": "Folge",
   "@episode_label": {
     "description": "Tab label on now playing screen.",
     "type": "text",
@@ -780,14 +780,14 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_mark_episode_played": "Mark Episode as played",
+  "semantics_mark_episode_played": "Als abgespielt markieren",
   "@semantics_mark_episode_played": {
     "description": "Describes mark played button",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
   },
-  "semantics_mark_episode_unplayed": "Mark Episode as un-played",
+  "semantics_mark_episode_unplayed": "Als nicht abgespielt markieren",
   "@semantics_mark_episode_unplayed": {
     "description": "Describes mark unplayed button",
     "type": "text",
