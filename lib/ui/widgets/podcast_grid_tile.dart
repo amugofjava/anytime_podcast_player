@@ -28,6 +28,7 @@ class PodcastGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final podcastBloc = Provider.of<PodcastBloc>(context);
@@ -60,30 +61,36 @@ class PodcastGridTile extends StatelessWidget {
       child: Semantics(
         customSemanticsActions: {
           if (podcast.id != null)
-          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
-              audioBloc.playLatestEpisode(podcast),
+            CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
+                audioBloc.playLatestEpisode(podcast),
           if (podcast.id != null)
-          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
-              queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
+            CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
+                queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
           if (podcast.id != null)
-          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
-              audioBloc.playNextUnplayedEpisode(podcast),
+            CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
+                audioBloc.playNextUnplayedEpisode(podcast),
           if (podcast.id != null)
-          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
-              queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
+            CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
+                queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
         },
         label: '$semanticTitle, ${podcast.copyright}',
-        child: GridTile(
-          child: Hero(
-            key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
-            tag: '${podcast.imageUrl}:${podcast.link}',
-            child: ExcludeSemantics(
-              child: TileImage(
-                url: podcast.imageUrl!,
-                highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
-                count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
-                fontSize: 16.0,
-                size: 18.0,
+        child: Material(
+          color: theme.colorScheme.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(24.0),
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Hero(
+              key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
+              tag: '${podcast.imageUrl}:${podcast.link}',
+              child: ExcludeSemantics(
+                child: TileImage(
+                  url: podcast.imageUrl!,
+                  highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
+                  count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
+                  fontSize: 16.0,
+                  size: 18.0,
+                ),
               ),
             ),
           ),
@@ -222,31 +229,40 @@ class PodcastTitledGridTile extends StatelessWidget {
           podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
         });
       },
-      child: GridTile(
+      child: Material(
+        color: theme.colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(24.0),
+        clipBehavior: Clip.antiAlias,
         child: Hero(
           key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
           tag: '${podcast.imageUrl}:${podcast.link}',
-          child: Column(
-            children: [
-              TileImage(
-                url: podcast.imageUrl!,
-                highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
-                count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
-                size: 128.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 4.0,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TileImage(
+                  url: podcast.imageUrl!,
+                  highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
+                  count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
+                  size: 128.0,
                 ),
-                child: Text(
+                const SizedBox(height: 10.0),
+                Text(
                   podcast.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall,
                 ),
-              ),
-            ],
+                const SizedBox(height: 4.0),
+                Text(
+                  podcast.copyright ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall,
+                ),
+              ],
+            ),
           ),
         ),
       ),

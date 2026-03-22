@@ -124,7 +124,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           min: 0.0,
                           max: episodeLength.toDouble(),
                           divisions: divisions,
-                          activeColor: theme.primaryColor,
+                          activeColor: theme.colorScheme.primary,
                           semanticFormatterCallback: (double newValue) {
                             return _formatDuration(Duration(seconds: currentPosition));
                           })
@@ -133,7 +133,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                           value: 0,
                           min: 0.0,
                           max: 1.0,
-                          activeColor: theme.primaryColor,
+                          activeColor: theme.colorScheme.primary,
                         ),
                 ),
                 FittedBox(

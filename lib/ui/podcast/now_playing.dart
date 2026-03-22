@@ -5,12 +5,14 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
-import 'package:anytime/ui/podcast/now_playing_floating_player.dart';
 import 'package:anytime/ui/podcast/now_playing_options.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/playback_error_listener.dart';
@@ -49,8 +51,6 @@ class NowPlaying extends StatefulWidget {
 class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   late StreamSubscription<AudioState> playingStateSubscription;
   var textGroup = AutoSizeGroup();
-  double scrollPos = 0.0;
-  double opacity = 0.0;
 
   @override
   void initState() {
@@ -92,7 +92,6 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final playerBuilder = PlayerControlsBuilder.of(context);
-    final orientation = MediaQuery.orientationOf(context);
 
     return Semantics(
       header: false,
@@ -109,58 +108,9 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
             final WidgetBuilder? transportBuilder = playerBuilder?.builder(duration);
 
             return isMobilePortrait(context)
-                ? NotificationListener<DraggableScrollableNotification>(
-                    onNotification: (notification) {
-                      setState(() {
-                        if (notification.extent > (notification.minExtent)) {
-                          opacity = 1 - (notification.maxExtent - notification.extent);
-                          scrollPos = 1.0;
-                        } else {
-                          opacity = 0.0;
-                          scrollPos = 0.0;
-                        }
-                      });
-
-                      return true;
-                    },
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        // We need to hide the main player when the floating player is visible to prevent
-                        // screen readers from reading both parts of the stack.
-                        Visibility(
-                          visible: opacity < 1,
-                          child: NowPlayingTabs(
-                            episode: snapshot.data!,
-                            transportBuilder: transportBuilder,
-                          ),
-                        ),
-                        SizedBox.expand(
-                            child: SafeArea(
-                          child: Column(
-                            children: [
-                              /// Sized boxes without a child are 'invisible' so they do not prevent taps below
-                              /// the stack but are still present in the layout. We have a sized box here to stop
-                              /// the draggable panel from jumping as you start to pull it up. I am really looking
-                              /// forward to the Dart team fixing the nested scroll issues with [DraggableScrollableSheet]
-                              SizedBox(
-                                height: 64.0,
-                                child: scrollPos == 1
-                                    ? Opacity(
-                                        opacity: opacity,
-                                        child: const FloatingPlayer(),
-                                      )
-                                    : null,
-                              ),
-                              if (orientation == Orientation.portrait)
-                                const Expanded(
-                                  child: NowPlayingOptionsSelector(),
-                                ),
-                            ],
-                          ),
-                        )),
-                      ],
-                    ),
+                ? NowPlayingMobileScaffold(
+                    episode: snapshot.data!,
+                    transportBuilder: transportBuilder,
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.max,
@@ -176,6 +126,407 @@ class _NowPlayingState extends State<NowPlaying> with WidgetsBindingObserver {
                     ],
                   );
           }),
+    );
+  }
+}
+
+class NowPlayingMobileScaffold extends StatelessWidget {
+  final Episode episode;
+  final WidgetBuilder? transportBuilder;
+
+  const NowPlayingMobileScaffold({
+    super.key,
+    required this.episode,
+    required this.transportBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: theme.appBarTheme.systemOverlayStyle!.copyWith(
+        systemNavigationBarColor: theme.colorScheme.surface,
+      ),
+      child: Scaffold(
+        backgroundColor: theme.colorScheme.surface,
+        appBar: AppBar(
+          backgroundColor: theme.colorScheme.surface,
+          surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0.0,
+          leading: IconButton(
+            tooltip: L.of(context)!.minimise_player_window_button_label,
+            icon: Icon(
+              Icons.expand_more,
+              color: theme.colorScheme.onSurface,
+              semanticLabel: L.of(context)!.minimise_player_window_button_label,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text('Now Playing'),
+          actions: [
+            IconButton(
+              tooltip: L.of(context)!.share_episode_option_label,
+              icon: const Icon(Icons.share_outlined),
+              onPressed: () async {
+                await shareEpisode(episode: episode);
+              },
+            ),
+            PopupMenuButton<String>(
+              onSelected: (value) async {
+                if (value == 'share') {
+                  await shareEpisode(episode: episode);
+                } else if (value == 'queue') {
+                  final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+                  queueBloc.queueEvent(QueueAddEvent(episode: episode));
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem<String>(
+                  value: 'queue',
+                  child: Text(L.of(context)!.podcast_context_queue_latest_episode_label),
+                ),
+                PopupMenuItem<String>(
+                  value: 'share',
+                  child: Text(L.of(context)!.share_episode_option_label),
+                ),
+              ],
+            ),
+          ],
+        ),
+        body: PlaybackErrorListener(
+          child: Column(
+            children: [
+              Expanded(
+                flex: 5,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: NowPlayingArtworkCard(
+                          imageUrl: episode.positionalImageUrl ?? episode.imageUrl,
+                        ),
+                      ),
+                      const SizedBox(height: 22.0),
+                      _NowPlayingTitleBlock(episode: episode),
+                      const SizedBox(height: 18.0),
+                      transportBuilder != null
+                          ? transportBuilder!(context)
+                          : const SizedBox(
+                              height: 148.0,
+                              child: NowPlayingTransport(),
+                            ),
+                      const SizedBox(height: 18.0),
+                      _NowPlayingDetailsCard(episode: episode),
+                      const SizedBox(height: 14.0),
+                      const _NowPlayingQueueBar(),
+                    ],
+                  ),
+                ),
+              ),
+              const Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 12.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24.0),
+                      topRight: Radius.circular(24.0),
+                    ),
+                    child: NowPlayingOptionsSelectorWide(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class NowPlayingArtworkCard extends StatelessWidget {
+  final String? imageUrl;
+
+  const NowPlayingArtworkCard({
+    super.key,
+    required this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholderBuilder = PlaceholderBuilder.of(context);
+    final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final size = (width - 40.0).clamp(240.0, 360.0);
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        children: [
+          Positioned(
+            top: 12.0,
+            left: 12.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(34.0),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 4.0,
+            left: 0.0,
+            right: 12.0,
+            bottom: 12.0,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.04),
+                borderRadius: BorderRadius.circular(34.0),
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30.0),
+              child: imageUrl == null || imageUrl!.isEmpty
+                  ? DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerLow,
+                      ),
+                      child: Icon(
+                        Icons.podcasts_rounded,
+                        size: 72.0,
+                        color: theme.colorScheme.primary,
+                      ),
+                    )
+                  : PodcastImage(
+                      key: Key('nowplaying$imageUrl'),
+                      url: imageUrl!,
+                      width: size,
+                      height: size,
+                      fit: BoxFit.cover,
+                      borderRadius: 30.0,
+                      placeholder: placeholderBuilder != null
+                          ? placeholderBuilder.builder()(context)
+                          : DelayedCircularProgressIndicator(),
+                      errorPlaceholder: placeholderBuilder != null
+                          ? placeholderBuilder.errorBuilder()(context)
+                          : const Image(image: AssetImage('assets/images/anytime-placeholder-logo.png')),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NowPlayingTitleBlock extends StatelessWidget {
+  final Episode episode;
+
+  const _NowPlayingTitleBlock({
+    required this.episode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+    final theme = Theme.of(context);
+    final subtitle = _episodeSubtitle();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                episode.title ?? '',
+                style: theme.textTheme.headlineMedium?.copyWith(height: 1.06),
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                queueBloc.queueEvent(QueueAddEvent(episode: episode));
+              },
+              icon: const Icon(Icons.add_circle_outline_rounded),
+              color: theme.colorScheme.primary,
+            ),
+          ],
+        ),
+        if (subtitle.isNotEmpty) ...[
+          const SizedBox(height: 6.0),
+          Text(
+            subtitle,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  String _episodeSubtitle() {
+    final parts = <String>[];
+
+    final podcast = episode.podcast?.trim();
+    if (podcast != null && podcast.isNotEmpty) {
+      parts.add(podcast);
+    }
+
+    if (episode.episode > 0) {
+      parts.add('Ep. ${episode.episode}');
+    } else if (episode.season > 0) {
+      parts.add('Season ${episode.season}');
+    }
+
+    return parts.join(' • ');
+  }
+}
+
+class _NowPlayingDetailsCard extends StatelessWidget {
+  final Episode episode;
+
+  const _NowPlayingDetailsCard({
+    required this.episode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+    final theme = Theme.of(context);
+    final title = episode.podcast?.trim().isNotEmpty == true ? episode.podcast!.trim() : 'This episode';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18.0),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(24.0),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42.0,
+            height: 42.0,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+            child: Icon(
+              Icons.speaker_group_rounded,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(width: 14.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'LISTENING TO',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                const SizedBox(height: 2.0),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12.0),
+          FilledButton.tonal(
+            onPressed: () {
+              queueBloc.queueEvent(QueueAddEvent(episode: episode));
+            },
+            child: const Text('Queue'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NowPlayingQueueBar extends StatelessWidget {
+  const _NowPlayingQueueBar();
+
+  @override
+  Widget build(BuildContext context) {
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+    final theme = Theme.of(context);
+
+    return StreamBuilder<QueueState>(
+      stream: queueBloc.queue,
+      initialData: QueueEmptyState(),
+      builder: (context, snapshot) {
+        final queue = snapshot.data?.queue ?? const <Episode>[];
+        final next = queue.isNotEmpty ? queue.first : null;
+        final label = next?.title?.trim().isNotEmpty == true ? next!.title! : 'Queue is empty';
+
+        return Container(
+          padding: const EdgeInsets.fromLTRB(18.0, 14.0, 18.0, 14.0),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(24.0),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.format_list_bulleted_rounded,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 12.0),
+              Expanded(
+                child: Text(
+                  next == null ? label : 'Up Next: $label',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              SizedBox(
+                width: 18.0,
+                height: 14.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: List<Widget>.generate(4, (index) {
+                    final heights = [14.0, 9.0, 11.0, 7.0];
+                    return Padding(
+                      padding: EdgeInsets.only(right: index == 3 ? 0.0 : 2.0),
+                      child: Container(
+                        width: 3.0,
+                        height: heights[index],
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.72),
+                          borderRadius: BorderRadius.circular(999.0),
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -300,6 +651,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final chapterTitle = episode?.currentChapter?.title ?? '';
     final chapterUrl = episode?.currentChapter?.url ?? '';
 
@@ -317,10 +669,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 minFontSize: minFontSize,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+                style: theme.textTheme.headlineMedium,
                 maxLines: episode!.hasChapters ? 3 : 4,
               ),
             ),
@@ -345,10 +694,8 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                         minFontSize: minFontSize,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey[300],
-                          fontWeight: FontWeight.normal,
-                          fontSize: 16.0,
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          color: colorScheme.onSurfaceVariant,
                         ),
                         maxLines: 2,
                       ),
@@ -367,7 +714,7 @@ class NowPlayingEpisodeDetails extends StatelessWidget {
                               icon: const Icon(
                                 Icons.link,
                               ),
-                              color: theme.primaryIconTheme.color,
+                              color: colorScheme.primary,
                               onPressed: () {
                                 _chapterLink(chapterUrl);
                               }),
@@ -423,8 +770,8 @@ class NowPlayingShowNotes extends StatelessWidget {
                 child: Text(
                   episode!.title!,
                   style: theme.textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -478,19 +825,18 @@ class NowPlayingTabs extends StatelessWidget {
         length: episode.hasChapters ? 3 : 2,
         initialIndex: episode.hasChapters ? 1 : 0,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: theme
-              .appBarTheme
-              .systemOverlayStyle!
-              .copyWith(systemNavigationBarColor: theme.secondaryHeaderColor),
+          value: theme.appBarTheme.systemOverlayStyle!
+              .copyWith(systemNavigationBarColor: theme.colorScheme.surfaceContainerLow),
           child: Scaffold(
+            backgroundColor: theme.colorScheme.surface,
             appBar: AppBar(
-              backgroundColor: theme.scaffoldBackgroundColor,
+              backgroundColor: theme.colorScheme.surfaceContainerLow,
               elevation: 0.0,
               leading: IconButton(
                 tooltip: L.of(context)!.minimise_player_window_button_label,
                 icon: Icon(
                   Icons.keyboard_arrow_down,
-                  color: theme.primaryIconTheme.color,
+                  color: theme.colorScheme.onSurface,
                   semanticLabel: L.of(context)!.minimise_player_window_button_label,
                 ),
                 onPressed: () => {
@@ -562,7 +908,7 @@ class _EpisodeTabBarState extends State<EpisodeTabBar> {
     return TabBar(
       isScrollable: true,
       indicatorSize: TabBarIndicatorSize.tab,
-      indicator: DotDecoration(colour: theme.primaryColor),
+      indicator: DotDecoration(colour: theme.colorScheme.primary),
       tabs: [
         if (widget.chapters)
           Tab(

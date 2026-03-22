@@ -10,6 +10,7 @@ import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 /// Displays a list of currently downloaded podcast episodes.
 class Downloads extends StatefulWidget {
@@ -41,12 +42,38 @@ class _DownloadsState extends State<Downloads> {
         final state = snapshot.data;
 
         if (state is BlocPopulatedState<List<Episode>>) {
-          return PodcastEpisodeList(
-            episodes: state.results,
-            play: true,
-            download: false,
-            icon: Icons.cloud_download,
-            emptyMessage: L.of(context)!.no_downloads_message,
+          final episodes = state.results ?? <Episode>[];
+          final totalBytes = episodes.fold<int>(0, (total, episode) => total + episode.length);
+
+          return MultiSliver(
+            children: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        L.of(context)!.downloads,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 6.0),
+                      Text(
+                        '${episodes.length} episodes • ${_formatFileSize(totalBytes)}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              PodcastEpisodeList(
+                episodes: episodes,
+                play: true,
+                download: false,
+                icon: Icons.cloud_download,
+                emptyMessage: L.of(context)!.no_downloads_message,
+              ),
+            ],
           );
         } else {
           if (state is BlocLoadingState) {
@@ -74,5 +101,19 @@ class _DownloadsState extends State<Downloads> {
         }
       },
     );
+  }
+
+  String _formatFileSize(int bytes) {
+    if (bytes <= 0) {
+      return '0 MB';
+    }
+
+    final mb = bytes / (1024 * 1024);
+
+    if (mb >= 1024) {
+      return '${(mb / 1024).toStringAsFixed(1)} GB';
+    }
+
+    return '${mb.toStringAsFixed(1)} MB';
   }
 }

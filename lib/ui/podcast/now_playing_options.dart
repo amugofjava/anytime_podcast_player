@@ -29,7 +29,7 @@ import 'package:provider/provider.dart';
 ///
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double? scrollPos;
-  static const baseSize = 68.0;
+  static const baseSize = 70.0;
 
   const NowPlayingOptionsSelector({super.key, this.scrollPos});
 
@@ -44,149 +44,150 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
   Widget build(BuildContext context) {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
-    final windowHeight = MediaQuery.sizeOf(context).height;
-    final minSize = NowPlayingOptionsSelector.baseSize / (windowHeight - NowPlayingOptionsSelector.baseSize);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableHeight = constraints.maxHeight > 0.0 ? constraints.maxHeight : MediaQuery.sizeOf(context).height;
+        final minSize = (NowPlayingOptionsSelector.baseSize / availableHeight).clamp(0.0, 1.0).toDouble();
 
-    return DraggableScrollableSheet(
-      initialChildSize: minSize,
-      minChildSize: minSize,
-      maxChildSize: 1.0,
-      controller: draggableController,
-      // Snap doesn't work as the sheet and scroll controller just don't get along
-      // snap: true,
-      // snapSizes: [minSize, maxSize],
-      builder: (BuildContext context, ScrollController scrollController) {
-        return DefaultTabController(
-          animationDuration: !draggableController!.isAttached || draggableController!.size <= minSize
-              ? const Duration(seconds: 0)
-              : kTabScrollDuration,
-          length: 2,
-          child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              child: ConstrainedBox(
-                constraints: BoxConstraints.expand(
-                  height: constraints.maxHeight,
-                ),
-                child: Material(
-                  color: theme.secondaryHeaderColor,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: theme.highlightColor,
-                      width: 0.0,
+        return DraggableScrollableSheet(
+          initialChildSize: minSize,
+          minChildSize: minSize,
+          maxChildSize: 1.0,
+          controller: draggableController,
+          // Snap doesn't work as the sheet and scroll controller just don't get along
+          // snap: true,
+          // snapSizes: [minSize, maxSize],
+          builder: (BuildContext context, ScrollController scrollController) {
+            return DefaultTabController(
+              animationDuration: !draggableController!.isAttached || draggableController!.size <= minSize
+                  ? const Duration(seconds: 0)
+                  : kTabScrollDuration,
+              length: 2,
+              child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
+                return SingleChildScrollView(
+                  controller: scrollController,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.expand(
+                      height: constraints.maxHeight,
                     ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(18.0),
-                      topRight: Radius.circular(18.0),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SliderHandle(
-                        label: optionsSliderOpen()
-                            ? L.of(context)!.semantic_playing_options_collapse_label
-                            : L.of(context)!.semantic_playing_options_expand_label,
-                        onTap: () {
-                          if (draggableController != null) {
-                            if (draggableController!.size < 1.0) {
-                              draggableController!.animateTo(
-                                1.0,
-                                duration: const Duration(milliseconds: 150),
-                                curve: Curves.easeInOut,
-                              );
-                            } else {
-                              draggableController!.animateTo(
-                                0.0,
-                                duration: const Duration(milliseconds: 150),
-                                curve: Curves.easeInOut,
-                              );
-                            }
-                          }
-                        },
+                    child: Material(
+                      color: theme.colorScheme.surfaceContainerLow,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2),
+                          width: 0.0,
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(18.0),
+                          topRight: Radius.circular(18.0),
+                        ),
                       ),
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.0),
-                          border: Border(
-                            bottom: draggableController != null &&
-                                    (!draggableController!.isAttached || draggableController!.size <= minSize)
-                                ? BorderSide.none
-                                : BorderSide(color: Colors.grey[800]!, width: 1.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SliderHandle(
+                            label: optionsSliderOpen()
+                                ? L.of(context)!.semantic_playing_options_collapse_label
+                                : L.of(context)!.semantic_playing_options_expand_label,
+                            onTap: () {
+                              if (draggableController != null) {
+                                if (draggableController!.size < 1.0) {
+                                  draggableController!.animateTo(
+                                    1.0,
+                                    duration: const Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
+                                  );
+                                } else {
+                                  draggableController!.animateTo(
+                                    0.0,
+                                    duration: const Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              }
+                            },
                           ),
-                        ),
-                        child: StreamBuilder<QueueState>(
-                            initialData: QueueEmptyState(),
-                            stream: queueBloc.queue,
-                            builder: (context, snapshot) {
-                              return TabBar(
-                                onTap: (index) {
-                                  DefaultTabController.of(ctx).animateTo(index);
-
-                                  if (draggableController != null && draggableController!.size < 1.0) {
-                                    draggableController!.animateTo(
-                                      1.0,
-                                      duration: const Duration(milliseconds: 150),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  }
-                                },
-                                automaticIndicatorColorAdjustment: false,
-                                indicatorPadding: EdgeInsets.zero,
-
-                                /// Little hack to hide the indicator when closed
-                                indicatorColor: draggableController != null &&
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.0),
+                              border: Border(
+                                bottom: draggableController != null &&
                                         (!draggableController!.isAttached || draggableController!.size <= minSize)
-                                    ? theme.secondaryHeaderColor
-                                    : null,
-                                tabs: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                    child: Text(
-                                      L.of(context)!.up_next_queue_label.toUpperCase(),
-                                      style: theme.textTheme.labelLarge,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                    // If the episode does not support transcripts, grey out
-                                    // the option.
-                                    child: snapshot.hasData &&
-                                            snapshot.data?.playing != null &&
-                                            snapshot.data!.playing!.hasTranscripts
-                                        ? Text(
-                                            L.of(context)!.transcript_label.toUpperCase(),
-                                            style: theme.textTheme.labelLarge,
-                                          )
-                                        : Text(
-                                            L.of(context)!.transcript_label.toUpperCase(),
-                                            style: theme
-                                                .textTheme
-                                                .labelLarge!
-                                                .copyWith(color: theme.disabledColor),
-                                          ),
-                                  ),
-                                ],
-                              );
-                            }),
+                                    ? BorderSide.none
+                                    : BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2)),
+                              ),
+                            ),
+                            child: StreamBuilder<QueueState>(
+                                initialData: QueueEmptyState(),
+                                stream: queueBloc.queue,
+                                builder: (context, snapshot) {
+                                  return TabBar(
+                                    onTap: (index) {
+                                      DefaultTabController.of(ctx).animateTo(index);
+
+                                      if (draggableController != null && draggableController!.size < 1.0) {
+                                        draggableController!.animateTo(
+                                          1.0,
+                                          duration: const Duration(milliseconds: 150),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    },
+                                    automaticIndicatorColorAdjustment: false,
+                                    indicatorPadding: EdgeInsets.zero,
+
+                                    /// Little hack to hide the indicator when closed
+                                    indicatorColor: draggableController != null &&
+                                            (!draggableController!.isAttached || draggableController!.size <= minSize)
+                                        ? theme.colorScheme.surfaceContainerLow
+                                        : null,
+                                    tabs: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                        child: Text(
+                                          L.of(context)!.up_next_queue_label.toUpperCase(),
+                                          style: theme.textTheme.labelLarge,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                        // If the episode does not support transcripts, grey out
+                                        // the option.
+                                        child: snapshot.hasData &&
+                                                snapshot.data?.playing != null &&
+                                                snapshot.data!.playing!.hasTranscripts
+                                            ? Text(
+                                                L.of(context)!.transcript_label.toUpperCase(),
+                                                style: theme.textTheme.labelLarge,
+                                              )
+                                            : Text(
+                                                L.of(context)!.transcript_label.toUpperCase(),
+                                                style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
+                                              ),
+                                      ),
+                                    ],
+                                  );
+                                }),
+                          ),
+                          const Padding(padding: EdgeInsets.only(bottom: 12.0)),
+                          const Expanded(
+                            child: TabBarView(
+                              children: [
+                                UpNextView(),
+                                TranscriptView(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const Padding(padding: EdgeInsets.only(bottom: 12.0)),
-                      const Expanded(
-                        child: TabBarView(
-                          children: [
-                            UpNextView(),
-                            TranscriptView(),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
             );
-          }),
+          },
         );
       },
     );
@@ -220,7 +221,7 @@ class NowPlayingOptionsScaffold extends StatelessWidget {
 /// Currently these options are Up Next & Transcript.
 class NowPlayingOptionsSelectorWide extends StatefulWidget {
   final double? scrollPos;
-  static const baseSize = 68.0;
+  static const baseSize = 70.0;
 
   const NowPlayingOptionsSelectorWide({super.key, this.scrollPos});
 
@@ -247,7 +248,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
               height: constraints.maxHeight,
             ),
             child: Material(
-              color: theme.secondaryHeaderColor,
+              color: theme.colorScheme.surfaceContainerLow,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -257,7 +258,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.0),
                       border: Border(
-                        bottom: BorderSide(color: Colors.grey[800]!, width: 1.0),
+                        bottom: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2)),
                       ),
                     ),
                     child: StreamBuilder<QueueState>(
@@ -285,10 +286,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                                       )
                                     : Text(
                                         L.of(context)!.transcript_label.toUpperCase(),
-                                        style: theme
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(color: theme.disabledColor),
+                                        style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
                                       ),
                               ),
                             ],

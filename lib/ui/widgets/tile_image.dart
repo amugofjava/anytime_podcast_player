@@ -40,7 +40,7 @@ class TileImage extends StatelessWidget {
       height: size,
       width: size,
       fontSize: fontSize,
-      borderRadius: 4.0,
+      borderRadius: 16.0,
       fit: BoxFit.contain,
       placeholder: placeholderBuilder != null
           ? placeholderBuilder.builder()(context)

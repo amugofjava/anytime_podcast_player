@@ -4,6 +4,7 @@
 
 import 'package:anytime/core/annotations.dart';
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/person.dart';
@@ -118,6 +119,21 @@ class Episode {
   /// Date and time episode was last updated and persisted.
   DateTime? lastUpdated;
 
+  /// Current analysis state for this episode if ad analysis has been attempted.
+  String? analysisStatus;
+
+  /// Identifier for an analysis job if the backend issues one.
+  String? analysisJobId;
+
+  /// Error captured from the latest analysis attempt.
+  String? analysisError;
+
+  /// When analysis metadata was last updated.
+  DateTime? analysisUpdatedAt;
+
+  /// Detected ad segments for this episode.
+  List<AdSegment> adSegments;
+
   /// Processed version of episode description.
   String? _descriptionText;
 
@@ -177,6 +193,11 @@ class Episode {
     this.persons = const <Person>[],
     this.transcriptId = 0,
     this.lastUpdated,
+    this.analysisStatus,
+    this.analysisJobId,
+    this.analysisError,
+    this.analysisUpdatedAt,
+    this.adSegments = const <AdSegment>[],
   })  : imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps,
         contentUrl = contentUrl?.forceHttps,
@@ -215,6 +236,11 @@ class Episode {
       'transcriptUrls': (transcriptUrls).map((tu) => tu.toMap()).toList(growable: false),
       'persons': (persons).map((person) => person.toMap()).toList(growable: false),
       'lastUpdated': lastUpdated?.millisecondsSinceEpoch.toString() ?? '',
+      'analysisStatus': analysisStatus,
+      'analysisJobId': analysisJobId,
+      'analysisError': analysisError,
+      'analysisUpdatedAt': analysisUpdatedAt?.millisecondsSinceEpoch.toString() ?? '',
+      'adSegments': (adSegments).map((adSegment) => adSegment.toMap()).toList(growable: false),
     };
   }
 
@@ -222,6 +248,7 @@ class Episode {
     var chapters = <Chapter>[];
     var transcriptUrls = <TranscriptUrl>[];
     var persons = <Person>[];
+    var adSegments = <AdSegment>[];
 
     // We need to perform an 'is' on each loop to prevent Dart
     // from complaining that we have not set the type for chapter.
@@ -245,6 +272,14 @@ class Episode {
       for (var person in (episode['persons'] as List)) {
         if (person is Map<String, dynamic>) {
           persons.add(Person.fromMap(person));
+        }
+      }
+    }
+
+    if (episode['adSegments'] != null) {
+      for (var adSegment in (episode['adSegments'] as List)) {
+        if (adSegment is Map) {
+          adSegments.add(AdSegment.fromMap(Map<String, dynamic>.from(adSegment)));
         }
       }
     }
@@ -286,7 +321,28 @@ class Episode {
       lastUpdated: episode['lastUpdated'] == null || episode['lastUpdated'] == 'null'
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(int.parse(episode['lastUpdated'] as String)),
+      analysisStatus: episode['analysisStatus'] as String?,
+      analysisJobId: episode['analysisJobId'] as String?,
+      analysisError: episode['analysisError'] as String?,
+      analysisUpdatedAt: _parseOptionalDateTime(episode['analysisUpdatedAt']),
+      adSegments: adSegments,
     );
+  }
+
+  static DateTime? _parseOptionalDateTime(Object? value) {
+    if (value == null || value == 'null' || value == '') {
+      return null;
+    }
+
+    if (value is int) {
+      return DateTime.fromMillisecondsSinceEpoch(value);
+    }
+
+    if (value is String) {
+      return DateTime.fromMillisecondsSinceEpoch(int.parse(value));
+    }
+
+    return null;
   }
 
   static DownloadState _determineState(int? index) {
@@ -341,9 +397,14 @@ class Episode {
             played == other.played &&
             chaptersUrl == other.chaptersUrl &&
             transcriptId == other.transcriptId &&
+            analysisStatus == other.analysisStatus &&
+            analysisJobId == other.analysisJobId &&
+            analysisError == other.analysisError &&
+            analysisUpdatedAt?.millisecondsSinceEpoch == other.analysisUpdatedAt?.millisecondsSinceEpoch &&
             listEquals(persons, other.persons) &&
             listEquals(chapters, other.chapters) &&
-            listEquals(transcriptUrls, other.transcriptUrls);
+            listEquals(transcriptUrls, other.transcriptUrls) &&
+            listEquals(adSegments, other.adSegments);
   }
 
   @override
@@ -374,6 +435,11 @@ class Episode {
       chaptersUrl.hashCode ^
       chapters.hashCode ^
       transcriptId.hashCode ^
+      analysisStatus.hashCode ^
+      analysisJobId.hashCode ^
+      analysisError.hashCode ^
+      analysisUpdatedAt.hashCode ^
+      adSegments.hashCode ^
       lastUpdated.hashCode;
 
   @override

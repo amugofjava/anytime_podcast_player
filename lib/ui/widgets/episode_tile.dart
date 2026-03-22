@@ -147,7 +147,7 @@ class _ExpandableEpisodeTileState extends State<ExpandableEpisodeTile> {
               height: 5.0,
               width: 56.0 * (widget.episode.percentagePlayed / 100),
               child: Container(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
@@ -450,7 +450,7 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
                       height: 5.0,
                       width: 56.0 * (widget.episode.percentagePlayed / 100),
                       child: Container(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
@@ -835,7 +835,7 @@ class _AndroidAccessibleEpisodeTileState extends State<_AndroidAccessibleEpisode
                     height: 5.0,
                     width: 56.0 * (widget.episode.percentagePlayed / 100),
                     child: Container(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],

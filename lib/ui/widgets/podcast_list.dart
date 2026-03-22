@@ -33,32 +33,39 @@ class PodcastList extends StatelessWidget {
               var size = mode == 1 ? 100.0 : 160.0;
 
               if (mode == 0) {
-                return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final i = results.items[index];
-                    final p = Podcast.fromSearchResultItem(i);
+                return SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 24.0),
+                  sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      final i = results.items[index];
+                      final p = Podcast.fromSearchResultItem(i);
 
-                    return PodcastTile(podcast: p);
-                  },
-                  childCount: results.items.length,
-                  addAutomaticKeepAlives: false,
-                ));
+                      return PodcastTile(podcast: p);
+                    },
+                    childCount: results.items.length,
+                    addAutomaticKeepAlives: false,
+                  )),
+                );
               }
-              return SliverGrid(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: size,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    final i = results.items[index];
-                    final p = Podcast.fromSearchResultItem(i);
+              return SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 24.0),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: size,
+                    mainAxisSpacing: 16.0,
+                    crossAxisSpacing: 16.0,
+                    mainAxisExtent: size + 58.0,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      final i = results.items[index];
+                      final p = Podcast.fromSearchResultItem(i);
 
-                    return PodcastGridTile(podcast: p);
-                  },
-                  childCount: results.items.length,
+                      return PodcastTitledGridTile(podcast: p);
+                    },
+                    childCount: results.items.length,
+                  ),
                 ),
               );
             } else {
@@ -83,7 +90,7 @@ class PodcastList extends StatelessWidget {
               Icon(
                 Icons.search,
                 size: 75,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
               Text(
                 L.of(context)!.no_search_results_message,

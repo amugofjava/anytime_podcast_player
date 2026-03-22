@@ -54,7 +54,7 @@ class _EpisodeSortSelectorWidgetState extends State<EpisodeSortSelectorWidget> {
                                 barrierLabel: L.of(context)!.scrim_episode_sort_selector,
                                 isScrollControlled: true,
                                 context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
+                                backgroundColor: theme.colorScheme.surfaceContainerLow,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(16.0),

@@ -76,7 +76,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
 
     return Container(
       height: 64,
-      color: theme.canvasColor,
+      color: theme.colorScheme.surface,
       child: StreamBuilder<Episode?>(
           stream: audioBloc.nowPlaying,
           builder: (context, snapshot) {

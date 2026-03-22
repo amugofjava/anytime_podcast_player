@@ -123,7 +123,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                         height: 13,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).canvasColor,
+                          color: Theme.of(context).colorScheme.surfaceContainerLowest,
                         ),
                       ),
                     ),
@@ -136,7 +136,7 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                         height: 10.0,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context).indicatorColor,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -149,15 +149,15 @@ class _PodcastImageState extends State<PodcastImage> with TickerProviderStateMix
                         margin: const EdgeInsets.symmetric(horizontal: 2),
                         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          backgroundBlendMode: BlendMode.luminosity,
-                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(999),
+                          color: Theme.of(context).colorScheme.secondaryContainer,
                         ),
                         child: Text(
                           widget.count.toString(),
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                             fontSize: widget.fontSize,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),

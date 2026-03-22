@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:anytime/api/podcast/mobile_podcast_api.dart';
 import 'package:anytime/api/podcast/podcast_api.dart';
@@ -29,6 +30,7 @@ import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/notifications/mobile_notification_service.dart';
 import 'package:anytime/services/notifications/notification_service.dart';
+import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
@@ -60,8 +62,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../services/settings/settings_service.dart';
 
-var theme = Themes.lightTheme().themeData;
-
 /// Anytime is a Podcast player. You can search and subscribe to podcasts,
 /// download and stream episodes and view the latest podcast charts.
 // ignore: must_be_immutable
@@ -71,6 +71,7 @@ class AnytimePodcastApp extends StatefulWidget {
   late DownloadService downloadService;
   late NotificationService notificationService;
   late AudioPlayerService audioPlayerService;
+  late EpisodeAnalysisService episodeAnalysisService;
   late OPMLService opmlService;
   PodcastService? podcastService;
   SettingsBloc? settingsBloc;
@@ -84,6 +85,8 @@ class AnytimePodcastApp extends StatefulWidget {
   }) : repository = SembastRepository() {
     podcastApi = MobilePodcastApi();
     notificationService = MobileNotificationService();
+    episodeAnalysisService =
+        Environment.hasAnalysisBackend ? BackendEpisodeAnalysisService() : DisabledEpisodeAnalysisService();
 
     podcastService = MobilePodcastService(
       api: podcastApi,
@@ -174,8 +177,11 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           dispose: (_, value) => value.dispose(),
         ),
         Provider<EpisodeBloc>(
-          create: (_) =>
-              EpisodeBloc(podcastService: widget.podcastService!, audioPlayerService: widget.audioPlayerService),
+          create: (_) => EpisodeBloc(
+            podcastService: widget.podcastService!,
+            audioPlayerService: widget.audioPlayerService,
+            analysisService: widget.episodeAnalysisService,
+          ),
           dispose: (_, value) => value.dispose(),
         ),
         Provider<PodcastBloc>(
@@ -382,7 +388,8 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final theme = Theme.of(context);
     final pager = Provider.of<PagerBloc>(context);
     final searchBloc = Provider.of<EpisodeBloc>(context);
-    final backgroundColour = Theme.of(context).scaffoldBackgroundColor;
+    final colorScheme = theme.colorScheme;
+    final backgroundColour = colorScheme.surface;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: theme.appBarTheme.systemOverlayStyle!,
@@ -396,10 +403,12 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   SliverVisibility(
                     visible: widget.topBarVisible,
                     sliver: SliverAppBar(
-                      title: ExcludeSemantics(
+                      title: const ExcludeSemantics(
                         child: TitleWidget(),
                       ),
-                      backgroundColor: backgroundColour,
+                      backgroundColor: colorScheme.surfaceContainerLow,
+                      surfaceTintColor: Colors.transparent,
+                      toolbarHeight: 74.0,
                       floating: false,
                       pinned: true,
                       snap: false,
@@ -556,36 +565,38 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
             builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
               int index = snapshot.data ?? 0;
 
-              return BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: theme.bottomAppBarTheme.color,
-                selectedIconTheme: theme.iconTheme,
-                selectedItemColor: theme.iconTheme.color,
-                selectedFontSize: 11.0,
-                unselectedFontSize: 11.0,
-                unselectedItemColor:
-                    HSLColor.fromColor(theme.bottomAppBarTheme.color!).withLightness(0.8).toColor(),
-                currentIndex: index,
-                onTap: pager.changePage,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: index == 0 ? const Icon(Icons.library_music) : const Icon(Icons.library_music_outlined),
-                    label: L.of(context)!.library,
+              return SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 12.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28.0),
+                    child: BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
+                      child: NavigationBar(
+                        selectedIndex: index,
+                        onDestinationSelected: pager.changePage,
+                        destinations: <NavigationDestination>[
+                          NavigationDestination(
+                            selectedIcon: const Icon(Icons.library_music),
+                            icon: const Icon(Icons.library_music_outlined),
+                            label: L.of(context)!.library,
+                          ),
+                          NavigationDestination(
+                            selectedIcon: const Icon(Icons.explore),
+                            icon: const Icon(Icons.explore_outlined),
+                            label: L.of(context)!.discover,
+                          ),
+                          NavigationDestination(
+                            selectedIcon: const Icon(Icons.download),
+                            icon: const Icon(Icons.download_outlined),
+                            label: L.of(context)!.downloads,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  // To be fleshed out later.
-                  // BottomNavigationBarItem(
-                  //   icon: index == 0 ? Icon(Icons.article_rounded) : Icon(Icons.article_outlined),
-                  //   label: 'Episodes',
-                  // ),
-                  BottomNavigationBarItem(
-                    icon: index == 1 ? const Icon(Icons.explore) : const Icon(Icons.explore_outlined),
-                    label: L.of(context)!.discover,
-                  ),
-                  BottomNavigationBarItem(
-                    icon: index == 2 ? const Icon(Icons.download) : const Icon(Icons.download_outlined),
-                    label: L.of(context)!.downloads,
-                  ),
-                ],
+                ),
               );
             }),
       ),
@@ -631,7 +642,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                   'hello@anytimeplayer.app',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: theme.indicatorColor,
+                    color: theme.colorScheme.primary,
                   ),
                 ),
               ),
@@ -653,7 +664,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
       case 'layout':
         await showModalBottomSheet<void>(
           context: context,
-          backgroundColor: theme.secondaryHeaderColor,
+          backgroundColor: theme.colorScheme.surfaceContainerLow,
           barrierLabel: L.of(context)!.scrim_layout_selector,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -748,44 +759,35 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
 }
 
 class TitleWidget extends StatelessWidget {
-  final TextStyle _titleTheme1 = theme.textTheme.bodyMedium!.copyWith(
-    color: const Color.fromARGB(255, 255, 153, 0),
-    fontWeight: FontWeight.bold,
-    fontFamily: 'MontserratRegular',
-    fontSize: 18,
-  );
-
-  final TextStyle _titleTheme2Light = theme.textTheme.bodyMedium!.copyWith(
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-    fontFamily: 'MontserratRegular',
-    fontSize: 18,
-  );
-
-  final TextStyle _titleTheme2Dark = theme.textTheme.bodyMedium!.copyWith(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-    fontFamily: 'MontserratRegular',
-    fontSize: 18,
-  );
-
-  TitleWidget({
+  const TitleWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
-      padding: const EdgeInsets.only(left: 2.0),
+      padding: const EdgeInsets.only(left: 2.0, right: 8.0),
       child: Row(
         children: <Widget>[
-          Text(
-            'Anytime ',
-            style: _titleTheme1,
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.secondaryContainer,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Icon(
+              Icons.graphic_eq_rounded,
+              size: 18.0,
+              color: theme.colorScheme.primary,
+            ),
           ),
+          const SizedBox(width: 12.0),
           Text(
-            'Player',
-            style: Theme.of(context).brightness == Brightness.light ? _titleTheme2Light : _titleTheme2Dark,
+            'Anytime',
+            style: theme.textTheme.titleLarge,
           ),
         ],
       ),

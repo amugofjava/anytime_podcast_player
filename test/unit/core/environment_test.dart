@@ -15,5 +15,10 @@ void main() {
       final userAgent = Environment.userAgent();
       expect(userAgent, contains('Anytime/${Environment.projectVersion}'));
     });
+
+    test('analysis backend base URL defaults to empty', () {
+      expect(Environment.analysisBackendBaseUrl, isEmpty);
+      expect(Environment.hasAnalysisBackend, isFalse);
+    });
   });
 }

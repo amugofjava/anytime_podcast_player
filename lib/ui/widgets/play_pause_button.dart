@@ -20,19 +20,19 @@ class PlayPauseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Semantics(
       label: '$label $title',
       child: CircularPercentIndicator(
         radius: 19.0,
-        lineWidth: 1.5,
-        backgroundColor: Theme.of(context).primaryColor,
+        lineWidth: 2.0,
+        backgroundColor: colorScheme.surfaceContainerHigh,
         percent: 0.0,
         center: Icon(
           icon,
           size: 22.0,
-
-          /// Why is this not picking up the theme like other widgets?!?!?!
-          color: Theme.of(context).primaryColor,
+          color: colorScheme.primary,
         ),
       ),
     );
@@ -53,6 +53,8 @@ class PlayPauseBusyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Semantics(
         label: '$label $title',
         child: Stack(
@@ -63,12 +65,12 @@ class PlayPauseBusyButton extends StatelessWidget {
               child: Icon(
                 icon,
                 size: 22.0,
-                color: Theme.of(context).primaryColor,
+                color: colorScheme.primary,
               ),
             ),
             SpinKitRing(
-              lineWidth: 1.5,
-              color: Theme.of(context).primaryColor,
+              lineWidth: 2.0,
+              color: colorScheme.primary,
               size: 38.0,
             ),
           ],

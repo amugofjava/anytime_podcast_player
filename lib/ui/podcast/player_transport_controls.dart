@@ -28,9 +28,10 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: StreamBuilder<AudioState>(
           stream: audioBloc.playingState,
           initialData: AudioState.none,
@@ -45,11 +46,14 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _rewind(audioBloc);
                   },
-                  padding: const EdgeInsets.all(0.0),
+                  style: IconButton.styleFrom(
+                    backgroundColor: theme.colorScheme.surfaceContainerLow,
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
                   icon: Icon(
                     semanticLabel: L.of(context)!.rewind_button_label,
                     Icons.replay_10,
-                    size: 48.0,
+                    size: 28.0,
                   ),
                 ),
                 AnimatedPlayButton(audioState: snapshot.data!),
@@ -57,11 +61,14 @@ class _PlayerTransportControlsState extends State<PlayerTransportControls> {
                   onPressed: () {
                     return snapshot.data == AudioState.buffering ? null : _fastforward(audioBloc);
                   },
-                  padding: const EdgeInsets.all(0.0),
+                  style: IconButton.styleFrom(
+                    backgroundColor: theme.colorScheme.surfaceContainerLow,
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
                   icon: Icon(
                     semanticLabel: L.of(context)!.fast_forward_button_label,
                     Icons.forward_30,
-                    size: 48.0,
+                    size: 28.0,
                   ),
                 ),
                 const SpeedSelectorWidget(),
@@ -163,22 +170,22 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
         if (buffering)
           SpinKitRing(
             lineWidth: 4.0,
-            color: Theme.of(context).primaryColor,
-            size: 84,
+            color: Theme.of(context).colorScheme.primary,
+            size: 88,
           ),
         if (!buffering)
           const SizedBox(
-            height: 84,
-            width: 84,
+            height: 88,
+            width: 88,
           ),
         Tooltip(
           message: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
           child: TextButton(
             style: TextButton.styleFrom(
-              shape: CircleBorder(side: BorderSide(color: Theme.of(context).highlightColor, width: 0.0)),
-              backgroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-              foregroundColor: Theme.of(context).brightness == Brightness.light ? Colors.orange : Colors.grey[800],
-              padding: const EdgeInsets.all(6.0),
+              shape: const CircleBorder(),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              padding: const EdgeInsets.all(10.0),
             ),
             onPressed: () {
               if (playing) {
@@ -188,10 +195,10 @@ class _AnimatedPlayButtonState extends State<AnimatedPlayButton> with SingleTick
               }
             },
             child: AnimatedIcon(
-              size: 60.0,
+              size: 56.0,
               semanticLabel: playing ? L.of(context)!.pause_button_label : L.of(context)!.play_button_label,
               icon: AnimatedIcons.play_pause,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimary,
               progress: _playPauseController,
             ),
           ),

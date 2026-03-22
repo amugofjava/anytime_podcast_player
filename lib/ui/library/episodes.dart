@@ -124,7 +124,7 @@ class _EpisodesState extends State<Episodes> {
               Icon(
                 Icons.cloud_download,
                 size: 75,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
               Text(
                 L.of(context)!.no_downloads_message,

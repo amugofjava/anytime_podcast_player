@@ -39,18 +39,27 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 16, right: 16),
-      title: TextField(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: TextField(
         controller: _searchController,
         focusNode: _searchFocusNode,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.search,
-        decoration: InputDecoration(hintText: L.of(context)!.search_for_podcasts_hint, border: InputBorder.none),
-        style: TextStyle(
-            color: Theme.of(context).primaryIconTheme.color,
-            fontSize: 18.0,
-            decorationColor: Theme.of(context).scaffoldBackgroundColor),
+        decoration: InputDecoration(
+          hintText: L.of(context)!.search_for_podcasts_hint,
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+              padding: EdgeInsets.zero,
+              tooltip: _searchFocusNode.hasFocus ? L.of(context)!.clear_search_button_label : null,
+              icon: Icon(_searchController.text.isEmpty && !_searchFocusNode.hasFocus ? Icons.search : Icons.clear),
+              onPressed: () {
+                _searchController.clear();
+                FocusScope.of(context).requestFocus(FocusNode());
+                SystemChannels.textInput.invokeMethod<String>('TextInput.show');
+              }),
+        ),
+        style: Theme.of(context).textTheme.bodyLarge,
         onSubmitted: (value) async {
           await Navigator.push(
               context,
@@ -61,18 +70,6 @@ class _SearchBarState extends State<SearchBar> {
           _searchController.clear();
         },
       ),
-      trailing: IconButton(
-          padding: EdgeInsets.zero,
-          tooltip: _searchFocusNode.hasFocus ? L.of(context)!.clear_search_button_label : null,
-          color: _searchFocusNode.hasFocus ? Theme.of(context).iconTheme.color : null,
-          splashColor: _searchFocusNode.hasFocus ? Theme.of(context).splashColor : Colors.transparent,
-          highlightColor: _searchFocusNode.hasFocus ? Theme.of(context).highlightColor : Colors.transparent,
-          icon: Icon(_searchController.text.isEmpty && !_searchFocusNode.hasFocus ? Icons.search : Icons.clear),
-          onPressed: () {
-            _searchController.clear();
-            FocusScope.of(context).requestFocus(FocusNode());
-            SystemChannels.textInput.invokeMethod<String>('TextInput.show');
-          }),
     );
   }
 }

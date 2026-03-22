@@ -30,6 +30,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_spinkit: ^5.0.0
   html: ^0.15.6
+  http: ^1.2.2
   intl: '>=0.19.0 <0.21.0'
   intl_translation: ^0.20.0
   just_audio: ^0.10.4
@@ -85,6 +86,12 @@ flutter:
     - assets/ca/globalsign-gcc-r6-alphassl-ca-2023.pem
 
   fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Variable.ttf
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Variable.ttf
     - family: MontserratMedium
       fonts:
         - asset: assets/fonts/Montserrat-Medium.otf
@@ -94,4 +101,3 @@ flutter:
     - family: MontserratBold
       fonts:
         - asset: assets/fonts/Montserrat-Bold.otf
-

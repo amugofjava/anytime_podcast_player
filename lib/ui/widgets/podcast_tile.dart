@@ -28,6 +28,7 @@ class PodcastTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final podcastBloc = Provider.of<PodcastBloc>(context);
@@ -47,59 +48,76 @@ class PodcastTile extends StatelessWidget {
     return Semantics(
       customSemanticsActions: {
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
-            audioBloc.playLatestEpisode(podcast),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
+              audioBloc.playLatestEpisode(podcast),
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
-            queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
+              queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
-            audioBloc.playNextUnplayedEpisode(podcast),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
+              audioBloc.playNextUnplayedEpisode(podcast),
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
-            queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
+              queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
       },
-      child: ListTile(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-                settings: const RouteSettings(name: 'podcastdetails'),
-                builder: (context) => PodcastDetails(podcast, podcastBloc)),
-          ).then((v) {
-            //TODO : Would be more efficient to just update the one podcast in the list.
-            podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
-          });
-        },
-        onLongPress: podcast.id == null ? null : () => showContextMenu(context),
-        minVerticalPadding: 9,
-        leading: ExcludeSemantics(
-          child: Hero(
-            key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
-            tag: '${podcast.imageUrl}:${podcast.link}',
-            child: TileImage(
-              url: podcast.imageUrl!,
-              fontSize: 13.0,
-              highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
-              count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
-              size: 60,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 16.0),
+        child: Material(
+          color: theme.colorScheme.surfaceContainerLowest,
+          clipBehavior: Clip.antiAlias,
+          borderRadius: BorderRadius.circular(24.0),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                    settings: const RouteSettings(name: 'podcastdetails'),
+                    builder: (context) => PodcastDetails(podcast, podcastBloc)),
+              ).then((v) {
+                //TODO : Would be more efficient to just update the one podcast in the list.
+                podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
+              });
+            },
+            onLongPress: podcast.id == null ? null : () => showContextMenu(context),
+            child: ListTile(
+              minVerticalPadding: 12,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              leading: ExcludeSemantics(
+                child: Hero(
+                  key: Key('tilehero${podcast.imageUrl}:${podcast.link}'),
+                  tag: '${podcast.imageUrl}:${podcast.link}',
+                  child: TileImage(
+                    url: podcast.imageUrl!,
+                    fontSize: 13.0,
+                    highlight: settingsBloc.currentSettings.layoutHighlight && podcast.newEpisodes > 0,
+                    count: settingsBloc.currentSettings.layoutCount ? podcast.episodeCount : 0,
+                    size: 72,
+                  ),
+                ),
+              ),
+              title: Text(
+                semanticsLabel: semanticTitle,
+                podcast.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.titleMedium,
+              ),
+
+              /// A ListTile's density changes depending upon whether we have 2 or more lines of text. We
+              /// manually add a newline character here to ensure the density is consistent whether the
+              /// podcast subtitle spans 1 or more lines. Bit of a hack, but a simple solution.
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  '${podcast.copyright ?? ''}\n',
+                  maxLines: 2,
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+              isThreeLine: false,
             ),
           ),
         ),
-        title: Text(
-          semanticsLabel: semanticTitle,
-          podcast.title,
-          maxLines: 1,
-        ),
-
-        /// A ListTile's density changes depending upon whether we have 2 or more lines of text. We
-        /// manually add a newline character here to ensure the density is consistent whether the
-        /// podcast subtitle spans 1 or more lines. Bit of a hack, but a simple solution.
-        subtitle: Text(
-          '${podcast.copyright ?? ''}\n',
-          maxLines: 2,
-        ),
-        isThreeLine: false,
       ),
     );
   }

@@ -80,7 +80,7 @@ class _SleepSelectorWidgetState extends State<SleepSelectorWidget> {
                             showModalBottomSheet<void>(
                                 isScrollControlled: true,
                                 context: context,
-                                backgroundColor: theme.secondaryHeaderColor,
+                                backgroundColor: theme.colorScheme.surfaceContainerLow,
                                 barrierLabel: L.of(context)!.scrim_sleep_timer_selector,
                                 shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(

@@ -26,6 +26,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:collection/collection.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
+import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 
 /// This is the default implementation of [AudioPlayerService].
@@ -135,7 +136,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
       return playEpisode(episode: _currentEpisode!, resume: true);
     } else {
-
       log.fine('Resuming play ${_currentEpisode?.title}');
 
       return _audioHandler.play();
@@ -396,7 +396,6 @@ class DefaultAudioPlayerService extends AudioPlayerService {
             if (_currentEpisode != null) {
               _currentEpisode!.position = _audioHandler.playbackState.value.position.inMilliseconds;
             }
-
           }
         }
       } else {
@@ -666,26 +665,22 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _currentEpisode = await repository.saveEpisode(_currentEpisode!);
     }
 
-    if (_currentEpisode!.hasTranscripts) {
-      Transcript? transcript;
-
-      if (_currentEpisode!.streaming) {
-        var sub = _currentEpisode!.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.vtt);
-        sub ??= _currentEpisode!.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
-        sub ??= _currentEpisode!.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
-
-        if (sub != null) {
+    if ((_currentEpisode!.transcriptId ?? 0) > 0 || _currentEpisode!.hasTranscripts) {
+      final transcript = await loadPreferredPlaybackTranscript(
+        episode: _currentEpisode!,
+        repository: repository,
+        loadRemoteTranscript: (transcriptUrl) async {
           _updateTranscriptState(state: TranscriptLoadingState());
+          log.fine('Loading transcript from ${transcriptUrl.url}');
 
-          log.fine('Loading transcript from ${sub.url}');
+          final remoteTranscript = await podcastService.loadTranscriptByUrl(transcriptUrl: transcriptUrl);
 
-          transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+          log.fine('We have ${remoteTranscript.subtitles.length} transcript lines');
 
-          log.fine('We have ${transcript.subtitles.length} transcript lines');
-        }
-      } else {
-        transcript = await repository.findTranscriptById(_currentEpisode!.transcriptId!);
-      }
+          return remoteTranscript;
+        },
+        logger: log,
+      );
 
       if (transcript != null) {
         _currentEpisode!.transcript = transcript;
@@ -867,6 +862,43 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<Sleep> get sleepStream => _sleepState.stream;
+}
+
+@visibleForTesting
+Future<Transcript?> loadPreferredPlaybackTranscript({
+  required Episode episode,
+  required Repository repository,
+  required Future<Transcript> Function(TranscriptUrl transcriptUrl) loadRemoteTranscript,
+  Logger? logger,
+}) async {
+  final transcriptId = episode.transcriptId ?? 0;
+
+  if (transcriptId > 0) {
+    final storedTranscript = await repository.findTranscriptById(transcriptId);
+
+    if (storedTranscript != null) {
+      logger?.fine('Loaded stored transcript $transcriptId for ${episode.guid}');
+      return storedTranscript;
+    }
+
+    logger?.fine('Stored transcript $transcriptId missing for ${episode.guid}; falling back to feed transcript URLs.');
+  }
+
+  if (!episode.streaming || !episode.hasTranscripts) {
+    return null;
+  }
+
+  var transcriptUrl = episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.vtt);
+  transcriptUrl ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
+  transcriptUrl ??= episode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
+
+  if (transcriptUrl == null) {
+    return null;
+  }
+
+  logger?.fine('Falling back to remote transcript ${transcriptUrl.url} for ${episode.guid}');
+
+  return loadRemoteTranscript(transcriptUrl);
 }
 
 /// This is the default audio handler used by the [DefaultAudioPlayerService] service.

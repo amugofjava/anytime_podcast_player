@@ -4,6 +4,7 @@
 
 import 'dart:io';
 
+import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
@@ -29,25 +30,13 @@ void main() {
     persistenceService = SembastRepository(cleanup: false);
 
     podcast1 = Podcast(
-        title: 'Podcast 1',
-        description: '1st p1',
-        guid: 'http://p1.com',
-        link: 'http://p1.com',
-        url: 'http://p1.com');
+        title: 'Podcast 1', description: '1st p1', guid: 'http://p1.com', link: 'http://p1.com', url: 'http://p1.com');
 
     podcast2 = Podcast(
-        title: 'Podcast 2',
-        description: '2nd p1',
-        guid: 'http://p2.com',
-        link: 'http://p2.com',
-        url: 'http://p2.com');
+        title: 'Podcast 2', description: '2nd p1', guid: 'http://p2.com', link: 'http://p2.com', url: 'http://p2.com');
 
     podcast3 = Podcast(
-        title: 'Podcast 3',
-        description: '3rd p1',
-        guid: 'http://p3.com',
-        link: 'http://p3.com',
-        url: 'http://p3.com');
+        title: 'Podcast 3', description: '3rd p1', guid: 'http://p3.com', link: 'http://p3.com', url: 'http://p3.com');
   });
 
   tearDown(() async {
@@ -531,6 +520,52 @@ void main() {
       expect(listEquals(podcast.episodes, episodes), true);
     });
 
+    test('Persist episode analysis metadata and ad segments', () async {
+      final analysisUpdatedAt = DateTime(2025, 3, 4, 5, 6, 7);
+
+      podcast1.episodes = <Episode>[
+        Episode(
+          guid: 'ANALYSIS-EP-001',
+          title: 'Analysis Episode',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now(),
+          analysisStatus: 'completed',
+          analysisJobId: 'job-456',
+          analysisError: 'low confidence boundary',
+          analysisUpdatedAt: analysisUpdatedAt,
+          adSegments: const <AdSegment>[
+            AdSegment(
+              startMs: 5000,
+              endMs: 25000,
+              reason: 'preroll',
+              confidence: 0.88,
+              flags: <String>['brand_mention'],
+            ),
+            AdSegment(
+              startMs: 120000,
+              endMs: 150000,
+              reason: 'midroll',
+              confidence: 0.73,
+              flags: <String>['music_bed', 'cta'],
+            ),
+          ],
+        ),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+
+      final fetchedPodcast = (await persistenceService!.findPodcastByGuid(podcast1.guid!))!;
+      final fetchedEpisode = fetchedPodcast.episodes.single;
+
+      expect(fetchedEpisode, podcast1.episodes.single);
+      expect(fetchedEpisode.analysisStatus, 'completed');
+      expect(fetchedEpisode.analysisJobId, 'job-456');
+      expect(fetchedEpisode.analysisError, 'low confidence boundary');
+      expect(fetchedEpisode.analysisUpdatedAt, analysisUpdatedAt);
+      expect(fetchedEpisode.adSegments, podcast1.episodes.single.adSegments);
+    });
+
     test('Fetch all episodes for all podcasts', () async {
       podcast1.episodes = <Episode>[
         Episode(
@@ -651,7 +686,6 @@ void main() {
       podcast1.filter = PodcastEpisodeFilter.none;
       await persistenceService!.savePodcast(podcast1);
     });
-
 
     test('Delete all episodes for a p1', () async {
       /// Save > 100 episodes (to test chunking)
@@ -939,21 +973,24 @@ void main() {
       /// Earliest first
       orderedEpisodes.sort((a, b) => a.publicationDate!.compareTo(b.publicationDate!));
 
-      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.earliestFirst);
+      episodes =
+          await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.earliestFirst);
 
       expect(listEquals(episodes, orderedEpisodes), true);
 
       /// Alphabetical
       orderedEpisodes.sort((a, b) => a.title!.compareTo(b.title!));
 
-      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalAscending);
+      episodes = await persistenceService!
+          .findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalAscending);
 
       expect(listEquals(episodes, orderedEpisodes), true);
 
       /// Alphabetical descending
       orderedEpisodes.sort((a, b) => b.title!.compareTo(a.title!));
 
-      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalDescending);
+      episodes = await persistenceService!
+          .findEpisodesByPodcastGuid(podcast1.guid!, sort: PodcastEpisodeSort.alphabeticalDescending);
 
       expect(listEquals(episodes, orderedEpisodes), true);
     });
@@ -1008,15 +1045,18 @@ void main() {
       await persistenceService!.savePodcast(podcast1);
 
       // Played episodes
-      var episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.played);
+      var episodes =
+          await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.played);
 
       expect(episodes.length, 2);
 
-      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.notPlayed);
+      episodes =
+          await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.notPlayed);
 
       expect(episodes.length, 3);
 
-      episodes = await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.started);
+      episodes =
+          await persistenceService!.findEpisodesByPodcastGuid(podcast1.guid!, filter: PodcastEpisodeFilter.started);
 
       expect(episodes.length, 1);
 

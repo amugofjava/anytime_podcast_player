@@ -75,7 +75,7 @@ class PodcastEpisodeList extends StatelessWidget {
               Icon(
                 icon,
                 size: 75,
-                color: theme.primaryColor,
+                color: theme.colorScheme.primary,
               ),
               Text(
                 emptyMessage,

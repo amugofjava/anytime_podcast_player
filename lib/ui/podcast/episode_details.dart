@@ -79,6 +79,10 @@ class _EpisodeDetailsState extends State<EpisodeDetails> {
                   episode: episode,
                 ),
                 const Divider(),
+                EpisodeAnalysisPanel(
+                  episode: episode,
+                ),
+                const Divider(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
                   child: Align(
@@ -244,5 +248,106 @@ class EpisodeToolBar extends StatelessWidget {
 
   void _shareEpisode() async {
     await shareEpisode(episode: episode);
+  }
+}
+
+class EpisodeAnalysisPanel extends StatelessWidget {
+  final Episode episode;
+
+  const EpisodeAnalysisPanel({
+    super.key,
+    required this.episode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final episodeBloc = Provider.of<EpisodeBloc>(context, listen: false);
+    final theme = Theme.of(context);
+
+    return StreamBuilder<EpisodeState>(
+      stream: episodeBloc.episodeListener.where((event) => event.episode.guid == episode.guid),
+      initialData: EpisodeUpdateState(episode),
+      builder: (context, snapshot) {
+        final currentEpisode = snapshot.data!.episode;
+        final isAnalyzing = _isAnalyzing(currentEpisode);
+        final statusText = _statusText(currentEpisode);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 12.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  ),
+                  icon: isAnalyzing
+                      ? const SizedBox(
+                          width: 18.0,
+                          height: 18.0,
+                          child: CircularProgressIndicator(strokeWidth: 2.0),
+                        )
+                      : const Icon(Icons.auto_awesome_outlined),
+                  label: const Text('Analyze Ads'),
+                  onPressed: isAnalyzing
+                      ? null
+                      : () async {
+                          try {
+                            await episodeBloc.analyzeAds(currentEpisode);
+                          } catch (error) {
+                            if (context.mounted) {
+                              final message =
+                                  error is EpisodeAnalysisFailedException ? error.message : 'Ad analysis failed.';
+
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                            }
+                          }
+                        },
+                ),
+                if (statusText != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      statusText,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  bool _isAnalyzing(Episode episode) {
+    return episode.analysisStatus == 'queued' || episode.analysisStatus == 'processing';
+  }
+
+  String? _statusText(Episode episode) {
+    switch (episode.analysisStatus) {
+      case 'queued':
+      case 'processing':
+        return 'Analyzing ads...';
+      case 'completed':
+        final count = episode.adSegments.length;
+
+        if (count > 0) {
+          return 'Analysis complete - $count ${count == 1 ? 'ad segment' : 'ad segments'}';
+        }
+
+        return 'Analysis complete';
+      case 'failed':
+        if (episode.analysisError != null && episode.analysisError!.isNotEmpty) {
+          return 'Analysis failed - ${episode.analysisError}';
+        }
+
+        return 'Analysis failed';
+      default:
+        return null;
+    }
   }
 }
