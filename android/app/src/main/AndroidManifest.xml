@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
-        tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
         android:label="Anytime Player"
         android:largeHeap="true"
