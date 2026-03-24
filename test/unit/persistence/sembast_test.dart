@@ -617,6 +617,51 @@ void main() {
       expect(episodes.length, 6);
     });
 
+    test('findAllEpisodes and findDownloads hydrate stored transcripts', () async {
+      final transcript = Transcript(
+        guid: 'EP-TRANSCRIPT-LINK',
+        provenance: TranscriptProvenance.openAi,
+        provider: 'whisper-1',
+        subtitles: [
+          Subtitle(
+            index: 1,
+            start: Duration.zero,
+            end: const Duration(seconds: 2),
+            data: 'Transcript line',
+          ),
+        ],
+      );
+
+      final savedTranscript = await persistenceService!.saveTranscript(transcript);
+
+      podcast1.episodes = <Episode>[
+        Episode(
+          guid: 'EP-TRANSCRIPT-LINK',
+          title: 'Transcript linked episode',
+          pguid: podcast1.guid,
+          podcast: podcast1.title,
+          publicationDate: DateTime.now(),
+          transcriptId: savedTranscript.id,
+          downloadPercentage: 100,
+        ),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+
+      final allEpisodes = await persistenceService!.findAllEpisodes();
+      final downloads = await persistenceService!.findDownloads();
+
+      expect(allEpisodes.single.transcriptId, savedTranscript.id);
+      expect(allEpisodes.single.transcript, isNotNull);
+      expect(allEpisodes.single.transcript!.provider, 'whisper-1');
+      expect(allEpisodes.single.transcript!.subtitles.single.data, 'Transcript line');
+
+      expect(downloads.single.transcriptId, savedTranscript.id);
+      expect(downloads.single.transcript, isNotNull);
+      expect(downloads.single.transcript!.provider, 'whisper-1');
+      expect(downloads.single.transcript!.subtitles.single.data, 'Transcript line');
+    });
+
     test('Fetch latest playable episode', () async {
       podcast1.episodes = <Episode>[
         Episode(
@@ -1607,7 +1652,7 @@ void main() {
     });
 
     test('Test episode transcript read/write', () async {
-      var transcript = Transcript(guid: 'GUID1', subtitles: <Subtitle>[
+      var transcript = Transcript(guid: 'GUID1', provenance: TranscriptProvenance.localAi, provider: 'whisper', subtitles: <Subtitle>[
         Subtitle(
             index: 0,
             start: const Duration(seconds: 0),
@@ -1626,6 +1671,8 @@ void main() {
       var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
 
       expect(savedTranscript == fetchedTranscript, true);
+      expect(fetchedTranscript?.provenance, TranscriptProvenance.localAi);
+      expect(fetchedTranscript?.provider, 'whisper');
 
       await persistenceService!.deleteTranscriptById(savedTranscript.id!);
 

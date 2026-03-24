@@ -10,6 +10,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/state/ad_skip_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
@@ -139,7 +140,7 @@ class AudioBloc extends Bloc {
   /// Listen for requests to change the position of the current episode.
   void _handlePositionTransitions() async {
     _transitionPosition.listen((pos) async {
-      await audioPlayerService.seek(position: pos.ceil());
+      await audioPlayerService.seek(position: Duration(milliseconds: (pos * 1000).round()));
     });
   }
 
@@ -214,6 +215,8 @@ class AudioBloc extends Bloc {
   /// Move the play position.
   void Function(double) get transitionPosition => _transitionPosition.sink.add;
 
+  Future<void> skipActiveAd() => audioPlayerService.skipActiveAd();
+
   /// Get the current playing state
   Stream<AudioState>? get playingState => audioPlayerService.playingState;
 
@@ -225,6 +228,8 @@ class AudioBloc extends Bloc {
 
   /// Get the current transcript (if there is one).
   Stream<TranscriptState>? get nowPlayingTranscript => audioPlayerService.transcriptEvent;
+
+  Stream<AdSkipState>? get adSkipEvents => audioPlayerService.adSkipEvent;
 
   /// Get position and percentage played of playing episode
   ValueStream<PositionState>? get playPosition => audioPlayerService.playPosition;

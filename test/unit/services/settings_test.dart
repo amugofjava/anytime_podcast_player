@@ -1,6 +1,7 @@
 // Copyright 2020 Ben Hills and the project contributors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -180,5 +181,26 @@ void main() {
     expectLater(settingsListener, emits('lastFeedRefresh'));
     mobileSettingsService?.lastFeedRefresh = latest;
     expect(mobileSettingsService?.lastFeedRefresh, latest);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test transcript upload provider', () async {
+    expect(mobileSettingsService?.transcriptUploadProvider, TranscriptUploadProvider.disabled);
+    expectLater(settingsListener, emits('transcriptUploadProvider'));
+    mobileSettingsService?.transcriptUploadProvider = TranscriptUploadProvider.analysisBackend;
+    expect(mobileSettingsService?.transcriptUploadProvider, TranscriptUploadProvider.analysisBackend);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test transcription provider', () async {
+    expect(mobileSettingsService?.transcriptionProvider, TranscriptionProvider.localAi);
+    expectLater(settingsListener, emits('transcriptionProvider'));
+    mobileSettingsService?.transcriptionProvider = TranscriptionProvider.openAi;
+    expect(mobileSettingsService?.transcriptionProvider, TranscriptionProvider.openAi);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test ad skip mode', () async {
+    expect(mobileSettingsService?.adSkipMode, AdSkipMode.prompt);
+    expectLater(settingsListener, emits('adSkipMode'));
+    mobileSettingsService?.adSkipMode = AdSkipMode.disabled;
+    expect(mobileSettingsService?.adSkipMode, AdSkipMode.disabled);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }

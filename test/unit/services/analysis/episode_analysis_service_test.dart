@@ -86,6 +86,7 @@ void main() {
         transcript: EpisodeAnalysisTranscriptPayload(
           format: 'srt',
           content: '1\n00:00:00,000 --> 00:00:01,000\nHello',
+          provenance: 'localAi',
         ),
       );
 
@@ -96,6 +97,7 @@ void main() {
         'transcript': <String, dynamic>{
           'format': 'srt',
           'content': '1\n00:00:00,000 --> 00:00:01,000\nHello',
+          'provenance': 'localAi',
         },
       });
     });

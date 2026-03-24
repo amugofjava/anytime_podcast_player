@@ -5,6 +5,7 @@
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
+import 'package:anytime/state/ad_skip_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:rxdart/rxdart.dart';
@@ -71,7 +72,10 @@ abstract class AudioPlayerService {
   Future<void> fastForward();
 
   /// Seek to the specified position within the current episode.
-  Future<void> seek({required int position});
+  Future<void> seek({required Duration position});
+
+  /// Skip the currently active ad segment when prompt mode is enabled.
+  Future<void> skipActiveAd();
 
   /// Call when the app is resumed to re-establish the audio service.
   Future<Episode?> resume();
@@ -119,6 +123,7 @@ abstract class AudioPlayerService {
   ValueStream<PositionState>? playPosition;
   ValueStream<Episode?>? episodeEvent;
   Stream<TranscriptState>? transcriptEvent;
+  Stream<AdSkipState>? adSkipEvent;
   Stream<int>? playbackError;
   Stream<QueueListState>? queueState;
   Stream<Sleep>? sleepStream;

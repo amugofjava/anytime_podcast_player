@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:ui' as ui;
 
 import 'package:anytime/api/podcast/mobile_podcast_api.dart';
@@ -31,11 +32,17 @@ import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/notifications/mobile_notification_service.dart';
 import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
+import 'package:anytime/services/analysis/openai_episode_analysis_service.dart';
 import 'package:anytime/services/podcast/mobile_opml_service.dart';
 import 'package:anytime/services/podcast/mobile_podcast_service.dart';
 import 'package:anytime/services/podcast/opml_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/secrets/mobile_secure_secrets_service.dart';
+import 'package:anytime/services/secrets/secure_secrets_service.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
+import 'package:anytime/services/transcription/episode_transcription_service.dart';
+import 'package:anytime/services/transcription/openai_episode_transcription_service.dart';
+import 'package:anytime/services/transcription/whisper_episode_transcription_service.dart';
 import 'package:anytime/state/library_state.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
@@ -72,7 +79,9 @@ class AnytimePodcastApp extends StatefulWidget {
   late NotificationService notificationService;
   late AudioPlayerService audioPlayerService;
   late EpisodeAnalysisService episodeAnalysisService;
+  late EpisodeTranscriptionService episodeTranscriptionService;
   late OPMLService opmlService;
+  late SecureSecretsService secureSecretsService;
   PodcastService? podcastService;
   SettingsBloc? settingsBloc;
   MobileSettingsService mobileSettingsService;
@@ -85,8 +94,20 @@ class AnytimePodcastApp extends StatefulWidget {
   }) : repository = SembastRepository() {
     podcastApi = MobilePodcastApi();
     notificationService = MobileNotificationService();
-    episodeAnalysisService =
-        Environment.hasAnalysisBackend ? BackendEpisodeAnalysisService() : DisabledEpisodeAnalysisService();
+    secureSecretsService = MobileSecureSecretsService();
+    episodeAnalysisService = ConfigurableEpisodeAnalysisService(
+      settingsService: mobileSettingsService,
+      secureSecretsService: secureSecretsService,
+      backendService: Environment.hasAnalysisBackend ? BackendEpisodeAnalysisService() : null,
+    );
+    final localTranscriptionService = !kIsWeb && (Platform.isAndroid || Platform.isIOS || Platform.isMacOS)
+        ? WhisperEpisodeTranscriptionService()
+        : DisabledEpisodeTranscriptionService();
+    episodeTranscriptionService = ConfigurableEpisodeTranscriptionService(
+      settingsService: mobileSettingsService,
+      secureSecretsService: secureSecretsService,
+      localService: localTranscriptionService,
+    );
 
     podcastService = MobilePodcastService(
       api: podcastApi,
@@ -181,6 +202,8 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
             podcastService: widget.podcastService!,
             audioPlayerService: widget.audioPlayerService,
             analysisService: widget.episodeAnalysisService,
+            settingsService: widget.mobileSettingsService,
+            transcriptionService: widget.episodeTranscriptionService,
           ),
           dispose: (_, value) => value.dispose(),
         ),
@@ -200,6 +223,9 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         Provider<AudioBloc>(
           create: (_) => AudioBloc(audioPlayerService: widget.audioPlayerService),
           dispose: (_, value) => value.dispose(),
+        ),
+        Provider<SecureSecretsService>.value(
+          value: widget.secureSecretsService,
         ),
         Provider<SettingsBloc?>(
           create: (_) => widget.settingsBloc,

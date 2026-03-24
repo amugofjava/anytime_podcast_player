@@ -4,6 +4,7 @@
 
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -79,6 +80,53 @@ void main() {
       expect(restored.analysisError, isNull);
       expect(restored.analysisUpdatedAt, isNull);
       expect(restored.adSegments, isEmpty);
+    });
+  });
+
+  group('Transcript serialization', () {
+    test('round-trips transcript provenance metadata', () {
+      final transcript = Transcript(
+        id: 9,
+        guid: 'EP-TRANSCRIPT-1',
+        provenance: TranscriptProvenance.localAi,
+        provider: 'whisper',
+        subtitles: <Subtitle>[
+          Subtitle(
+            index: 1,
+            start: Duration.zero,
+            end: const Duration(seconds: 2),
+            data: 'Hello',
+          ),
+        ],
+      );
+
+      final restored = Transcript.fromMap(transcript.id, transcript.toMap());
+
+      expect(restored, transcript);
+      expect(restored.provenance, TranscriptProvenance.localAi);
+      expect(restored.provider, 'whisper');
+    });
+
+    test('defaults legacy transcript records to feed provenance', () {
+      final legacyMap = Transcript(
+        id: 10,
+        guid: 'EP-TRANSCRIPT-LEGACY',
+        subtitles: <Subtitle>[
+          Subtitle(
+            index: 1,
+            start: Duration.zero,
+            end: const Duration(seconds: 1),
+            data: 'Legacy',
+          ),
+        ],
+      ).toMap()
+        ..remove('provenance')
+        ..remove('provider');
+
+      final restored = Transcript.fromMap(10, legacyMap);
+
+      expect(restored.provenance, TranscriptProvenance.feed);
+      expect(restored.provider, isNull);
     });
   });
 }

@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   device_info_plus: ^11.3.0
   extended_image: ^9.1.0
+  ffmpeg_kit_flutter_new_min: ^2.1.0
   file_picker: ^10.0.0
   flutter_dialogs: ^3.0.0
   flutter_downloader: ^1.12.0
@@ -28,6 +29,7 @@ dependencies:
   flutter_html_svg: ^3.0.0
   flutter_html_table: ^3.0.0
   flutter_launcher_icons: ^0.14.4
+  flutter_secure_storage: ^9.2.4
   flutter_spinkit: ^5.0.0
   html: ^0.15.6
   http: ^1.2.2
@@ -53,6 +55,7 @@ dependencies:
   synchronized: ^3.3.0+3
   url_launcher: ^6.3.1
   wakelock_plus: ^1.4.0
+  whisper_ggml: ^1.7.0
   xml: 6.5.0
 
   flutter:

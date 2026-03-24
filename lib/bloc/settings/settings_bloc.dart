@@ -36,6 +36,10 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _backgroundUpdate = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _backgroundUpdateMobileData = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<TranscriptUploadProvider> _transcriptUploadProvider =
+      BehaviorSubject<TranscriptUploadProvider>();
+  final BehaviorSubject<TranscriptionProvider> _transcriptionProvider = BehaviorSubject<TranscriptionProvider>();
+  final BehaviorSubject<AdSkipMode> _adSkipMode = BehaviorSubject<AdSkipMode>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -77,6 +81,9 @@ class SettingsBloc extends Bloc {
       backgroundUpdate: settingsService.backgroundUpdate,
       backgroundUpdateMobileData: settingsService.backgroundUpdateMobileData,
       updatesNotification: settingsService.updateNotification,
+      transcriptUploadProvider: settingsService.transcriptUploadProvider,
+      transcriptionProvider: settingsService.transcriptionProvider,
+      adSkipMode: settingsService.adSkipMode,
     );
 
     _settings.add(_currentSettings);
@@ -212,6 +219,24 @@ class SettingsBloc extends Bloc {
         _initNotifications();
       }
     });
+
+    _transcriptUploadProvider.listen((provider) {
+      _currentSettings = _currentSettings.copyWith(transcriptUploadProvider: provider);
+      _settings.add(_currentSettings);
+      settingsService.transcriptUploadProvider = provider;
+    });
+
+    _transcriptionProvider.listen((provider) {
+      _currentSettings = _currentSettings.copyWith(transcriptionProvider: provider);
+      _settings.add(_currentSettings);
+      settingsService.transcriptionProvider = provider;
+    });
+
+    _adSkipMode.listen((mode) {
+      _currentSettings = _currentSettings.copyWith(adSkipMode: mode);
+      _settings.add(_currentSettings);
+      settingsService.adSkipMode = mode;
+    });
   }
 
   void _initNotifications() async {
@@ -266,6 +291,12 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get updateNotification => _updateNotification.add;
 
+  void Function(TranscriptUploadProvider) get setTranscriptUploadProvider => _transcriptUploadProvider.add;
+
+  void Function(TranscriptionProvider) get setTranscriptionProvider => _transcriptionProvider.add;
+
+  void Function(AdSkipMode) get setAdSkipMode => _adSkipMode.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -286,8 +317,13 @@ class SettingsBloc extends Bloc {
     _layoutOrder.close();
     _layoutHighlight.close();
     _layoutCount.close();
+    _autoPlay.close();
     _backgroundUpdate.close();
+    _backgroundUpdateMobileData.close();
     _updateNotification.close();
+    _transcriptUploadProvider.close();
+    _transcriptionProvider.close();
+    _adSkipMode.close();
     _settings.close();
   }
 }

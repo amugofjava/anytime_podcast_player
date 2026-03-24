@@ -9,6 +9,7 @@ import 'package:anytime/core/environment.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/services/secrets/secure_secrets_service.dart';
 import 'package:anytime/state/opml_state.dart';
 import 'package:anytime/ui/library/opml_export.dart';
 import 'package:anytime/ui/library/opml_import.dart';
@@ -146,6 +147,43 @@ class _SettingsState extends State<Settings> {
                       subtitle: L.of(context)!.settings_continuous_play_subtitle,
                       value: settings.autoPlay,
                       onChanged: settingsBloc.autoPlay,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28.0),
+                const _SectionLabel(label: 'AI'),
+                _SettingsCard(
+                  children: [
+                    _ActionSettingsTile(
+                      icon: Icons.subtitles_outlined,
+                      title: 'Transcription provider',
+                      subtitle: _transcriptionProviderLabel(settings.transcriptionProvider),
+                      onTap: () => _showTranscriptionProviderDialog(settings),
+                    ),
+                    _ActionSettingsTile(
+                      icon: Icons.auto_awesome_outlined,
+                      title: 'Ad analysis provider',
+                      subtitle: _analysisProviderLabel(settings.transcriptUploadProvider),
+                      onTap: () => _showAnalysisProviderDialog(settings),
+                    ),
+                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.openAi ||
+                        settings.transcriptionProvider == TranscriptionProvider.openAi)
+                      FutureBuilder<String?>(
+                        future: Provider.of<SecureSecretsService>(context, listen: false).read(openAiApiKeySecret),
+                        builder: (context, snapshot) {
+                          return _ActionSettingsTile(
+                            icon: Icons.key_outlined,
+                            title: 'OpenAI API key',
+                            subtitle: _openAiKeyLabel(snapshot.data),
+                            onTap: _showOpenAiApiKeyDialog,
+                          );
+                        },
+                      ),
+                    _ActionSettingsTile(
+                      icon: Icons.skip_next_outlined,
+                      title: 'Ad skip mode',
+                      subtitle: _adSkipModeLabel(settings.adSkipMode),
+                      onTap: () => _showAdSkipModeDialog(settings),
                     ),
                   ],
                 ),
@@ -459,6 +497,298 @@ class _SettingsState extends State<Settings> {
           ),
         ],
       ),
+    );
+  }
+
+  String _analysisProviderLabel(TranscriptUploadProvider provider) {
+    switch (provider) {
+      case TranscriptUploadProvider.disabled:
+        return 'Disabled';
+      case TranscriptUploadProvider.openAi:
+        return 'OpenAI';
+      case TranscriptUploadProvider.analysisBackend:
+        return 'Private backend';
+    }
+  }
+
+  String _transcriptionProviderLabel(TranscriptionProvider provider) {
+    switch (provider) {
+      case TranscriptionProvider.localAi:
+        return 'On-device Whisper';
+      case TranscriptionProvider.openAi:
+        return 'OpenAI Whisper API';
+    }
+  }
+
+  String _openAiKeyLabel(String? key) {
+    final trimmed = key?.trim() ?? '';
+
+    if (trimmed.isEmpty) {
+      return 'Not configured';
+    }
+
+    if (trimmed.length <= 4) {
+      return 'Stored securely';
+    }
+
+    return 'Stored securely ••••${trimmed.substring(trimmed.length - 4)}';
+  }
+
+  String _adSkipModeLabel(AdSkipMode mode) {
+    switch (mode) {
+      case AdSkipMode.disabled:
+        return 'Disabled';
+      case AdSkipMode.prompt:
+        return 'Prompt before skipping';
+      case AdSkipMode.auto:
+        return 'Skip automatically';
+    }
+  }
+
+  Future<void> _showAnalysisProviderDialog(AppSettings settings) async {
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    final options = <_ValueLabel<TranscriptUploadProvider>>[
+      const _ValueLabel(TranscriptUploadProvider.disabled, 'Disabled'),
+      const _ValueLabel(TranscriptUploadProvider.openAi, 'OpenAI'),
+      if (Environment.hasAnalysisBackend)
+        const _ValueLabel(TranscriptUploadProvider.analysisBackend, 'Private backend'),
+    ];
+
+    await showPlatformDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        var selected = settings.transcriptUploadProvider;
+
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(
+                'Ad analysis provider',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final option in options)
+                    _SelectionDialogTile(
+                      title: option.label,
+                      selected: selected == option.value,
+                      onTap: () {
+                        setDialogState(() {
+                          selected = option.value;
+                        });
+                        settingsBloc.setTranscriptUploadProvider(option.value);
+                        Navigator.pop(dialogContext);
+                        setState(() {});
+                      },
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: ActionText(L.of(context)!.close_button_label),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _showTranscriptionProviderDialog(AppSettings settings) async {
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    final options = <_ValueLabel<TranscriptionProvider>>[
+      const _ValueLabel(TranscriptionProvider.localAi, 'On-device Whisper'),
+      const _ValueLabel(TranscriptionProvider.openAi, 'OpenAI Whisper API'),
+    ];
+
+    await showPlatformDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        var selected = settings.transcriptionProvider;
+
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(
+                'Transcription provider',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final option in options)
+                    _SelectionDialogTile(
+                      title: option.label,
+                      selected: selected == option.value,
+                      onTap: () {
+                        setDialogState(() {
+                          selected = option.value;
+                        });
+                        settingsBloc.setTranscriptionProvider(option.value);
+                        Navigator.pop(dialogContext);
+                        setState(() {});
+                      },
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: ActionText(L.of(context)!.close_button_label),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> _showOpenAiApiKeyDialog() async {
+    final secureSecretsService = Provider.of<SecureSecretsService>(context, listen: false);
+    final existingKey = await secureSecretsService.read(openAiApiKeySecret);
+    final controller = TextEditingController();
+
+    if (!mounted) {
+      return;
+    }
+
+    await showPlatformDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'OpenAI API key',
+            style: Theme.of(context).textTheme.titleMedium,
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if ((existingKey?.trim().isNotEmpty ?? false))
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 12.0),
+                  child: Text('A key is already stored securely. Save a new one to replace it, or clear it below.'),
+                ),
+              TextField(
+                controller: controller,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'sk-...',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: ActionText(L.of(context)!.cancel_button_label),
+            ),
+            TextButton(
+              onPressed: () async {
+                await secureSecretsService.delete(openAiApiKeySecret);
+
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext);
+                }
+
+                if (mounted) {
+                  setState(() {});
+                }
+              },
+              child: const ActionText('Clear'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final value = controller.text.trim();
+
+                if (value.isEmpty) {
+                  await secureSecretsService.delete(openAiApiKeySecret);
+                } else {
+                  await secureSecretsService.write(
+                    key: openAiApiKeySecret,
+                    value: value,
+                  );
+                }
+
+                if (dialogContext.mounted) {
+                  Navigator.pop(dialogContext);
+                }
+
+                if (mounted) {
+                  setState(() {});
+                }
+              },
+              child: const ActionText('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showAdSkipModeDialog(AppSettings settings) async {
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    final options = <_ValueLabel<AdSkipMode>>[
+      const _ValueLabel(AdSkipMode.prompt, 'Prompt before skipping'),
+      const _ValueLabel(AdSkipMode.auto, 'Skip automatically'),
+      const _ValueLabel(AdSkipMode.disabled, 'Disabled'),
+    ];
+
+    await showPlatformDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        var selected = settings.adSkipMode;
+
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(
+                'Ad skip mode',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (final option in options)
+                    _SelectionDialogTile(
+                      title: option.label,
+                      selected: selected == option.value,
+                      onTap: () {
+                        setDialogState(() {
+                          selected = option.value;
+                        });
+                        settingsBloc.setAdSkipMode(option.value);
+                        Navigator.pop(dialogContext);
+                      },
+                    ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: ActionText(L.of(context)!.close_button_label),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -65,6 +65,8 @@ class MobileDownloadService extends DownloadService {
 
         if (sub != null) {
           var transcript = await podcastService.loadTranscriptByUrl(transcriptUrl: sub);
+          transcript.provenance = TranscriptProvenance.feed;
+          transcript.provider = 'feed';
 
           transcript = await podcastService.saveTranscript(transcript);
 

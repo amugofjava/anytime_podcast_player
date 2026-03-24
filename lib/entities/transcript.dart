@@ -12,6 +12,32 @@ enum TranscriptFormat {
   vtt,
 }
 
+enum TranscriptProvenance {
+  feed,
+  localAi,
+  openAi,
+  analysisBackend,
+}
+
+TranscriptProvenance parseTranscriptProvenance(Object? raw) {
+  final normalized = raw?.toString().trim().toLowerCase();
+
+  switch (normalized) {
+    case 'localai':
+    case 'local_ai':
+      return TranscriptProvenance.localAi;
+    case 'openai':
+    case 'open_ai':
+      return TranscriptProvenance.openAi;
+    case 'analysisbackend':
+    case 'analysis_backend':
+      return TranscriptProvenance.analysisBackend;
+    case 'feed':
+    default:
+      return TranscriptProvenance.feed;
+  }
+}
+
 /// This class represents a Podcasting 2.0 transcript URL.
 ///
 /// [docs](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md#transcript)
@@ -109,12 +135,16 @@ class Transcript {
   final List<Subtitle> subtitles;
   DateTime? lastUpdated;
   bool filtered;
+  TranscriptProvenance provenance;
+  String? provider;
 
   Transcript({
     this.id,
     this.guid,
     this.subtitles = const <Subtitle>[],
     this.filtered = false,
+    this.provenance = TranscriptProvenance.feed,
+    this.provider,
     this.lastUpdated,
   });
 
@@ -122,6 +152,8 @@ class Transcript {
     return <String, dynamic>{
       'guid': guid,
       'subtitles': (subtitles).map((subtitle) => subtitle.toMap()).toList(growable: false),
+      'provenance': provenance.name,
+      'provider': provider,
       'lastUpdated': DateTime.now().millisecondsSinceEpoch,
     };
   }
@@ -141,6 +173,8 @@ class Transcript {
       id: key,
       guid: transcript['guid'] as String? ?? '',
       subtitles: subtitles,
+      provenance: parseTranscriptProvenance(transcript['provenance']),
+      provider: transcript['provider'] as String?,
       lastUpdated: transcript['lastUpdated'] == null
           ? DateTime.now()
           : DateTime.fromMillisecondsSinceEpoch(transcript['lastUpdated'] as int),
@@ -153,12 +187,25 @@ class Transcript {
       other is Transcript &&
           runtimeType == other.runtimeType &&
           guid == other.guid &&
+          provenance == other.provenance &&
+          provider == other.provider &&
           listEquals(subtitles, other.subtitles);
 
   @override
-  int get hashCode => guid.hashCode ^ subtitles.hashCode;
+  int get hashCode => guid.hashCode ^ subtitles.hashCode ^ provenance.hashCode ^ provider.hashCode;
 
   bool get transcriptAvailable => (subtitles.isNotEmpty || filtered);
+
+  bool get isFeedTranscript => provenance == TranscriptProvenance.feed;
+
+  bool get isLocalAiTranscript => provenance == TranscriptProvenance.localAi;
+
+  bool get isOpenAiTranscript => provenance == TranscriptProvenance.openAi;
+
+  bool get isAppGeneratedAiTranscript =>
+      provenance == TranscriptProvenance.localAi || provenance == TranscriptProvenance.openAi;
+
+  bool get isAnalysisBackendTranscript => provenance == TranscriptProvenance.analysisBackend;
 }
 
 /// Represents an individual line within a transcript.

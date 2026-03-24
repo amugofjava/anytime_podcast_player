@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/ad_segment.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/services/analysis/episode_analysis_dto.dart';
@@ -13,9 +14,10 @@ import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_transcript_codec.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
+import 'package:anytime/services/transcription/episode_transcription_service.dart';
 import 'package:anytime/state/bloc_state.dart';
 import 'package:anytime/state/episode_state.dart';
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:logging/logging.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,6 +28,8 @@ class EpisodeBloc extends Bloc {
   final PodcastService podcastService;
   final AudioPlayerService audioPlayerService;
   final EpisodeAnalysisService analysisService;
+  final SettingsService settingsService;
+  final EpisodeTranscriptionService transcriptionService;
   final Duration analysisPollInterval;
 
   /// Add to sink to fetch list of current downloaded episodes.
@@ -50,11 +54,14 @@ class EpisodeBloc extends Bloc {
   List<Episode>? _episodes;
 
   final _analysisTasks = <String, Future<Episode>>{};
+  final _subscriptions = <StreamSubscription<dynamic>>[];
 
   EpisodeBloc({
     required this.podcastService,
     required this.audioPlayerService,
     required this.analysisService,
+    required this.settingsService,
+    required this.transcriptionService,
     this.analysisPollInterval = const Duration(seconds: 5),
   }) {
     _init();
@@ -70,7 +77,7 @@ class EpisodeBloc extends Bloc {
   }
 
   void _handleDeleteDownloads() async {
-    _deleteDownload.stream.listen((episode) async {
+    final subscription = _deleteDownload.stream.listen((episode) async {
       var nowPlaying = audioPlayerService.nowPlaying?.guid == episode?.guid;
 
       /// If we are attempting to delete the episode we are currently playing, we need to stop the audio.
@@ -84,21 +91,27 @@ class EpisodeBloc extends Bloc {
 
       fetchDownloads(true);
     });
+
+    _subscriptions.add(subscription);
   }
 
   void _handleMarkAsPlayed() async {
-    _togglePlayed.stream.listen((episode) async {
+    final subscription = _togglePlayed.stream.listen((episode) async {
       await podcastService.toggleEpisodePlayed(episode!);
 
       fetchDownloads(true);
     });
+
+    _subscriptions.add(subscription);
   }
 
   void _listenEpisodeEvents() {
     // Listen for episode updates. If the episode is downloaded, we need to update.
-    podcastService.episodeListener
+    final subscription = podcastService.episodeListener
         .where((event) => event.episode.downloaded || event.episode.played)
         .listen((event) => fetchDownloads(true));
+
+    _subscriptions.add(subscription);
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {
@@ -123,6 +136,10 @@ class EpisodeBloc extends Bloc {
 
   @override
   void dispose() {
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+
     _downloadsInput.close();
     _episodesInput.close();
     _deleteDownload.close();
@@ -144,7 +161,11 @@ class EpisodeBloc extends Bloc {
 
   Stream<EpisodeState> get episodeListener => podcastService.episodeListener;
 
-  Future<Episode> analyzeAds(Episode episode, {bool force = false}) {
+  Future<Episode> analyzeAds(
+    Episode episode, {
+    bool force = false,
+    bool consentToUpload = false,
+  }) {
     final guid = episode.guid;
     final existingTask = _analysisTasks[guid];
 
@@ -152,7 +173,11 @@ class EpisodeBloc extends Bloc {
       return existingTask;
     }
 
-    final task = _analyzeAds(episode, force: force).whenComplete(() {
+    final task = _analyzeAds(
+      episode,
+      force: force,
+      consentToUpload: consentToUpload,
+    ).whenComplete(() {
       _analysisTasks.remove(guid);
     });
 
@@ -161,13 +186,74 @@ class EpisodeBloc extends Bloc {
     return task;
   }
 
-  Future<Episode> _analyzeAds(Episode episode, {required bool force}) async {
-    final existingTranscript = await _loadExistingTranscript(episode);
-    final submitResponse = await analysisService.submit(
+  Future<Episode> generateLocalTranscript(
+    Episode episode, {
+    void Function(EpisodeTranscriptionProgress progress)? onProgress,
+  }) async {
+    if (!episode.downloaded) {
+      throw const EpisodeTranscriptionException(
+        'Download the episode before generating an AI transcript.',
+      );
+    }
+
+    final transcript = await transcriptionService.transcribeDownloadedEpisode(
       episode: episode,
-      force: force,
-      transcript: existingTranscript == null ? null : EpisodeAnalysisTranscriptCodec.toPayload(existingTranscript),
+      onProgress: onProgress,
     );
+
+    transcript.guid = episode.guid;
+
+    if (!transcript.isAppGeneratedAiTranscript) {
+      transcript.provenance = settingsService.transcriptionProvider == TranscriptionProvider.openAi
+          ? TranscriptProvenance.openAi
+          : TranscriptProvenance.localAi;
+    }
+
+    transcript.provider ??=
+        settingsService.transcriptionProvider == TranscriptionProvider.openAi ? 'whisper-1' : 'whisper';
+
+    return _persistTranscriptReplacement(
+      episode,
+      transcript: transcript,
+    );
+  }
+
+  Future<Episode> _analyzeAds(
+    Episode episode, {
+    required bool force,
+    required bool consentToUpload,
+  }) async {
+    if (settingsService.transcriptUploadProvider == TranscriptUploadProvider.disabled) {
+      throw EpisodeAnalysisFailedException(
+        'Ad analysis is not configured in this build.',
+      );
+    }
+
+    if (!consentToUpload) {
+      throw EpisodeAnalysisFailedException(
+        'Transcript upload requires explicit confirmation for this episode.',
+      );
+    }
+
+    final existingTranscript = await _loadExistingAiTranscript(episode);
+
+    if (existingTranscript == null || !existingTranscript.transcriptAvailable) {
+      throw EpisodeAnalysisFailedException(
+        'Generate an AI transcript before analyzing ads.',
+      );
+    }
+
+    late EpisodeAnalysisSubmitResponse submitResponse;
+
+    try {
+      submitResponse = await analysisService.submit(
+        episode: episode,
+        force: force,
+        transcript: EpisodeAnalysisTranscriptCodec.toPayload(existingTranscript),
+      );
+    } catch (error) {
+      throw EpisodeAnalysisFailedException(_analysisErrorMessage(error));
+    }
 
     var currentEpisode = await _persistAnalysisUpdate(
       episode,
@@ -177,7 +263,13 @@ class EpisodeBloc extends Bloc {
     );
 
     while (true) {
-      final pollResponse = await analysisService.poll(jobId: submitResponse.jobId);
+      late EpisodeAnalysisStatusResponse pollResponse;
+
+      try {
+        pollResponse = await analysisService.poll(jobId: submitResponse.jobId);
+      } catch (error) {
+        throw EpisodeAnalysisFailedException(_analysisErrorMessage(error));
+      }
 
       currentEpisode = await _persistAnalysisUpdate(
         currentEpisode,
@@ -185,7 +277,6 @@ class EpisodeBloc extends Bloc {
         jobId: pollResponse.jobId,
         error: pollResponse.error,
         adSegments: pollResponse.isCompleted ? pollResponse.adSegments : null,
-        transcript: pollResponse.transcript,
       );
 
       if (pollResponse.status == EpisodeAnalysisJobStatus.completed) {
@@ -216,10 +307,8 @@ class EpisodeBloc extends Bloc {
     required String jobId,
     required String? error,
     List<AdSegment>? adSegments,
-    EpisodeAnalysisTranscriptDto? transcript,
   }) async {
     final currentEpisode = await _loadCurrentEpisode(episode);
-    final previousTranscriptId = currentEpisode.transcriptId;
 
     currentEpisode.analysisStatus = status.name;
     currentEpisode.analysisJobId = jobId;
@@ -230,18 +319,6 @@ class EpisodeBloc extends Bloc {
       currentEpisode.adSegments = List.unmodifiable(adSegments);
     }
 
-    if (status == EpisodeAnalysisJobStatus.completed && transcript != null) {
-      var savedTranscript = EpisodeAnalysisTranscriptCodec.fromDto(transcript, guid: currentEpisode.guid);
-      savedTranscript = await podcastService.saveTranscript(savedTranscript);
-
-      currentEpisode.transcript = savedTranscript;
-      currentEpisode.transcriptId = savedTranscript.id;
-
-      if (previousTranscriptId != null && previousTranscriptId > 0 && previousTranscriptId != savedTranscript.id) {
-        await podcastService.repository.deleteTranscriptById(previousTranscriptId);
-      }
-    }
-
     return podcastService.saveEpisode(currentEpisode);
   }
 
@@ -249,41 +326,65 @@ class EpisodeBloc extends Bloc {
     return await podcastService.repository.findEpisodeByGuid(episode.guid) ?? episode;
   }
 
-  Future<Transcript?> _loadExistingTranscript(Episode episode) async {
+  Future<Episode> _persistTranscriptReplacement(
+    Episode episode, {
+    required Transcript transcript,
+  }) async {
+    final currentEpisode = await _loadCurrentEpisode(episode);
+    final previousTranscriptId = currentEpisode.transcriptId;
+    var savedTranscript = await podcastService.saveTranscript(transcript);
+
+    currentEpisode.transcript = savedTranscript;
+    currentEpisode.transcriptId = savedTranscript.id;
+    currentEpisode.analysisStatus = null;
+    currentEpisode.analysisJobId = null;
+    currentEpisode.analysisError = null;
+    currentEpisode.analysisUpdatedAt = null;
+    currentEpisode.adSegments = const <AdSegment>[];
+
+    if (previousTranscriptId != null && previousTranscriptId > 0 && previousTranscriptId != savedTranscript.id) {
+      await podcastService.repository.deleteTranscriptById(previousTranscriptId);
+    }
+
+    return podcastService.saveEpisode(currentEpisode);
+  }
+
+  Future<Transcript?> _loadExistingAiTranscript(Episode episode) async {
     if (episode.transcript != null && episode.transcript!.transcriptAvailable) {
-      return episode.transcript;
+      return episode.transcript!.isAppGeneratedAiTranscript ? episode.transcript : null;
     }
 
     final currentEpisode = await _loadCurrentEpisode(episode);
 
     if (currentEpisode.transcript != null && currentEpisode.transcript!.transcriptAvailable) {
-      return currentEpisode.transcript;
+      return currentEpisode.transcript!.isAppGeneratedAiTranscript ? currentEpisode.transcript : null;
     }
 
     if (currentEpisode.transcriptId != null && currentEpisode.transcriptId! > 0) {
       final storedTranscript = await podcastService.repository.findTranscriptById(currentEpisode.transcriptId!);
 
-      if (storedTranscript != null && storedTranscript.transcriptAvailable) {
+      if (storedTranscript != null &&
+          storedTranscript.transcriptAvailable &&
+          storedTranscript.isAppGeneratedAiTranscript) {
         return storedTranscript;
       }
     }
 
-    if (currentEpisode.transcriptUrls.isEmpty) {
-      return null;
+    return null;
+  }
+
+  String _analysisErrorMessage(Object error) {
+    final description = error.toString();
+
+    if (description.startsWith('Exception: ')) {
+      return description.substring('Exception: '.length);
     }
 
-    var transcriptUrl =
-        currentEpisode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.vtt);
-    transcriptUrl ??=
-        currentEpisode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.json);
-    transcriptUrl ??=
-        currentEpisode.transcriptUrls.firstWhereOrNull((element) => element.type == TranscriptFormat.subrip);
-
-    if (transcriptUrl == null) {
-      return null;
+    if (description.startsWith('StateError: ')) {
+      return description.substring('StateError: '.length);
     }
 
-    return podcastService.loadTranscriptByUrl(transcriptUrl: transcriptUrl);
+    return description;
   }
 }
 

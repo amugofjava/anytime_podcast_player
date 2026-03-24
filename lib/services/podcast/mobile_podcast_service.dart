@@ -578,7 +578,11 @@ class MobilePodcastService extends PodcastService {
       }
     }
 
-    return Transcript(subtitles: subtitles);
+    return Transcript(
+      subtitles: subtitles,
+      provenance: TranscriptProvenance.feed,
+      provider: 'feed',
+    );
   }
 
   @override
@@ -609,6 +613,8 @@ class MobilePodcastService extends PodcastService {
 
     if (episode.transcriptId != null && episode.transcriptId! > 0) {
       await repository.deleteTranscriptById(episode.transcriptId!);
+      episode.transcript = null;
+      episode.transcriptId = 0;
     }
 
     await repository.saveEpisode(episode);

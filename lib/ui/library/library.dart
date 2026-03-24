@@ -5,10 +5,16 @@
 import 'dart:async';
 
 import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
+import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/state/bloc_state.dart';
+import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/ui/podcast/podcast_episode_list.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/widgets/platform_progress_indicator.dart';
 import 'package:anytime/ui/widgets/podcast_image.dart';
@@ -35,12 +41,16 @@ class _LibraryState extends State<Library> {
     super.initState();
 
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final episodeBloc = Provider.of<EpisodeBloc>(context, listen: false);
     final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
     var currentOrder = settingsBloc.currentSettings.layoutOrder;
+
+    episodeBloc.fetchEpisodes(false);
 
     _settingsSubscription = settingsBloc.settings.listen((event) {
       if (event.layoutOrder != currentOrder) {
         podcastBloc.podcastEvent(PodcastEvent.reloadSubscriptions);
+        episodeBloc.fetchEpisodes(true);
         currentOrder = event.layoutOrder;
       }
     });
@@ -55,7 +65,9 @@ class _LibraryState extends State<Library> {
   @override
   Widget build(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+    final episodeBloc = Provider.of<EpisodeBloc>(context, listen: false);
     final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
 
     return StreamBuilder<List<Podcast>>(
@@ -101,186 +113,386 @@ class _LibraryState extends State<Library> {
           );
         }
 
-        final updated = [...podcasts]..sort((a, b) {
-            final newEpisodeCompare = b.newEpisodes.compareTo(a.newEpisodes);
-            if (newEpisodeCompare != 0) {
-              return newEpisodeCompare;
-            }
+        return StreamBuilder<BlocState<List<Episode>>>(
+          stream: episodeBloc.episodes,
+          builder: (context, episodeSnapshot) {
+            final episodeState = episodeSnapshot.data;
+            final allEpisodes = episodeState is BlocPopulatedState<List<Episode>>
+                ? List<Episode>.from(episodeState.results ?? const <Episode>[])
+                : const <Episode>[];
+            final newEpisodeFeed = _buildNewEpisodeFeed(allEpisodes);
+            final updated = [...podcasts]..sort((a, b) {
+                final newEpisodeCompare = b.newEpisodes.compareTo(a.newEpisodes);
+                if (newEpisodeCompare != 0) {
+                  return newEpisodeCompare;
+                }
 
-            return b.episodeCount.compareTo(a.episodeCount);
-          });
+                return b.episodeCount.compareTo(a.episodeCount);
+              });
 
-        final filtered = switch (_activeFilter) {
-          'new' => podcasts.where((podcast) => podcast.newEpisodes > 0).toList(growable: false),
-          'playlists' => const <Podcast>[],
-          _ => podcasts,
-        };
+            return StreamBuilder<QueueState>(
+              stream: queueBloc.queue,
+              initialData: QueueEmptyState(),
+              builder: (context, queueSnapshot) {
+                final featured = updated.first;
+                final sideCards = updated.skip(1).take(2).toList(growable: false);
+                final smartPlaylists = _buildSmartPlaylists(
+                  queueState: queueSnapshot.data,
+                  allEpisodes: allEpisodes,
+                  newEpisodeFeed: newEpisodeFeed,
+                );
 
-        final featured = updated.first;
-        final sideCards = updated.skip(1).take(2).toList(growable: false);
-
-        return MultiSliver(
-          children: [
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _LibraryFilterChip(
-                        label: 'Shows',
-                        selected: _activeFilter == 'shows',
-                        onTap: () => setState(() => _activeFilter = 'shows'),
-                      ),
-                      const SizedBox(width: 8.0),
-                      _LibraryFilterChip(
-                        label: 'Playlists',
-                        selected: _activeFilter == 'playlists',
-                        onTap: () => setState(() => _activeFilter = 'playlists'),
-                      ),
-                      const SizedBox(width: 8.0),
-                      _LibraryFilterChip(
-                        label: 'New Episodes',
-                        selected: _activeFilter == 'new',
-                        onTap: () => setState(() => _activeFilter = 'new'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            if (_activeFilter != 'playlists') ...[
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
-                  child: _LibrarySectionHeading(
-                    eyebrow: 'Recently Updated',
-                    title: 'New Episodes',
-                    actionLabel: 'See all',
-                    onActionTap: () => setState(() => _activeFilter = 'new'),
-                  ),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 14.0, 16.0, 0.0),
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (constraints.maxWidth < 640.0) {
-                        return Column(
-                          children: [
-                            _FeaturedLibraryCard(
-                              podcast: featured,
-                              onTap: () => _openPodcast(podcastBloc, featured),
-                              onPlay: () => audioBloc.playLatestEpisode(featured),
-                            ),
-                            const SizedBox(height: 14.0),
-                            ...sideCards.map(
-                              (podcast) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12.0),
-                                child: _LibrarySideCard(
-                                  podcast: podcast,
-                                  onTap: () => _openPodcast(podcastBloc, podcast),
-                                ),
+                return MultiSliver(
+                  children: [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _LibraryFilterChip(
+                                label: 'Shows',
+                                selected: _activeFilter == 'shows',
+                                onTap: () => setState(() => _activeFilter = 'shows'),
                               ),
-                            ),
-                          ],
-                        );
-                      }
-
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _FeaturedLibraryCard(
-                              podcast: featured,
-                              onTap: () => _openPodcast(podcastBloc, featured),
-                              onPlay: () => audioBloc.playLatestEpisode(featured),
-                            ),
+                              const SizedBox(width: 8.0),
+                              _LibraryFilterChip(
+                                label: 'Playlists',
+                                selected: _activeFilter == 'playlists',
+                                onTap: () => setState(() => _activeFilter = 'playlists'),
+                              ),
+                              const SizedBox(width: 8.0),
+                              _LibraryFilterChip(
+                                label: 'New Episodes',
+                                selected: _activeFilter == 'new',
+                                onTap: () => setState(() => _activeFilter = 'new'),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 16.0),
-                          Expanded(
-                            child: Column(
-                              children: sideCards
-                                  .map(
-                                    (podcast) => Padding(
-                                      padding: const EdgeInsets.only(bottom: 12.0),
-                                      child: _LibrarySideCard(
-                                        podcast: podcast,
-                                        onTap: () => _openPodcast(podcastBloc, podcast),
-                                      ),
-                                    ),
-                                  )
-                                  .toList(growable: false),
-                            ),
-                          ),
-                        ],
-                      );
+                        ),
+                      ),
+                    ),
+                    ...switch (_activeFilter) {
+                      'new' => _buildNewEpisodesSlivers(
+                          context,
+                          episodes: newEpisodeFeed,
+                          podcasts: podcasts,
+                          loading: episodeState is BlocLoadingState && newEpisodeFeed.isEmpty,
+                        ),
+                      'playlists' => _buildPlaylistsSlivers(
+                          context,
+                          playlists: smartPlaylists,
+                          loading: episodeState is BlocLoadingState && allEpisodes.isEmpty,
+                        ),
+                      _ => _buildShowsSlivers(
+                          context,
+                          audioBloc: audioBloc,
+                          podcastBloc: podcastBloc,
+                          featured: featured,
+                          sideCards: sideCards,
+                          podcasts: podcasts,
+                        ),
                     },
-                  ),
-                ),
-              ),
-            ],
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 14.0),
-                child: Text(
-                  _activeFilter == 'new' ? 'New in Your Library' : 'Your Library',
-                  style: theme.textTheme.headlineSmall,
-                ),
-              ),
-            ),
-            if (_activeFilter == 'playlists')
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
-                  child: _LibraryEmptyCard(
-                    icon: Icons.queue_music_rounded,
-                    title: 'Playlists are next',
-                    message:
-                        'This screen is following the Stitch structure first. Playlist-specific content still needs its own data path.',
-                  ),
-                ),
-              )
-            else if (filtered.isEmpty)
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
-                  child: _LibraryEmptyCard(
-                    icon: Icons.new_releases_outlined,
-                    title: 'No new episodes yet',
-                    message: 'Your followed shows are up to date right now.',
-                  ),
-                ),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 180.0,
-                    mainAxisSpacing: 20.0,
-                    crossAxisSpacing: 16.0,
-                    childAspectRatio: 0.64,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final podcast = filtered[index];
-                      return _LibraryGridCard(
-                        podcast: podcast,
-                        onTap: () => _openPodcast(podcastBloc, podcast),
-                      );
-                    },
-                    childCount: filtered.length,
-                    addAutomaticKeepAlives: false,
-                  ),
-                ),
-              ),
-          ],
+                  ],
+                );
+              },
+            );
+          },
         );
       },
     );
+  }
+
+  List<Episode> _buildNewEpisodeFeed(List<Episode> episodes) {
+    final filtered = episodes
+        .where((episode) => !episode.played && (episode.pguid?.isNotEmpty ?? false))
+        .toList(growable: false);
+
+    filtered.sort((a, b) {
+      final left = a.publicationDate?.millisecondsSinceEpoch ?? 0;
+      final right = b.publicationDate?.millisecondsSinceEpoch ?? 0;
+      return right.compareTo(left);
+    });
+
+    return filtered;
+  }
+
+  List<_SmartPlaylistSummary> _buildSmartPlaylists({
+    required QueueState? queueState,
+    required List<Episode> allEpisodes,
+    required List<Episode> newEpisodeFeed,
+  }) {
+    final queuedEpisodes = queueState?.queue ?? const <Episode>[];
+    final downloads = allEpisodes.where((episode) => episode.downloaded).toList(growable: false);
+    final inProgress = allEpisodes
+        .where((episode) => !episode.played && episode.position > 0)
+        .toList(growable: false)
+      ..sort((a, b) => b.position.compareTo(a.position));
+
+    return <_SmartPlaylistSummary>[
+      _SmartPlaylistSummary(
+        icon: Icons.new_releases_outlined,
+        title: 'Fresh Episodes',
+        count: newEpisodeFeed.length,
+        description: 'The newest unplayed releases across the shows you follow.',
+        previewTitles: newEpisodeFeed.take(3).map((episode) => episode.title ?? 'Untitled episode').toList(growable: false),
+      ),
+      _SmartPlaylistSummary(
+        icon: Icons.play_arrow_rounded,
+        title: 'Continue Listening',
+        count: inProgress.length,
+        description: 'Episodes you started and can jump back into immediately.',
+        previewTitles: inProgress.take(3).map((episode) => episode.title ?? 'Untitled episode').toList(growable: false),
+      ),
+      _SmartPlaylistSummary(
+        icon: Icons.download_done_rounded,
+        title: 'Downloads',
+        count: downloads.length,
+        description: 'Offline-ready episodes already saved on this device.',
+        previewTitles: downloads.take(3).map((episode) => episode.title ?? 'Untitled episode').toList(growable: false),
+      ),
+      _SmartPlaylistSummary(
+        icon: Icons.queue_music_rounded,
+        title: 'Up Next',
+        count: queuedEpisodes.length,
+        description: 'What is queued up to play after your current episode.',
+        previewTitles: queuedEpisodes.take(3).map((episode) => episode.title ?? 'Untitled episode').toList(growable: false),
+      ),
+    ];
+  }
+
+  List<Widget> _buildShowsSlivers(
+    BuildContext context, {
+    required AudioBloc audioBloc,
+    required PodcastBloc podcastBloc,
+    required Podcast featured,
+    required List<Podcast> sideCards,
+    required List<Podcast> podcasts,
+  }) {
+    final theme = Theme.of(context);
+
+    return <Widget>[
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+          child: _LibrarySectionHeading(
+            eyebrow: 'Recently Updated',
+            title: 'Shows',
+            actionLabel: 'New Episodes',
+            onActionTap: () => setState(() => _activeFilter = 'new'),
+          ),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 14.0, 16.0, 0.0),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 640.0) {
+                return Column(
+                  children: [
+                    _FeaturedLibraryCard(
+                      podcast: featured,
+                      onTap: () => _openPodcast(podcastBloc, featured),
+                      onPlay: () => audioBloc.playLatestEpisode(featured),
+                    ),
+                    const SizedBox(height: 14.0),
+                    ...sideCards.map(
+                      (podcast) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: _LibrarySideCard(
+                          podcast: podcast,
+                          onTap: () => _openPodcast(podcastBloc, podcast),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _FeaturedLibraryCard(
+                      podcast: featured,
+                      onTap: () => _openPodcast(podcastBloc, featured),
+                      onPlay: () => audioBloc.playLatestEpisode(featured),
+                    ),
+                  ),
+                  const SizedBox(width: 16.0),
+                  Expanded(
+                    child: Column(
+                      children: sideCards
+                          .map(
+                            (podcast) => Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: _LibrarySideCard(
+                                podcast: podcast,
+                                onTap: () => _openPodcast(podcastBloc, podcast),
+                              ),
+                            ),
+                          )
+                          .toList(growable: false),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 14.0),
+          child: Text(
+            'Your Shows',
+            style: theme.textTheme.headlineSmall,
+          ),
+        ),
+      ),
+      SliverPadding(
+        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 24.0),
+        sliver: SliverGrid(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 180.0,
+            mainAxisSpacing: 20.0,
+            crossAxisSpacing: 16.0,
+            childAspectRatio: 0.64,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final podcast = podcasts[index];
+              return _LibraryGridCard(
+                podcast: podcast,
+                onTap: () => _openPodcast(podcastBloc, podcast),
+              );
+            },
+            childCount: podcasts.length,
+            addAutomaticKeepAlives: false,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _buildNewEpisodesSlivers(
+    BuildContext context, {
+    required List<Episode> episodes,
+    required List<Podcast> podcasts,
+    required bool loading,
+  }) {
+    final theme = Theme.of(context);
+    final newest = episodes.isNotEmpty ? episodes.first : null;
+    final episodePodcast = newest == null
+        ? null
+        : podcasts.cast<Podcast?>().firstWhere(
+              (podcast) => podcast?.guid == newest.pguid,
+              orElse: () => null,
+            );
+
+    return <Widget>[
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+          child: _LibrarySectionHeading(
+            eyebrow: 'Latest Across Your Feed',
+            title: 'New Episodes',
+            actionLabel: '${episodes.length} total',
+          ),
+        ),
+      ),
+      if (loading)
+        const SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: PlatformProgressIndicator(),
+          ),
+        )
+      else if (newest != null)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 14.0, 16.0, 0.0),
+            child: _NewEpisodeHeroCard(
+              episode: newest,
+              podcastTitle: episodePodcast?.title ?? newest.podcast ?? 'Podcast',
+            ),
+          ),
+        ),
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 28.0, 16.0, 14.0),
+          child: Text(
+            'Latest Unplayed',
+            style: theme.textTheme.headlineSmall,
+          ),
+        ),
+      ),
+      PodcastEpisodeList(
+        episodes: episodes,
+        play: true,
+        download: true,
+        icon: Icons.new_releases_outlined,
+        emptyMessage: 'Your followed shows are up to date right now.',
+      ),
+    ];
+  }
+
+  List<Widget> _buildPlaylistsSlivers(
+    BuildContext context, {
+    required List<_SmartPlaylistSummary> playlists,
+    required bool loading,
+  }) {
+    final theme = Theme.of(context);
+
+    return <Widget>[
+      const SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 0.0),
+          child: _LibrarySectionHeading(
+            eyebrow: 'Smart Collections',
+            title: 'Playlists',
+          ),
+        ),
+      ),
+      if (loading)
+        const SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: PlatformProgressIndicator(),
+          ),
+        )
+      else
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 14.0, 16.0, 0.0),
+            child: Text(
+              'These are generated from the listening data the app already has, so the screen is useful now even before custom playlist editing exists.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ),
+      if (!loading)
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 24.0),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final playlist = playlists[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 14.0),
+                  child: _SmartPlaylistCard(summary: playlist),
+                );
+              },
+              childCount: playlists.length,
+              addAutomaticKeepAlives: false,
+            ),
+          ),
+        ),
+    ];
   }
 
   void _openPodcast(PodcastBloc podcastBloc, Podcast podcast) {
@@ -655,15 +867,13 @@ class _LibraryGridCard extends StatelessWidget {
   }
 }
 
-class _LibraryEmptyCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String message;
+class _NewEpisodeHeroCard extends StatelessWidget {
+  final Episode episode;
+  final String podcastTitle;
 
-  const _LibraryEmptyCard({
-    required this.icon,
-    required this.title,
-    required this.message,
+  const _NewEpisodeHeroCard({
+    required this.episode,
+    required this.podcastTitle,
   });
 
   @override
@@ -672,31 +882,189 @@ class _LibraryEmptyCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.all(18.0),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(28.0),
       ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 84.0,
+            height: 84.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: _ArtworkFill(
+                imageUrl: episode.thumbImageUrl ?? episode.imageUrl,
+                borderRadius: 20.0,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'JUST LANDED',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 6.0),
+                Text(
+                  episode.title ?? 'Untitled episode',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleLarge,
+                ),
+                const SizedBox(height: 6.0),
+                Text(
+                  podcastTitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                if (episode.descriptionText?.isNotEmpty == true) ...[
+                  const SizedBox(height: 10.0),
+                  Text(
+                    episode.descriptionText!,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SmartPlaylistSummary {
+  final IconData icon;
+  final String title;
+  final int count;
+  final String description;
+  final List<String> previewTitles;
+
+  const _SmartPlaylistSummary({
+    required this.icon,
+    required this.title,
+    required this.count,
+    required this.description,
+    required this.previewTitles,
+  });
+}
+
+class _SmartPlaylistCard extends StatelessWidget {
+  final _SmartPlaylistSummary summary;
+
+  const _SmartPlaylistCard({
+    required this.summary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18.0),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(26.0),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            size: 34.0,
-            color: theme.colorScheme.primary,
+          Row(
+            children: [
+              Container(
+                width: 44.0,
+                height: 44.0,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.secondaryContainer,
+                  borderRadius: BorderRadius.circular(14.0),
+                ),
+                child: Icon(
+                  summary.icon,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 14.0),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      summary.title,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Text(
+                      '${summary.count} ${summary.count == 1 ? 'item' : 'items'}',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 14.0),
           Text(
-            title,
-            style: theme.textTheme.titleLarge,
+            summary.description,
+            style: theme.textTheme.bodyMedium,
           ),
-          const SizedBox(height: 6.0),
-          Text(
-            message,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+          const SizedBox(height: 12.0),
+          if (summary.previewTitles.isEmpty)
+            Text(
+              'Nothing here yet.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          else
+            ...summary.previewTitles.map(
+              (title) => Padding(
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6.0),
+                      child: Container(
+                        width: 6.0,
+                        height: 6.0,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary,
+                          borderRadius: BorderRadius.circular(999.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
         ],
       ),
     );

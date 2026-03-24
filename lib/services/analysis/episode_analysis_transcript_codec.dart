@@ -10,12 +10,15 @@ class EpisodeAnalysisTranscriptCodec {
     return EpisodeAnalysisTranscriptPayload(
       format: 'srt',
       content: _encodeSrt(transcript),
+      provenance: transcript.provenance.name,
     );
   }
 
   static Transcript fromDto(
     EpisodeAnalysisTranscriptDto transcript, {
     String? guid,
+    TranscriptProvenance provenance = TranscriptProvenance.analysisBackend,
+    String? provider = 'analysisBackend',
   }) {
     final normalizedFormat = transcript.format.trim().toLowerCase();
 
@@ -25,6 +28,8 @@ class EpisodeAnalysisTranscriptCodec {
         return Transcript(
           guid: guid,
           subtitles: _parseSrt(transcript.content),
+          provenance: provenance,
+          provider: provider,
         );
       default:
         throw UnsupportedError('Unsupported analysis transcript format: ${transcript.format}');

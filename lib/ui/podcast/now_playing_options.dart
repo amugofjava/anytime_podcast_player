@@ -2,9 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:anytime/bloc/podcast/queue_bloc.dart';
+import 'package:anytime/bloc/podcast/audio_bloc.dart';
+import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
-import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/ui/podcast/episode_details.dart';
 import 'package:anytime/ui/podcast/transcript_view.dart';
 import 'package:anytime/ui/podcast/up_next_view.dart';
 import 'package:anytime/ui/widgets/slider_handle.dart';
@@ -29,7 +30,7 @@ import 'package:provider/provider.dart';
 ///
 class NowPlayingOptionsSelector extends StatefulWidget {
   final double? scrollPos;
-  static const baseSize = 70.0;
+  static const baseSize = 96.0;
 
   const NowPlayingOptionsSelector({super.key, this.scrollPos});
 
@@ -42,7 +43,6 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -62,7 +62,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
               animationDuration: !draggableController!.isAttached || draggableController!.size <= minSize
                   ? const Duration(seconds: 0)
                   : kTabScrollDuration,
-              length: 2,
+              length: 3,
               child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
                 return SingleChildScrollView(
                   controller: scrollController,
@@ -119,64 +119,58 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                     : BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2)),
                               ),
                             ),
-                            child: StreamBuilder<QueueState>(
-                                initialData: QueueEmptyState(),
-                                stream: queueBloc.queue,
-                                builder: (context, snapshot) {
-                                  return TabBar(
-                                    onTap: (index) {
-                                      DefaultTabController.of(ctx).animateTo(index);
+                            child: TabBar(
+                              onTap: (index) {
+                                DefaultTabController.of(ctx).animateTo(index);
 
-                                      if (draggableController != null && draggableController!.size < 1.0) {
-                                        draggableController!.animateTo(
-                                          1.0,
-                                          duration: const Duration(milliseconds: 150),
-                                          curve: Curves.easeInOut,
-                                        );
-                                      }
-                                    },
-                                    automaticIndicatorColorAdjustment: false,
-                                    indicatorPadding: EdgeInsets.zero,
-
-                                    /// Little hack to hide the indicator when closed
-                                    indicatorColor: draggableController != null &&
-                                            (!draggableController!.isAttached || draggableController!.size <= minSize)
-                                        ? theme.colorScheme.surfaceContainerLow
-                                        : null,
-                                    tabs: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        child: Text(
-                                          L.of(context)!.up_next_queue_label.toUpperCase(),
-                                          style: theme.textTheme.labelLarge,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                                        // If the episode does not support transcripts, grey out
-                                        // the option.
-                                        child: snapshot.hasData &&
-                                                snapshot.data?.playing != null &&
-                                                snapshot.data!.playing!.hasTranscripts
-                                            ? Text(
-                                                L.of(context)!.transcript_label.toUpperCase(),
-                                                style: theme.textTheme.labelLarge,
-                                              )
-                                            : Text(
-                                                L.of(context)!.transcript_label.toUpperCase(),
-                                                style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
-                                              ),
-                                      ),
-                                    ],
+                                if (draggableController != null && draggableController!.size < 1.0) {
+                                  draggableController!.animateTo(
+                                    1.0,
+                                    duration: const Duration(milliseconds: 150),
+                                    curve: Curves.easeInOut,
                                   );
-                                }),
+                                }
+                              },
+                              automaticIndicatorColorAdjustment: false,
+                              indicatorPadding: EdgeInsets.zero,
+
+                              /// Little hack to hide the indicator when closed
+                              indicatorColor: draggableController != null &&
+                                      (!draggableController!.isAttached || draggableController!.size <= minSize)
+                                  ? theme.colorScheme.surfaceContainerLow
+                                  : null,
+                              tabs: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                  child: Text(
+                                    'AI',
+                                    style: theme.textTheme.labelLarge,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                  child: Text(
+                                    L.of(context)!.transcript_label.toUpperCase(),
+                                    style: theme.textTheme.labelLarge,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                                  child: Text(
+                                    L.of(context)!.up_next_queue_label.toUpperCase(),
+                                    style: theme.textTheme.labelLarge,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const Padding(padding: EdgeInsets.only(bottom: 12.0)),
                           const Expanded(
                             child: TabBarView(
                               children: [
-                                UpNextView(),
+                                _NowPlayingAiTab(),
                                 TranscriptView(),
+                                UpNextView(),
                               ],
                             ),
                           ),
@@ -234,12 +228,11 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
 
   @override
   Widget build(BuildContext context) {
-    final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final theme = Theme.of(context);
     final scrollController = ScrollController();
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: LayoutBuilder(builder: (BuildContext ctx, BoxConstraints constraints) {
         return SingleChildScrollView(
           controller: scrollController,
@@ -261,43 +254,39 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                         bottom: BorderSide(color: theme.colorScheme.outlineVariant.withValues(alpha: 0.2)),
                       ),
                     ),
-                    child: StreamBuilder<QueueState>(
-                        initialData: QueueEmptyState(),
-                        stream: queueBloc.queue,
-                        builder: (context, snapshot) {
-                          return TabBar(
-                            automaticIndicatorColorAdjustment: false,
-                            tabs: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                child: Text(
-                                  L.of(context)!.up_next_queue_label.toUpperCase(),
-                                  style: theme.textTheme.labelLarge,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                                child: snapshot.hasData &&
-                                        snapshot.data?.playing != null &&
-                                        snapshot.data!.playing!.hasTranscripts
-                                    ? Text(
-                                        L.of(context)!.transcript_label.toUpperCase(),
-                                        style: theme.textTheme.labelLarge,
-                                      )
-                                    : Text(
-                                        L.of(context)!.transcript_label.toUpperCase(),
-                                        style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
-                                      ),
-                              ),
-                            ],
-                          );
-                        }),
+                    child: TabBar(
+                      automaticIndicatorColorAdjustment: false,
+                      tabs: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                          child: Text(
+                            'AI',
+                            style: theme.textTheme.labelLarge,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                          child: Text(
+                            L.of(context)!.transcript_label.toUpperCase(),
+                            style: theme.textTheme.labelLarge,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                          child: Text(
+                            L.of(context)!.up_next_queue_label.toUpperCase(),
+                            style: theme.textTheme.labelLarge,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Expanded(
                     child: TabBarView(
                       children: [
-                        UpNextView(),
+                        _NowPlayingAiTab(),
                         TranscriptView(),
+                        UpNextView(),
                       ],
                     ),
                   ),
@@ -307,6 +296,43 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
           ),
         );
       }),
+    );
+  }
+}
+
+class _NowPlayingAiTab extends StatelessWidget {
+  const _NowPlayingAiTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final audioBloc = Provider.of<AudioBloc>(context, listen: false);
+
+    return StreamBuilder<Episode?>(
+      stream: audioBloc.nowPlaying,
+      builder: (context, snapshot) {
+        final episode = snapshot.data;
+
+        if (episode == null) {
+          return const SizedBox.shrink();
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                child: Text(
+                  'Transcript, ad analysis, and detected skip blocks are available here while you listen.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+              EpisodeAnalysisPanel(episode: episode),
+            ],
+          ),
+        );
+      },
     );
   }
 }

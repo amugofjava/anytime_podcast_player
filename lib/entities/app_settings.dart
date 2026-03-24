@@ -4,6 +4,23 @@
 
 import 'package:anytime/entities/search_providers.dart';
 
+enum TranscriptUploadProvider {
+  disabled,
+  openAi,
+  analysisBackend,
+}
+
+enum TranscriptionProvider {
+  localAi,
+  openAi,
+}
+
+enum AdSkipMode {
+  disabled,
+  prompt,
+  auto,
+}
+
 class AppSettings {
   /// The current theme name.
   final String theme;
@@ -68,6 +85,15 @@ class AppSettings {
   /// True if showing a status icon in the notification bar during fetch is enabled
   final bool updatesNotification;
 
+  /// The currently enabled transcript upload provider.
+  final TranscriptUploadProvider transcriptUploadProvider;
+
+  /// Controls where app-generated transcripts come from.
+  final TranscriptionProvider transcriptionProvider;
+
+  /// Controls how ad skip behaves during playback.
+  final AdSkipMode adSkipMode;
+
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
@@ -90,6 +116,9 @@ class AppSettings {
     required this.backgroundUpdate,
     required this.backgroundUpdateMobileData,
     required this.updatesNotification,
+    required this.transcriptUploadProvider,
+    required this.transcriptionProvider,
+    required this.adSkipMode,
   });
 
   AppSettings.sensibleDefaults()
@@ -113,7 +142,10 @@ class AppSettings {
         autoPlay = false,
         backgroundUpdate = false,
         backgroundUpdateMobileData = false,
-        updatesNotification = false;
+        updatesNotification = false,
+        transcriptUploadProvider = TranscriptUploadProvider.disabled,
+        transcriptionProvider = TranscriptionProvider.localAi,
+        adSkipMode = AdSkipMode.prompt;
 
   AppSettings copyWith({
     String? theme,
@@ -138,6 +170,9 @@ class AppSettings {
     bool? backgroundUpdate,
     bool? backgroundUpdateMobileData,
     bool? updatesNotification,
+    TranscriptUploadProvider? transcriptUploadProvider,
+    TranscriptionProvider? transcriptionProvider,
+    AdSkipMode? adSkipMode,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -161,5 +196,8 @@ class AppSettings {
         backgroundUpdate: backgroundUpdate ?? this.backgroundUpdate,
         backgroundUpdateMobileData: backgroundUpdateMobileData ?? this.backgroundUpdateMobileData,
         updatesNotification: updatesNotification ?? this.updatesNotification,
+        transcriptUploadProvider: transcriptUploadProvider ?? this.transcriptUploadProvider,
+        transcriptionProvider: transcriptionProvider ?? this.transcriptionProvider,
+        adSkipMode: adSkipMode ?? this.adSkipMode,
       );
 }

@@ -36,16 +36,19 @@ class EpisodeAnalysisSubmitResponse {
 class EpisodeAnalysisTranscriptPayload {
   final String format;
   final String content;
+  final String provenance;
 
   EpisodeAnalysisTranscriptPayload({
     required this.format,
     required this.content,
+    required this.provenance,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'format': format,
       'content': content,
+      'provenance': provenance,
     };
   }
 }

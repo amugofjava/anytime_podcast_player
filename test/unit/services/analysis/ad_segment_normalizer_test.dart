@@ -83,5 +83,49 @@ void main() {
       expect(normalized.single.confidence, 0.8);
       expect(normalized.single.flags, <String>['music', 'cta', 'brand']);
     });
+
+    test('merges ad segments separated by short gaps into one skip block', () {
+      final normalized = AdSegmentNormalizer.normalize([
+        const AdSegment(
+          startMs: 3 * 60 * 1000 + 41 * 1000,
+          endMs: 4 * 60 * 1000 + 19 * 1000,
+          reason: 'first',
+        ),
+        const AdSegment(
+          startMs: 4 * 60 * 1000 + 30 * 1000,
+          endMs: 4 * 60 * 1000 + 48 * 1000,
+          reason: 'second',
+        ),
+        const AdSegment(
+          startMs: 4 * 60 * 1000 + 51 * 1000,
+          endMs: 5 * 60 * 1000 + 18 * 1000,
+          reason: 'third',
+        ),
+      ]);
+
+      expect(normalized, hasLength(1));
+      expect(normalized.single.startMs, 3 * 60 * 1000 + 41 * 1000);
+      expect(normalized.single.endMs, 5 * 60 * 1000 + 18 * 1000);
+      expect(normalized.single.reason, 'first | second | third');
+    });
+
+    test('keeps segments separate when the gap is at least 30 seconds', () {
+      final normalized = AdSegmentNormalizer.normalize([
+        const AdSegment(
+          startMs: 1000,
+          endMs: 5000,
+          reason: 'first',
+        ),
+        const AdSegment(
+          startMs: 35000,
+          endMs: 45000,
+          reason: 'second',
+        ),
+      ]);
+
+      expect(normalized, hasLength(2));
+      expect(normalized.first.reason, 'first');
+      expect(normalized.last.reason, 'second');
+    });
   });
 }

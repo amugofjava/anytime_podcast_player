@@ -89,6 +89,18 @@ abstract class SettingsService {
 
   bool get updateNotification;
 
+  set transcriptUploadProvider(TranscriptUploadProvider provider);
+
+  TranscriptUploadProvider get transcriptUploadProvider;
+
+  set transcriptionProvider(TranscriptionProvider provider);
+
+  TranscriptionProvider get transcriptionProvider;
+
+  set adSkipMode(AdSkipMode mode);
+
+  AdSkipMode get adSkipMode;
+
   Stream<String> get settingsListener;
 
   set lastFeedRefresh(DateTime lastFeedRefresh);

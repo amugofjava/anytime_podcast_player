@@ -179,13 +179,11 @@ class SembastRepository extends Repository {
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);
 
-    final results = recordSnapshots.map((snapshot) {
-      final episode = Episode.fromMap(snapshot.key, snapshot.value);
-
-      return episode;
+    final results = recordSnapshots.map((snapshot) async {
+      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
     }).toList();
 
-    return results;
+    return Future.wait(results);
   }
 
   @override
@@ -330,13 +328,11 @@ class SembastRepository extends Repository {
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);
 
-    final results = recordSnapshots.map((snapshot) {
-      final episode = Episode.fromMap(snapshot.key, snapshot.value);
-
-      return episode;
+    final results = recordSnapshots.map((snapshot) async {
+      return await _loadEpisodeSnapshot(snapshot.key, snapshot.value);
     }).toList();
 
-    return results;
+    return Future.wait(results);
   }
 
   @override

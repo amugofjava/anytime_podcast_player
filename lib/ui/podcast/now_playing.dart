@@ -10,6 +10,7 @@ import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
+import 'package:anytime/ui/podcast/ad_skip_listener.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/chapter_selector.dart';
 import 'package:anytime/ui/podcast/dot_decoration.dart';
@@ -194,52 +195,55 @@ class NowPlayingMobileScaffold extends StatelessWidget {
             ),
           ],
         ),
-        body: PlaybackErrorListener(
-          child: Column(
-            children: [
-              Expanded(
-                flex: 5,
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: NowPlayingArtworkCard(
-                          imageUrl: episode.positionalImageUrl ?? episode.imageUrl,
-                        ),
-                      ),
-                      const SizedBox(height: 22.0),
-                      _NowPlayingTitleBlock(episode: episode),
-                      const SizedBox(height: 18.0),
-                      transportBuilder != null
-                          ? transportBuilder!(context)
-                          : const SizedBox(
-                              height: 148.0,
-                              child: NowPlayingTransport(),
-                            ),
-                      const SizedBox(height: 18.0),
-                      _NowPlayingDetailsCard(episode: episode),
-                      const SizedBox(height: 14.0),
-                      const _NowPlayingQueueBar(),
-                    ],
-                  ),
-                ),
-              ),
-              const Expanded(
-                flex: 4,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 12.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(24.0),
-                      topRight: Radius.circular(24.0),
+        body: AdSkipListener(
+          child: PlaybackErrorListener(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(
+                      20.0,
+                      8.0,
+                      20.0,
+                      NowPlayingOptionsSelector.baseSize + 28.0,
                     ),
-                    child: NowPlayingOptionsSelectorWide(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: NowPlayingArtworkCard(
+                            imageUrl: episode.positionalImageUrl ?? episode.imageUrl,
+                          ),
+                        ),
+                        const SizedBox(height: 22.0),
+                        _NowPlayingTitleBlock(episode: episode),
+                        const SizedBox(height: 18.0),
+                        transportBuilder != null
+                            ? transportBuilder!(context)
+                            : const SizedBox(
+                                height: 148.0,
+                                child: NowPlayingTransport(),
+                              ),
+                        const SizedBox(height: 18.0),
+                        _NowPlayingDetailsCard(episode: episode),
+                        const SizedBox(height: 14.0),
+                        const _NowPlayingQueueBar(),
+                        const SizedBox(height: 12.0),
+                        Text(
+                          'Pull up the bottom sheet for transcript, ad-skip controls, and detected ad blocks.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const Positioned.fill(
+                  child: NowPlayingOptionsSelector(),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -7,6 +7,8 @@ import 'dart:io';
 
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/ad_segment.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
@@ -21,6 +23,7 @@ import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/persistent_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/state/ad_skip_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
 import 'package:audio_service/audio_service.dart';
 import 'package:collection/collection.dart';
@@ -35,6 +38,9 @@ import 'package:rxdart/rxdart.dart';
 /// package to run the audio layer as a service to allow background play, and playback
 /// is handled by the [just_audio](https://pub.dev/packages/just_audio) package.
 class DefaultAudioPlayerService extends AudioPlayerService {
+  static const int _adSkipSeekPaddingMs = 500;
+  static const int _adSkipResumeToleranceMs = 250;
+
   final zeroDuration = const Duration(seconds: 0);
   final log = Logger('DefaultAudioPlayerService');
   final Repository repository;
@@ -58,6 +64,10 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   /// The currently 'processed' transcript;
   Transcript? _currentTranscript;
+
+  AdSegment? _activeAdSegment;
+  String? _promptedAdSegmentKey;
+  String? _skippedAdSegmentKey;
 
   /// Subscription to the position ticker.
   StreamSubscription<int>? _positionSubscription;
@@ -88,6 +98,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   /// Stream transcript events such as search filters and updates.
   final _transcriptEvent = BehaviorSubject<TranscriptState>(sync: true);
+
+  final _adSkipEvent = BehaviorSubject<AdSkipState>(sync: true);
 
   /// Stream for the last audio error as an integer code.
   final _playbackError = PublishSubject<int>();
@@ -224,6 +236,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       // Current episode is saved. Now we re-point the current episode to the new one passed in.
       _currentEpisode = episode;
       _currentEpisode!.played = false;
+      _activeAdSegment = null;
+      _promptedAdSegmentKey = null;
+      _skippedAdSegmentKey = null;
 
       /// Update the state of the queue.
       _updateQueueState();
@@ -239,6 +254,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
         await _audioHandler.playMediaItem(_episodeToMediaItem(_currentEpisode!, uri));
 
         _currentEpisode!.duration = _audioHandler.mediaItem.value?.duration?.inSeconds ?? 0;
+        _currentEpisode = await _preserveStoredAiMetadata(_currentEpisode!);
 
         await repository.saveEpisode(_currentEpisode!);
 
@@ -266,28 +282,44 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Future<void> fastForward() => _audioHandler.fastForward();
 
   @override
-  Future<void> seek({required int position}) async {
+  Future<void> seek({required Duration position}) async {
     var currentMediaItem = _audioHandler.mediaItem.value;
     var duration = currentMediaItem?.duration ?? const Duration(seconds: 1);
-    var p = Duration(seconds: position);
-    var complete = p.inSeconds > 0 ? (duration.inSeconds / p.inSeconds) * 100 : 0;
+    var complete = duration.inMilliseconds > 0 ? (position.inMilliseconds / duration.inMilliseconds) * 100 : 0;
 
     // Pause the ticker whilst we seek to prevent jumpy UI.
     _positionSubscription?.pause();
 
-    _updateChapter(p.inSeconds, duration.inSeconds);
+    _updateChapter(position.inSeconds, duration.inSeconds);
 
     _playPosition.add(PositionState(
-      position: p,
+      position: position,
       length: duration,
       percentage: complete.toInt(),
       episode: _currentEpisode,
       buffering: true,
     ));
 
-    await _audioHandler.seek(Duration(seconds: position));
+    await _audioHandler.seek(position);
 
     _positionSubscription?.resume();
+    await _evaluateAdSkip(position);
+  }
+
+  @override
+  Future<void> skipActiveAd() async {
+    final episode = _currentEpisode;
+    final activeSegment = _activeAdSegment;
+
+    if (episode == null || activeSegment == null) {
+      return;
+    }
+
+    _skippedAdSegmentKey = _segmentKey(activeSegment);
+    _promptedAdSegmentKey = null;
+    _activeAdSegment = null;
+
+    await seek(position: Duration(milliseconds: _resolveAdSkipTargetMs(activeSegment)));
   }
 
   @override
@@ -341,6 +373,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   @override
   Future<void> stop() async {
     _currentEpisode = null;
+    _activeAdSegment = null;
+    _promptedAdSegmentKey = null;
+    _skippedAdSegmentKey = null;
     _updateEpisodeState();
     await _audioHandler.stop();
   }
@@ -662,6 +697,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       _updateEpisodeState();
 
       log.fine('We have ${_currentEpisode!.chapters.length} chapters');
+      _currentEpisode = await _preserveStoredAiMetadata(_currentEpisode!);
       _currentEpisode = await repository.saveEpisode(_currentEpisode!);
     }
 
@@ -700,7 +736,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   void _broadcastEpisodePosition(Episode? e) {
     if (e != null) {
       var duration = Duration(seconds: e.duration);
-      var complete = e.position > 0 ? (duration.inSeconds / e.position) * 100 : 0;
+      var complete = duration.inMilliseconds > 0 ? (e.position / duration.inMilliseconds) * 100 : 0;
 
       _playPosition.add(PositionState(
         position: Duration(milliseconds: e.position),
@@ -734,6 +770,31 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     } else {
       log.fine(' - Cannot save position as episode is null');
     }
+  }
+
+  Future<Episode> _preserveStoredAiMetadata(Episode episode) async {
+    final storedEpisode = await repository.findEpisodeByGuid(episode.guid);
+
+    if (storedEpisode == null) {
+      return episode;
+    }
+
+    if ((episode.transcriptId ?? 0) <= 0 && (storedEpisode.transcriptId ?? 0) > 0) {
+      episode.transcriptId = storedEpisode.transcriptId;
+    }
+
+    episode.transcript ??= storedEpisode.transcript;
+
+    episode.analysisStatus ??= storedEpisode.analysisStatus;
+    episode.analysisJobId ??= storedEpisode.analysisJobId;
+    episode.analysisError ??= storedEpisode.analysisError;
+    episode.analysisUpdatedAt ??= storedEpisode.analysisUpdatedAt;
+
+    if (episode.adSegments.isEmpty && storedEpisode.adSegments.isNotEmpty) {
+      episode.adSegments = List<AdSegment>.unmodifiable(storedEpisode.adSegments);
+    }
+
+    return episode;
   }
 
   /// Called when play starts. Each time we receive an event in the stream
@@ -789,7 +850,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     var currentMediaItem = _audioHandler.mediaItem.value;
     var duration = currentMediaItem?.duration ?? const Duration(seconds: 1);
     var position = playbackState.position;
-    var complete = position.inSeconds > 0 ? (duration.inSeconds / position.inSeconds) * 100 : 0;
+    var complete = duration.inMilliseconds > 0 ? (position.inMilliseconds / duration.inMilliseconds) * 100 : 0;
     var buffering = playbackState.processingState == AudioProcessingState.buffering;
 
     _updateChapter(position.inSeconds, duration.inSeconds);
@@ -801,6 +862,8 @@ class DefaultAudioPlayerService extends AudioPlayerService {
       episode: _currentEpisode,
       buffering: buffering,
     ));
+
+    await _evaluateAdSkip(position);
   }
 
   /// Calculate our current chapter based on playback position, and if it's different to
@@ -836,6 +899,91 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
+  Future<void> _evaluateAdSkip(Duration position) async {
+    final episode = _currentEpisode;
+    final transcript = _currentTranscript;
+
+    if (episode == null || transcript == null || !transcript.isAppGeneratedAiTranscript || episode.adSegments.isEmpty) {
+      _activeAdSegment = null;
+      _promptedAdSegmentKey = null;
+      return;
+    }
+
+    final activeSegment = findActiveAdSegment(
+      positionMs: position.inMilliseconds,
+      adSegments: episode.adSegments,
+    );
+
+    if (activeSegment == null) {
+      if (_activeAdSegment != null) {
+        _adSkipEvent.add(AdSkipClearedState(
+          episode: episode,
+          segment: _activeAdSegment!,
+        ));
+      }
+
+      _activeAdSegment = null;
+      _promptedAdSegmentKey = null;
+      _skippedAdSegmentKey = null;
+      return;
+    }
+
+    _activeAdSegment = activeSegment;
+    final currentSegmentKey = _segmentKey(activeSegment);
+
+    if (_skippedAdSegmentKey == currentSegmentKey) {
+      if (_hasExitedSkippedSegment(position.inMilliseconds, activeSegment)) {
+        return;
+      }
+
+      log.fine(
+        'Playback remained inside skipped ad segment $currentSegmentKey at ${position.inMilliseconds}ms; retrying seek.',
+      );
+
+      await seek(position: Duration(milliseconds: _resolveAdSkipTargetMs(activeSegment)));
+      return;
+    }
+
+    switch (settingsService.adSkipMode) {
+      case AdSkipMode.disabled:
+        return;
+      case AdSkipMode.auto:
+        await skipActiveAd();
+        return;
+      case AdSkipMode.prompt:
+        if (_promptedAdSegmentKey == currentSegmentKey) {
+          return;
+        }
+
+        _promptedAdSegmentKey = currentSegmentKey;
+        _adSkipEvent.add(AdSkipPromptState(
+          episode: episode,
+          segment: activeSegment,
+        ));
+        return;
+    }
+  }
+
+  String _segmentKey(AdSegment segment) => '${segment.startMs}:${segment.endMs}';
+
+  int _resolveAdSkipTargetMs(AdSegment segment) {
+    final durationMs = _audioHandler.mediaItem.value?.duration?.inMilliseconds;
+
+    return resolveAdSkipTargetMs(
+      segment: segment,
+      durationMs: durationMs,
+      seekPaddingMs: _adSkipSeekPaddingMs,
+    );
+  }
+
+  bool _hasExitedSkippedSegment(int positionMs, AdSegment segment) {
+    return hasExitedSkippedAdSegment(
+      positionMs: positionMs,
+      segment: segment,
+      resumeToleranceMs: _adSkipResumeToleranceMs,
+    );
+  }
+
   @override
   Episode? get nowPlaying => _currentEpisode;
 
@@ -855,6 +1003,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
   Stream<TranscriptState> get transcriptEvent => _transcriptEvent.stream;
 
   @override
+  Stream<AdSkipState> get adSkipEvent => _adSkipEvent.stream;
+
+  @override
   Stream<int> get playbackError => _playbackError.stream;
 
   @override
@@ -862,6 +1013,44 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   @override
   Stream<Sleep> get sleepStream => _sleepState.stream;
+}
+
+@visibleForTesting
+AdSegment? findActiveAdSegment({
+  required int positionMs,
+  required List<AdSegment> adSegments,
+}) {
+  for (final segment in adSegments) {
+    if (positionMs >= segment.startMs && positionMs < segment.endMs) {
+      return segment;
+    }
+  }
+
+  return null;
+}
+
+@visibleForTesting
+int resolveAdSkipTargetMs({
+  required AdSegment segment,
+  required int? durationMs,
+  int seekPaddingMs = 500,
+}) {
+  final paddedTargetMs = segment.endMs + seekPaddingMs;
+
+  if (durationMs == null || durationMs <= 0) {
+    return paddedTargetMs;
+  }
+
+  return paddedTargetMs > durationMs ? durationMs : paddedTargetMs;
+}
+
+@visibleForTesting
+bool hasExitedSkippedAdSegment({
+  required int positionMs,
+  required AdSegment segment,
+  int resumeToleranceMs = 250,
+}) {
+  return positionMs >= (segment.endMs - resumeToleranceMs);
 }
 
 @visibleForTesting

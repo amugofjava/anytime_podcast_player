@@ -2,11 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/core/utils.dart';
+import 'package:anytime/entities/ad_segment.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/services/transcription/episode_transcription_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
@@ -16,8 +22,11 @@ import 'package:anytime/ui/widgets/episode_tile.dart';
 import 'package:anytime/ui/widgets/podcast_html.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 /// This class renders the more info widget that is accessed from the 'more'
 /// button on an episode.
@@ -252,6 +261,7 @@ class EpisodeToolBar extends StatelessWidget {
 }
 
 class EpisodeAnalysisPanel extends StatelessWidget {
+  static final _log = Logger('EpisodeAnalysisPanel');
   final Episode episode;
 
   const EpisodeAnalysisPanel({
@@ -271,6 +281,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
         final currentEpisode = snapshot.data!.episode;
         final isAnalyzing = _isAnalyzing(currentEpisode);
         final statusText = _statusText(currentEpisode);
+        final transcriptionProvider = episodeBloc.settingsService.transcriptionProvider;
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 12.0),
@@ -284,6 +295,60 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                   ),
+                  icon: const Icon(Icons.subtitles_outlined),
+                  label: const Text('Generate AI Transcript'),
+                  onPressed: currentEpisode.downloaded
+                      ? () async {
+                          final confirmed = await showPlatformDialog<bool>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: Text(_generateTranscriptTitle(transcriptionProvider)),
+                              content: Text(_generateTranscriptConfirmationText(transcriptionProvider)),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: const ActionText('Cancel'),
+                                  onPressed: () => Navigator.pop(context, false),
+                                ),
+                                BasicDialogAction(
+                                  title: const ActionText('Continue'),
+                                  iosIsDefaultAction: true,
+                                  onPressed: () => Navigator.pop(context, true),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirmed != true) {
+                            return;
+                          }
+
+                          if (!context.mounted) {
+                            return;
+                          }
+
+                          await _generateTranscript(
+                            context,
+                            episodeBloc: episodeBloc,
+                            episode: currentEpisode,
+                          );
+                        }
+                      : null,
+                ),
+                if (_transcriptStatusText(currentEpisode) != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      _transcriptStatusText(currentEpisode)!,
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+                const SizedBox(height: 8.0),
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.fromLTRB(10.0, 6.0, 10.0, 6.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  ),
                   icon: isAnalyzing
                       ? const SizedBox(
                           width: 18.0,
@@ -292,11 +357,40 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                         )
                       : const Icon(Icons.auto_awesome_outlined),
                   label: const Text('Analyze Ads'),
-                  onPressed: isAnalyzing
+                  onPressed: isAnalyzing || !_canAnalyze(currentEpisode)
                       ? null
                       : () async {
+                          final consent = await showPlatformDialog<bool>(
+                            context: context,
+                            useRootNavigator: false,
+                            builder: (_) => BasicDialogAlert(
+                              title: const Text('Upload Transcript?'),
+                              content: const Text(
+                                'This uploads only this episode transcript to the configured external provider for ad analysis. Nothing is uploaded automatically after transcription. Continue?',
+                              ),
+                              actions: <Widget>[
+                                BasicDialogAction(
+                                  title: const ActionText('Cancel'),
+                                  onPressed: () => Navigator.pop(context, false),
+                                ),
+                                BasicDialogAction(
+                                  title: const ActionText('Upload'),
+                                  iosIsDefaultAction: true,
+                                  onPressed: () => Navigator.pop(context, true),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (consent != true) {
+                            return;
+                          }
+
                           try {
-                            await episodeBloc.analyzeAds(currentEpisode);
+                            await episodeBloc.analyzeAds(
+                              currentEpisode,
+                              consentToUpload: true,
+                            );
                           } catch (error) {
                             if (context.mounted) {
                               final message =
@@ -315,6 +409,13 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                       style: theme.textTheme.bodySmall,
                     ),
                   ),
+                if (currentEpisode.adSegments.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: _AdSegmentDiagnostics(
+                      adSegments: currentEpisode.adSegments,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -325,6 +426,124 @@ class EpisodeAnalysisPanel extends StatelessWidget {
 
   bool _isAnalyzing(Episode episode) {
     return episode.analysisStatus == 'queued' || episode.analysisStatus == 'processing';
+  }
+
+  Future<void> _generateTranscript(
+    BuildContext context, {
+    required EpisodeBloc episodeBloc,
+    required Episode episode,
+  }) async {
+    _log.fine('Starting transcript generation for ${episode.guid}');
+    BuildContext? dialogContext;
+    final progress = ValueNotifier<EpisodeTranscriptionProgress>(
+      const EpisodeTranscriptionProgress(
+        stage: EpisodeTranscriptionStage.preparing,
+        message: 'Preparing local audio...',
+      ),
+    );
+
+    final dialogClosed = showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogBuildContext) {
+        dialogContext = dialogBuildContext;
+        return _TranscriptionProgressDialog(progress: progress);
+      },
+    );
+
+    try {
+      _setTranscriptionWakelock(true);
+
+      await episodeBloc.generateLocalTranscript(
+        episode,
+        onProgress: (update) {
+          _log.fine(
+            'Transcript progress for ${episode.guid}: ${update.stage.name} '
+            '${update.progress == null ? '' : '(${(update.progress! * 100).toStringAsFixed(0)}%) '}'
+            '${update.message}',
+          );
+          progress.value = update;
+        },
+      );
+
+      _log.fine('Transcript generation completed for ${episode.guid}');
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('AI transcript ready.')),
+        );
+      }
+    } catch (error, stackTrace) {
+      _log.warning('Transcript generation failed for ${episode.guid}', error, stackTrace);
+      if (context.mounted) {
+        final message = error is EpisodeTranscriptionException ? error.message : 'Transcript generation failed.';
+
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      }
+    } finally {
+      _log.fine('Closing transcript dialog for ${episode.guid}');
+      if (dialogContext != null && dialogContext!.mounted) {
+        Navigator.of(dialogContext!).pop();
+      }
+
+      await dialogClosed;
+      _setTranscriptionWakelock(false);
+      progress.dispose();
+    }
+  }
+
+  void _setTranscriptionWakelock(bool enabled) {
+    final operation = enabled ? WakelockPlus.enable() : WakelockPlus.disable();
+
+    unawaited(operation.catchError((error) {
+      // Ignore wakelock failures so transcript generation can still proceed.
+      if (error is MissingPluginException || error is PlatformException) {
+        return;
+      }
+    }));
+  }
+
+  bool _canAnalyze(Episode episode) {
+    final transcript = episode.transcript;
+
+    return transcript != null && transcript.transcriptAvailable && transcript.isAppGeneratedAiTranscript;
+  }
+
+  String _generateTranscriptTitle(TranscriptionProvider provider) {
+    switch (provider) {
+      case TranscriptionProvider.localAi:
+        return 'Generate On-Device Transcript?';
+      case TranscriptionProvider.openAi:
+        return 'Generate OpenAI Transcript?';
+    }
+  }
+
+  String _generateTranscriptConfirmationText(TranscriptionProvider provider) {
+    switch (provider) {
+      case TranscriptionProvider.localAi:
+        return 'This downloads a Whisper model to your device if needed and transcribes this downloaded episode on this device. Audio stays on this device during transcription.';
+      case TranscriptionProvider.openAi:
+        return 'This uploads the downloaded audio file for this episode to the OpenAI Whisper API to generate a transcript. Continue only if you want this audio processed by OpenAI.';
+    }
+  }
+
+  String? _transcriptStatusText(Episode episode) {
+    final transcript = episode.transcript;
+
+    if (transcript == null || !transcript.transcriptAvailable) {
+      return episode.downloaded ? 'No AI transcript yet.' : 'Download this episode to generate an AI transcript.';
+    }
+
+    switch (transcript.provenance) {
+      case TranscriptProvenance.localAi:
+        return 'On-device AI transcript ready.';
+      case TranscriptProvenance.openAi:
+        return 'OpenAI transcript ready.';
+      case TranscriptProvenance.analysisBackend:
+        return 'Analysis transcript stored, but ad skip requires an AI transcript generated in the app.';
+      case TranscriptProvenance.feed:
+        return 'Feed transcript available. Ad analysis requires an AI transcript generated in the app.';
+    }
   }
 
   String? _statusText(Episode episode) {
@@ -349,5 +568,262 @@ class EpisodeAnalysisPanel extends StatelessWidget {
       default:
         return null;
     }
+  }
+}
+
+class _AdSegmentDiagnostics extends StatelessWidget {
+  const _AdSegmentDiagnostics({
+    required this.adSegments,
+  });
+
+  final List<AdSegment> adSegments;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: theme.dividerColor,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Detected ad segments',
+            style: theme.textTheme.titleSmall,
+          ),
+          const SizedBox(height: 8.0),
+          ...adSegments.map((segment) => Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: _AdSegmentDiagnosticsRow(segment: segment),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdSegmentDiagnosticsRow extends StatelessWidget {
+  const _AdSegmentDiagnosticsRow({
+    required this.segment,
+  });
+
+  final AdSegment segment;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final duration = Duration(milliseconds: segment.endMs - segment.startMs);
+    final confidence = segment.confidence == null ? null : '${(segment.confidence! * 100).toStringAsFixed(0)}%';
+    final flags = segment.flags.where((flag) => flag.trim().isNotEmpty).join(', ');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SelectableText(
+          '${_formatTimestamp(segment.startMs)} - ${_formatTimestamp(segment.endMs)} '
+          '(${_formatDuration(duration)})',
+          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        if (segment.reason != null && segment.reason!.trim().isNotEmpty)
+          Text(
+            'Reason: ${segment.reason}',
+            style: theme.textTheme.bodySmall,
+          ),
+        if (confidence != null)
+          Text(
+            'Confidence: $confidence',
+            style: theme.textTheme.bodySmall,
+          ),
+        if (flags.isNotEmpty)
+          Text(
+            'Flags: $flags',
+            style: theme.textTheme.bodySmall,
+          ),
+      ],
+    );
+  }
+
+  String _formatTimestamp(int milliseconds) {
+    final duration = Duration(milliseconds: milliseconds);
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+    final seconds = duration.inSeconds % 60;
+
+    if (hours > 0) {
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
+
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String _formatDuration(Duration duration) {
+    final totalSeconds = duration.inSeconds;
+    final minutes = totalSeconds ~/ 60;
+    final seconds = totalSeconds % 60;
+
+    if (duration.inHours > 0) {
+      final hours = duration.inHours;
+      return '${hours}h ${minutes % 60}m ${seconds.toString().padLeft(2, '0')}s';
+    }
+
+    if (minutes > 0) {
+      return '${minutes}m ${seconds.toString().padLeft(2, '0')}s';
+    }
+
+    return '${seconds}s';
+  }
+}
+
+class _TranscriptionProgressDialog extends StatelessWidget {
+  final ValueNotifier<EpisodeTranscriptionProgress> progress;
+
+  const _TranscriptionProgressDialog({
+    required this.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: _TranscriptionProgressBody(progress: progress),
+    );
+  }
+}
+
+class _TranscriptionProgressBody extends StatefulWidget {
+  final ValueNotifier<EpisodeTranscriptionProgress> progress;
+
+  const _TranscriptionProgressBody({
+    required this.progress,
+  });
+
+  @override
+  State<_TranscriptionProgressBody> createState() => _TranscriptionProgressBodyState();
+}
+
+class _TranscriptionProgressBodyState extends State<_TranscriptionProgressBody> {
+  late EpisodeTranscriptionStage _stage;
+  late DateTime _stageStartedAt;
+  Timer? _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _stage = widget.progress.value.stage;
+    _stageStartedAt = DateTime.now();
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _ticker?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<EpisodeTranscriptionProgress>(
+      valueListenable: widget.progress,
+      builder: (context, state, _) {
+        if (state.stage != _stage) {
+          _stage = state.stage;
+          _stageStartedAt = DateTime.now();
+        }
+
+        final elapsed = DateTime.now().difference(_stageStartedAt);
+        final eta = _estimateRemaining(
+          elapsed: elapsed,
+          progress: state.progress,
+        );
+
+        return AlertDialog(
+          title: const Text('Generating AI Transcript'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              LinearProgressIndicator(value: state.progress),
+              const SizedBox(height: 12.0),
+              if (!state.isIndeterminate)
+                Text(
+                  '${(state.progress! * 100).clamp(0, 100).toStringAsFixed(0)}%',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              const SizedBox(height: 8.0),
+              Text(state.message),
+              const SizedBox(height: 10.0),
+              Text(
+                _timingText(
+                  stage: state.stage,
+                  elapsed: elapsed,
+                  eta: eta,
+                ),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Duration? _estimateRemaining({
+    required Duration elapsed,
+    required double? progress,
+  }) {
+    if (progress == null || progress <= 0 || progress >= 1) {
+      return null;
+    }
+
+    final remainingMilliseconds = (elapsed.inMilliseconds * (1 - progress) / progress).round();
+    return Duration(milliseconds: remainingMilliseconds);
+  }
+
+  String _timingText({
+    required EpisodeTranscriptionStage stage,
+    required Duration elapsed,
+    required Duration? eta,
+  }) {
+    final elapsedLabel = _formatDuration(elapsed);
+
+    if (eta != null) {
+      return 'Elapsed $elapsedLabel • About ${_formatDuration(eta)} left';
+    }
+
+    switch (stage) {
+      case EpisodeTranscriptionStage.downloadingModel:
+      case EpisodeTranscriptionStage.uploading:
+        return 'Elapsed $elapsedLabel • Estimating time remaining...';
+      case EpisodeTranscriptionStage.transcribing:
+        return 'Elapsed $elapsedLabel • Time remaining depends on device speed.';
+      case EpisodeTranscriptionStage.preparing:
+        return 'Elapsed $elapsedLabel';
+      case EpisodeTranscriptionStage.completed:
+        return 'Finishing up...';
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    final totalSeconds = duration.inSeconds;
+    final minutes = totalSeconds ~/ 60;
+    final seconds = totalSeconds % 60;
+
+    if (minutes <= 0) {
+      return '${seconds}s';
+    }
+
+    return '${minutes}m ${seconds.toString().padLeft(2, '0')}s';
   }
 }

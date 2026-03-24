@@ -255,6 +255,68 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set transcriptUploadProvider(TranscriptUploadProvider provider) {
+    _sharedPreferences.setString('transcriptUploadProvider', provider.name);
+    settingsNotifier.sink.add('transcriptUploadProvider');
+  }
+
+  @override
+  TranscriptUploadProvider get transcriptUploadProvider {
+    final stored = _sharedPreferences.getString('transcriptUploadProvider');
+
+    if (stored == null || stored.isEmpty) {
+      return Environment.hasAnalysisBackend
+          ? TranscriptUploadProvider.analysisBackend
+          : TranscriptUploadProvider.disabled;
+    }
+
+    return TranscriptUploadProvider.values.firstWhere(
+      (value) => value.name == stored,
+      orElse: () => TranscriptUploadProvider.disabled,
+    );
+  }
+
+  @override
+  set transcriptionProvider(TranscriptionProvider provider) {
+    _sharedPreferences.setString('transcriptionProvider', provider.name);
+    settingsNotifier.sink.add('transcriptionProvider');
+  }
+
+  @override
+  TranscriptionProvider get transcriptionProvider {
+    final stored = _sharedPreferences.getString('transcriptionProvider');
+
+    if (stored == null || stored.isEmpty) {
+      return TranscriptionProvider.localAi;
+    }
+
+    return TranscriptionProvider.values.firstWhere(
+      (value) => value.name == stored,
+      orElse: () => TranscriptionProvider.localAi,
+    );
+  }
+
+  @override
+  set adSkipMode(AdSkipMode mode) {
+    _sharedPreferences.setString('adSkipMode', mode.name);
+    settingsNotifier.sink.add('adSkipMode');
+  }
+
+  @override
+  AdSkipMode get adSkipMode {
+    final stored = _sharedPreferences.getString('adSkipMode');
+
+    if (stored == null || stored.isEmpty) {
+      return AdSkipMode.prompt;
+    }
+
+    return AdSkipMode.values.firstWhere(
+      (value) => value.name == stored,
+      orElse: () => AdSkipMode.prompt,
+    );
+  }
+
+  @override
   set lastFeedRefresh(DateTime lastFeedRefresh) {
     _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
     settingsNotifier.sink.add('lastFeedRefresh');

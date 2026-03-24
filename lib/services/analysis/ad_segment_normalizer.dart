@@ -7,6 +7,7 @@ import 'package:anytime/entities/ad_segment.dart';
 class AdSegmentNormalizer {
   static const suspiciousDurationThresholdMs = 10 * 60 * 1000;
   static const suspiciousDurationFlag = 'suspicious_duration';
+  static const mergeGapThresholdMs = 30 * 1000;
 
   static List<AdSegment> normalize(List<AdSegment> segments) {
     final sanitized = segments.map(_sanitize).whereType<AdSegment>().toList()
@@ -29,7 +30,7 @@ class AdSegmentNormalizer {
     for (final segment in sanitized.skip(1)) {
       final current = merged.removeLast();
 
-      if (segment.startMs <= current.endMs) {
+      if (segment.startMs < current.endMs + mergeGapThresholdMs) {
         merged.add(_merge(current, segment));
       } else {
         merged
