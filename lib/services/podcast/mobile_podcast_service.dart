@@ -761,7 +761,7 @@ class MobilePodcastService extends PodcastService {
     }
 
     /// If set to never, do not bother to continue
-    if (settingsService.autoUpdateEpisodePeriod == -1) {
+    if (!manual && settingsService.autoUpdateEpisodePeriod == -1) {
       _log.fine('Automatic library refresh is disabled.');
       return;
     }
