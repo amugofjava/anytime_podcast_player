@@ -8,9 +8,11 @@ import 'package:anytime/bloc/podcast/audio_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,6 +34,8 @@ class PodcastTile extends StatelessWidget {
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
     final podcastBloc = Provider.of<PodcastBloc>(context);
     final settingsBloc = Provider.of<SettingsBloc>(context);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
+
     var semanticTitle = '${podcast.title}.';
 
     if (settingsBloc.currentSettings.layoutCount && podcast.episodeCount > 0) {
@@ -47,17 +51,21 @@ class PodcastTile extends StatelessWidget {
     return Semantics(
       customSemanticsActions: {
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () =>
-            audioBloc.playLatestEpisode(podcast),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_latest_episode_label): () {
+            audioBloc.playLatestEpisode(podcast);
+            optionalShowNowPlaying(context, settings);
+          },
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
-            queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_latest_episode_label): () =>
+              queueBloc.queueEvent(QueueAddLatestEpisodeEvent(podcast: podcast)),
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () =>
-            audioBloc.playNextUnplayedEpisode(podcast),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_play_next_episode_label): () {
+            audioBloc.playNextUnplayedEpisode(podcast);
+            optionalShowNowPlaying(context, settings);
+          },
         if (podcast.id != null)
-        CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
-            queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
+          CustomSemanticsAction(label: L.of(context)!.podcast_context_queue_next_episode_label): () =>
+              queueBloc.queueEvent(QueueAddNextUnplayedEpisodeEvent(podcast: podcast)),
       },
       child: ListTile(
         onTap: () {
@@ -104,9 +112,25 @@ class PodcastTile extends StatelessWidget {
     );
   }
 
+  /// If we have the 'show now playing upon play' option set to true, launch
+  /// the [NowPlaying] widget automatically.
+  void optionalShowNowPlaying(BuildContext context, AppSettings settings) {
+    if (settings.autoOpenNowPlaying) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => const NowPlaying(),
+          settings: const RouteSettings(name: 'nowplaying'),
+          fullscreenDialog: false,
+        ),
+      );
+    }
+  }
+
   void showContextMenu(BuildContext context) {
     final audioBloc = Provider.of<AudioBloc>(context, listen: false);
     final queueBloc = Provider.of<QueueBloc>(context, listen: false);
+    final settings = Provider.of<SettingsBloc>(context, listen: false).currentSettings;
 
     if (Platform.isIOS || Platform.isMacOS) {
       showCupertinoModalPopup<void>(
@@ -119,6 +143,7 @@ class PodcastTile extends StatelessWidget {
                 onPressed: () {
                   audioBloc.playLatestEpisode(podcast);
                   Navigator.pop(context, 'Close');
+                  optionalShowNowPlaying(context, settings);
                 },
                 child: Text(L.of(context)!.podcast_context_play_latest_episode_label),
               ),
@@ -135,6 +160,7 @@ class PodcastTile extends StatelessWidget {
                 onPressed: () {
                   audioBloc.playNextUnplayedEpisode(podcast);
                   Navigator.pop(context, 'Close');
+                  optionalShowNowPlaying(context, settings);
                 },
                 child: Text(L.of(context)!.podcast_context_play_next_episode_label),
               ),
@@ -170,6 +196,7 @@ class PodcastTile extends StatelessWidget {
                   onPressed: () {
                     audioBloc.playLatestEpisode(podcast);
                     Navigator.pop(context, '');
+                    optionalShowNowPlaying(context, settings);
                   },
                   padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                   child: Text(L.of(context)!.podcast_context_play_latest_episode_label),
@@ -186,6 +213,7 @@ class PodcastTile extends StatelessWidget {
                   onPressed: () {
                     audioBloc.playNextUnplayedEpisode(podcast);
                     Navigator.pop(context, '');
+                    optionalShowNowPlaying(context, settings);
                   },
                   padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                   child: Text(L.of(context)!.podcast_context_play_next_episode_label),
