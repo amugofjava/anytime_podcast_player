@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/queue.dart';
@@ -301,10 +302,7 @@ class SembastRepository extends Repository {
   @override
   Future<List<Episode>> findDownloadsByPodcastGuid(String pguid) async {
     final finder = Finder(
-      filter: Filter.and([
-        Filter.equals('pguid', pguid),
-        Filter.equals('downloadPercentage', '100'),
-      ]),
+      filter: _downloadLibraryFilter(podcastGuid: pguid),
       sortOrders: [SortOrder('publicationDate', false)],
     );
 
@@ -322,8 +320,7 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Episode>> findDownloads() async {
-    final finder =
-        Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
+    final finder = Finder(filter: _downloadLibraryFilter(), sortOrders: [SortOrder('publicationDate', false)]);
 
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);
@@ -333,6 +330,22 @@ class SembastRepository extends Repository {
     }).toList();
 
     return Future.wait(results);
+  }
+
+  Filter _downloadLibraryFilter({String? podcastGuid}) {
+    final filters = <Filter>[
+      if (podcastGuid != null) Filter.equals('pguid', podcastGuid),
+      Filter.or([
+        // Keep legacy completed downloads visible even if older rows never
+        // persisted a downloaded state.
+        Filter.equals('downloadPercentage', '100'),
+        Filter.equals('downloadState', DownloadState.queued.index),
+        Filter.equals('downloadState', DownloadState.downloading.index),
+        Filter.equals('downloadState', DownloadState.downloaded.index),
+      ]),
+    ];
+
+    return Filter.and(filters);
   }
 
   @override

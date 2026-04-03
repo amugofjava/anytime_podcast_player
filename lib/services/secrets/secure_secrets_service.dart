@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 const openAiApiKeySecret = 'openai_api_key';
+const grokApiKeySecret = 'grok_api_key';
 
 abstract class SecureSecretsService {
   Future<String?> read(String key);

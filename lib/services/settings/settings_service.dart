@@ -101,6 +101,14 @@ abstract class SettingsService {
 
   AdSkipMode get adSkipMode;
 
+  set openAiAnalysisModel(String model);
+
+  String get openAiAnalysisModel;
+
+  set grokAnalysisModel(String model);
+
+  String get grokAnalysisModel;
+
   Stream<String> get settingsListener;
 
   set lastFeedRefresh(DateTime lastFeedRefresh);

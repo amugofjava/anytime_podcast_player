@@ -186,8 +186,8 @@ void main() {
   test('Test transcript upload provider', () async {
     expect(mobileSettingsService?.transcriptUploadProvider, TranscriptUploadProvider.disabled);
     expectLater(settingsListener, emits('transcriptUploadProvider'));
-    mobileSettingsService?.transcriptUploadProvider = TranscriptUploadProvider.analysisBackend;
-    expect(mobileSettingsService?.transcriptUploadProvider, TranscriptUploadProvider.analysisBackend);
+    mobileSettingsService?.transcriptUploadProvider = TranscriptUploadProvider.grok;
+    expect(mobileSettingsService?.transcriptUploadProvider, TranscriptUploadProvider.grok);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
   test('Test transcription provider', () async {
@@ -202,5 +202,19 @@ void main() {
     expectLater(settingsListener, emits('adSkipMode'));
     mobileSettingsService?.adSkipMode = AdSkipMode.disabled;
     expect(mobileSettingsService?.adSkipMode, AdSkipMode.disabled);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test OpenAI analysis model', () async {
+    expect(mobileSettingsService?.openAiAnalysisModel, 'gpt-4.1-mini');
+    expectLater(settingsListener, emits('openAiAnalysisModel'));
+    mobileSettingsService?.openAiAnalysisModel = 'gpt-4.1';
+    expect(mobileSettingsService?.openAiAnalysisModel, 'gpt-4.1');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test Grok analysis model', () async {
+    expect(mobileSettingsService?.grokAnalysisModel, 'grok-3');
+    expectLater(settingsListener, emits('grokAnalysisModel'));
+    mobileSettingsService?.grokAnalysisModel = 'grok-4-1-fast-reasoning';
+    expect(mobileSettingsService?.grokAnalysisModel, 'grok-4-1-fast-reasoning');
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }

@@ -40,6 +40,8 @@ class SettingsBloc extends Bloc {
       BehaviorSubject<TranscriptUploadProvider>();
   final BehaviorSubject<TranscriptionProvider> _transcriptionProvider = BehaviorSubject<TranscriptionProvider>();
   final BehaviorSubject<AdSkipMode> _adSkipMode = BehaviorSubject<AdSkipMode>();
+  final BehaviorSubject<String> _openAiAnalysisModel = BehaviorSubject<String>();
+  final BehaviorSubject<String> _grokAnalysisModel = BehaviorSubject<String>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -84,6 +86,8 @@ class SettingsBloc extends Bloc {
       transcriptUploadProvider: settingsService.transcriptUploadProvider,
       transcriptionProvider: settingsService.transcriptionProvider,
       adSkipMode: settingsService.adSkipMode,
+      openAiAnalysisModel: settingsService.openAiAnalysisModel,
+      grokAnalysisModel: settingsService.grokAnalysisModel,
     );
 
     _settings.add(_currentSettings);
@@ -237,6 +241,18 @@ class SettingsBloc extends Bloc {
       _settings.add(_currentSettings);
       settingsService.adSkipMode = mode;
     });
+
+    _openAiAnalysisModel.listen((model) {
+      _currentSettings = _currentSettings.copyWith(openAiAnalysisModel: model);
+      _settings.add(_currentSettings);
+      settingsService.openAiAnalysisModel = model;
+    });
+
+    _grokAnalysisModel.listen((model) {
+      _currentSettings = _currentSettings.copyWith(grokAnalysisModel: model);
+      _settings.add(_currentSettings);
+      settingsService.grokAnalysisModel = model;
+    });
   }
 
   void _initNotifications() async {
@@ -297,6 +313,10 @@ class SettingsBloc extends Bloc {
 
   void Function(AdSkipMode) get setAdSkipMode => _adSkipMode.add;
 
+  void Function(String) get setOpenAiAnalysisModel => _openAiAnalysisModel.add;
+
+  void Function(String) get setGrokAnalysisModel => _grokAnalysisModel.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -324,6 +344,8 @@ class SettingsBloc extends Bloc {
     _transcriptUploadProvider.close();
     _transcriptionProvider.close();
     _adSkipMode.close();
+    _openAiAnalysisModel.close();
+    _grokAnalysisModel.close();
     _settings.close();
   }
 }

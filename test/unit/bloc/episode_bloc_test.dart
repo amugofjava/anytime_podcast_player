@@ -238,6 +238,73 @@ void main() {
       bloc.dispose();
     });
 
+    test('generates a transcript and analyzes ads in one flow', () async {
+      final repository = _FakeRepository();
+      final episode = Episode(
+        id: 6,
+        guid: 'ep-combined',
+        pguid: 'pod-1',
+        podcast: 'Podcast',
+        title: 'Episode Combined',
+        contentUrl: 'https://cdn.example.com/episode-combined.mp3',
+        downloadPercentage: 100,
+      );
+
+      repository.episodesByGuid[episode.guid] = episode;
+
+      final transcriptionService = _FakeEpisodeTranscriptionService(
+        transcript: Transcript(
+          subtitles: <Subtitle>[
+            Subtitle(
+              index: 1,
+              start: Duration.zero,
+              end: const Duration(seconds: 2),
+              data: 'Combined transcript line',
+            ),
+          ],
+        ),
+      );
+      final analysisService = _FakeEpisodeAnalysisService(
+        submitResponse: EpisodeAnalysisSubmitResponse(
+          jobId: 'job-combined',
+          status: EpisodeAnalysisJobStatus.queued,
+        ),
+        pollResponses: <EpisodeAnalysisStatusResponse>[
+          EpisodeAnalysisStatusResponse(
+            jobId: 'job-combined',
+            status: EpisodeAnalysisJobStatus.completed,
+            adSegments: const <AdSegment>[
+              AdSegment(startMs: 500, endMs: 2500),
+            ],
+          ),
+        ],
+      );
+      final bloc = EpisodeBloc(
+        podcastService: _FakePodcastService(repository: repository),
+        audioPlayerService: _FakeAudioPlayerService(),
+        analysisService: analysisService,
+        settingsService: _FakeSettingsService(),
+        transcriptionService: transcriptionService,
+        analysisPollInterval: Duration.zero,
+      );
+
+      final updatedEpisode = await bloc.generateTranscriptAndAnalyzeAds(
+        episode,
+        consentToUpload: true,
+      );
+
+      expect(transcriptionService.callCount, 1);
+      expect(analysisService.submitCount, 1);
+      expect(analysisService.lastSubmitTranscript, isNotNull);
+      expect(analysisService.lastSubmitTranscript!.provenance, 'localAi');
+      expect(updatedEpisode.transcriptId, isNotNull);
+      expect(updatedEpisode.transcript?.subtitles.single.data, 'Combined transcript line');
+      expect(updatedEpisode.analysisStatus, 'completed');
+      expect(updatedEpisode.adSegments, hasLength(1));
+
+      bloc.dispose();
+    });
+
     test('accepts an OpenAI-generated transcript for ad analysis', () async {
       final repository = _FakeRepository();
       final openAiTranscript = Transcript(
@@ -536,6 +603,7 @@ class _FakeAudioPlayerService implements AudioPlayerService {
 
 class _FakeEpisodeTranscriptionService implements EpisodeTranscriptionService {
   final Transcript transcript;
+  int callCount = 0;
 
   _FakeEpisodeTranscriptionService({
     Transcript? transcript,
@@ -546,6 +614,7 @@ class _FakeEpisodeTranscriptionService implements EpisodeTranscriptionService {
     required Episode episode,
     void Function(EpisodeTranscriptionProgress progress)? onProgress,
   }) async {
+    callCount++;
     return transcript;
   }
 }

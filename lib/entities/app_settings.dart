@@ -7,6 +7,7 @@ import 'package:anytime/entities/search_providers.dart';
 enum TranscriptUploadProvider {
   disabled,
   openAi,
+  grok,
   analysisBackend,
 }
 
@@ -94,6 +95,12 @@ class AppSettings {
   /// Controls how ad skip behaves during playback.
   final AdSkipMode adSkipMode;
 
+  /// Preferred OpenAI model for ad analysis.
+  final String openAiAnalysisModel;
+
+  /// Preferred Grok model for ad analysis.
+  final String grokAnalysisModel;
+
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
@@ -119,6 +126,8 @@ class AppSettings {
     required this.transcriptUploadProvider,
     required this.transcriptionProvider,
     required this.adSkipMode,
+    required this.openAiAnalysisModel,
+    required this.grokAnalysisModel,
   });
 
   AppSettings.sensibleDefaults()
@@ -145,7 +154,9 @@ class AppSettings {
         updatesNotification = false,
         transcriptUploadProvider = TranscriptUploadProvider.disabled,
         transcriptionProvider = TranscriptionProvider.localAi,
-        adSkipMode = AdSkipMode.prompt;
+        adSkipMode = AdSkipMode.prompt,
+        openAiAnalysisModel = 'gpt-4.1-mini',
+        grokAnalysisModel = 'grok-3';
 
   AppSettings copyWith({
     String? theme,
@@ -173,6 +184,8 @@ class AppSettings {
     TranscriptUploadProvider? transcriptUploadProvider,
     TranscriptionProvider? transcriptionProvider,
     AdSkipMode? adSkipMode,
+    String? openAiAnalysisModel,
+    String? grokAnalysisModel,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -199,5 +212,7 @@ class AppSettings {
         transcriptUploadProvider: transcriptUploadProvider ?? this.transcriptUploadProvider,
         transcriptionProvider: transcriptionProvider ?? this.transcriptionProvider,
         adSkipMode: adSkipMode ?? this.adSkipMode,
+        openAiAnalysisModel: openAiAnalysisModel ?? this.openAiAnalysisModel,
+        grokAnalysisModel: grokAnalysisModel ?? this.grokAnalysisModel,
       );
 }

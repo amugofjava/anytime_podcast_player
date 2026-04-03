@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -9,6 +11,8 @@ import 'package:anytime/core/environment.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/services/analysis/episode_analysis_service.dart';
+import 'package:anytime/services/analysis/openai_episode_analysis_service.dart';
 import 'package:anytime/services/secrets/secure_secrets_service.dart';
 import 'package:anytime/state/opml_state.dart';
 import 'package:anytime/ui/library/opml_export.dart';
@@ -166,6 +170,13 @@ class _SettingsState extends State<Settings> {
                       subtitle: _analysisProviderLabel(settings.transcriptUploadProvider),
                       onTap: () => _showAnalysisProviderDialog(settings),
                     ),
+                    if (_supportsAnalysisModelSelection(settings.transcriptUploadProvider))
+                      _ActionSettingsTile(
+                        icon: Icons.tune_outlined,
+                        title: 'Analysis model',
+                        subtitle: _analysisModelLabel(settings),
+                        onTap: () => _showAnalysisModelDialog(settings),
+                      ),
                     if (settings.transcriptUploadProvider == TranscriptUploadProvider.openAi ||
                         settings.transcriptionProvider == TranscriptionProvider.openAi)
                       FutureBuilder<String?>(
@@ -174,8 +185,28 @@ class _SettingsState extends State<Settings> {
                           return _ActionSettingsTile(
                             icon: Icons.key_outlined,
                             title: 'OpenAI API key',
-                            subtitle: _openAiKeyLabel(snapshot.data),
-                            onTap: _showOpenAiApiKeyDialog,
+                            subtitle: _apiKeyLabel(snapshot.data),
+                            onTap: () => _showApiKeyDialog(
+                              title: 'OpenAI API key',
+                              secretKey: openAiApiKeySecret,
+                              hintText: 'sk-...',
+                            ),
+                          );
+                        },
+                      ),
+                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.grok)
+                      FutureBuilder<String?>(
+                        future: Provider.of<SecureSecretsService>(context, listen: false).read(grokApiKeySecret),
+                        builder: (context, snapshot) {
+                          return _ActionSettingsTile(
+                            icon: Icons.vpn_key_outlined,
+                            title: 'Grok API key',
+                            subtitle: _apiKeyLabel(snapshot.data),
+                            onTap: () => _showApiKeyDialog(
+                              title: 'Grok API key',
+                              secretKey: grokApiKeySecret,
+                              hintText: 'xai-...',
+                            ),
                           );
                         },
                       ),
@@ -506,6 +537,8 @@ class _SettingsState extends State<Settings> {
         return 'Disabled';
       case TranscriptUploadProvider.openAi:
         return 'OpenAI';
+      case TranscriptUploadProvider.grok:
+        return 'Grok';
       case TranscriptUploadProvider.analysisBackend:
         return 'Private backend';
     }
@@ -520,7 +553,7 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  String _openAiKeyLabel(String? key) {
+  String _apiKeyLabel(String? key) {
     final trimmed = key?.trim() ?? '';
 
     if (trimmed.isEmpty) {
@@ -545,11 +578,28 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  bool _supportsAnalysisModelSelection(TranscriptUploadProvider provider) {
+    return provider == TranscriptUploadProvider.openAi || provider == TranscriptUploadProvider.grok;
+  }
+
+  String _analysisModelLabel(AppSettings settings) {
+    switch (settings.transcriptUploadProvider) {
+      case TranscriptUploadProvider.openAi:
+        return settings.openAiAnalysisModel;
+      case TranscriptUploadProvider.grok:
+        return settings.grokAnalysisModel;
+      case TranscriptUploadProvider.disabled:
+      case TranscriptUploadProvider.analysisBackend:
+        return 'Not available';
+    }
+  }
+
   Future<void> _showAnalysisProviderDialog(AppSettings settings) async {
     final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
     final options = <_ValueLabel<TranscriptUploadProvider>>[
       const _ValueLabel(TranscriptUploadProvider.disabled, 'Disabled'),
       const _ValueLabel(TranscriptUploadProvider.openAi, 'OpenAI'),
+      const _ValueLabel(TranscriptUploadProvider.grok, 'Grok'),
       if (Environment.hasAnalysisBackend)
         const _ValueLabel(TranscriptUploadProvider.analysisBackend, 'Private backend'),
     ];
@@ -598,6 +648,127 @@ class _SettingsState extends State<Settings> {
         );
       },
     );
+  }
+
+  Future<void> _showAnalysisModelDialog(AppSettings settings) async {
+    final provider = settings.transcriptUploadProvider;
+
+    if (!_supportsAnalysisModelSelection(provider)) {
+      return;
+    }
+
+    final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
+    final secureSecretsService = Provider.of<SecureSecretsService>(context, listen: false);
+    final catalogService = EpisodeAnalysisModelCatalogService(
+      secureSecretsService: secureSecretsService,
+    );
+    final loadModels = catalogService.listModels(provider: provider);
+    final currentModel = _analysisModelLabel(settings);
+
+    await showPlatformDialog<void>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        return FutureBuilder<List<String>>(
+          future: loadModels,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return AlertDialog(
+                title: Text(
+                  'Analysis model',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                content: const SizedBox(
+                  width: 72,
+                  height: 72,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return AlertDialog(
+                title: Text(
+                  'Analysis model',
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                content: Text(_analysisModelErrorMessage(snapshot.error)),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: ActionText(L.of(context)!.close_button_label),
+                  ),
+                ],
+              );
+            }
+
+            final models = _mergeCurrentModel(
+              snapshot.data ?? const <String>[],
+              currentModel,
+            );
+            var selected = currentModel;
+
+            return StatefulBuilder(
+              builder: (context, setDialogState) {
+                return AlertDialog(
+                  title: Text(
+                    'Analysis model',
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  content: SizedBox(
+                    width: double.maxFinite,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final model in models)
+                            _SelectionDialogTile(
+                              title: model,
+                              selected: selected == model,
+                              onTap: () {
+                                setDialogState(() {
+                                  selected = model;
+                                });
+
+                                switch (provider) {
+                                  case TranscriptUploadProvider.openAi:
+                                    settingsBloc.setOpenAiAnalysisModel(model);
+                                    break;
+                                  case TranscriptUploadProvider.grok:
+                                    settingsBloc.setGrokAnalysisModel(model);
+                                    break;
+                                  case TranscriptUploadProvider.disabled:
+                                  case TranscriptUploadProvider.analysisBackend:
+                                    break;
+                                }
+
+                                Navigator.pop(dialogContext);
+                                setState(() {});
+                              },
+                            ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () => Navigator.pop(dialogContext),
+                              child: ActionText(L.of(context)!.close_button_label),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+
+    catalogService.close();
   }
 
   Future<void> _showTranscriptionProviderDialog(AppSettings settings) async {
@@ -653,9 +824,13 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Future<void> _showOpenAiApiKeyDialog() async {
+  Future<void> _showApiKeyDialog({
+    required String title,
+    required String secretKey,
+    required String hintText,
+  }) async {
     final secureSecretsService = Provider.of<SecureSecretsService>(context, listen: false);
-    final existingKey = await secureSecretsService.read(openAiApiKeySecret);
+    final existingKey = await secureSecretsService.read(secretKey);
     final controller = TextEditingController();
 
     if (!mounted) {
@@ -668,7 +843,7 @@ class _SettingsState extends State<Settings> {
       builder: (dialogContext) {
         return AlertDialog(
           title: Text(
-            'OpenAI API key',
+            title,
             style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.center,
           ),
@@ -684,9 +859,9 @@ class _SettingsState extends State<Settings> {
               TextField(
                 controller: controller,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'sk-...',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  hintText: hintText,
                 ),
               ),
             ],
@@ -698,7 +873,7 @@ class _SettingsState extends State<Settings> {
             ),
             TextButton(
               onPressed: () async {
-                await secureSecretsService.delete(openAiApiKeySecret);
+                await secureSecretsService.delete(secretKey);
 
                 if (dialogContext.mounted) {
                   Navigator.pop(dialogContext);
@@ -715,10 +890,10 @@ class _SettingsState extends State<Settings> {
                 final value = controller.text.trim();
 
                 if (value.isEmpty) {
-                  await secureSecretsService.delete(openAiApiKeySecret);
+                  await secureSecretsService.delete(secretKey);
                 } else {
                   await secureSecretsService.write(
-                    key: openAiApiKeySecret,
+                    key: secretKey,
                     value: value,
                   );
                 }
@@ -790,6 +965,31 @@ class _SettingsState extends State<Settings> {
         );
       },
     );
+  }
+
+  String _analysisModelErrorMessage(Object? error) {
+    if (error is EpisodeAnalysisHttpException) {
+      return 'Model list request failed with status ${error.statusCode}.';
+    }
+
+    if (error is TimeoutException) {
+      return 'Loading models timed out. Try again.';
+    }
+
+    if (error is StateError || error is FormatException) {
+      return error.toString().replaceFirst(RegExp(r'^(StateError|FormatException):\s*'), '');
+    }
+
+    return 'Could not load models. Try again.';
+  }
+
+  List<String> _mergeCurrentModel(List<String> models, String currentModel) {
+    final merged = <String>[
+      ...models,
+      if (currentModel.trim().isNotEmpty && !models.contains(currentModel)) currentModel,
+    ]..sort();
+
+    return List<String>.unmodifiable(merged);
   }
 }
 

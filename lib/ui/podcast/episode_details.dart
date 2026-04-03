@@ -296,7 +296,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                   ),
                   icon: const Icon(Icons.subtitles_outlined),
-                  label: const Text('Generate AI Transcript'),
+                  label: Text(_transcriptActionLabel(currentEpisode)),
                   onPressed: currentEpisode.downloaded
                       ? () async {
                           final confirmed = await showPlatformDialog<bool>(
@@ -356,17 +356,24 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 2.0),
                         )
                       : const Icon(Icons.auto_awesome_outlined),
-                  label: const Text('Analyze Ads'),
-                  onPressed: isAnalyzing || !_canAnalyze(currentEpisode)
+                  label: Text(_analysisActionLabel(currentEpisode)),
+                  onPressed: isAnalyzing || !_canTranscribeOrAnalyze(currentEpisode)
                       ? null
                       : () async {
+                          final hasTranscript = _canAnalyze(currentEpisode);
                           final consent = await showPlatformDialog<bool>(
                             context: context,
                             useRootNavigator: false,
                             builder: (_) => BasicDialogAlert(
-                              title: const Text('Upload Transcript?'),
-                              content: const Text(
-                                'This uploads only this episode transcript to the configured external provider for ad analysis. Nothing is uploaded automatically after transcription. Continue?',
+                              title: Text(
+                                hasTranscript
+                                    ? 'Upload Transcript?'
+                                    : _transcribeAndAnalyzeTitle(transcriptionProvider),
+                              ),
+                              content: Text(
+                                hasTranscript
+                                    ? 'This uploads only this episode transcript to the configured external provider for ad analysis. Nothing is uploaded automatically after transcription. Continue?'
+                                    : _transcribeAndAnalyzeConfirmationText(transcriptionProvider),
                               ),
                               actions: <Widget>[
                                 BasicDialogAction(
@@ -374,7 +381,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                                   onPressed: () => Navigator.pop(context, false),
                                 ),
                                 BasicDialogAction(
-                                  title: const ActionText('Upload'),
+                                  title: ActionText(hasTranscript ? 'Upload' : 'Continue'),
                                   iosIsDefaultAction: true,
                                   onPressed: () => Navigator.pop(context, true),
                                 ),
@@ -387,10 +394,19 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                           }
 
                           try {
-                            await episodeBloc.analyzeAds(
-                              currentEpisode,
-                              consentToUpload: true,
-                            );
+                            if (hasTranscript) {
+                              await episodeBloc.analyzeAds(
+                                currentEpisode,
+                                consentToUpload: true,
+                              );
+                            } else {
+                              await _generateTranscript(
+                                context,
+                                episodeBloc: episodeBloc,
+                                episode: currentEpisode,
+                                analyzeAfterGeneration: true,
+                              );
+                            }
                           } catch (error) {
                             if (context.mounted) {
                               final message =
@@ -432,6 +448,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     BuildContext context, {
     required EpisodeBloc episodeBloc,
     required Episode episode,
+    bool analyzeAfterGeneration = false,
   }) async {
     _log.fine('Starting transcript generation for ${episode.guid}');
     BuildContext? dialogContext;
@@ -454,21 +471,31 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     try {
       _setTranscriptionWakelock(true);
 
-      await episodeBloc.generateLocalTranscript(
-        episode,
-        onProgress: (update) {
-          _log.fine(
-            'Transcript progress for ${episode.guid}: ${update.stage.name} '
-            '${update.progress == null ? '' : '(${(update.progress! * 100).toStringAsFixed(0)}%) '}'
-            '${update.message}',
-          );
-          progress.value = update;
-        },
-      );
+      final progressListener = (EpisodeTranscriptionProgress update) {
+        _log.fine(
+          'Transcript progress for ${episode.guid}: ${update.stage.name} '
+          '${update.progress == null ? '' : '(${(update.progress! * 100).toStringAsFixed(0)}%) '}'
+          '${update.message}',
+        );
+        progress.value = update;
+      };
+
+      if (analyzeAfterGeneration) {
+        await episodeBloc.generateTranscriptAndAnalyzeAds(
+          episode,
+          consentToUpload: true,
+          onProgress: progressListener,
+        );
+      } else {
+        await episodeBloc.generateLocalTranscript(
+          episode,
+          onProgress: progressListener,
+        );
+      }
 
       _log.fine('Transcript generation completed for ${episode.guid}');
 
-      if (context.mounted) {
+      if (context.mounted && !analyzeAfterGeneration) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('AI transcript ready.')),
         );
@@ -476,7 +503,13 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     } catch (error, stackTrace) {
       _log.warning('Transcript generation failed for ${episode.guid}', error, stackTrace);
       if (context.mounted) {
-        final message = error is EpisodeTranscriptionException ? error.message : 'Transcript generation failed.';
+        final message = error is EpisodeTranscriptionException
+            ? error.message
+            : error is EpisodeAnalysisFailedException
+                ? error.message
+                : analyzeAfterGeneration
+                    ? 'Transcribe and analyze failed.'
+                    : 'Transcript generation failed.';
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       }
@@ -509,6 +542,18 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     return transcript != null && transcript.transcriptAvailable && transcript.isAppGeneratedAiTranscript;
   }
 
+  bool _canTranscribeOrAnalyze(Episode episode) {
+    return _canAnalyze(episode) || episode.downloaded;
+  }
+
+  String _analysisActionLabel(Episode episode) {
+    return _canAnalyze(episode) ? 'Analyze Ads' : 'Transcribe & Analyze';
+  }
+
+  String _transcriptActionLabel(Episode episode) {
+    return _canAnalyze(episode) ? 'Regenerate AI Transcript' : 'Generate AI Transcript';
+  }
+
   String _generateTranscriptTitle(TranscriptionProvider provider) {
     switch (provider) {
       case TranscriptionProvider.localAi:
@@ -524,6 +569,24 @@ class EpisodeAnalysisPanel extends StatelessWidget {
         return 'This downloads a Whisper model to your device if needed and transcribes this downloaded episode on this device. Audio stays on this device during transcription.';
       case TranscriptionProvider.openAi:
         return 'This uploads the downloaded audio file for this episode to the OpenAI Whisper API to generate a transcript. Continue only if you want this audio processed by OpenAI.';
+    }
+  }
+
+  String _transcribeAndAnalyzeTitle(TranscriptionProvider provider) {
+    switch (provider) {
+      case TranscriptionProvider.localAi:
+        return 'Transcribe and Analyze?';
+      case TranscriptionProvider.openAi:
+        return 'Transcribe and Analyze with OpenAI?';
+    }
+  }
+
+  String _transcribeAndAnalyzeConfirmationText(TranscriptionProvider provider) {
+    switch (provider) {
+      case TranscriptionProvider.localAi:
+        return 'This generates an AI transcript on this device, then uploads that transcript to the configured external provider for ad analysis. Audio stays on this device during transcription. Continue?';
+      case TranscriptionProvider.openAi:
+        return 'This uploads the downloaded audio file for this episode to OpenAI to generate a transcript, then uploads that transcript to the configured external provider for ad analysis. Continue only if you want this audio and transcript processed externally.';
     }
   }
 
@@ -558,7 +621,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
           return 'Analysis complete - $count ${count == 1 ? 'ad segment' : 'ad segments'}';
         }
 
-        return 'Analysis complete';
+        return 'Analysis complete - no ad segments detected';
       case 'failed':
         if (episode.analysisError != null && episode.analysisError!.isNotEmpty) {
           return 'Analysis failed - ${episode.analysisError}';

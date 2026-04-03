@@ -317,6 +317,30 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set openAiAnalysisModel(String model) {
+    _sharedPreferences.setString('openAiAnalysisModel', model);
+    settingsNotifier.sink.add('openAiAnalysisModel');
+  }
+
+  @override
+  String get openAiAnalysisModel {
+    final stored = _sharedPreferences.getString('openAiAnalysisModel')?.trim() ?? '';
+    return stored.isEmpty ? 'gpt-4.1-mini' : stored;
+  }
+
+  @override
+  set grokAnalysisModel(String model) {
+    _sharedPreferences.setString('grokAnalysisModel', model);
+    settingsNotifier.sink.add('grokAnalysisModel');
+  }
+
+  @override
+  String get grokAnalysisModel {
+    final stored = _sharedPreferences.getString('grokAnalysisModel')?.trim() ?? '';
+    return stored.isEmpty ? 'grok-3' : stored;
+  }
+
+  @override
   set lastFeedRefresh(DateTime lastFeedRefresh) {
     _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
     settingsNotifier.sink.add('lastFeedRefresh');

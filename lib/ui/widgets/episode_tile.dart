@@ -17,6 +17,7 @@ import 'package:anytime/ui/podcast/episode_details.dart';
 import 'package:anytime/ui/podcast/now_playing.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
+import 'package:anytime/ui/widgets/expressive_linear_progress_indicator.dart';
 import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -155,7 +156,7 @@ class _ExpandableEpisodeTileState extends State<ExpandableEpisodeTile> {
       ),
       subtitle: Opacity(
         opacity: widget.episode.played ? 0.5 : 1.0,
-        child: EpisodeSubtitle(widget.episode),
+        child: EpisodeTileSubtitle(widget.episode),
       ),
       title: Opacity(
         opacity: widget.episode.played ? 0.5 : 1.0,
@@ -458,7 +459,7 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
               ),
               subtitle: Opacity(
                 opacity: widget.episode.played ? 0.5 : 1.0,
-                child: EpisodeSubtitle(widget.episode),
+                child: EpisodeTileSubtitle(widget.episode),
               ),
               title: Opacity(
                 opacity: widget.episode.played ? 0.5 : 1.0,
@@ -843,7 +844,7 @@ class _AndroidAccessibleEpisodeTileState extends State<_AndroidAccessibleEpisode
             ),
             subtitle: Opacity(
               opacity: widget.episode.played ? 0.5 : 1.0,
-              child: EpisodeSubtitle(widget.episode),
+              child: EpisodeTileSubtitle(widget.episode),
             ),
             title: Opacity(
               opacity: widget.episode.played ? 0.5 : 1.0,
@@ -913,6 +914,72 @@ class EpisodeTransportControls extends StatelessWidget {
       width: (buttons.length * 48.0),
       child: Row(
         children: <Widget>[...buttons],
+      ),
+    );
+  }
+}
+
+class EpisodeTileSubtitle extends StatelessWidget {
+  final Episode episode;
+
+  const EpisodeTileSubtitle(this.episode, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isActiveDownload =
+        episode.downloadState == DownloadState.queued || episode.downloadState == DownloadState.downloading;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        EpisodeSubtitle(episode),
+        if (isActiveDownload) _EpisodeDownloadProgress(episode: episode),
+      ],
+    );
+  }
+}
+
+class _EpisodeDownloadProgress extends StatelessWidget {
+  final Episode episode;
+
+  const _EpisodeDownloadProgress({
+    required this.episode,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final percentage = (episode.downloadPercentage ?? 0).clamp(0, 100);
+    final showDeterminateProgress = episode.downloadState == DownloadState.downloading && percentage > 0;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 6.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(999.0),
+              child: showDeterminateProgress
+                  ? ExpressiveLinearProgressIndicator(
+                      value: percentage / 100,
+                      minHeight: 5.0,
+                      animated: true,
+                    )
+                  : const LinearProgressIndicator(minHeight: 5.0),
+            ),
+          ),
+          if (episode.downloadState == DownloadState.downloading) ...[
+            const SizedBox(width: 8.0),
+            Text(
+              '$percentage%',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ],
       ),
     );
   }

@@ -74,5 +74,20 @@ class MockSettingsService extends SettingsService {
   DateTime lastFeedRefresh = DateTime.utc(1970, 1, 1);
 
   @override
+  TranscriptUploadProvider transcriptUploadProvider = TranscriptUploadProvider.disabled;
+
+  @override
+  TranscriptionProvider transcriptionProvider = TranscriptionProvider.localAi;
+
+  @override
+  AdSkipMode adSkipMode = AdSkipMode.prompt;
+
+  @override
+  String openAiAnalysisModel = 'gpt-4.1-mini';
+
+  @override
+  String grokAnalysisModel = 'grok-3';
+
+  @override
   Stream<String> get settingsListener => PublishSubject<String>().stream;
 }

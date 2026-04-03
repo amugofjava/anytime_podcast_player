@@ -218,6 +218,24 @@ class EpisodeBloc extends Bloc {
     );
   }
 
+  Future<Episode> generateTranscriptAndAnalyzeAds(
+    Episode episode, {
+    bool force = false,
+    bool consentToUpload = false,
+    void Function(EpisodeTranscriptionProgress progress)? onProgress,
+  }) async {
+    final updatedEpisode = await generateLocalTranscript(
+      episode,
+      onProgress: onProgress,
+    );
+
+    return analyzeAds(
+      updatedEpisode,
+      force: force,
+      consentToUpload: consentToUpload,
+    );
+  }
+
   Future<Episode> _analyzeAds(
     Episode episode, {
     required bool force,

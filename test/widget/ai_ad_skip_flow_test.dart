@@ -89,6 +89,77 @@ void main() {
     expect(find.text('AI transcript ready.'), findsWidgets);
   });
 
+  testWidgets('EpisodeAnalysisPanel can transcribe and analyze in one go', (tester) async {
+    final repository = _FakeRepository();
+    final episode = Episode(
+      id: 11,
+      guid: 'ep-transcribe-analyze',
+      pguid: 'pod-1',
+      podcast: 'Podcast',
+      title: 'Transcribe and Analyze Episode',
+      contentUrl: 'https://cdn.example.com/transcribe-analyze.mp3',
+      downloadPercentage: 100,
+    );
+    repository.episodesByGuid[episode.guid] = episode;
+
+    final transcriptionService = _FakeEpisodeTranscriptionService(
+      transcript: Transcript(
+        subtitles: <Subtitle>[
+          Subtitle(
+            index: 1,
+            start: Duration.zero,
+            end: const Duration(seconds: 2),
+            data: 'Combined flow line',
+          ),
+        ],
+      ),
+    );
+    final podcastService = _FakePodcastService(repository: repository);
+    final analysisService = _FakeEpisodeAnalysisService(
+      pollResponses: <EpisodeAnalysisStatusResponse>[
+        EpisodeAnalysisStatusResponse(
+          jobId: 'job-1',
+          status: EpisodeAnalysisJobStatus.completed,
+          adSegments: const <AdSegment>[
+            AdSegment(
+              startMs: 1000,
+              endMs: 4000,
+              reason: 'midroll',
+              confidence: 0.8,
+            ),
+          ],
+        ),
+      ],
+    );
+    final bloc = EpisodeBloc(
+      podcastService: podcastService,
+      audioPlayerService: _FakeAudioPlayerService(),
+      analysisService: analysisService,
+      settingsService: _FakeSettingsService(),
+      transcriptionService: transcriptionService,
+      analysisPollInterval: Duration.zero,
+    );
+    addTearDown(() async {
+      bloc.dispose();
+      await podcastService.dispose();
+    });
+
+    await tester.pumpWidget(_wrapWithEpisodeBloc(bloc, episode));
+
+    await tester.tap(find.text('Transcribe & Analyze'));
+    await tester.pumpAndSettle();
+    expect(find.text('Transcribe and Analyze?'), findsOneWidget);
+
+    await tester.tap(find.text('Continue'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(transcriptionService.callCount, 1);
+    expect(analysisService.submitCount, 1);
+    expect(find.text('Analysis complete - 1 ad segment'), findsOneWidget);
+    expect(find.text('Reason: midroll'), findsOneWidget);
+  });
+
   testWidgets('EpisodeAnalysisPanel confirms upload and renders completed analysis status', (tester) async {
     final repository = _FakeRepository();
     final transcript = Transcript(
@@ -164,6 +235,69 @@ void main() {
     expect(find.text('00:01 - 00:04 (3s)'), findsOneWidget);
     expect(find.text('Reason: preroll'), findsOneWidget);
     expect(find.text('Confidence: 90%'), findsOneWidget);
+  });
+
+  testWidgets('EpisodeAnalysisPanel shows an explicit no-ads message after analysis completes', (tester) async {
+    final repository = _FakeRepository();
+    final transcript = Transcript(
+      id: 12,
+      guid: 'ep-no-ads',
+      provenance: TranscriptProvenance.localAi,
+      subtitles: <Subtitle>[
+        Subtitle(
+          index: 1,
+          start: Duration.zero,
+          end: const Duration(seconds: 2),
+          data: 'Just regular conversation.',
+        ),
+      ],
+    );
+    final episode = Episode(
+      id: 12,
+      guid: 'ep-no-ads',
+      pguid: 'pod-1',
+      podcast: 'Podcast',
+      title: 'No Ads Episode',
+      contentUrl: 'https://cdn.example.com/no-ads.mp3',
+      downloadPercentage: 100,
+      transcriptId: 12,
+    )..transcript = transcript;
+
+    repository.episodesByGuid[episode.guid] = episode;
+    repository.transcriptsById[12] = transcript;
+
+    final podcastService = _FakePodcastService(repository: repository);
+    final analysisService = _FakeEpisodeAnalysisService(
+      pollResponses: <EpisodeAnalysisStatusResponse>[
+        EpisodeAnalysisStatusResponse(
+          jobId: 'job-1',
+          status: EpisodeAnalysisJobStatus.completed,
+          adSegments: const <AdSegment>[],
+        ),
+      ],
+    );
+    final bloc = EpisodeBloc(
+      podcastService: podcastService,
+      audioPlayerService: _FakeAudioPlayerService(),
+      analysisService: analysisService,
+      settingsService: _FakeSettingsService(),
+      transcriptionService: _FakeEpisodeTranscriptionService(),
+      analysisPollInterval: Duration.zero,
+    );
+    addTearDown(() async {
+      bloc.dispose();
+      await podcastService.dispose();
+    });
+
+    await tester.pumpWidget(_wrapWithEpisodeBloc(bloc, episode));
+
+    await tester.tap(find.text('Analyze Ads'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Upload'));
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(find.text('Analysis complete - no ad segments detected'), findsOneWidget);
   });
 
   testWidgets('AdSkipListener shows the prompt and wires the skip action', (tester) async {
@@ -308,7 +442,7 @@ void main() {
     expect(find.text('AI'), findsOneWidget);
     expect(find.text('TRANSCRIPT'), findsOneWidget);
     expect(find.text('UP NEXT'), findsOneWidget);
-    expect(find.text('Generate AI Transcript'), findsOneWidget);
+    expect(find.text('Regenerate AI Transcript'), findsOneWidget);
     expect(find.text('Analyze Ads'), findsOneWidget);
 
     await tester.pump(const Duration(seconds: 2));

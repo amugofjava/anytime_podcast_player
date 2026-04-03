@@ -1110,7 +1110,7 @@ void main() {
       expect(episodes.length, 5);
     });
 
-    test('Fetch downloaded episodes', () async {
+    test('Fetch downloads includes active downloads in progress', () async {
       var pubDate5 = DateTime.now();
       var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
       var pubDate3 = DateTime.now().subtract(const Duration(days: 2));
@@ -1175,7 +1175,7 @@ void main() {
       var episode1Comp = await persistenceService!.saveEpisode(episode1);
       var episode2Comp = await persistenceService!.saveEpisode(episode2);
 
-      var downloaded = <Episode>[episode1];
+      var downloaded = <Episode>[episode2, episode1];
       var singleDownload = await persistenceService!.findDownloads();
 
       expect(listEquals(singleDownload, downloaded), true);
@@ -1460,6 +1460,54 @@ void main() {
       expect(listEquals(pd2, <Episode>[]), true);
     });
 
+    test('Fetch downloads for podcast includes active downloads in progress', () async {
+      var pubDate3 = DateTime.now();
+      var pubDate2 = DateTime.now().subtract(const Duration(days: 1));
+      var pubDate1 = DateTime.now().subtract(const Duration(days: 2));
+
+      podcast1.episodes = <Episode>[
+        Episode(
+            guid: 'EP001',
+            title: 'Episode 1',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate1),
+        Episode(
+            guid: 'EP002',
+            title: 'Episode 2',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate2),
+        Episode(
+            guid: 'EP003',
+            title: 'Episode 3',
+            pguid: podcast1.guid,
+            podcast: podcast1.title,
+            publicationDate: pubDate3),
+      ];
+
+      await persistenceService!.savePodcast(podcast1);
+
+      var episode1 = (await persistenceService!.findEpisodeByGuid('EP001'))!;
+      var episode2 = (await persistenceService!.findEpisodeByGuid('EP002'))!;
+      var episode3 = (await persistenceService!.findEpisodeByGuid('EP003'))!;
+
+      episode1.downloadPercentage = 100;
+      episode1.downloadState = DownloadState.downloaded;
+      episode2.downloadPercentage = 35;
+      episode2.downloadState = DownloadState.downloading;
+      episode3.downloadPercentage = 0;
+      episode3.downloadState = DownloadState.queued;
+
+      await persistenceService!.saveEpisode(episode1);
+      await persistenceService!.saveEpisode(episode2);
+      await persistenceService!.saveEpisode(episode3);
+
+      final downloads = await persistenceService!.findDownloadsByPodcastGuid(podcast1.guid!);
+
+      expect(listEquals(downloads, <Episode>[episode3, episode2, episode1]), true);
+    });
+
     test('Fetch downloads by task ID', () async {
       var pubDate5 = DateTime.now();
       var pubDate4 = DateTime.now().subtract(const Duration(days: 1));
@@ -1652,20 +1700,24 @@ void main() {
     });
 
     test('Test episode transcript read/write', () async {
-      var transcript = Transcript(guid: 'GUID1', provenance: TranscriptProvenance.localAi, provider: 'whisper', subtitles: <Subtitle>[
-        Subtitle(
-            index: 0,
-            start: const Duration(seconds: 0),
-            data: 'This is line 1',
-            end: const Duration(seconds: 10),
-            speaker: 'Speaker 1'),
-        Subtitle(
-            index: 1,
-            start: const Duration(seconds: 10),
-            data: 'This is line 2',
-            end: const Duration(seconds: 20),
-            speaker: 'Speaker 2'),
-      ]);
+      var transcript = Transcript(
+          guid: 'GUID1',
+          provenance: TranscriptProvenance.localAi,
+          provider: 'whisper',
+          subtitles: <Subtitle>[
+            Subtitle(
+                index: 0,
+                start: const Duration(seconds: 0),
+                data: 'This is line 1',
+                end: const Duration(seconds: 10),
+                speaker: 'Speaker 1'),
+            Subtitle(
+                index: 1,
+                start: const Duration(seconds: 10),
+                data: 'This is line 2',
+                end: const Duration(seconds: 20),
+                speaker: 'Speaker 2'),
+          ]);
 
       var savedTranscript = await persistenceService!.saveTranscript(transcript);
       var fetchedTranscript = await persistenceService!.findTranscriptById(savedTranscript.id!);
