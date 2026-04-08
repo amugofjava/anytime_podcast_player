@@ -141,7 +141,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                  value: 720,
+                                  value: 1440,
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
@@ -158,7 +158,7 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
                                   ),
                                   dense: true,
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 0.0),
-                                  value: 720,
+                                  value: 2880,
                                   groupValue: snapshot.data!.autoUpdateEpisodePeriod,
                                   onChanged: (int? value) {
                                     setState(() {
@@ -210,8 +210,12 @@ class _EpisodeRefreshWidgetState extends State<EpisodeRefreshWidget> {
         return Text(L.of(context)!.settings_auto_update_episodes_6hour);
       case 720:
         return Text(L.of(context)!.settings_auto_update_episodes_12hour);
+      case 1440:
+        return Text(L.of(context)!.settings_auto_update_episodes_24hour);
+      case 2880:
+        return Text(L.of(context)!.settings_auto_update_episodes_48hour);
     }
 
-    return const Text('Never');
+    return Text(L.of(context)!.settings_auto_update_episodes_never);
   }
 }

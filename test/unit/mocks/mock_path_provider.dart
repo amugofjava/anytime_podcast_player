@@ -15,4 +15,14 @@ class MockPathProvder extends PathProviderPlatform {
   Future<String> getApplicationDocumentsPath() {
     return Future.value(Directory.systemTemp.path);
   }
+
+  @override
+  Future<String> getApplicationSupportPath() {
+    return Future.value(Directory.systemTemp.path);
+  }
+
+  @override
+  Future<String> getTemporaryPath() {
+    return Future.value(Directory.systemTemp.path);
+  }
 }
