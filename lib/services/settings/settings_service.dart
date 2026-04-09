@@ -109,6 +109,10 @@ abstract class SettingsService {
 
   String get grokAnalysisModel;
 
+  set geminiAnalysisModel(String model);
+
+  String get geminiAnalysisModel;
+
   Stream<String> get settingsListener;
 
   set lastFeedRefresh(DateTime lastFeedRefresh);

@@ -45,11 +45,16 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
         builder: (context, snapshot) {
           var position = snapshot.hasData ? snapshot.data!.position.inSeconds : 0;
           episodeLength = snapshot.hasData ? snapshot.data!.length.inSeconds : 0;
-          var divisions = episodeLength == 0 ? 1 : episodeLength;
+          final hasValidDuration = episodeLength > 0;
+          int? divisions = hasValidDuration ? episodeLength : null;
 
           // If a screen reader is enabled, will make divisions ten seconds each.
-          if (screenReader) {
+          if (screenReader && hasValidDuration) {
             divisions = episodeLength ~/ 10;
+          }
+
+          if (divisions != null && divisions <= 0) {
+            divisions = 1;
           }
 
           if (!dragging) {
@@ -90,7 +95,7 @@ class _PlayerPositionControlsState extends State<PlayerPositionControls> {
                   ),
                 ),
                 Expanded(
-                  child: snapshot.hasData
+                  child: snapshot.hasData && hasValidDuration
                       ? PositionSlider(
                           label: _formatDuration(Duration(seconds: currentPosition)),
                           onChanged: (value) {

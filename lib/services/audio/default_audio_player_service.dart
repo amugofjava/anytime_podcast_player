@@ -901,9 +901,27 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 
   Future<void> _evaluateAdSkip(Duration position) async {
     final episode = _currentEpisode;
-    final transcript = _currentTranscript;
 
-    if (episode == null || transcript == null || !transcript.isAppGeneratedAiTranscript || episode.adSegments.isEmpty) {
+    if (episode == null) {
+      _activeAdSegment = null;
+      _promptedAdSegmentKey = null;
+      return;
+    }
+
+    if (episode.adSegments.isEmpty) {
+      final storedEpisode = await repository.findEpisodeByGuid(episode.guid);
+
+      if (storedEpisode != null && storedEpisode.adSegments.isNotEmpty) {
+        episode.adSegments = List<AdSegment>.unmodifiable(storedEpisode.adSegments);
+        episode.analysisStatus = storedEpisode.analysisStatus;
+        episode.analysisJobId = storedEpisode.analysisJobId;
+        episode.analysisError = storedEpisode.analysisError;
+        episode.analysisUpdatedAt = storedEpisode.analysisUpdatedAt;
+        _updateEpisodeState();
+      }
+    }
+
+    if (episode.adSegments.isEmpty) {
       _activeAdSegment = null;
       _promptedAdSegmentKey = null;
       return;

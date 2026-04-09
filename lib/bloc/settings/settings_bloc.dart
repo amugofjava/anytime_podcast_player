@@ -42,6 +42,7 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<AdSkipMode> _adSkipMode = BehaviorSubject<AdSkipMode>();
   final BehaviorSubject<String> _openAiAnalysisModel = BehaviorSubject<String>();
   final BehaviorSubject<String> _grokAnalysisModel = BehaviorSubject<String>();
+  final BehaviorSubject<String> _geminiAnalysisModel = BehaviorSubject<String>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -88,6 +89,7 @@ class SettingsBloc extends Bloc {
       adSkipMode: settingsService.adSkipMode,
       openAiAnalysisModel: settingsService.openAiAnalysisModel,
       grokAnalysisModel: settingsService.grokAnalysisModel,
+      geminiAnalysisModel: settingsService.geminiAnalysisModel,
     );
 
     _settings.add(_currentSettings);
@@ -253,6 +255,12 @@ class SettingsBloc extends Bloc {
       _settings.add(_currentSettings);
       settingsService.grokAnalysisModel = model;
     });
+
+    _geminiAnalysisModel.listen((model) {
+      _currentSettings = _currentSettings.copyWith(geminiAnalysisModel: model);
+      _settings.add(_currentSettings);
+      settingsService.geminiAnalysisModel = model;
+    });
   }
 
   void _initNotifications() async {
@@ -317,6 +325,8 @@ class SettingsBloc extends Bloc {
 
   void Function(String) get setGrokAnalysisModel => _grokAnalysisModel.add;
 
+  void Function(String) get setGeminiAnalysisModel => _geminiAnalysisModel.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -346,6 +356,7 @@ class SettingsBloc extends Bloc {
     _adSkipMode.close();
     _openAiAnalysisModel.close();
     _grokAnalysisModel.close();
+    _geminiAnalysisModel.close();
     _settings.close();
   }
 }

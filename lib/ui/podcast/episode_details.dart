@@ -15,6 +15,7 @@ import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/transcription/episode_transcription_service.dart';
 import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
+import 'package:anytime/ui/app_scaffold_messenger.dart';
 import 'package:anytime/ui/podcast/person_avatar.dart';
 import 'package:anytime/ui/podcast/transport_controls.dart';
 import 'package:anytime/ui/widgets/action_text.dart';
@@ -269,6 +270,18 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     required this.episode,
   });
 
+  void _showRootSnackBar(BuildContext context, SnackBar snackBar) {
+    final messenger = appScaffoldMessengerKey.currentState;
+
+    if (messenger == null) {
+      return;
+    }
+
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     final episodeBloc = Provider.of<EpisodeBloc>(context, listen: false);
@@ -282,6 +295,8 @@ class EpisodeAnalysisPanel extends StatelessWidget {
         final isAnalyzing = _isAnalyzing(currentEpisode);
         final statusText = _statusText(currentEpisode);
         final transcriptionProvider = episodeBloc.settingsService.transcriptionProvider;
+        final analysisProvider = episodeBloc.settingsService.transcriptUploadProvider;
+        final isGemini = analysisProvider == TranscriptUploadProvider.gemini;
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 12.0),
@@ -356,32 +371,45 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                           child: CircularProgressIndicator(strokeWidth: 2.0),
                         )
                       : const Icon(Icons.auto_awesome_outlined),
-                  label: Text(_analysisActionLabel(currentEpisode)),
-                  onPressed: isAnalyzing || !_canTranscribeOrAnalyze(currentEpisode)
+                  label: Text(_analysisActionLabel(currentEpisode, isGemini: isGemini)),
+                  onPressed: isAnalyzing || !_canTranscribeOrAnalyze(currentEpisode, isGemini: isGemini)
                       ? null
                       : () async {
                           final hasTranscript = _canAnalyze(currentEpisode);
+
+                          String consentTitle;
+                          String consentText;
+                          String confirmLabel;
+
+                          if (isGemini) {
+                            consentTitle = 'Analyze Audio with Gemini?';
+                            consentText =
+                                'This uploads the downloaded audio for this episode directly to the Gemini API for ad detection. No transcript is needed. Continue?';
+                            confirmLabel = 'Upload';
+                          } else if (hasTranscript) {
+                            consentTitle = 'Upload Transcript?';
+                            consentText =
+                                'This uploads only this episode transcript to the configured external provider for ad analysis. Nothing is uploaded automatically after transcription. Continue?';
+                            confirmLabel = 'Upload';
+                          } else {
+                            consentTitle = _transcribeAndAnalyzeTitle(transcriptionProvider);
+                            consentText = _transcribeAndAnalyzeConfirmationText(transcriptionProvider);
+                            confirmLabel = 'Continue';
+                          }
+
                           final consent = await showPlatformDialog<bool>(
                             context: context,
                             useRootNavigator: false,
                             builder: (_) => BasicDialogAlert(
-                              title: Text(
-                                hasTranscript
-                                    ? 'Upload Transcript?'
-                                    : _transcribeAndAnalyzeTitle(transcriptionProvider),
-                              ),
-                              content: Text(
-                                hasTranscript
-                                    ? 'This uploads only this episode transcript to the configured external provider for ad analysis. Nothing is uploaded automatically after transcription. Continue?'
-                                    : _transcribeAndAnalyzeConfirmationText(transcriptionProvider),
-                              ),
+                              title: Text(consentTitle),
+                              content: Text(consentText),
                               actions: <Widget>[
                                 BasicDialogAction(
                                   title: const ActionText('Cancel'),
                                   onPressed: () => Navigator.pop(context, false),
                                 ),
                                 BasicDialogAction(
-                                  title: ActionText(hasTranscript ? 'Upload' : 'Continue'),
+                                  title: ActionText(confirmLabel),
                                   iosIsDefaultAction: true,
                                   onPressed: () => Navigator.pop(context, true),
                                 ),
@@ -394,7 +422,9 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                           }
 
                           try {
-                            if (hasTranscript) {
+                            _log.fine('Analysis consent given: isGemini=$isGemini hasTranscript=$hasTranscript '
+                                'downloaded=${currentEpisode.downloaded} filepath=${currentEpisode.filepath}');
+                            if (isGemini || hasTranscript) {
                               await episodeBloc.analyzeAds(
                                 currentEpisode,
                                 consentToUpload: true,
@@ -412,7 +442,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                               final message =
                                   error is EpisodeAnalysisFailedException ? error.message : 'Ad analysis failed.';
 
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                              _showRootSnackBar(context, SnackBar(content: Text(message)));
                             }
                           }
                         },
@@ -496,7 +526,8 @@ class EpisodeAnalysisPanel extends StatelessWidget {
       _log.fine('Transcript generation completed for ${episode.guid}');
 
       if (context.mounted && !analyzeAfterGeneration) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        _showRootSnackBar(
+          context,
           const SnackBar(content: Text('AI transcript ready.')),
         );
       }
@@ -511,7 +542,7 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                     ? 'Transcribe and analyze failed.'
                     : 'Transcript generation failed.';
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+        _showRootSnackBar(context, SnackBar(content: Text(message)));
       }
     } finally {
       _log.fine('Closing transcript dialog for ${episode.guid}');
@@ -542,11 +573,17 @@ class EpisodeAnalysisPanel extends StatelessWidget {
     return transcript != null && transcript.transcriptAvailable && transcript.isAppGeneratedAiTranscript;
   }
 
-  bool _canTranscribeOrAnalyze(Episode episode) {
+  bool _canTranscribeOrAnalyze(Episode episode, {bool isGemini = false}) {
+    if (isGemini) {
+      return episode.downloaded;
+    }
     return _canAnalyze(episode) || episode.downloaded;
   }
 
-  String _analysisActionLabel(Episode episode) {
+  String _analysisActionLabel(Episode episode, {bool isGemini = false}) {
+    if (isGemini) {
+      return 'Analyze Audio';
+    }
     return _canAnalyze(episode) ? 'Analyze Ads' : 'Transcribe & Analyze';
   }
 
