@@ -341,6 +341,18 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set geminiAnalysisModel(String model) {
+    _sharedPreferences.setString('geminiAnalysisModel', model);
+    settingsNotifier.sink.add('geminiAnalysisModel');
+  }
+
+  @override
+  String get geminiAnalysisModel {
+    final stored = _sharedPreferences.getString('geminiAnalysisModel')?.trim() ?? '';
+    return stored.isEmpty ? 'gemini-3.1-flash-lite-preview' : stored;
+  }
+
+  @override
   set lastFeedRefresh(DateTime lastFeedRefresh) {
     _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
     settingsNotifier.sink.add('lastFeedRefresh');

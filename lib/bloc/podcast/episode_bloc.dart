@@ -241,7 +241,9 @@ class EpisodeBloc extends Bloc {
     required bool force,
     required bool consentToUpload,
   }) async {
-    if (settingsService.transcriptUploadProvider == TranscriptUploadProvider.disabled) {
+    final provider = settingsService.transcriptUploadProvider;
+
+    if (provider == TranscriptUploadProvider.disabled) {
       throw EpisodeAnalysisFailedException(
         'Ad analysis is not configured in this build.',
       );
@@ -249,16 +251,34 @@ class EpisodeBloc extends Bloc {
 
     if (!consentToUpload) {
       throw EpisodeAnalysisFailedException(
-        'Transcript upload requires explicit confirmation for this episode.',
+        'Analysis requires explicit confirmation for this episode.',
       );
     }
 
-    final existingTranscript = await _loadExistingAiTranscript(episode);
+    // Gemini uses a single-step audio-native approach — no transcript needed.
+    final isAudioDirect = provider == TranscriptUploadProvider.gemini;
 
-    if (existingTranscript == null || !existingTranscript.transcriptAvailable) {
-      throw EpisodeAnalysisFailedException(
-        'Generate an AI transcript before analyzing ads.',
-      );
+    log.fine('analyzeAds: provider=$provider isAudioDirect=$isAudioDirect '
+        'downloaded=${episode.downloaded} filepath=${episode.filepath}');
+
+    EpisodeAnalysisTranscriptPayload? transcriptPayload;
+
+    if (!isAudioDirect) {
+      final existingTranscript = await _loadExistingAiTranscript(episode);
+
+      if (existingTranscript == null || !existingTranscript.transcriptAvailable) {
+        throw EpisodeAnalysisFailedException(
+          'Generate an AI transcript before analyzing ads.',
+        );
+      }
+
+      transcriptPayload = EpisodeAnalysisTranscriptCodec.toPayload(existingTranscript);
+    } else {
+      if (!episode.downloaded || episode.filepath == null || episode.filepath!.isEmpty) {
+        throw EpisodeAnalysisFailedException(
+          'Download the episode before using Gemini audio analysis.',
+        );
+      }
     }
 
     late EpisodeAnalysisSubmitResponse submitResponse;
@@ -267,7 +287,7 @@ class EpisodeBloc extends Bloc {
       submitResponse = await analysisService.submit(
         episode: episode,
         force: force,
-        transcript: EpisodeAnalysisTranscriptCodec.toPayload(existingTranscript),
+        transcript: transcriptPayload,
       );
     } catch (error) {
       throw EpisodeAnalysisFailedException(_analysisErrorMessage(error));

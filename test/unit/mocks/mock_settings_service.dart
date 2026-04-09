@@ -89,5 +89,8 @@ class MockSettingsService extends SettingsService {
   String grokAnalysisModel = 'grok-3';
 
   @override
+  String geminiAnalysisModel = 'gemini-3.1-flash-lite-preview';
+
+  @override
   Stream<String> get settingsListener => PublishSubject<String>().stream;
 }

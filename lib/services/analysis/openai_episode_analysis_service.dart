@@ -15,6 +15,7 @@ import 'package:anytime/services/analysis/ad_segment_normalizer.dart';
 import 'package:anytime/services/analysis/episode_analysis_dto.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_transcript_codec.dart';
+import 'package:anytime/services/analysis/gemini_episode_analysis_service.dart';
 import 'package:anytime/services/secrets/secure_secrets_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:http/http.dart' as http;
@@ -26,6 +27,7 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
     EpisodeAnalysisService? backendService,
     OpenAIEpisodeAnalysisService? openAiService,
     GrokEpisodeAnalysisService? grokService,
+    GeminiEpisodeAnalysisService? geminiService,
   })  : _backendService = backendService,
         _openAiService = openAiService ??
             OpenAIEpisodeAnalysisService(
@@ -36,6 +38,11 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
             GrokEpisodeAnalysisService(
               secureSecretsService: secureSecretsService,
               modelResolver: () => settingsService.grokAnalysisModel,
+            ),
+        _geminiService = geminiService ??
+            GeminiEpisodeAnalysisService(
+              secureSecretsService: secureSecretsService,
+              modelResolver: () => settingsService.geminiAnalysisModel,
             );
 
   final SettingsService settingsService;
@@ -43,6 +50,7 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
   final EpisodeAnalysisService? _backendService;
   final OpenAIEpisodeAnalysisService _openAiService;
   final GrokEpisodeAnalysisService _grokService;
+  final GeminiEpisodeAnalysisService _geminiService;
 
   @override
   Future<EpisodeAnalysisSubmitResponse> submit({
@@ -61,6 +69,12 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
         );
       case TranscriptUploadProvider.grok:
         return _grokService.submit(
+          episode: episode,
+          force: force,
+          transcript: transcript,
+        );
+      case TranscriptUploadProvider.gemini:
+        return _geminiService.submit(
           episode: episode,
           force: force,
           transcript: transcript,
@@ -92,6 +106,10 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
       return _grokService.poll(jobId: jobId);
     }
 
+    if (jobId.startsWith(GeminiEpisodeAnalysisService.jobIdPrefix)) {
+      return _geminiService.poll(jobId: jobId);
+    }
+
     final backendService = _backendService;
 
     if (backendService == null) {
@@ -105,6 +123,7 @@ class ConfigurableEpisodeAnalysisService implements EpisodeAnalysisService {
   void close() {
     _openAiService.close();
     _grokService.close();
+    _geminiService.close();
     _backendService?.close();
   }
 }
@@ -836,6 +855,10 @@ class EpisodeAnalysisModelCatalogService {
   Future<List<String>> listModels({
     required TranscriptUploadProvider provider,
   }) async {
+    if (provider == TranscriptUploadProvider.gemini) {
+      return _listGeminiModels();
+    }
+
     final config = _providerConfig(provider);
 
     if (config == null) {
@@ -891,6 +914,58 @@ class EpisodeAnalysisModelCatalogService {
     return List<String>.unmodifiable(modelIds);
   }
 
+  Future<List<String>> _listGeminiModels() async {
+    final apiKey = (await secureSecretsService.read(geminiApiKeySecret))?.trim() ?? '';
+
+    if (apiKey.isEmpty) {
+      throw StateError('Gemini API key is not configured. Add it in Settings > AI.');
+    }
+
+    final response = await _client.get(
+      Uri.parse('https://generativelanguage.googleapis.com/v1beta/models?key=$apiKey'),
+      headers: <String, String>{
+        'accept': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 20));
+
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw EpisodeAnalysisHttpException(
+        statusCode: response.statusCode,
+        body: response.body,
+      );
+    }
+
+    final decoded = jsonDecode(response.body);
+
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException('Model list response was not a JSON object.');
+    }
+
+    final models = decoded['models'];
+
+    if (models is! List) {
+      throw const FormatException('Model list response did not contain a models array.');
+    }
+
+    final modelIds = models
+        .whereType<Map>()
+        .map((rawModel) {
+          final name = rawModel['name']?.toString().trim() ?? '';
+          // Gemini returns "models/gemini-..." — strip the prefix.
+          return name.startsWith('models/') ? name.substring('models/'.length) : name;
+        })
+        .where((id) => id.isNotEmpty && id.contains('gemini'))
+        .toSet()
+        .toList()
+      ..sort();
+
+    if (modelIds.isEmpty) {
+      throw StateError('No Gemini models were returned.');
+    }
+
+    return List<String>.unmodifiable(modelIds);
+  }
+
   void close() {
     if (_ownsClient) {
       _client.close();
@@ -911,6 +986,7 @@ class EpisodeAnalysisModelCatalogService {
           apiKeySecret: grokApiKeySecret,
           baseUri: 'https://api.x.ai/v1/',
         );
+      case TranscriptUploadProvider.gemini:
       case TranscriptUploadProvider.disabled:
       case TranscriptUploadProvider.analysisBackend:
         return null;

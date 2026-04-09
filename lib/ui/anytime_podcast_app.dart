@@ -47,6 +47,7 @@ import 'package:anytime/state/library_state.dart';
 import 'package:anytime/ui/library/discovery.dart';
 import 'package:anytime/ui/library/downloads.dart';
 import 'package:anytime/ui/library/library.dart';
+import 'package:anytime/ui/app_scaffold_messenger.dart';
 import 'package:anytime/ui/podcast/mini_player.dart';
 import 'package:anytime/ui/podcast/podcast_details.dart';
 import 'package:anytime/ui/podcast/up_next_view.dart';
@@ -247,6 +248,7 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         debugShowCheckedModeBanner: false,
         showSemanticsDebugger: false,
         title: 'Anytime Podcast Player',
+        scaffoldMessengerKey: appScaffoldMessengerKey,
         navigatorObservers: [NavigationRouteObserver()],
         localizationsDelegates: const <LocalizationsDelegate<Object>>[
           AnytimeLocalisationsDelegate(),
@@ -416,215 +418,223 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
     final searchBloc = Provider.of<EpisodeBloc>(context);
     final colorScheme = theme.colorScheme;
     final backgroundColour = colorScheme.surface;
+    final homeTheme = theme.copyWith(
+      snackBarTheme: theme.snackBarTheme.copyWith(
+        behavior: SnackBarBehavior.fixed,
+      ),
+    );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: theme.appBarTheme.systemOverlayStyle!,
-      child: Scaffold(
-        backgroundColor: backgroundColour,
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverVisibility(
-                    visible: widget.topBarVisible,
-                    sliver: SliverAppBar(
-                      title: const ExcludeSemantics(
-                        child: TitleWidget(),
-                      ),
-                      backgroundColor: colorScheme.surfaceContainerLow,
-                      surfaceTintColor: Colors.transparent,
-                      toolbarHeight: 74.0,
-                      floating: false,
-                      pinned: true,
-                      snap: false,
-                      actions: <Widget>[
-                        IconButton(
-                          icon: Icon(
-                            Icons.search,
-                            semanticLabel: L.of(context)!.search_for_podcasts_hint,
-                          ),
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              defaultTargetPlatform == TargetPlatform.iOS
-                                  ? MaterialPageRoute<void>(
-                                      fullscreenDialog: false,
-                                      settings: const RouteSettings(name: 'search'),
-                                      builder: (context) => const Search())
-                                  : SlideRightRoute(
-                                      widget: const Search(),
-                                      settings: const RouteSettings(name: 'search'),
-                                    ),
-                            );
-                          },
+      child: Theme(
+        data: homeTheme,
+        child: Scaffold(
+          backgroundColor: backgroundColour,
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverVisibility(
+                      visible: widget.topBarVisible,
+                      sliver: SliverAppBar(
+                        title: const ExcludeSemantics(
+                          child: TitleWidget(),
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.featured_play_list_outlined,
-                            semanticLabel: L.of(context)!.open_up_next_hint,
+                        backgroundColor: colorScheme.surfaceContainerLow,
+                        surfaceTintColor: Colors.transparent,
+                        toolbarHeight: 74.0,
+                        floating: false,
+                        pinned: true,
+                        snap: false,
+                        actions: <Widget>[
+                          IconButton(
+                            icon: Icon(
+                              Icons.search,
+                              semanticLabel: L.of(context)!.search_for_podcasts_hint,
+                            ),
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                defaultTargetPlatform == TargetPlatform.iOS
+                                    ? MaterialPageRoute<void>(
+                                        fullscreenDialog: false,
+                                        settings: const RouteSettings(name: 'search'),
+                                        builder: (context) => const Search())
+                                    : SlideRightRoute(
+                                        widget: const Search(),
+                                        settings: const RouteSettings(name: 'search'),
+                                      ),
+                              );
+                            },
                           ),
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                fullscreenDialog: false,
-                                settings: const RouteSettings(name: 'queue'),
-                                builder: (context) => const UpNextPage(),
-                              ),
-                            );
-                          },
-                        ),
-                        PopupMenuButton<String>(
-                          onSelected: _menuSelect,
-                          icon: const Icon(
-                            Icons.more_vert,
+                          IconButton(
+                            icon: Icon(
+                              Icons.featured_play_list_outlined,
+                              semanticLabel: L.of(context)!.open_up_next_hint,
+                            ),
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  fullscreenDialog: false,
+                                  settings: const RouteSettings(name: 'queue'),
+                                  builder: (context) => const UpNextPage(),
+                                ),
+                              );
+                            },
                           ),
-                          itemBuilder: (BuildContext context) {
-                            return <PopupMenuEntry<String>>[
-                              if (feedbackUrl.isNotEmpty)
-                                PopupMenuItem<String>(
-                                  textStyle: theme.textTheme.titleMedium,
-                                  value: 'feedback',
-                                  child: Focus(
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        const Padding(
-                                          padding: EdgeInsets.only(right: 8.0),
-                                          child: Icon(Icons.feedback_outlined, size: 18.0),
-                                        ),
-                                        Text(L.of(context)!.feedback_menu_item_label),
-                                      ],
+                          PopupMenuButton<String>(
+                            onSelected: _menuSelect,
+                            icon: const Icon(
+                              Icons.more_vert,
+                            ),
+                            itemBuilder: (BuildContext context) {
+                              return <PopupMenuEntry<String>>[
+                                if (feedbackUrl.isNotEmpty)
+                                  PopupMenuItem<String>(
+                                    textStyle: theme.textTheme.titleMedium,
+                                    value: 'feedback',
+                                    child: Focus(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Icon(Icons.feedback_outlined, size: 18.0),
+                                          ),
+                                          Text(L.of(context)!.feedback_menu_item_label),
+                                        ],
+                                      ),
                                     ),
                                   ),
+                                PopupMenuItem<String>(
+                                  textStyle: theme.textTheme.titleMedium,
+                                  value: 'layout',
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.dashboard, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.layout_label),
+                                    ],
+                                  ),
                                 ),
-                              PopupMenuItem<String>(
-                                textStyle: theme.textTheme.titleMedium,
-                                value: 'layout',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.dashboard, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.layout_label),
-                                  ],
+                                PopupMenuItem<String>(
+                                  textStyle: theme.textTheme.titleMedium,
+                                  value: 'rss',
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.rss_feed, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.add_rss_feed_option),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: theme.textTheme.titleMedium,
-                                value: 'rss',
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.rss_feed, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.add_rss_feed_option),
-                                  ],
+                                PopupMenuItem<String>(
+                                  textStyle: theme.textTheme.titleMedium,
+                                  value: 'library',
+                                  enabled: !libraryRefreshing,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.refresh, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.update_library_option),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: theme.textTheme.titleMedium,
-                                value: 'library',
-                                enabled: !libraryRefreshing,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.refresh, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.update_library_option),
-                                  ],
+                                PopupMenuItem<String>(
+                                  textStyle: theme.textTheme.titleMedium,
+                                  value: 'settings',
+                                  child: Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.settings, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.settings_label),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: theme.textTheme.titleMedium,
-                                value: 'settings',
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.settings, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.settings_label),
-                                  ],
+                                PopupMenuItem<String>(
+                                  textStyle: theme.textTheme.titleMedium,
+                                  value: 'about',
+                                  child: Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 8.0),
+                                        child: Icon(Icons.info_outline, size: 18.0),
+                                      ),
+                                      Text(L.of(context)!.about_label),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              PopupMenuItem<String>(
-                                textStyle: theme.textTheme.titleMedium,
-                                value: 'about',
-                                child: Row(
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Icon(Icons.info_outline, size: 18.0),
-                                    ),
-                                    Text(L.of(context)!.about_label),
-                                  ],
-                                ),
-                              ),
-                            ];
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  StreamBuilder<int>(
-                      stream: pager.currentPage,
-                      builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                        return _fragment(snapshot.data, searchBloc);
-                      }),
-                ],
-              ),
-            ),
-            const MiniPlayer(),
-          ],
-        ),
-        bottomNavigationBar: StreamBuilder<int>(
-            stream: pager.currentPage,
-            initialData: 0,
-            builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-              int index = snapshot.data ?? 0;
-
-              return SafeArea(
-                top: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 12.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(28.0),
-                    child: BackdropFilter(
-                      filter: ui.ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-                      child: NavigationBar(
-                        selectedIndex: index,
-                        onDestinationSelected: pager.changePage,
-                        destinations: <NavigationDestination>[
-                          NavigationDestination(
-                            selectedIcon: const Icon(Icons.library_music),
-                            icon: const Icon(Icons.library_music_outlined),
-                            label: L.of(context)!.library,
-                          ),
-                          NavigationDestination(
-                            selectedIcon: const Icon(Icons.explore),
-                            icon: const Icon(Icons.explore_outlined),
-                            label: L.of(context)!.discover,
-                          ),
-                          NavigationDestination(
-                            selectedIcon: const Icon(Icons.download),
-                            icon: const Icon(Icons.download_outlined),
-                            label: L.of(context)!.downloads,
+                              ];
+                            },
                           ),
                         ],
                       ),
                     ),
-                  ),
+                    StreamBuilder<int>(
+                        stream: pager.currentPage,
+                        builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                          return _fragment(snapshot.data, searchBloc);
+                        }),
+                  ],
                 ),
-              );
-            }),
+              ),
+              const MiniPlayer(),
+            ],
+          ),
+          bottomNavigationBar: StreamBuilder<int>(
+              stream: pager.currentPage,
+              initialData: 0,
+              builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                int index = snapshot.data ?? 0;
+
+                return SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 12.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(28.0),
+                      child: BackdropFilter(
+                        filter: ui.ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
+                        child: NavigationBar(
+                          selectedIndex: index,
+                          onDestinationSelected: pager.changePage,
+                          destinations: <NavigationDestination>[
+                            NavigationDestination(
+                              selectedIcon: const Icon(Icons.library_music),
+                              icon: const Icon(Icons.library_music_outlined),
+                              label: L.of(context)!.library,
+                            ),
+                            NavigationDestination(
+                              selectedIcon: const Icon(Icons.explore),
+                              icon: const Icon(Icons.explore_outlined),
+                              label: L.of(context)!.discover,
+                            ),
+                            NavigationDestination(
+                              selectedIcon: const Icon(Icons.download),
+                              icon: const Icon(Icons.download_outlined),
+                              label: L.of(context)!.downloads,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }

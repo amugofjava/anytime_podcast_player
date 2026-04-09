@@ -210,6 +210,22 @@ class _SettingsState extends State<Settings> {
                           );
                         },
                       ),
+                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.gemini)
+                      FutureBuilder<String?>(
+                        future: Provider.of<SecureSecretsService>(context, listen: false).read(geminiApiKeySecret),
+                        builder: (context, snapshot) {
+                          return _ActionSettingsTile(
+                            icon: Icons.vpn_key_outlined,
+                            title: 'Gemini API key',
+                            subtitle: _apiKeyLabel(snapshot.data),
+                            onTap: () => _showApiKeyDialog(
+                              title: 'Gemini API key',
+                              secretKey: geminiApiKeySecret,
+                              hintText: 'AIza...',
+                            ),
+                          );
+                        },
+                      ),
                     _ActionSettingsTile(
                       icon: Icons.skip_next_outlined,
                       title: 'Ad skip mode',
@@ -539,6 +555,8 @@ class _SettingsState extends State<Settings> {
         return 'OpenAI';
       case TranscriptUploadProvider.grok:
         return 'Grok';
+      case TranscriptUploadProvider.gemini:
+        return 'Gemini (audio-direct)';
       case TranscriptUploadProvider.analysisBackend:
         return 'Private backend';
     }
@@ -579,7 +597,9 @@ class _SettingsState extends State<Settings> {
   }
 
   bool _supportsAnalysisModelSelection(TranscriptUploadProvider provider) {
-    return provider == TranscriptUploadProvider.openAi || provider == TranscriptUploadProvider.grok;
+    return provider == TranscriptUploadProvider.openAi ||
+        provider == TranscriptUploadProvider.grok ||
+        provider == TranscriptUploadProvider.gemini;
   }
 
   String _analysisModelLabel(AppSettings settings) {
@@ -588,6 +608,8 @@ class _SettingsState extends State<Settings> {
         return settings.openAiAnalysisModel;
       case TranscriptUploadProvider.grok:
         return settings.grokAnalysisModel;
+      case TranscriptUploadProvider.gemini:
+        return settings.geminiAnalysisModel;
       case TranscriptUploadProvider.disabled:
       case TranscriptUploadProvider.analysisBackend:
         return 'Not available';
@@ -600,6 +622,7 @@ class _SettingsState extends State<Settings> {
       const _ValueLabel(TranscriptUploadProvider.disabled, 'Disabled'),
       const _ValueLabel(TranscriptUploadProvider.openAi, 'OpenAI'),
       const _ValueLabel(TranscriptUploadProvider.grok, 'Grok'),
+      const _ValueLabel(TranscriptUploadProvider.gemini, 'Gemini (audio-direct)'),
       if (Environment.hasAnalysisBackend)
         const _ValueLabel(TranscriptUploadProvider.analysisBackend, 'Private backend'),
     ];
@@ -739,6 +762,9 @@ class _SettingsState extends State<Settings> {
                                     break;
                                   case TranscriptUploadProvider.grok:
                                     settingsBloc.setGrokAnalysisModel(model);
+                                    break;
+                                  case TranscriptUploadProvider.gemini:
+                                    settingsBloc.setGeminiAnalysisModel(model);
                                     break;
                                   case TranscriptUploadProvider.disabled:
                                   case TranscriptUploadProvider.analysisBackend:

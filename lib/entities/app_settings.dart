@@ -8,6 +8,7 @@ enum TranscriptUploadProvider {
   disabled,
   openAi,
   grok,
+  gemini,
   analysisBackend,
 }
 
@@ -101,6 +102,9 @@ class AppSettings {
   /// Preferred Grok model for ad analysis.
   final String grokAnalysisModel;
 
+  /// Preferred Gemini model for ad analysis.
+  final String geminiAnalysisModel;
+
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
@@ -128,6 +132,7 @@ class AppSettings {
     required this.adSkipMode,
     required this.openAiAnalysisModel,
     required this.grokAnalysisModel,
+    required this.geminiAnalysisModel,
   });
 
   AppSettings.sensibleDefaults()
@@ -156,7 +161,8 @@ class AppSettings {
         transcriptionProvider = TranscriptionProvider.localAi,
         adSkipMode = AdSkipMode.prompt,
         openAiAnalysisModel = 'gpt-4.1-mini',
-        grokAnalysisModel = 'grok-3';
+        grokAnalysisModel = 'grok-3',
+        geminiAnalysisModel = 'gemini-3.1-flash-lite-preview';
 
   AppSettings copyWith({
     String? theme,
@@ -186,6 +192,7 @@ class AppSettings {
     AdSkipMode? adSkipMode,
     String? openAiAnalysisModel,
     String? grokAnalysisModel,
+    String? geminiAnalysisModel,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -214,5 +221,6 @@ class AppSettings {
         adSkipMode: adSkipMode ?? this.adSkipMode,
         openAiAnalysisModel: openAiAnalysisModel ?? this.openAiAnalysisModel,
         grokAnalysisModel: grokAnalysisModel ?? this.grokAnalysisModel,
+        geminiAnalysisModel: geminiAnalysisModel ?? this.geminiAnalysisModel,
       );
 }
