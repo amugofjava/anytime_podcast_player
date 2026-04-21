@@ -491,7 +491,7 @@ class _NowPlayingQueueBar extends StatelessWidget {
           child: Row(
             children: [
               Icon(
-                Icons.format_list_bulleted_rounded,
+                Icons.format_list_numbered_rounded,
                 color: theme.colorScheme.primary,
               ),
               const SizedBox(width: 12.0),

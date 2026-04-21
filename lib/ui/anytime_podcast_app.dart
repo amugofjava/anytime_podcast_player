@@ -470,7 +470,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                           ),
                           IconButton(
                             icon: Icon(
-                              Icons.featured_play_list_outlined,
+                              Icons.format_list_numbered_rounded,
                               semanticLabel: L.of(context)!.open_up_next_hint,
                             ),
                             onPressed: () async {
