@@ -65,6 +65,9 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+            appLabel: "Anytime Player"
+        ]
     }
 
     signingConfigs {
@@ -78,11 +81,21 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+            manifestPlaceholders.appLabel = "Anytime Player Debug"
             signingConfig signingConfigs.debug
             shrinkResources false
         }
 
+        profile {
+            applicationIdSuffix ".profile"
+            versionNameSuffix "-profile"
+            manifestPlaceholders.appLabel = "Anytime Player Profile"
+        }
+
         release {
+            manifestPlaceholders.appLabel = "Anytime Player"
             signingConfig signingConfigs.release
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt')

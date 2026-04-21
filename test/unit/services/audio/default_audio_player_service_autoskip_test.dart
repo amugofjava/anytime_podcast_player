@@ -14,28 +14,19 @@ void main() {
     ];
 
     test('matches a segment when playback enters the boundary', () {
-      final match = findActiveAdSegment(
-        positionMs: 1000,
-        adSegments: segments,
-      );
+      final match = findActiveAdSegment(positionMs: 1000, adSegments: segments);
 
       expect(match, segments.first);
     });
 
     test('returns null once playback reaches the segment end', () {
-      final match = findActiveAdSegment(
-        positionMs: 5000,
-        adSegments: segments,
-      );
+      final match = findActiveAdSegment(positionMs: 5000, adSegments: segments);
 
       expect(match, isNull);
     });
 
     test('handles short gaps without selecting the wrong segment', () {
-      final match = findActiveAdSegment(
-        positionMs: 7000,
-        adSegments: segments,
-      );
+      final match = findActiveAdSegment(positionMs: 7000, adSegments: segments);
 
       expect(match, isNull);
     });
@@ -81,5 +72,42 @@ void main() {
 
       expect(cleared, isFalse);
     });
+  });
+
+  group('shouldRetainSkippedAdSegmentAfterSeek', () {
+    const segment = AdSegment(startMs: 1000, endMs: 5000);
+
+    test('retains the skipped segment when playback is still inside it', () {
+      final retain = shouldRetainSkippedAdSegmentAfterSeek(
+        positionMs: 2000,
+        activeSegment: segment,
+        skippedSegmentKey: '1000:5000',
+      );
+
+      expect(retain, isTrue);
+    });
+
+    test('does not retain the skipped segment after playback clears it', () {
+      final retain = shouldRetainSkippedAdSegmentAfterSeek(
+        positionMs: 5000,
+        activeSegment: null,
+        skippedSegmentKey: '1000:5000',
+      );
+
+      expect(retain, isFalse);
+    });
+
+    test(
+      'does not retain the skipped segment for a different active segment',
+      () {
+        final retain = shouldRetainSkippedAdSegmentAfterSeek(
+          positionMs: 9000,
+          activeSegment: const AdSegment(startMs: 8000, endMs: 12000),
+          skippedSegmentKey: '1000:5000',
+        );
+
+        expect(retain, isFalse);
+      },
+    );
   });
 }
