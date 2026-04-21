@@ -1065,7 +1065,7 @@ class DefaultAudioPlayerService extends AudioPlayerService {
     }
   }
 
-  String _segmentKey(AdSegment segment) => '${segment.startMs}:${segment.endMs}';
+  String _segmentKey(AdSegment segment) => segmentKey(segment);
 
   int _resolveAdSkipTargetMs(AdSegment segment) {
     final durationMs = _audioHandler.mediaItem.value?.duration?.inMilliseconds;
@@ -1117,6 +1117,9 @@ class DefaultAudioPlayerService extends AudioPlayerService {
 }
 
 @visibleForTesting
+String segmentKey(AdSegment segment) => '${segment.startMs}:${segment.endMs}';
+
+@visibleForTesting
 AdSegment? findActiveAdSegment({
   required int positionMs,
   required List<AdSegment> adSegments,
@@ -1165,9 +1168,7 @@ bool shouldRetainSkippedAdSegmentAfterSeek({
     return false;
   }
 
-  final activeSegmentKey = '${activeSegment.startMs}:${activeSegment.endMs}';
-
-  if (activeSegmentKey != skippedSegmentKey) {
+  if (segmentKey(activeSegment) != skippedSegmentKey) {
     return false;
   }
 
