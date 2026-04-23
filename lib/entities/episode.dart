@@ -7,6 +7,7 @@ import 'package:anytime/core/extensions.dart';
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/chapter.dart';
 import 'package:anytime/entities/downloadable.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/person.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:flutter/foundation.dart';
@@ -132,7 +133,14 @@ class Episode {
   DateTime? analysisUpdatedAt;
 
   /// Detected ad segments for this episode.
+  ///
+  /// Mirrors the active record in [analysisHistory] for backward compatibility
+  /// with the audio player and UI (spec §4.2, CON-005).
   List<AdSegment> adSegments;
+
+  /// Full history of analysis runs for this episode. Records are retained
+  /// indefinitely until the episode itself is deleted (spec REQ-011).
+  List<EpisodeAnalysisRecord> analysisHistory;
 
   /// Processed version of episode description.
   String? _descriptionText;
@@ -198,6 +206,7 @@ class Episode {
     this.analysisError,
     this.analysisUpdatedAt,
     this.adSegments = const <AdSegment>[],
+    this.analysisHistory = const <EpisodeAnalysisRecord>[],
   })  : imageUrl = imageUrl?.forceHttps,
         thumbImageUrl = thumbImageUrl?.forceHttps,
         contentUrl = contentUrl?.forceHttps,
@@ -404,7 +413,8 @@ class Episode {
             listEquals(persons, other.persons) &&
             listEquals(chapters, other.chapters) &&
             listEquals(transcriptUrls, other.transcriptUrls) &&
-            listEquals(adSegments, other.adSegments);
+            listEquals(adSegments, other.adSegments) &&
+            listEquals(analysisHistory, other.analysisHistory);
   }
 
   @override
@@ -440,6 +450,7 @@ class Episode {
       analysisError.hashCode ^
       analysisUpdatedAt.hashCode ^
       adSegments.hashCode ^
+      analysisHistory.hashCode ^
       lastUpdated.hashCode;
 
   @override

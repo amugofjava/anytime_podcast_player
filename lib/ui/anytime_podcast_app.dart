@@ -31,6 +31,9 @@ import 'package:anytime/services/download/mobile_download_manager.dart';
 import 'package:anytime/services/download/mobile_download_service.dart';
 import 'package:anytime/services/notifications/mobile_notification_service.dart';
 import 'package:anytime/services/notifications/notification_service.dart';
+import 'package:anytime/services/analysis/background/background_analysis_scheduler.dart';
+import 'package:anytime/services/analysis/background/model_download_service.dart';
+import 'package:anytime/services/analysis/background/background_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/analysis/openai_episode_analysis_service.dart';
 import 'package:anytime/services/podcast/mobile_opml_service.dart';
@@ -81,6 +84,8 @@ class AnytimePodcastApp extends StatefulWidget {
   late AudioPlayerService audioPlayerService;
   late EpisodeAnalysisService episodeAnalysisService;
   late EpisodeTranscriptionService episodeTranscriptionService;
+  late DefaultBackgroundAnalysisService backgroundAnalysisService;
+  late GemmaModelDownloadService gemmaModelDownloadService;
   late OPMLService opmlService;
   late SecureSecretsService secureSecretsService;
   PodcastService? podcastService;
@@ -119,10 +124,14 @@ class AnytimePodcastApp extends StatefulWidget {
 
     assert(podcastService != null);
 
+    backgroundAnalysisService = DefaultBackgroundAnalysisService(repository);
+
     downloadService = MobileDownloadService(
       repository: repository,
       downloadManager: MobileDownloaderManager(),
       podcastService: podcastService!,
+      backgroundAnalysisService: backgroundAnalysisService,
+      settingsService: mobileSettingsService,
     );
 
     audioPlayerService = DefaultAudioPlayerService(
@@ -131,9 +140,18 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService!,
     );
 
+    final BackgroundAnalysisScheduler backgroundAnalysisScheduler = !kIsWeb && Platform.isAndroid
+        ? WorkManagerBackgroundAnalysisScheduler()
+        : const NoopBackgroundAnalysisScheduler();
+
+    gemmaModelDownloadService = !kIsWeb && Platform.isAndroid
+        ? FlutterGemmaModelDownloadService()
+        : const NoopGemmaModelDownloadService();
+
     settingsBloc = SettingsBloc(
       settingsService: mobileSettingsService,
       notificationService: notificationService,
+      backgroundAnalysisScheduler: backgroundAnalysisScheduler,
     );
 
     opmlService = MobileOPMLService(
@@ -205,8 +223,15 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
             analysisService: widget.episodeAnalysisService,
             settingsService: widget.mobileSettingsService,
             transcriptionService: widget.episodeTranscriptionService,
+            backgroundAnalysisService: widget.backgroundAnalysisService,
           ),
           dispose: (_, value) => value.dispose(),
+        ),
+        Provider<BackgroundAnalysisService>.value(
+          value: widget.backgroundAnalysisService,
+        ),
+        Provider<GemmaModelDownloadService>.value(
+          value: widget.gemmaModelDownloadService,
         ),
         Provider<PodcastBloc>(
           create: (_) => PodcastBloc(

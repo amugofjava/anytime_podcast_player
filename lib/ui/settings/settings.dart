@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
@@ -11,6 +12,9 @@ import 'package:anytime/core/environment.dart';
 import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/l10n/L.dart';
+import 'package:anytime/services/analysis/background/analysis_model_catalog.dart';
+import 'package:anytime/services/analysis/background/background_analysis_dispatcher.dart';
+import 'package:anytime/services/analysis/background/model_download_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/analysis/openai_episode_analysis_service.dart';
 import 'package:anytime/services/secrets/secure_secrets_service.dart';
@@ -22,6 +26,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 /// This is the settings page and allows the user to select various options for the app.
@@ -36,6 +41,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   bool sdcard = false;
+  int _versionTapCount = 0;
+  bool? _gemmaInstalled;
+  BackgroundAnalysisLocalModel? _checkedVariant;
+  GemmaDownloadProgress? _downloadProgress;
+  String? _downloadError;
+  StreamSubscription<GemmaDownloadProgress>? _downloadSub;
+  bool _runningBackgroundAnalysis = false;
 
   @override
   void initState() {
@@ -47,6 +59,70 @@ class _SettingsState extends State<Settings> {
           sdcard = value;
         });
       }
+    });
+  }
+
+  @override
+  void dispose() {
+    _downloadSub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _refreshGemmaInstallState(BackgroundAnalysisLocalModel variant) async {
+    if (_downloadSub != null) return; // mid-download; skip redundant poll
+    final service = Provider.of<GemmaModelDownloadService>(context, listen: false);
+    final installed = await service.isInstalled(variant);
+    if (!mounted) return;
+    setState(() {
+      _gemmaInstalled = installed;
+      _checkedVariant = variant;
+    });
+  }
+
+  void _startGemmaDownload(BackgroundAnalysisLocalModel variant, String? hfToken) {
+    final service = Provider.of<GemmaModelDownloadService>(context, listen: false);
+    _downloadSub?.cancel();
+    setState(() {
+      _downloadProgress = const GemmaDownloadProgress(percent: 0, filename: '');
+      _downloadError = null;
+    });
+    _downloadSub = service.download(variant, huggingFaceToken: hfToken).listen(
+      (progress) {
+        if (!mounted) return;
+        setState(() => _downloadProgress = progress);
+      },
+      onError: (Object error) {
+        if (!mounted) return;
+        setState(() {
+          _downloadSub = null;
+          _downloadProgress = null;
+          _downloadError = error.toString();
+        });
+      },
+      onDone: () {
+        if (!mounted) return;
+        setState(() {
+          _downloadSub = null;
+          _downloadProgress = null;
+          _gemmaInstalled = true;
+          _checkedVariant = variant;
+        });
+      },
+    );
+  }
+
+  Future<void> _cancelGemmaDownload(BackgroundAnalysisLocalModel variant) async {
+    await _downloadSub?.cancel();
+    final service = Provider.of<GemmaModelDownloadService>(context, listen: false);
+    try {
+      await service.delete(variant);
+    } catch (_) {}
+    if (!mounted) return;
+    setState(() {
+      _downloadSub = null;
+      _downloadProgress = null;
+      _gemmaInstalled = false;
+      _checkedVariant = variant;
     });
   }
 
@@ -155,7 +231,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
                 const SizedBox(height: 28.0),
-                const _SectionLabel(label: 'AI'),
+                const _SectionLabel(label: 'Transcription'),
                 _SettingsCard(
                   children: [
                     _ActionSettingsTile(
@@ -164,21 +240,7 @@ class _SettingsState extends State<Settings> {
                       subtitle: _transcriptionProviderLabel(settings.transcriptionProvider),
                       onTap: () => _showTranscriptionProviderDialog(settings),
                     ),
-                    _ActionSettingsTile(
-                      icon: Icons.auto_awesome_outlined,
-                      title: 'Ad analysis provider',
-                      subtitle: _analysisProviderLabel(settings.transcriptUploadProvider),
-                      onTap: () => _showAnalysisProviderDialog(settings),
-                    ),
-                    if (_supportsAnalysisModelSelection(settings.transcriptUploadProvider))
-                      _ActionSettingsTile(
-                        icon: Icons.tune_outlined,
-                        title: 'Analysis model',
-                        subtitle: _analysisModelLabel(settings),
-                        onTap: () => _showAnalysisModelDialog(settings),
-                      ),
-                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.openAi ||
-                        settings.transcriptionProvider == TranscriptionProvider.openAi)
+                    if (settings.transcriptionProvider == TranscriptionProvider.openAi)
                       FutureBuilder<String?>(
                         future: Provider.of<SecureSecretsService>(context, listen: false).read(openAiApiKeySecret),
                         builder: (context, snapshot) {
@@ -194,23 +256,64 @@ class _SettingsState extends State<Settings> {
                           );
                         },
                       ),
-                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.grok)
-                      FutureBuilder<String?>(
-                        future: Provider.of<SecureSecretsService>(context, listen: false).read(grokApiKeySecret),
-                        builder: (context, snapshot) {
-                          return _ActionSettingsTile(
-                            icon: Icons.vpn_key_outlined,
-                            title: 'Grok API key',
-                            subtitle: _apiKeyLabel(snapshot.data),
-                            onTap: () => _showApiKeyDialog(
-                              title: 'Grok API key',
-                              secretKey: grokApiKeySecret,
-                              hintText: 'xai-...',
-                            ),
-                          );
-                        },
+                  ],
+                ),
+                const SizedBox(height: 28.0),
+                const _SectionLabel(label: 'Background ad analysis'),
+                _SettingsCard(
+                  children: [
+                    _ToggleSettingsTile(
+                      title: 'Auto-analyze downloaded episodes',
+                      subtitle: _backgroundAnalysisSubtitle(),
+                      value: settings.backgroundAnalysisEnabled && _backgroundAnalysisSupported(),
+                      onChanged: _backgroundAnalysisSupported()
+                          ? (enabled) => _handleBackgroundAnalysisToggle(settingsBloc, settings, enabled)
+                          : (_) {},
+                    ),
+                    if (settings.backgroundAnalysisEnabled && _backgroundAnalysisSupported()) ...[
+                      _ActionSettingsTile(
+                        icon: Icons.memory_outlined,
+                        title: 'On-device model',
+                        subtitle: _backgroundLocalModelLabel(settings.backgroundLocalModel),
+                        onTap: () => _showBackgroundLocalModelDialog(settings),
                       ),
-                    if (settings.transcriptUploadProvider == TranscriptUploadProvider.gemini)
+                      _buildGemmaInstallTile(settings),
+                      _ActionSettingsTile(
+                        icon: Icons.vpn_key_outlined,
+                        title: 'HuggingFace token',
+                        subtitle: settings.huggingFaceAccessToken.isEmpty
+                            ? 'Optional — required only for gated model files'
+                            : '•••••••• (set)',
+                        onTap: () => _showHuggingFaceTokenDialog(settings, settingsBloc),
+                      ),
+                      if (settings.showAnalysisHistory)
+                        _ActionSettingsTile(
+                          icon: Icons.play_arrow_outlined,
+                          title: 'Run background analysis now (dev)',
+                          subtitle: _runningBackgroundAnalysis
+                              ? 'Running…'
+                              : 'Processes the next queued episode on the UI isolate',
+                          onTap: _runBackgroundAnalysisNow,
+                        ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 28.0),
+                const _SectionLabel(label: 'On-demand analysis'),
+                _SettingsCard(
+                  children: [
+                    _ToggleSettingsTile(
+                      title: 'Enable "Analyze now" (Gemini)',
+                      subtitle: 'Uploads audio to Google Gemini to detect ads on demand.',
+                      value: settings.onDemandAnalysisEnabled,
+                      onChanged: (enabled) {
+                        settingsBloc.setOnDemandAnalysisEnabled(enabled);
+                        settingsBloc.setTranscriptUploadProvider(
+                          enabled ? TranscriptUploadProvider.gemini : TranscriptUploadProvider.disabled,
+                        );
+                      },
+                    ),
+                    if (settings.onDemandAnalysisEnabled) ...[
                       FutureBuilder<String?>(
                         future: Provider.of<SecureSecretsService>(context, listen: false).read(geminiApiKeySecret),
                         builder: (context, snapshot) {
@@ -226,6 +329,19 @@ class _SettingsState extends State<Settings> {
                           );
                         },
                       ),
+                      _ActionSettingsTile(
+                        icon: Icons.tune_outlined,
+                        title: 'Gemini model',
+                        subtitle: settings.geminiAnalysisModel,
+                        onTap: () => _showAnalysisModelDialog(settings),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 28.0),
+                const _SectionLabel(label: 'Ad playback'),
+                _SettingsCard(
+                  children: [
                     _ActionSettingsTile(
                       icon: Icons.skip_next_outlined,
                       title: 'Ad skip mode',
@@ -321,11 +437,20 @@ class _SettingsState extends State<Settings> {
                 ),
                 const SizedBox(height: 24.0),
                 Center(
-                  child: Text(
-                    'Version ${Environment.projectVersion}',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: theme.colorScheme.outline,
-                      letterSpacing: 1.0,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => _handleVersionTap(context, settings, settingsBloc),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: Text(
+                        settings.showAnalysisHistory
+                            ? 'Version ${Environment.projectVersion} • debug'
+                            : 'Version ${Environment.projectVersion}',
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.outline,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -547,21 +672,6 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  String _analysisProviderLabel(TranscriptUploadProvider provider) {
-    switch (provider) {
-      case TranscriptUploadProvider.disabled:
-        return 'Disabled';
-      case TranscriptUploadProvider.openAi:
-        return 'OpenAI';
-      case TranscriptUploadProvider.grok:
-        return 'Grok';
-      case TranscriptUploadProvider.gemini:
-        return 'Gemini (audio-direct)';
-      case TranscriptUploadProvider.analysisBackend:
-        return 'Private backend';
-    }
-  }
-
   String _transcriptionProviderLabel(TranscriptionProvider provider) {
     switch (provider) {
       case TranscriptionProvider.localAi:
@@ -596,48 +706,280 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  bool _supportsAnalysisModelSelection(TranscriptUploadProvider provider) {
-    return provider == TranscriptUploadProvider.openAi ||
-        provider == TranscriptUploadProvider.grok ||
-        provider == TranscriptUploadProvider.gemini;
+  void _handleVersionTap(BuildContext context, AppSettings settings, SettingsBloc settingsBloc) {
+    _versionTapCount++;
+    if (_versionTapCount < 7) {
+      return;
+    }
+    _versionTapCount = 0;
+
+    final enabling = !settings.showAnalysisHistory;
+    settingsBloc.setShowAnalysisHistory(enabling);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(enabling ? 'Analysis history enabled.' : 'Analysis history disabled.'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
-  String _analysisModelLabel(AppSettings settings) {
-    switch (settings.transcriptUploadProvider) {
-      case TranscriptUploadProvider.openAi:
-        return settings.openAiAnalysisModel;
-      case TranscriptUploadProvider.grok:
-        return settings.grokAnalysisModel;
-      case TranscriptUploadProvider.gemini:
-        return settings.geminiAnalysisModel;
-      case TranscriptUploadProvider.disabled:
-      case TranscriptUploadProvider.analysisBackend:
-        return 'Not available';
+  Future<void> _runBackgroundAnalysisNow() async {
+    if (_runningBackgroundAnalysis) return;
+    setState(() => _runningBackgroundAnalysis = true);
+    try {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          settings: const RouteSettings(name: 'dev_background_analysis_run'),
+          builder: (_) => const _BackgroundAnalysisRunPage(),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _runningBackgroundAnalysis = false);
+      }
     }
   }
 
-  Future<void> _showAnalysisProviderDialog(AppSettings settings) async {
+  Future<void> _handleBackgroundAnalysisToggle(
+    SettingsBloc settingsBloc,
+    AppSettings settings,
+    bool enabled,
+  ) async {
+    if (!enabled) {
+      settingsBloc.setBackgroundAnalysisEnabled(false);
+      return;
+    }
+
+    if (settings.backgroundAnalysisDiskCostAccepted) {
+      settingsBloc.setBackgroundAnalysisEnabled(true);
+      _maybeStartGemmaDownload(settings);
+      return;
+    }
+
+    final confirmed = await _showBackgroundAnalysisDiskCostDialog(settings.backgroundLocalModel);
+    if (!confirmed) {
+      return;
+    }
+    settingsBloc.setBackgroundAnalysisDiskCostAccepted(true);
+    settingsBloc.setBackgroundAnalysisEnabled(true);
+    _maybeStartGemmaDownload(settings);
+  }
+
+  Future<void> _maybeStartGemmaDownload(AppSettings settings) async {
+    final service = Provider.of<GemmaModelDownloadService>(context, listen: false);
+    final variant = settings.backgroundLocalModel;
+    final installed = await service.isInstalled(variant);
+    if (!mounted) return;
+    if (installed) {
+      setState(() {
+        _gemmaInstalled = true;
+        _checkedVariant = variant;
+      });
+      return;
+    }
+    _startGemmaDownload(variant, settings.huggingFaceAccessToken);
+  }
+
+  Widget _buildGemmaInstallTile(AppSettings settings) {
+    final variant = settings.backgroundLocalModel;
+    if (_checkedVariant != variant && _downloadSub == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _refreshGemmaInstallState(variant);
+      });
+    }
+
+    if (_downloadProgress != null) {
+      final pct = _downloadProgress!.percent;
+      return _ActionSettingsTile(
+        icon: Icons.cloud_download_outlined,
+        title: 'Downloading Gemma model ($pct%)',
+        subtitle: _downloadProgress!.filename.isEmpty ? 'Starting…' : _downloadProgress!.filename,
+        onTap: () => _cancelGemmaDownload(variant),
+      );
+    }
+
+    if (_downloadError != null) {
+      return _ActionSettingsTile(
+        icon: Icons.error_outline,
+        title: 'Download failed',
+        subtitle: 'Tap to retry — ${_downloadError!}',
+        onTap: () => _startGemmaDownload(variant, settings.huggingFaceAccessToken),
+      );
+    }
+
+    if (_gemmaInstalled == true) {
+      return _ActionSettingsTile(
+        icon: Icons.check_circle_outline,
+        title: 'Gemma model installed',
+        subtitle: 'Ready to analyze',
+        onTap: () => _confirmAndRedownload(variant, settings),
+      );
+    }
+
+    return _ActionSettingsTile(
+      icon: Icons.cloud_download_outlined,
+      title: 'Download Gemma model',
+      subtitle:
+          '${AnalysisModelCatalog.formatBytes(AnalysisModelCatalog.approximateSizeBytesFor(variant))} — tap to download',
+      onTap: () => _startGemmaDownload(variant, settings.huggingFaceAccessToken),
+    );
+  }
+
+  Future<void> _confirmAndRedownload(BackgroundAnalysisLocalModel variant, AppSettings settings) async {
+    final confirmed = await showPlatformDialog<bool>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Re-download model?'),
+        content: const Text('This will delete the installed model and download it again.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Re-download')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await _cancelGemmaDownload(variant);
+    if (!mounted) return;
+    _startGemmaDownload(variant, settings.huggingFaceAccessToken);
+  }
+
+  Future<void> _showHuggingFaceTokenDialog(AppSettings settings, SettingsBloc settingsBloc) async {
+    final controller = TextEditingController(text: settings.huggingFaceAccessToken);
+    final result = await showPlatformDialog<String>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('HuggingFace access token'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Required only for gated model files. Paste a token from huggingface.co/settings/tokens.',
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'hf_...',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(null), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(controller.text.trim()),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (result != null) {
+      settingsBloc.setHuggingFaceAccessToken(result);
+    }
+  }
+
+  Future<bool> _showBackgroundAnalysisDiskCostDialog(BackgroundAnalysisLocalModel variant) async {
+    final totalBytes = AnalysisModelCatalog.totalApproximateSizeBytesFor(variant);
+    final totalLabel = AnalysisModelCatalog.formatBytes(totalBytes);
+    final gemmaLabel = AnalysisModelCatalog.formatBytes(
+      AnalysisModelCatalog.approximateSizeBytesFor(variant),
+    );
+    final whisperLabel = AnalysisModelCatalog.formatBytes(
+      AnalysisModelCatalog.whisperApproximateSizeBytes,
+    );
+
+    final result = await showPlatformDialog<bool>(
+      context: context,
+      useRootNavigator: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Download models?',
+            style: Theme.of(dialogContext).textTheme.titleMedium,
+            textAlign: TextAlign.center,
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Background analysis runs Whisper and Gemma 4 fully on-device. '
+                'Enabling it will download the required models the next time you '
+                'charge your device:',
+                style: Theme.of(dialogContext).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 12),
+              Text('• Whisper transcription ($whisperLabel)'),
+              Text('• Gemma 4 ${_backgroundLocalModelLabel(variant)} ($gemmaLabel)'),
+              const SizedBox(height: 12),
+              Text(
+                'Total disk cost: about $totalLabel.',
+                style: Theme.of(dialogContext).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Download'),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
+  bool _backgroundAnalysisSupported() {
+    // Background Gemma 4 requires Android 8+ (SDK 26) for WorkManager + model
+    // runtime. Other platforms have no background pipeline at all.
+    return Platform.isAndroid;
+  }
+
+  String _backgroundAnalysisSubtitle() {
+    if (Platform.isAndroid) {
+      return 'Runs Whisper + Gemma 4 on-device while charging. Requires Android 8 or newer.';
+    }
+    return 'Background analysis is only available on Android.';
+  }
+
+  String _backgroundLocalModelLabel(BackgroundAnalysisLocalModel model) {
+    switch (model) {
+      case BackgroundAnalysisLocalModel.gemma4E2B:
+        return 'Gemma 4 E2B (~2.4 GB) — recommended';
+      case BackgroundAnalysisLocalModel.gemma4E4B:
+        return 'Gemma 4 E4B (~4.3 GB) — higher quality';
+    }
+  }
+
+  Future<void> _showBackgroundLocalModelDialog(AppSettings settings) async {
     final settingsBloc = Provider.of<SettingsBloc>(context, listen: false);
-    final options = <_ValueLabel<TranscriptUploadProvider>>[
-      const _ValueLabel(TranscriptUploadProvider.disabled, 'Disabled'),
-      const _ValueLabel(TranscriptUploadProvider.openAi, 'OpenAI'),
-      const _ValueLabel(TranscriptUploadProvider.grok, 'Grok'),
-      const _ValueLabel(TranscriptUploadProvider.gemini, 'Gemini (audio-direct)'),
-      if (Environment.hasAnalysisBackend)
-        const _ValueLabel(TranscriptUploadProvider.analysisBackend, 'Private backend'),
+    final options = <_ValueLabel<BackgroundAnalysisLocalModel>>[
+      _ValueLabel(BackgroundAnalysisLocalModel.gemma4E2B, _backgroundLocalModelLabel(BackgroundAnalysisLocalModel.gemma4E2B)),
+      _ValueLabel(BackgroundAnalysisLocalModel.gemma4E4B, _backgroundLocalModelLabel(BackgroundAnalysisLocalModel.gemma4E4B)),
     ];
 
     await showPlatformDialog<void>(
       context: context,
       useRootNavigator: false,
       builder: (dialogContext) {
-        var selected = settings.transcriptUploadProvider;
+        var selected = settings.backgroundLocalModel;
 
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
               title: Text(
-                'Ad analysis provider',
+                'On-device model',
                 style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
@@ -652,7 +994,7 @@ class _SettingsState extends State<Settings> {
                         setDialogState(() {
                           selected = option.value;
                         });
-                        settingsBloc.setTranscriptUploadProvider(option.value);
+                        settingsBloc.setBackgroundLocalModel(option.value);
                         Navigator.pop(dialogContext);
                         setState(() {});
                       },
@@ -676,7 +1018,7 @@ class _SettingsState extends State<Settings> {
   Future<void> _showAnalysisModelDialog(AppSettings settings) async {
     final provider = settings.transcriptUploadProvider;
 
-    if (!_supportsAnalysisModelSelection(provider)) {
+    if (provider != TranscriptUploadProvider.gemini) {
       return;
     }
 
@@ -686,7 +1028,7 @@ class _SettingsState extends State<Settings> {
       secureSecretsService: secureSecretsService,
     );
     final loadModels = catalogService.listModels(provider: provider);
-    final currentModel = _analysisModelLabel(settings);
+    final currentModel = settings.geminiAnalysisModel;
 
     await showPlatformDialog<void>(
       context: context,
@@ -1588,4 +1930,239 @@ class _ValueLabel<T> {
   final String label;
 
   const _ValueLabel(this.value, this.label);
+}
+
+class _BackgroundAnalysisRunPage extends StatefulWidget {
+  const _BackgroundAnalysisRunPage();
+
+  @override
+  State<_BackgroundAnalysisRunPage> createState() => _BackgroundAnalysisRunPageState();
+}
+
+class _BackgroundAnalysisRunPageState extends State<_BackgroundAnalysisRunPage> {
+  final List<_LogLine> _lines = [];
+  final ScrollController _scroll = ScrollController();
+  StreamSubscription<LogRecord>? _logSub;
+  bool _done = false;
+  bool _failed = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _logSub = Logger.root.onRecord.listen((r) {
+      if (!_isRelevant(r.loggerName)) return;
+      if (!mounted) return;
+      setState(() {
+        _lines.add(_LogLine(
+          level: r.level,
+          logger: r.loggerName,
+          message: r.message,
+          error: r.error?.toString(),
+        ));
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (_scroll.hasClients) {
+          _scroll.animateTo(
+            _scroll.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOut,
+          );
+        }
+      });
+    });
+    _run();
+  }
+
+  bool _isRelevant(String name) {
+    return name.contains('Analysis') ||
+        name.contains('Gemma') ||
+        name.contains('Whisper') ||
+        name.contains('Transcription') ||
+        name.contains('Checkpoint') ||
+        name.contains('Supersession') ||
+        name.contains('AdSegment');
+  }
+
+  Future<void> _run() async {
+    try {
+      await runBackgroundAnalysisOnce();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _failed = true;
+        _error = e.toString();
+      });
+    }
+    if (!mounted) return;
+    setState(() => _done = true);
+  }
+
+  @override
+  void dispose() {
+    _logSub?.cancel();
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final status = _done
+        ? (_failed ? 'Failed: $_error' : 'Pass complete')
+        : 'Running…';
+    final statusColor = _done
+        ? (_failed ? theme.colorScheme.error : theme.colorScheme.primary)
+        : theme.colorScheme.primary;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Background analysis (dev)'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.content_copy_outlined),
+            tooltip: 'Copy log to clipboard',
+            onPressed: _lines.isEmpty
+                ? null
+                : () {
+                    final text = _lines.map((l) => l.format()).join('\n');
+                    Clipboard.setData(ClipboardData(text: text));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Log copied'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            color: theme.colorScheme.surfaceContainerHigh,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            child: Row(
+              children: [
+                if (!_done)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else
+                  Icon(
+                    _failed ? Icons.error_outline : Icons.check_circle_outline,
+                    color: statusColor,
+                    size: 18,
+                  ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    status,
+                    style: theme.textTheme.bodyMedium?.copyWith(color: statusColor),
+                  ),
+                ),
+                Text(
+                  '${_lines.length} lines',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: _lines.isEmpty
+                ? Center(
+                    child: Text(
+                      'Waiting for log output…',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.outline,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    controller: _scroll,
+                    padding: const EdgeInsets.all(12.0),
+                    itemCount: _lines.length,
+                    itemBuilder: (_, i) => _LogLineView(line: _lines[i]),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LogLine {
+  final Level level;
+  final String logger;
+  final String message;
+  final String? error;
+
+  const _LogLine({
+    required this.level,
+    required this.logger,
+    required this.message,
+    this.error,
+  });
+
+  String format() {
+    final base = '${level.name.padRight(7)} $logger: $message';
+    return error == null ? base : '$base\n    error: $error';
+  }
+}
+
+class _LogLineView extends StatelessWidget {
+  final _LogLine line;
+
+  const _LogLineView({required this.line});
+
+  Color _colorFor(BuildContext context, Level level) {
+    final scheme = Theme.of(context).colorScheme;
+    if (level >= Level.SEVERE) return scheme.error;
+    if (level >= Level.WARNING) return Colors.orange;
+    if (level >= Level.INFO) return scheme.primary;
+    return scheme.onSurfaceVariant;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = _colorFor(context, line.level);
+    final mono = theme.textTheme.bodySmall?.copyWith(
+      fontFamily: 'monospace',
+      fontFamilyFallback: const ['Menlo', 'Courier'],
+      height: 1.35,
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: RichText(
+        text: TextSpan(
+          style: mono,
+          children: [
+            TextSpan(
+              text: '${line.level.name.padRight(7)} ',
+              style: mono?.copyWith(color: color, fontWeight: FontWeight.w600),
+            ),
+            TextSpan(
+              text: '${line.logger}: ',
+              style: mono?.copyWith(color: theme.colorScheme.outline),
+            ),
+            TextSpan(
+              text: line.message,
+              style: mono?.copyWith(color: theme.colorScheme.onSurface),
+            ),
+            if (line.error != null)
+              TextSpan(
+                text: '\n    ${line.error}',
+                style: mono?.copyWith(color: theme.colorScheme.error),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }

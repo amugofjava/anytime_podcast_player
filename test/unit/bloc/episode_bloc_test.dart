@@ -8,10 +8,12 @@ import 'package:anytime/bloc/podcast/episode_bloc.dart';
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/analysis/background/background_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_dto.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -95,6 +97,7 @@ void main() {
         analysisService: analysisService,
         settingsService: _FakeSettingsService(),
         transcriptionService: _FakeEpisodeTranscriptionService(),
+        backgroundAnalysisService: DefaultBackgroundAnalysisService(repository),
         analysisPollInterval: Duration.zero,
       );
 
@@ -285,6 +288,7 @@ void main() {
         analysisService: analysisService,
         settingsService: _FakeSettingsService(),
         transcriptionService: transcriptionService,
+        backgroundAnalysisService: DefaultBackgroundAnalysisService(repository),
         analysisPollInterval: Duration.zero,
       );
 
@@ -356,6 +360,7 @@ void main() {
         analysisService: analysisService,
         settingsService: _FakeSettingsService(),
         transcriptionService: _FakeEpisodeTranscriptionService(),
+        backgroundAnalysisService: DefaultBackgroundAnalysisService(repository),
         analysisPollInterval: Duration.zero,
       );
 
@@ -527,6 +532,9 @@ class _FakeRepository implements Repository {
   final Map<String, Episode> episodesByGuid = <String, Episode>{};
   final Map<int, Transcript> transcriptsById = <int, Transcript>{};
   final List<int> deletedTranscriptIds = <int>[];
+  final Map<String, List<EpisodeAnalysisRecord>> analysisHistoryByEpisodeId =
+      <String, List<EpisodeAnalysisRecord>>{};
+  final List<String> backgroundAnalysisQueue = <String>[];
   int _nextTranscriptId = 100;
 
   @override
@@ -557,6 +565,39 @@ class _FakeRepository implements Repository {
   Future<void> deleteTranscriptById(int id) async {
     deletedTranscriptIds.add(id);
     transcriptsById.remove(id);
+  }
+
+  @override
+  Future<List<EpisodeAnalysisRecord>> findAnalysisHistory(String episodeId) async {
+    return List<EpisodeAnalysisRecord>.from(
+      analysisHistoryByEpisodeId[episodeId] ?? const <EpisodeAnalysisRecord>[],
+    );
+  }
+
+  @override
+  Future<void> replaceAnalysisHistory(String episodeId, List<EpisodeAnalysisRecord> records) async {
+    analysisHistoryByEpisodeId[episodeId] = List<EpisodeAnalysisRecord>.from(records);
+    final episode = episodesByGuid[episodeId];
+    if (episode != null) {
+      episode.analysisHistory = List<EpisodeAnalysisRecord>.unmodifiable(records);
+    }
+  }
+
+  @override
+  Future<void> enqueueBackgroundAnalysis(String episodeId) async {
+    if (!backgroundAnalysisQueue.contains(episodeId)) {
+      backgroundAnalysisQueue.add(episodeId);
+    }
+  }
+
+  @override
+  Future<void> dequeueBackgroundAnalysis(String episodeId) async {
+    backgroundAnalysisQueue.remove(episodeId);
+  }
+
+  @override
+  Future<List<String>> listBackgroundAnalysisQueue() async {
+    return List<String>.from(backgroundAnalysisQueue);
   }
 
   @override
@@ -628,6 +669,9 @@ class _FakeSettingsService implements SettingsService {
 
   @override
   AdSkipMode get adSkipMode => AdSkipMode.prompt;
+
+  @override
+  String get geminiAnalysisModel => 'gemini-test-model';
 
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

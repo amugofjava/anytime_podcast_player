@@ -113,6 +113,30 @@ abstract class SettingsService {
 
   String get geminiAnalysisModel;
 
+  set backgroundAnalysisEnabled(bool enabled);
+
+  bool get backgroundAnalysisEnabled;
+
+  set backgroundLocalModel(BackgroundAnalysisLocalModel model);
+
+  BackgroundAnalysisLocalModel get backgroundLocalModel;
+
+  set backgroundAnalysisDiskCostAccepted(bool accepted);
+
+  bool get backgroundAnalysisDiskCostAccepted;
+
+  set onDemandAnalysisEnabled(bool enabled);
+
+  bool get onDemandAnalysisEnabled;
+
+  set showAnalysisHistory(bool show);
+
+  bool get showAnalysisHistory;
+
+  set huggingFaceAccessToken(String token);
+
+  String get huggingFaceAccessToken;
+
   Stream<String> get settingsListener;
 
   set lastFeedRefresh(DateTime lastFeedRefresh);

@@ -6,6 +6,7 @@ import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/search_providers.dart';
+import 'package:anytime/services/analysis/background/background_analysis_scheduler.dart';
 import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:logging/logging.dart';
@@ -15,6 +16,7 @@ class SettingsBloc extends Bloc {
   final log = Logger('SettingsBloc');
   final SettingsService settingsService;
   final NotificationService notificationService;
+  final BackgroundAnalysisScheduler backgroundAnalysisScheduler;
   final BehaviorSubject<AppSettings> _settings = BehaviorSubject<AppSettings>.seeded(AppSettings.sensibleDefaults());
   final BehaviorSubject<String> _theme = BehaviorSubject<String>();
   final BehaviorSubject<bool> _markDeletedAsPlayed = BehaviorSubject<bool>();
@@ -43,13 +45,22 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<String> _openAiAnalysisModel = BehaviorSubject<String>();
   final BehaviorSubject<String> _grokAnalysisModel = BehaviorSubject<String>();
   final BehaviorSubject<String> _geminiAnalysisModel = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _backgroundAnalysisEnabled = BehaviorSubject<bool>();
+  final BehaviorSubject<BackgroundAnalysisLocalModel> _backgroundLocalModel =
+      BehaviorSubject<BackgroundAnalysisLocalModel>();
+  final BehaviorSubject<bool> _backgroundAnalysisDiskCostAccepted = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _onDemandAnalysisEnabled = BehaviorSubject<bool>();
+  final BehaviorSubject<bool> _showAnalysisHistory = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _huggingFaceAccessToken = BehaviorSubject<String>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
   SettingsBloc({
     required this.settingsService,
     required this.notificationService,
-  }) {
+    BackgroundAnalysisScheduler? backgroundAnalysisScheduler,
+  })  : backgroundAnalysisScheduler =
+            backgroundAnalysisScheduler ?? const NoopBackgroundAnalysisScheduler() {
     _init();
   }
 
@@ -90,6 +101,12 @@ class SettingsBloc extends Bloc {
       openAiAnalysisModel: settingsService.openAiAnalysisModel,
       grokAnalysisModel: settingsService.grokAnalysisModel,
       geminiAnalysisModel: settingsService.geminiAnalysisModel,
+      backgroundAnalysisEnabled: settingsService.backgroundAnalysisEnabled,
+      backgroundLocalModel: settingsService.backgroundLocalModel,
+      backgroundAnalysisDiskCostAccepted: settingsService.backgroundAnalysisDiskCostAccepted,
+      onDemandAnalysisEnabled: settingsService.onDemandAnalysisEnabled,
+      showAnalysisHistory: settingsService.showAnalysisHistory,
+      huggingFaceAccessToken: settingsService.huggingFaceAccessToken,
     );
 
     _settings.add(_currentSettings);
@@ -261,6 +278,51 @@ class SettingsBloc extends Bloc {
       _settings.add(_currentSettings);
       settingsService.geminiAnalysisModel = model;
     });
+
+    _backgroundAnalysisEnabled.listen((enabled) async {
+      _currentSettings = _currentSettings.copyWith(backgroundAnalysisEnabled: enabled);
+      _settings.add(_currentSettings);
+      settingsService.backgroundAnalysisEnabled = enabled;
+      try {
+        if (enabled) {
+          await this.backgroundAnalysisScheduler.schedule();
+        } else {
+          await this.backgroundAnalysisScheduler.cancel();
+        }
+      } catch (error, stack) {
+        log.warning('Failed to update background analysis schedule', error, stack);
+      }
+    });
+
+    _backgroundLocalModel.listen((model) {
+      _currentSettings = _currentSettings.copyWith(backgroundLocalModel: model);
+      _settings.add(_currentSettings);
+      settingsService.backgroundLocalModel = model;
+    });
+
+    _backgroundAnalysisDiskCostAccepted.listen((accepted) {
+      _currentSettings = _currentSettings.copyWith(backgroundAnalysisDiskCostAccepted: accepted);
+      _settings.add(_currentSettings);
+      settingsService.backgroundAnalysisDiskCostAccepted = accepted;
+    });
+
+    _onDemandAnalysisEnabled.listen((enabled) {
+      _currentSettings = _currentSettings.copyWith(onDemandAnalysisEnabled: enabled);
+      _settings.add(_currentSettings);
+      settingsService.onDemandAnalysisEnabled = enabled;
+    });
+
+    _showAnalysisHistory.listen((show) {
+      _currentSettings = _currentSettings.copyWith(showAnalysisHistory: show);
+      _settings.add(_currentSettings);
+      settingsService.showAnalysisHistory = show;
+    });
+
+    _huggingFaceAccessToken.listen((token) {
+      _currentSettings = _currentSettings.copyWith(huggingFaceAccessToken: token);
+      _settings.add(_currentSettings);
+      settingsService.huggingFaceAccessToken = token;
+    });
   }
 
   void _initNotifications() async {
@@ -327,6 +389,19 @@ class SettingsBloc extends Bloc {
 
   void Function(String) get setGeminiAnalysisModel => _geminiAnalysisModel.add;
 
+  void Function(bool) get setBackgroundAnalysisEnabled => _backgroundAnalysisEnabled.add;
+
+  void Function(BackgroundAnalysisLocalModel) get setBackgroundLocalModel => _backgroundLocalModel.add;
+
+  void Function(bool) get setBackgroundAnalysisDiskCostAccepted =>
+      _backgroundAnalysisDiskCostAccepted.add;
+
+  void Function(bool) get setOnDemandAnalysisEnabled => _onDemandAnalysisEnabled.add;
+
+  void Function(bool) get setShowAnalysisHistory => _showAnalysisHistory.add;
+
+  void Function(String) get setHuggingFaceAccessToken => _huggingFaceAccessToken.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -357,6 +432,12 @@ class SettingsBloc extends Bloc {
     _openAiAnalysisModel.close();
     _grokAnalysisModel.close();
     _geminiAnalysisModel.close();
+    _backgroundAnalysisEnabled.close();
+    _backgroundLocalModel.close();
+    _backgroundAnalysisDiskCostAccepted.close();
+    _onDemandAnalysisEnabled.close();
+    _showAnalysisHistory.close();
+    _huggingFaceAccessToken.close();
     _settings.close();
   }
 }

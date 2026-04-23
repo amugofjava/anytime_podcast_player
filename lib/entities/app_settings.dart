@@ -23,6 +23,16 @@ enum AdSkipMode {
   auto,
 }
 
+/// On-device LLM variant used by the background ad-analysis path.
+/// See spec §4.1.
+enum BackgroundAnalysisLocalModel {
+  /// Gemma 4 E2B — ~2.4 GB on disk. Default.
+  gemma4E2B,
+
+  /// Gemma 4 E4B — ~4.3 GB on disk.
+  gemma4E4B,
+}
+
 class AppSettings {
   /// The current theme name.
   final String theme;
@@ -105,6 +115,30 @@ class AppSettings {
   /// Preferred Gemini model for ad analysis.
   final String geminiAnalysisModel;
 
+  /// Whether newly downloaded episodes are enrolled in the background
+  /// Whisper + Gemma 4 analysis pipeline. See spec REQ-001.
+  final bool backgroundAnalysisEnabled;
+
+  /// Which on-device Gemma 4 variant the background pipeline uses.
+  final BackgroundAnalysisLocalModel backgroundLocalModel;
+
+  /// True after the user has seen and accepted the disk-cost confirmation
+  /// dialog (spec REQ-007). Gates the first enable of the pipeline; re-enables
+  /// bypass the dialog once this flag is set.
+  final bool backgroundAnalysisDiskCostAccepted;
+
+  /// Whether the on-demand Gemini "Analyze now" action is enabled.
+  final bool onDemandAnalysisEnabled;
+
+  /// Hidden developer toggle that reveals the per-episode analysis history
+  /// view (spec REQ-012). Not surfaced in normal Settings UI.
+  final bool showAnalysisHistory;
+
+  /// Optional HuggingFace access token used when downloading gated Gemma
+  /// model files (spec EXT-001). Empty string when the user has not supplied
+  /// one.
+  final String huggingFaceAccessToken;
+
   AppSettings({
     required this.theme,
     required this.markDeletedEpisodesAsPlayed,
@@ -133,6 +167,12 @@ class AppSettings {
     required this.openAiAnalysisModel,
     required this.grokAnalysisModel,
     required this.geminiAnalysisModel,
+    required this.backgroundAnalysisEnabled,
+    required this.backgroundLocalModel,
+    required this.backgroundAnalysisDiskCostAccepted,
+    required this.onDemandAnalysisEnabled,
+    required this.showAnalysisHistory,
+    required this.huggingFaceAccessToken,
   });
 
   AppSettings.sensibleDefaults()
@@ -162,7 +202,13 @@ class AppSettings {
         adSkipMode = AdSkipMode.prompt,
         openAiAnalysisModel = 'gpt-4.1-mini',
         grokAnalysisModel = 'grok-3',
-        geminiAnalysisModel = 'gemini-3.1-flash-lite-preview';
+        geminiAnalysisModel = 'gemini-3.1-flash-lite-preview',
+        backgroundAnalysisEnabled = false,
+        backgroundLocalModel = BackgroundAnalysisLocalModel.gemma4E2B,
+        backgroundAnalysisDiskCostAccepted = false,
+        onDemandAnalysisEnabled = true,
+        showAnalysisHistory = false,
+        huggingFaceAccessToken = '';
 
   AppSettings copyWith({
     String? theme,
@@ -193,6 +239,12 @@ class AppSettings {
     String? openAiAnalysisModel,
     String? grokAnalysisModel,
     String? geminiAnalysisModel,
+    bool? backgroundAnalysisEnabled,
+    BackgroundAnalysisLocalModel? backgroundLocalModel,
+    bool? backgroundAnalysisDiskCostAccepted,
+    bool? onDemandAnalysisEnabled,
+    bool? showAnalysisHistory,
+    String? huggingFaceAccessToken,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
@@ -222,5 +274,12 @@ class AppSettings {
         openAiAnalysisModel: openAiAnalysisModel ?? this.openAiAnalysisModel,
         grokAnalysisModel: grokAnalysisModel ?? this.grokAnalysisModel,
         geminiAnalysisModel: geminiAnalysisModel ?? this.geminiAnalysisModel,
+        backgroundAnalysisEnabled: backgroundAnalysisEnabled ?? this.backgroundAnalysisEnabled,
+        backgroundLocalModel: backgroundLocalModel ?? this.backgroundLocalModel,
+        backgroundAnalysisDiskCostAccepted:
+            backgroundAnalysisDiskCostAccepted ?? this.backgroundAnalysisDiskCostAccepted,
+        onDemandAnalysisEnabled: onDemandAnalysisEnabled ?? this.onDemandAnalysisEnabled,
+        showAnalysisHistory: showAnalysisHistory ?? this.showAnalysisHistory,
+        huggingFaceAccessToken: huggingFaceAccessToken ?? this.huggingFaceAccessToken,
       );
 }

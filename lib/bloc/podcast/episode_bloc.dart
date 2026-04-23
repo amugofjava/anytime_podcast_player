@@ -8,7 +8,9 @@ import 'package:anytime/bloc/bloc.dart';
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/transcript.dart';
+import 'package:anytime/services/analysis/background/background_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_dto.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_transcript_codec.dart';
@@ -30,6 +32,7 @@ class EpisodeBloc extends Bloc {
   final EpisodeAnalysisService analysisService;
   final SettingsService settingsService;
   final EpisodeTranscriptionService transcriptionService;
+  final DefaultBackgroundAnalysisService? backgroundAnalysisService;
   final Duration analysisPollInterval;
 
   /// Add to sink to fetch list of current downloaded episodes.
@@ -62,6 +65,7 @@ class EpisodeBloc extends Bloc {
     required this.analysisService,
     required this.settingsService,
     required this.transcriptionService,
+    this.backgroundAnalysisService,
     this.analysisPollInterval = const Duration(seconds: 5),
   }) {
     _init();
@@ -346,6 +350,13 @@ class EpisodeBloc extends Bloc {
     required String? error,
     List<AdSegment>? adSegments,
   }) async {
+    if (adSegments != null) {
+      await _commitOnDemandAnalysis(
+        episodeId: episode.guid,
+        adSegments: adSegments,
+      );
+    }
+
     final currentEpisode = await _loadCurrentEpisode(episode);
 
     currentEpisode.analysisStatus = status.name;
@@ -353,11 +364,27 @@ class EpisodeBloc extends Bloc {
     currentEpisode.analysisError = error;
     currentEpisode.analysisUpdatedAt = DateTime.now();
 
-    if (adSegments != null) {
-      currentEpisode.adSegments = List.unmodifiable(adSegments);
+    return podcastService.saveEpisode(currentEpisode);
+  }
+
+  Future<void> _commitOnDemandAnalysis({
+    required String episodeId,
+    required List<AdSegment> adSegments,
+  }) async {
+    final service = backgroundAnalysisService;
+    if (service == null) {
+      return;
     }
 
-    return podcastService.saveEpisode(currentEpisode);
+    final record = EpisodeAnalysisRecord(
+      provider: AnalysisProvider.geminiAudio,
+      modelId: settingsService.geminiAnalysisModel,
+      completedAtMs: DateTime.now().millisecondsSinceEpoch,
+      adSegments: List<AdSegment>.unmodifiable(adSegments),
+      active: false,
+    );
+
+    await service.commitResult(episodeId: episodeId, record: record);
   }
 
   Future<Episode> _loadCurrentEpisode(Episode episode) async {

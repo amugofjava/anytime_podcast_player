@@ -353,6 +353,81 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  set backgroundAnalysisEnabled(bool enabled) {
+    _sharedPreferences.setBool('backgroundAnalysisEnabled', enabled);
+    settingsNotifier.sink.add('backgroundAnalysisEnabled');
+  }
+
+  @override
+  bool get backgroundAnalysisEnabled {
+    return _sharedPreferences.getBool('backgroundAnalysisEnabled') ?? false;
+  }
+
+  @override
+  set backgroundLocalModel(BackgroundAnalysisLocalModel model) {
+    _sharedPreferences.setString('backgroundLocalModel', model.name);
+    settingsNotifier.sink.add('backgroundLocalModel');
+  }
+
+  @override
+  BackgroundAnalysisLocalModel get backgroundLocalModel {
+    final stored = _sharedPreferences.getString('backgroundLocalModel');
+
+    if (stored == null || stored.isEmpty) {
+      return BackgroundAnalysisLocalModel.gemma4E2B;
+    }
+
+    return BackgroundAnalysisLocalModel.values.firstWhere(
+      (value) => value.name == stored,
+      orElse: () => BackgroundAnalysisLocalModel.gemma4E2B,
+    );
+  }
+
+  @override
+  set backgroundAnalysisDiskCostAccepted(bool accepted) {
+    _sharedPreferences.setBool('backgroundAnalysisDiskCostAccepted', accepted);
+    settingsNotifier.sink.add('backgroundAnalysisDiskCostAccepted');
+  }
+
+  @override
+  bool get backgroundAnalysisDiskCostAccepted {
+    return _sharedPreferences.getBool('backgroundAnalysisDiskCostAccepted') ?? false;
+  }
+
+  @override
+  set onDemandAnalysisEnabled(bool enabled) {
+    _sharedPreferences.setBool('onDemandAnalysisEnabled', enabled);
+    settingsNotifier.sink.add('onDemandAnalysisEnabled');
+  }
+
+  @override
+  bool get onDemandAnalysisEnabled {
+    return _sharedPreferences.getBool('onDemandAnalysisEnabled') ?? true;
+  }
+
+  @override
+  set showAnalysisHistory(bool show) {
+    _sharedPreferences.setBool('showAnalysisHistory', show);
+    settingsNotifier.sink.add('showAnalysisHistory');
+  }
+
+  @override
+  bool get showAnalysisHistory {
+    return _sharedPreferences.getBool('showAnalysisHistory') ?? false;
+  }
+
+  @override
+  set huggingFaceAccessToken(String token) {
+    _sharedPreferences.setString('huggingFaceAccessToken', token);
+    settingsNotifier.sink.add('huggingFaceAccessToken');
+  }
+
+  @override
+  String get huggingFaceAccessToken {
+    return _sharedPreferences.getString('huggingFaceAccessToken') ?? '';
+  }
+
+  @override
   set lastFeedRefresh(DateTime lastFeedRefresh) {
     _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
     settingsNotifier.sink.add('lastFeedRefresh');

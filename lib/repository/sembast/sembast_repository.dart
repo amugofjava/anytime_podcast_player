@@ -3,8 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/queue.dart';
 import 'package:anytime/entities/transcript.dart';
@@ -28,6 +30,9 @@ class SembastRepository extends Repository {
   final _episodeStore = intMapStoreFactory.store('episode');
   final _queueStore = intMapStoreFactory.store('queue');
   final _transcriptStore = intMapStoreFactory.store('transcript');
+  final _analysisHistoryStore = stringMapStoreFactory.store('episode_analysis_history');
+  final _backgroundAnalysisQueueStore = stringMapStoreFactory.store('background_analysis_queue');
+  final _backgroundAnalysisCheckpointStore = stringMapStoreFactory.store('background_analysis_checkpoint');
 
   final _queueGuids = <String>[];
 
@@ -39,7 +44,7 @@ class SembastRepository extends Repository {
     bool cleanup = true,
     String databaseName = 'anytime.db',
   }) {
-    _databaseService = DatabaseService(databaseName, version: 3, upgraderCallback: dbUpgrader);
+    _databaseService = DatabaseService(databaseName, version: 4, upgraderCallback: dbUpgrader);
 
     if (cleanup) {
       cleanupEpisodes().then((value) {
@@ -744,7 +749,131 @@ class SembastRepository extends Repository {
       episode.transcript = await findTranscriptById(episode.transcriptId);
     }
 
+    episode.analysisHistory = await findAnalysisHistory(episode.guid);
+
     return episode;
+  }
+
+  @override
+  Future<void> saveAnalysisRecord(String episodeId, EpisodeAnalysisRecord record) async {
+    final db = await _db;
+
+    await db.transaction((txn) async {
+      final existing = await _readAnalysisRecords(txn, episodeId);
+      final updated = List<EpisodeAnalysisRecord>.from(existing)..add(record);
+
+      await _writeAnalysisRecords(txn, episodeId, updated);
+    });
+  }
+
+  @override
+  Future<List<EpisodeAnalysisRecord>> findAnalysisHistory(String episodeId) async {
+    return _readAnalysisRecords(await _db, episodeId);
+  }
+
+  @override
+  Future<void> deleteAnalysisHistory(String episodeId) async {
+    await _analysisHistoryStore.record(episodeId).delete(await _db);
+  }
+
+  @override
+  Future<void> replaceAnalysisHistory(String episodeId, List<EpisodeAnalysisRecord> records) async {
+    final db = await _db;
+    if (records.isEmpty) {
+      await _analysisHistoryStore.record(episodeId).delete(db);
+      return;
+    }
+    await _writeAnalysisRecords(db, episodeId, records);
+  }
+
+  Future<List<EpisodeAnalysisRecord>> _readAnalysisRecords(
+    DatabaseClient client,
+    String episodeId,
+  ) async {
+    final snapshot = await _analysisHistoryStore.record(episodeId).getSnapshot(client);
+
+    if (snapshot == null) {
+      return const <EpisodeAnalysisRecord>[];
+    }
+
+    final rawRecords = snapshot.value['records'];
+    if (rawRecords is! List) {
+      return const <EpisodeAnalysisRecord>[];
+    }
+
+    final records = <EpisodeAnalysisRecord>[];
+    for (var entry in rawRecords) {
+      if (entry is Map) {
+        records.add(EpisodeAnalysisRecord.fromMap(Map<String, dynamic>.from(entry)));
+      }
+    }
+    return records;
+  }
+
+  Future<void> _writeAnalysisRecords(
+    DatabaseClient client,
+    String episodeId,
+    List<EpisodeAnalysisRecord> records,
+  ) async {
+    await _analysisHistoryStore.record(episodeId).put(client, <String, Object?>{
+      'episodeId': episodeId,
+      'records': records.map((r) => r.toMap()).toList(growable: false),
+    });
+  }
+
+  @override
+  Future<void> enqueueBackgroundAnalysis(String episodeId) async {
+    final db = await _db;
+    final record = _backgroundAnalysisQueueStore.record(episodeId);
+
+    final existing = await record.getSnapshot(db);
+    if (existing != null) {
+      return;
+    }
+
+    await record.put(db, <String, Object?>{
+      'episodeId': episodeId,
+      'enqueuedAtMs': DateTime.now().millisecondsSinceEpoch,
+      'lastAttemptAtMs': null,
+      'lastFailureAtMs': null,
+      'attemptCount': 0,
+    });
+  }
+
+  @override
+  Future<void> dequeueBackgroundAnalysis(String episodeId) async {
+    await _backgroundAnalysisQueueStore.record(episodeId).delete(await _db);
+  }
+
+  @override
+  Future<List<String>> listBackgroundAnalysisQueue() async {
+    final finder = Finder(sortOrders: [SortOrder('enqueuedAtMs', true)]);
+    final snapshots = await _backgroundAnalysisQueueStore.find(await _db, finder: finder);
+
+    return snapshots.map((s) => s.value['episodeId'] as String).toList(growable: false);
+  }
+
+  @override
+  Future<void> recordBackgroundAnalysisCheckpoint(String episodeId, String stage) async {
+    await _backgroundAnalysisCheckpointStore.record(episodeId).put(await _db, <String, Object?>{
+      'episodeId': episodeId,
+      'stage': stage,
+      'updatedAtMs': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+
+  @override
+  Future<String?> findBackgroundAnalysisCheckpoint(String episodeId) async {
+    final snapshot = await _backgroundAnalysisCheckpointStore.record(episodeId).getSnapshot(await _db);
+    if (snapshot == null) {
+      return null;
+    }
+    return snapshot.value['stage'] as String?;
+  }
+
+  @override
+  Future<void> clearBackgroundAnalysisCheckpoint(String episodeId) async {
+    await _backgroundAnalysisCheckpointStore.record(episodeId).delete(await _db);
   }
 
   @override
@@ -762,6 +891,10 @@ class SembastRepository extends Repository {
 
       if (oldVersion < 3) {
         await _upgradeV3(db);
+      }
+
+      if (oldVersion < 4) {
+        await _upgradeV4(db);
       }
     }
   }
@@ -817,6 +950,75 @@ class SembastRepository extends Repository {
         upgradedPodcast.episodes = episodes;
         await _podcastStore.update(db, upgradedPodcast.toMap(), finder: idFinder);
       }
+    }
+  }
+
+  /// Backfill the new `episode_analysis_history` store from existing
+  /// `Episode.adSegments` data. Each affected episode gets a single synthetic
+  /// `legacy-unknown` record marked active. Idempotent: episodes that already
+  /// have an entry in the history store are skipped. See spec §10 Validation
+  /// Criteria.
+  Future<void> _upgradeV4(Database db) async {
+    _log.info('Upgrading Sembast store to V4 (analysis history backfill)');
+    await _performAnalysisHistoryBackfill(db);
+  }
+
+  /// Re-runnable backfill entry point for callers outside the upgrader
+  /// (primarily tests and data-repair tooling). Idempotent.
+  Future<void> runAnalysisHistoryBackfill() async {
+    await _performAnalysisHistoryBackfill(await _db);
+  }
+
+  Future<void> _performAnalysisHistoryBackfill(DatabaseClient client) async {
+    final episodes = await _episodeStore.find(client);
+
+    for (var snapshot in episodes) {
+      final guidRaw = snapshot.value['guid'];
+      if (guidRaw is! String || guidRaw.isEmpty) {
+        continue;
+      }
+
+      final existing = await _analysisHistoryStore.record(guidRaw).getSnapshot(client);
+      if (existing != null) {
+        continue;
+      }
+
+      final adSegmentsRaw = snapshot.value['adSegments'];
+      if (adSegmentsRaw is! List || adSegmentsRaw.isEmpty) {
+        continue;
+      }
+
+      final adSegments = <AdSegment>[];
+      for (var entry in adSegmentsRaw) {
+        if (entry is Map) {
+          adSegments.add(AdSegment.fromMap(Map<String, dynamic>.from(entry)));
+        }
+      }
+
+      if (adSegments.isEmpty) {
+        continue;
+      }
+
+      final analysisUpdatedAt = snapshot.value['analysisUpdatedAt'];
+      var completedAtMs = 0;
+      if (analysisUpdatedAt is String && analysisUpdatedAt.isNotEmpty && analysisUpdatedAt != 'null') {
+        completedAtMs = int.tryParse(analysisUpdatedAt) ?? 0;
+      } else if (analysisUpdatedAt is int) {
+        completedAtMs = analysisUpdatedAt;
+      }
+
+      final record = EpisodeAnalysisRecord(
+        provider: AnalysisProvider.legacyUnknown,
+        modelId: '',
+        completedAtMs: completedAtMs,
+        adSegments: adSegments,
+        active: true,
+      );
+
+      await _analysisHistoryStore.record(guidRaw).put(client, <String, Object?>{
+        'episodeId': guidRaw,
+        'records': <Object?>[record.toMap()],
+      });
     }
   }
 

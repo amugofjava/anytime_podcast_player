@@ -10,6 +10,7 @@ import 'package:anytime/core/utils.dart';
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/services/transcription/episode_transcription_service.dart';
@@ -462,6 +463,13 @@ class EpisodeAnalysisPanel extends StatelessWidget {
                       adSegments: currentEpisode.adSegments,
                     ),
                   ),
+                if (episodeBloc.settingsService.showAnalysisHistory && currentEpisode.analysisHistory.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: _AnalysisHistoryDiagnostics(
+                      history: currentEpisode.analysisHistory,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -779,6 +787,53 @@ class _AdSegmentDiagnosticsRow extends StatelessWidget {
     }
 
     return '${seconds}s';
+  }
+}
+
+class _AnalysisHistoryDiagnostics extends StatelessWidget {
+  const _AnalysisHistoryDiagnostics({required this.history});
+
+  final List<EpisodeAnalysisRecord> history;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12.0),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: theme.dividerColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Analysis history (debug)', style: theme.textTheme.titleSmall),
+          const SizedBox(height: 8.0),
+          ...history.map((record) {
+            final completed = DateTime.fromMillisecondsSinceEpoch(record.completedAtMs).toLocal().toIso8601String();
+            final marker = record.active ? '● active' : '○ superseded';
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${record.provider} · ${record.modelId.isEmpty ? '(no model)' : record.modelId}',
+                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  Text('$marker · ${record.adSegments.length} segments', style: theme.textTheme.bodySmall),
+                  Text(completed, style: theme.textTheme.bodySmall),
+                  if (record.status != null && record.status!.isNotEmpty)
+                    Text('status: ${record.status}', style: theme.textTheme.bodySmall),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 

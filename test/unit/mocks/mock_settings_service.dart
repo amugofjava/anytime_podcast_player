@@ -92,5 +92,23 @@ class MockSettingsService extends SettingsService {
   String geminiAnalysisModel = 'gemini-3.1-flash-lite-preview';
 
   @override
+  bool backgroundAnalysisEnabled = false;
+
+  @override
+  BackgroundAnalysisLocalModel backgroundLocalModel = BackgroundAnalysisLocalModel.gemma4E2B;
+
+  @override
+  bool backgroundAnalysisDiskCostAccepted = false;
+
+  @override
+  bool onDemandAnalysisEnabled = true;
+
+  @override
+  bool showAnalysisHistory = false;
+
+  @override
+  String huggingFaceAccessToken = '';
+
+  @override
   Stream<String> get settingsListener => PublishSubject<String>().stream;
 }

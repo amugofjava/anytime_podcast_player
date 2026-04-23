@@ -10,9 +10,11 @@ import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/analysis/background/background_analysis_service.dart';
 import 'package:anytime/services/download/download_manager.dart';
 import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/podcast/podcast_service.dart';
+import 'package:anytime/services/settings/settings_service.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:logging/logging.dart';
 import 'package:mp3_info/mp3_info.dart';
@@ -27,8 +29,16 @@ class MobileDownloadService extends DownloadService {
   final Repository repository;
   final DownloadManager downloadManager;
   final PodcastService podcastService;
+  final BackgroundAnalysisService? backgroundAnalysisService;
+  final SettingsService? settingsService;
 
-  MobileDownloadService({required this.repository, required this.downloadManager, required this.podcastService}) {
+  MobileDownloadService({
+    required this.repository,
+    required this.downloadManager,
+    required this.podcastService,
+    this.backgroundAnalysisService,
+    this.settingsService,
+  }) {
     downloadManager.downloadProgress.pipe(downloadProgress);
     downloadProgress.listen((progress) {
       _updateDownloadProgress(progress);
@@ -167,7 +177,28 @@ class MobileDownloadService extends DownloadService {
         }
 
         await repository.saveEpisode(episode);
+
+        if (progress.percentage == 100) {
+          await _maybeEnrollBackgroundAnalysis(episode);
+        }
       }
+    }
+  }
+
+  Future<void> _maybeEnrollBackgroundAnalysis(Episode episode) async {
+    final service = backgroundAnalysisService;
+    final settings = settingsService;
+    if (service == null || settings == null) {
+      return;
+    }
+    if (!settings.backgroundAnalysisEnabled) {
+      return;
+    }
+
+    try {
+      await service.enqueue(episode.guid);
+    } catch (e, stack) {
+      log.warning('Failed to enqueue background analysis for ${episode.guid}', e, stack);
     }
   }
 }

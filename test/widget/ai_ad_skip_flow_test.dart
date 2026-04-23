@@ -10,11 +10,13 @@ import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/entities/ad_segment.dart';
 import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/entities/episode.dart';
+import 'package:anytime/entities/episode_analysis_record.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/sleep.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/l10n/L.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/analysis/background/background_analysis_service.dart';
 import 'package:anytime/services/analysis/episode_analysis_dto.dart';
 import 'package:anytime/services/analysis/episode_analysis_service.dart';
 import 'package:anytime/services/audio/audio_player_service.dart';
@@ -26,6 +28,7 @@ import 'package:anytime/state/episode_state.dart';
 import 'package:anytime/state/library_state.dart';
 import 'package:anytime/state/queue_event_state.dart';
 import 'package:anytime/state/transcript_state_event.dart';
+import 'package:anytime/ui/app_scaffold_messenger.dart';
 import 'package:anytime/ui/podcast/ad_skip_listener.dart';
 import 'package:anytime/ui/podcast/episode_details.dart';
 import 'package:anytime/ui/podcast/now_playing_options.dart';
@@ -137,6 +140,7 @@ void main() {
       analysisService: analysisService,
       settingsService: _FakeSettingsService(),
       transcriptionService: transcriptionService,
+      backgroundAnalysisService: DefaultBackgroundAnalysisService(repository),
       analysisPollInterval: Duration.zero,
     );
     addTearDown(() async {
@@ -212,6 +216,7 @@ void main() {
       analysisService: analysisService,
       settingsService: _FakeSettingsService(),
       transcriptionService: _FakeEpisodeTranscriptionService(),
+      backgroundAnalysisService: DefaultBackgroundAnalysisService(repository),
       analysisPollInterval: Duration.zero,
     );
     addTearDown(() async {
@@ -451,6 +456,7 @@ void main() {
 
 Widget _wrapWithEpisodeBloc(EpisodeBloc bloc, Episode episode) {
   return MaterialApp(
+    scaffoldMessengerKey: appScaffoldMessengerKey,
     home: Scaffold(
       body: Provider<EpisodeBloc>.value(
         value: bloc,
@@ -544,6 +550,9 @@ class _FakePodcastService implements PodcastService {
 class _FakeRepository implements Repository {
   final Map<String, Episode> episodesByGuid = <String, Episode>{};
   final Map<int, Transcript> transcriptsById = <int, Transcript>{};
+  final Map<String, List<EpisodeAnalysisRecord>> analysisHistoryByEpisodeId =
+      <String, List<EpisodeAnalysisRecord>>{};
+  final List<String> backgroundAnalysisQueue = <String>[];
   int _nextTranscriptId = 100;
 
   @override
@@ -573,6 +582,39 @@ class _FakeRepository implements Repository {
   @override
   Future<void> deleteTranscriptById(int id) async {
     transcriptsById.remove(id);
+  }
+
+  @override
+  Future<List<EpisodeAnalysisRecord>> findAnalysisHistory(String episodeId) async {
+    return List<EpisodeAnalysisRecord>.from(
+      analysisHistoryByEpisodeId[episodeId] ?? const <EpisodeAnalysisRecord>[],
+    );
+  }
+
+  @override
+  Future<void> replaceAnalysisHistory(String episodeId, List<EpisodeAnalysisRecord> records) async {
+    analysisHistoryByEpisodeId[episodeId] = List<EpisodeAnalysisRecord>.from(records);
+    final episode = episodesByGuid[episodeId];
+    if (episode != null) {
+      episode.analysisHistory = List<EpisodeAnalysisRecord>.unmodifiable(records);
+    }
+  }
+
+  @override
+  Future<void> enqueueBackgroundAnalysis(String episodeId) async {
+    if (!backgroundAnalysisQueue.contains(episodeId)) {
+      backgroundAnalysisQueue.add(episodeId);
+    }
+  }
+
+  @override
+  Future<void> dequeueBackgroundAnalysis(String episodeId) async {
+    backgroundAnalysisQueue.remove(episodeId);
+  }
+
+  @override
+  Future<List<String>> listBackgroundAnalysisQueue() async {
+    return List<String>.from(backgroundAnalysisQueue);
   }
 
   @override
@@ -709,6 +751,12 @@ class _FakeSettingsService implements SettingsService {
 
   @override
   AdSkipMode get adSkipMode => AdSkipMode.prompt;
+
+  @override
+  String get geminiAnalysisModel => 'gemini-test-model';
+
+  @override
+  bool get showAnalysisHistory => false;
 
   @override
   noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);

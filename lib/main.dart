@@ -4,13 +4,16 @@
 
 import 'dart:io';
 
+import 'package:anytime/services/analysis/background/background_analysis_dispatcher.dart';
 import 'package:anytime/services/settings/mobile_settings_service.dart';
 import 'package:anytime/ui/anytime_podcast_app.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:logging/logging.dart';
+import 'package:workmanager/workmanager.dart';
 
 // ignore_for_file: avoid_print
 void main() async {
@@ -26,6 +29,11 @@ void main() async {
 
   var mobileSettingsService = (await MobileSettingsService.instance())!;
   certificateAuthorityBytes = await setupCertificateAuthority();
+
+  if (Platform.isAndroid) {
+    await FlutterGemma.initialize();
+    await Workmanager().initialize(backgroundAnalysisCallbackDispatcher);
+  }
 
   runApp(AnytimePodcastApp(
     mobileSettingsService: mobileSettingsService,
