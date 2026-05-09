@@ -1,0 +1,605 @@
+{
+    "app_title": "Anytime Podcast Player",
+    "@app_title": {
+        "description": "Full title for the application",
+        "type": "text",
+        "placeholders": {}
+    },
+    "app_title_short": "Anytime Player",
+    "@app_title_short": {
+        "description": "Title for the application",
+        "type": "text",
+        "placeholders": {}
+    },
+    "library": "Bibliothèque",
+    "@library": {
+        "description": "Library tab label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "discover": "Découvrir",
+    "@discover": {
+        "description": "Discover tab label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "downloads": "Téléchargements",
+    "@downloads": {
+        "description": "Downloads tab label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "subscribe_button_label": "ABONNER",
+    "@subscribe_button_label": {
+        "description": "Subscribe button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "unsubscribe_button_label": "Désabonner",
+    "@unsubscribe_button_label": {
+        "description": "Unsubscribe button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "cancel_button_label": "Annuler",
+    "@cancel_button_label": {
+        "description": "Cancel button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "ok_button_label": "OK",
+    "@ok_button_label": {
+        "description": "OK button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "subscribe_label": "Abonner",
+    "@subscribe_label": {
+        "description": "Subscribe label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "unsubscribe_label": "Désabonner",
+    "@unsubscribe_label": {
+        "description": "Unsubscribe label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "unsubscribe_message": "En vous désabonnant, tous les épisodes téléchargés de ce podcast seront supprimés.",
+    "@unsubscribe_message": {
+        "description": "Displayed when the user unsubscribes from a podcast.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_for_podcasts_hint": "Chercher un podcast",
+    "@search_for_podcasts_hint": {
+        "description": "Hint displayed on search bar when the user clicks the search icon.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_label": "Supprimer",
+    "@delete_label": {
+        "description": "Delete label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_button_label": "SUPPRIMER",
+    "@delete_button_label": {
+        "description": "Delete label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "mark_unplayed_label": "Marquer comme non lu",
+    "@mark_unplayed_label": {
+        "description": "Mark as unplayed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_episode_title": "Supprimer l'épisode",
+    "@delete_episode_title": {
+        "description": "Delete label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "no_downloads_message": "Vous n'avez aucun épisode téléchargé",
+    "@no_downloads_message": {
+        "description": "Displayed on the library tab when the user has no subscriptions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "no_search_results_message": "Aucun podcast trouvé",
+    "@no_search_results_message": {
+        "description": "Displayed on the library tab when the user has no subscriptions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "no_podcast_details_message": "Impossible de charger les épisodes. Merci de vérifier votre connexion.",
+    "@no_podcast_details_message": {
+        "description": "Displayed on the podcast details page when the details could not be loaded",
+        "type": "text",
+        "placeholders": {}
+    },
+    "play_button_label": "Lire l'épisode",
+    "@play_button_label": {
+        "description": "Semantic label for the play button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pause_button_label": "Mettre l'épisode en pause",
+    "@pause_button_label": {
+        "description": "Semantic label for the pause button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_episode_button_label": "Supprimer l'épisode",
+    "@delete_episode_button_label": {
+        "description": "Semantic label for the delete episode",
+        "type": "text",
+        "placeholders": {}
+    },
+    "close_button_label": "Fermer",
+    "@close_button_label": {
+        "description": "Close button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_button_label": "Recherche",
+    "@search_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "clear_search_button_label": "Vider le texte recherché",
+    "@clear_search_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_back_button_label": "Retour",
+    "@search_back_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "minimise_player_window_button_label": "Minimiser le lecteur",
+    "@minimise_player_window_button_label": {
+        "description": "Search button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "fast_forward_button_label": "Avancer de 30 secondes",
+    "@fast_forward_button_label": {
+        "description": "Fast forward tooltip",
+        "type": "text",
+        "placeholders": {}
+    },
+    "rewind_button_label": "Revenir en arrière de 30 secondes",
+    "@rewind_button_label": {
+        "description": "Rewind button tooltip",
+        "type": "text",
+        "placeholders": {}
+    },
+    "about_label": "À propos",
+    "@about_label": {
+        "description": "About menu item",
+        "type": "text",
+        "placeholders": {}
+    },
+    "mark_episodes_played_label": "Marquer tous comme lus",
+    "@mark_episodes_played_label": {
+        "description": "Mark all episodes played menu item",
+        "type": "text",
+        "placeholders": {}
+    },
+    "stop_download_confirmation": "Souhaitez vous interrompre le téléchargement et supprimer l'épisode ?",
+    "@stop_download_confirmation": {
+        "description": "User is asked to confirm when they wish to stop the active download.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "stop_download_button_label": "Stop",
+    "@stop_download_button_label": {
+        "description": "Stop label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "stop_download_title": "Arrêter le téléchargement",
+    "@stop_download_title": {
+        "description": "Stop download label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_mark_deleted_played_label": "Marquer les épisodes supprimés comme lus",
+    "@settings_mark_deleted_played_label": {
+        "description": "Mark deleted episodes as played setting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_download_switch_card": "Les prochains téléchargements seront enregistrés sur la carte SD. Les téléchargements existants resteront sur le stockage interne.",
+    "@settings_download_switch_card": {
+        "description": "Displayed when user switches from internal storage to SD card",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_download_switch_internal": "Les prochains téléchargements seront enregistrés sur le stockage interne. Les téléchargements existants resteront sur la carte SD.",
+    "@settings_download_switch_internal": {
+        "description": "Displayed when user switches from internal SD card to internal storage",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_download_switch_label": "Modifier l'emplacement de stockage",
+    "@settings_download_switch_label": {
+        "description": "Dialog label for storage switch",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_theme_switch_label": "Thème sombre",
+    "@settings_theme_switch_label": {
+        "description": "Dark theme",
+        "type": "text",
+        "placeholders": {}
+    },
+    "playback_speed_label": "Vitesse de lecture",
+    "@playback_speed_label": {
+        "description": "Set playback speed icon label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "show_notes_label": "Montrer les notes",
+    "@show_notes_label": {
+        "description": "Set show notes icon label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "search_provider_label": "Moteur de recherche",
+    "@search_provider_label": {
+        "description": "Set search provider label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_label": "Paramètres",
+    "@settings_label": {
+        "description": "Settings label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "go_back_button_label": "Retour",
+    "@go_back_button_label": {
+        "description": "Go-back button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "episode_label": "Épisode",
+    "@episode_label": {
+        "description": "Tab label on now playing screen.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "chapters_label": "Chapitres",
+    "@chapters_label": {
+        "description": "Tab label on now playing screen.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notes_label": "Notes",
+    "@notes_label": {
+        "description": "Tab label on now playing screen.",
+        "type": "text",
+        "placeholders": {}
+    },
+    "podcast_funding_dialog_header": "Financement du Podcast",
+    "@podcast_funding_dialog_header": {
+        "description": "Header on podcast funding consent dialog",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_open_now_playing": "Lecteur en plein écran lors du démarrage de la lecture",
+    "@settings_auto_open_now_playing": {
+        "description": "Displayed when user switches to use full screen player automatically",
+        "type": "text",
+        "placeholders": {}
+    },
+    "error_no_connection": "Impossible de lire l'épisode. Merci de vérifier votre connexion avant de ré-essayer.",
+    "@error_no_connection": {
+        "description": "Displayed when attempting to start streaming an episode with no data connection",
+        "type": "text",
+        "placeholders": {}
+    },
+    "error_playback_fail": "Une erreur inattendue est survenue durant la lecture. Merci de vérifier votre connexion et de ré-essayer.",
+    "@error_playback_fail": {
+        "description": "Displayed when attempting to start streaming an episode with no data connection",
+        "type": "text",
+        "placeholders": {}
+    },
+    "label_opml_importing": "En cours d'import",
+    "@label_opml_importing": {
+        "description": "Label for importing OPML dialog",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes": "Mise à jour automatique des épisodes",
+    "@settings_auto_update_episodes": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_never": "Jamais",
+    "@settings_auto_update_episodes_never": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_heading": "Recharger les épisodes sur l'écran de détail après",
+    "@settings_auto_update_episodes_heading": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_always": "Toujours",
+    "@settings_auto_update_episodes_always": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_10min": "10 minutes après la dernière mise à jour",
+    "@settings_auto_update_episodes_10min": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_30min": "30 minutes après la dernière mise à jour",
+    "@settings_auto_update_episodes_30min": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_1hour": "1 heure après la dernière mise à jour",
+    "@settings_auto_update_episodes_1hour": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_3hour": "3 heures après la dernière mise à jour",
+    "@settings_auto_update_episodes_3hour": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_6hour": "6 heures après la dernière mise à jour",
+    "@settings_auto_update_episodes_6hour": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_auto_update_episodes_12hour": "12 heures après la dernière mise à jour",
+    "@settings_auto_update_episodes_12hour": {
+        "description": "Option label for auto updating of episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "new_episodes_label": "De nouveaux épisodes sont disponibles",
+    "@new_episodes_label": {
+        "description": "Option label for new episodes snackbar",
+        "type": "text",
+        "placeholders": {}
+    },
+    "new_episodes_view_now_label": "VOIR MAINTENANT",
+    "@new_episodes_view_now_label": {
+        "description": "Option action label for new episodes snackbar",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_episodes_divider_label": "ÉPISODES",
+    "@settings_episodes_divider_label": {
+        "description": "Settings divider label for episodes",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_playback_divider_label": "LECTURE",
+    "@settings_playback_divider_label": {
+        "description": "Settings divider label for playback",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_data_divider_label": "DONNËES",
+    "@settings_data_divider_label": {
+        "description": "Settings divider label for data",
+        "type": "text",
+        "placeholders": {}
+    },
+    "audio_effect_trim_silence_label": "Couper les silences",
+    "@audio_effect_trim_silence_label": {
+        "description": "Label for trim silence toggle",
+        "type": "text",
+        "placeholders": {}
+    },
+    "audio_effect_volume_boost_label": "Booster le volume",
+    "@audio_effect_volume_boost_label": {
+        "description": "Label for volume boost toggle",
+        "type": "text",
+        "placeholders": {}
+    },
+    "audio_settings_playback_speed_label": "Vitesse de Lecture",
+    "@audio_settings_playback_speed_label": {
+        "description": "Label for playback settings widget",
+        "type": "text",
+        "placeholders": {}
+    },
+    "empty_queue_message": "La file est vide",
+    "@empty_queue_message": {
+        "description": "Displayed when there are no items left in the queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "clear_queue_button_label": "VIDER LA FILE",
+    "@clear_queue_button_label": {
+        "description": "Clear queue button label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "now_playing_queue_label": "En Cours",
+    "@now_playing_queue_label": {
+        "description": "Now playing label on queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "up_next_queue_label": "À Venir",
+    "@up_next_queue_label": {
+        "description": "Up next label on queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "more_label": "Plus",
+    "@more_label": {
+        "description": "More label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_remove_label": "Supprimer",
+    "@queue_remove_label": {
+        "description": "Queue remove label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "opml_import_button_label": "Importer",
+    "@opml_import_button_label": {
+        "description": "OPML Import button label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "opml_export_button_label": "Exporter",
+    "@opml_export_button_label": {
+        "description": "OPML Export button label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "opml_import_export_label": "Import/Export OPML",
+    "@opml_import_export_label": {
+        "description": "OPML Import/Export label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_clear_label": "Souhaitez-vous vider la file de lecture ?",
+    "@queue_clear_label": {
+        "description": "Shown on dialog box when clearing queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_clear_button_label": "Vider",
+    "@queue_clear_button_label": {
+        "description": "Shown on dialog box when clearing queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "queue_clear_label_title": "Vider la file",
+    "@queue_clear_label_title": {
+        "description": "Shown on dialog box when clearing queue",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "layout_label": "Affichage",
+    "@layout_label": {
+        "description": "Layout menu label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "mark_episodes_not_played_label": "Marquer tous comme non-lus",
+    "@mark_episodes_not_played_label": {
+        "description": "Mark all episodes not-played menu item",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_import_opml": "Importer un OPML",
+    "@settings_import_opml": {
+        "description": "Option label importing OPML file",
+        "type": "text",
+        "placeholders": {}
+    },
+    "mark_played_label": "Marquer comme lu",
+    "@mark_played_label": {
+        "description": "Mark as played",
+        "type": "text",
+        "placeholders": {}
+    },
+    "delete_episode_confirmation": "Voulez-vous vraiment supprimer cet épisode ?",
+    "@delete_episode_confirmation": {
+        "description": "User is asked to confirm when they attempt to delete an episode",
+        "type": "text",
+        "placeholders": {}
+    },
+    "download_episode_button_label": "Télécharger l'épisode",
+    "@download_episode_button_label": {
+        "description": "Semantic label for the download episode button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_download_sd_card_label": "Télécharger les épisodes sur la carte SD",
+    "@settings_download_sd_card_label": {
+        "description": "Download episodes to SD card setting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_export_opml": "Exporter en OPML",
+    "@settings_export_opml": {
+        "description": "Option label exporting OPML file",
+        "type": "text",
+        "placeholders": {}
+    },
+    "cancel_option_label": "Annuler",
+    "@cancel_option_label": {
+        "description": "Cancel option label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "continue_button_label": "Continuer",
+    "@continue_button_label": {
+        "description": "Continue button label",
+        "type": "text",
+        "placeholders": {}
+    },
+    "consent_message": "Ce lien de financement vous emmènera vers un site externe sur lequel vous pourrez directement aider le podcast. Les liens sont fournis par les auteurs de podcast et ne sont pas gérés par Anytime.",
+    "@consent_message": {
+        "description": "Display when first accessing external funding link",
+        "type": "text",
+        "placeholders": {}
+    },
+    "add_rss_feed_option": "Ajouter un Flux RSS",
+    "@add_rss_feed_option": {
+        "description": "Option label for adding manual RSS feed url",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings_personalisation_divider_label": "PERSONNALISATION",
+    "@settings_personalisation_divider_label": {
+        "description": "Settings divider label for personalisation",
+        "type": "text",
+        "placeholders": {}
+    },
+    "queue_add_label": "Ajouter",
+    "@queue_add_label": {
+        "description": "Queue add label",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    },
+    "no_subscriptions_message": "Utilisez le bouton Découvrir ci-dessous ou la barre de recherche ci-dessus pour trouver votre premier podcast",
+    "@no_subscriptions_message": {
+        "description": "Displayed on the library tab when the user has no subscriptions",
+        "type": "text",
+        "placeholders_order": [],
+        "placeholders": {}
+    }
+}
