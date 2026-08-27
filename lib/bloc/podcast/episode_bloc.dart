@@ -23,6 +23,9 @@ class EpisodeBloc extends Bloc {
   /// Add to sink to fetch list of current downloaded episodes.
   final BehaviorSubject<bool> _downloadsInput = BehaviorSubject<bool>();
 
+  /// Add to sink to fetch list of current active downloads.
+  final BehaviorSubject<bool> _activeDownloadsInput = BehaviorSubject<bool>();
+
   /// Add to sink to fetch list of current episodes.
   final BehaviorSubject<bool> _episodesInput = BehaviorSubject<bool>();
 
@@ -35,11 +38,17 @@ class EpisodeBloc extends Bloc {
   /// Stream of currently downloaded episodes
   Stream<BlocState<List<Episode>>>? _downloadsOutput;
 
+  /// Stream of current active downloads
+  Stream<BlocState<List<Episode>>>? _activeDownloadsOutput;
+
   /// Stream of current episodes
   Stream<BlocState<List<Episode>>>? _episodesOutput;
 
   /// Cache of our currently downloaded episodes.
   List<Episode>? _episodes;
+
+  /// Cache of active downloads
+  List<Episode>? _activeEpisodes;
 
   EpisodeBloc({
     required this.podcastService,
@@ -50,6 +59,8 @@ class EpisodeBloc extends Bloc {
 
   void _init() {
     _downloadsOutput = _downloadsInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadDownloads(silent));
+    _activeDownloadsOutput =
+        _activeDownloadsInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadActiveDownloads(silent));
     _episodesOutput = _episodesInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadEpisodes(silent));
 
     _handleDeleteDownloads();
@@ -71,6 +82,7 @@ class EpisodeBloc extends Bloc {
       await podcastService.deleteDownload(episode);
 
       fetchDownloads(true);
+      fetchActiveDownloads(true);
     });
   }
 
@@ -83,10 +95,12 @@ class EpisodeBloc extends Bloc {
   }
 
   void _listenEpisodeEvents() {
-    // Listen for episode updates. If the episode is downloaded, we need to update.
-    podcastService.episodeListener
-        .where((event) => event.episode.downloaded || event.episode.played)
-        .listen((event) => fetchDownloads(true));
+    podcastService.episodeListener.listen((event) {
+      if (event.episode.downloaded || event.episode.played) {
+        fetchDownloads(true);
+      }
+      fetchActiveDownloads(true);
+    });
   }
 
   Stream<BlocState<List<Episode>>> _loadDownloads(bool silent) async* {
@@ -97,6 +111,16 @@ class EpisodeBloc extends Bloc {
     _episodes = await podcastService.loadDownloads();
 
     yield BlocPopulatedState<List<Episode>>(results: _episodes);
+  }
+
+  Stream<BlocState<List<Episode>>> _loadActiveDownloads(bool silent) async* {
+    if (!silent) {
+      yield BlocLoadingState();
+    }
+
+    _activeEpisodes = await podcastService.loadActiveDownloads();
+
+    yield BlocPopulatedState<List<Episode>>(results: _activeEpisodes);
   }
 
   Stream<BlocState<List<Episode>>> _loadEpisodes(bool silent) async* {
@@ -112,15 +136,21 @@ class EpisodeBloc extends Bloc {
   @override
   void dispose() {
     _downloadsInput.close();
+    _activeDownloadsInput.close();
+    _episodesInput.close();
     _deleteDownload.close();
     _togglePlayed.close();
   }
 
   void Function(bool) get fetchDownloads => _downloadsInput.add;
 
+  void Function(bool) get fetchActiveDownloads => _activeDownloadsInput.add;
+
   void Function(bool) get fetchEpisodes => _episodesInput.add;
 
   Stream<BlocState<List<Episode>>>? get downloads => _downloadsOutput;
+
+  Stream<BlocState<List<Episode>>>? get activeDownloads => _activeDownloadsOutput;
 
   Stream<BlocState<List<Episode>>>? get episodes => _episodesOutput;
 
@@ -129,4 +159,58 @@ class EpisodeBloc extends Bloc {
   void Function(Episode?) get togglePlayed => _togglePlayed.add;
 
   Stream<EpisodeState> get episodeListener => podcastService.episodeListener;
+
+  Future<void> pauseDownload(Episode episode) async {
+    await podcastService.downloadService?.pauseDownload(episode);
+    fetchActiveDownloads(true);
+  }
+
+  Future<void> resumeDownload(Episode episode) async {
+    await podcastService.downloadService?.resumeDownload(episode);
+    fetchActiveDownloads(true);
+  }
+
+  Future<void> retryDownload(Episode episode) async {
+    await podcastService.downloadService?.retryDownload(episode);
+    fetchActiveDownloads(true);
+  }
+
+  Future<void> cancelDownload(Episode episode) async {
+    await podcastService.downloadService?.cancelDownload(episode);
+    fetchActiveDownloads(true);
+    fetchDownloads(true);
+  }
+
+  Future<void> batchDeleteDownloads(List<Episode> episodes) async {
+    final nowPlayingGuid = audioPlayerService.nowPlaying?.guid;
+    final containsNowPlaying = episodes.any((e) => e.guid == nowPlayingGuid);
+    if (containsNowPlaying) {
+      await audioPlayerService.stop();
+    }
+
+    for (final episode in episodes) {
+      await audioPlayerService.removeUpNextEpisode(episode);
+      await podcastService.deleteDownload(episode);
+    }
+
+    fetchDownloads(true);
+    fetchActiveDownloads(true);
+  }
+
+  Future<void> batchAddToQueue(List<Episode> episodes) async {
+    for (final episode in episodes) {
+      await audioPlayerService.addUpNextEpisode(episode);
+    }
+  }
+
+  Future<void> batchTogglePlayed(List<Episode> episodes, bool played) async {
+    for (final episode in episodes) {
+      episode.played = played;
+      if (played) {
+        episode.position = 0;
+      }
+      await podcastService.saveEpisode(episode);
+    }
+    fetchDownloads(true);
+  }
 }

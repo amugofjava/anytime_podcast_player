@@ -305,6 +305,8 @@ class Episode {
         return DownloadState.paused;
       case 6:
         return DownloadState.downloaded;
+      case 7:
+        return DownloadState.converting;
     }
 
     return DownloadState.none;
@@ -381,7 +383,7 @@ class Episode {
     return 'Episode{id: $id, guid: $guid, pguid: $pguid, filepath: $filepath, title: $title, contentUrl: $contentUrl, episode: $episode, duration: $duration, position: $position, downloadPercentage: $downloadPercentage, played: $played, queued: $queued}';
   }
 
-  bool get downloaded => downloadPercentage == 100;
+  bool get downloaded => downloadPercentage == 100 && downloadState != DownloadState.converting;
 
   Duration get timeRemaining {
     if (position > 0 && duration > 0) {

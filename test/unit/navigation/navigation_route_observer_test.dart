@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final routeA = MaterialPageRoute<void>(builder: (context) => const Text('A'), settings: const RouteSettings(name: 'ROUTE A'));
-  final routeB = MaterialPageRoute<void>(builder: (context) => const Text('B'), settings: const RouteSettings(name: 'ROUTE B'));
-  final routeC = MaterialPageRoute<void>(builder: (context) => const Text('C'), settings: const RouteSettings(name: 'ROUTE C'));
+  final routeA =
+      MaterialPageRoute<void>(builder: (context) => const Text('A'), settings: const RouteSettings(name: 'ROUTE A'));
+  final routeB =
+      MaterialPageRoute<void>(builder: (context) => const Text('B'), settings: const RouteSettings(name: 'ROUTE B'));
+  final routeC =
+      MaterialPageRoute<void>(builder: (context) => const Text('C'), settings: const RouteSettings(name: 'ROUTE C'));
 
   group('Navigation route observer', () {
     test('Initial route should be null', () {

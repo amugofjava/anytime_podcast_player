@@ -162,10 +162,7 @@ class _NowPlayingOptionsSelectorState extends State<NowPlayingOptionsSelector> {
                                           )
                                         : Text(
                                             L.of(context)!.transcript_label.toUpperCase(),
-                                            style: theme
-                                                .textTheme
-                                                .labelLarge!
-                                                .copyWith(color: theme.disabledColor),
+                                            style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
                                           ),
                                   ),
                                 ],
@@ -285,10 +282,7 @@ class _NowPlayingOptionsSelectorWideState extends State<NowPlayingOptionsSelecto
                                       )
                                     : Text(
                                         L.of(context)!.transcript_label.toUpperCase(),
-                                        style: theme
-                                            .textTheme
-                                            .labelLarge!
-                                            .copyWith(color: theme.disabledColor),
+                                        style: theme.textTheme.labelLarge!.copyWith(color: theme.disabledColor),
                                       ),
                               ),
                             ],

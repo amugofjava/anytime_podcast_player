@@ -14,6 +14,7 @@ import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/podcast/queue_bloc.dart';
 import 'package:anytime/bloc/search/search_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
+import 'package:anytime/entities/app_settings.dart';
 import 'package:anytime/bloc/ui/pager_bloc.dart';
 import 'package:anytime/core/environment.dart';
 import 'package:anytime/entities/feed.dart';
@@ -100,6 +101,8 @@ class AnytimePodcastApp extends StatefulWidget {
       podcastService: podcastService!,
     );
 
+    podcastService!.downloadService = downloadService;
+
     audioPlayerService = DefaultAudioPlayerService(
       repository: repository,
       settingsService: mobileSettingsService,
@@ -155,6 +158,26 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
         }
       });
     });
+
+    if (widget.mobileSettingsService.autoDownloadEpisodes) {
+      widget.podcastService?.refreshFeeds(manual: true);
+    }
+  }
+
+  /// Maps the stored language setting to a Flutter [Locale]. Returns null to
+  /// follow the device language (system default).
+  Locale? _localeFor(AppSettings? settings) {
+    switch (settings?.language) {
+      case 'en':
+        return const Locale('en');
+      case 'zh':
+        // Use languageCode 'zh' (not 'zh_Hans') so Flutter's built-in material
+        // localizations recognise it. Using Locale('zh_Hans') makes
+        // GlobalMaterialLocalizations reject it and the UI renders blank.
+        return const Locale('zh', 'Hans');
+      default:
+        return null;
+    }
   }
 
   @override
@@ -211,33 +234,41 @@ class AnytimePodcastAppState extends State<AnytimePodcastApp> {
           dispose: (_, value) => value.dispose(),
         )
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        showSemanticsDebugger: false,
-        title: 'Anytime Podcast Player',
-        navigatorObservers: [NavigationRouteObserver()],
-        localizationsDelegates: const <LocalizationsDelegate<Object>>[
-          AnytimeLocalisationsDelegate(),
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', ''),
-          Locale('es', ''),
-          Locale('de', ''),
-          Locale('gl', ''),
-          Locale('it', ''),
-          Locale('nl', ''),
-          Locale('ru', ''),
-          Locale('tr', ''),
-          Locale('vi', ''),
-          Locale('zh_Hans', ''),
-        ],
-        theme: theme,
-        // Uncomment builder below to enable accessibility checker tool.
-        // builder: (context, child) => AccessibilityTools(child: child),
-        home: const AnytimeHomePage(title: 'Anytime Podcast Player'),
+      child: StreamBuilder<AppSettings>(
+        stream: widget.settingsBloc?.settings,
+        initialData: AppSettings.sensibleDefaults(),
+        builder: (context, snapshot) {
+          final appLocale = _localeFor(snapshot.data);
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            showSemanticsDebugger: false,
+            title: 'Anytime Podcast Player',
+            navigatorObservers: [NavigationRouteObserver()],
+            locale: appLocale,
+            localizationsDelegates: const <LocalizationsDelegate<Object>>[
+              AnytimeLocalisationsDelegate(),
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('es', ''),
+              Locale('de', ''),
+              Locale('gl', ''),
+              Locale('it', ''),
+              Locale('nl', ''),
+              Locale('ru', ''),
+              Locale('tr', ''),
+              Locale('vi', ''),
+              Locale('zh', 'Hans'),
+            ],
+            theme: theme,
+            // Uncomment builder below to enable accessibility checker tool.
+            // builder: (context, child) => AccessibilityTools(child: child),
+            home: const AnytimeHomePage(title: 'Anytime Podcast Player'),
+          );
+        },
       ),
     );
   }
@@ -563,8 +594,7 @@ class _AnytimeHomePageState extends State<AnytimeHomePage> with WidgetsBindingOb
                 selectedItemColor: theme.iconTheme.color,
                 selectedFontSize: 11.0,
                 unselectedFontSize: 11.0,
-                unselectedItemColor:
-                    HSLColor.fromColor(theme.bottomAppBarTheme.color!).withLightness(0.8).toColor(),
+                unselectedItemColor: HSLColor.fromColor(theme.bottomAppBarTheme.color!).withLightness(0.8).toColor(),
                 currentIndex: index,
                 onTap: pager.changePage,
                 items: <BottomNavigationBarItem>[

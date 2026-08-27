@@ -34,16 +34,16 @@ Future<String> resolvePath(Episode episode) async {
   return Future.value(join(episode.filepath!, episode.filename));
 }
 
-Future<String> resolveDirectory({required Episode episode, bool full = false}) async {
+Future<String> resolveDirectory({required Episode episode, bool full = false, SettingsService? settingsService}) async {
   if (full || Platform.isAndroid) {
-    return Future.value(join(await getStorageDirectory(), safePath(episode.podcast!)));
+    return Future.value(join(await getStorageDirectory(settingsService: settingsService), safePath(episode.podcast!)));
   }
 
   return Future.value(safePath(episode.podcast!));
 }
 
-Future<void> createDownloadDirectory(Episode episode) async {
-  var path = join(await getStorageDirectory(), safePath(episode.podcast!));
+Future<void> createDownloadDirectory(Episode episode, {SettingsService? settingsService}) async {
+  var path = join(await getStorageDirectory(settingsService: settingsService), safePath(episode.podcast!));
 
   Directory(path).createSync(recursive: true);
 }
@@ -60,18 +60,35 @@ Future<bool> hasStoragePermission() async {
   }
 }
 
-Future<String> getStorageDirectory() async {
-  SettingsService? settings = await MobileSettingsService.instance();
+Future<String> getStorageDirectory({SettingsService? settingsService}) async {
+  SettingsService? settings = settingsService ?? await MobileSettingsService.instance();
   Directory directory;
 
   if (Platform.isIOS) {
     directory = await getApplicationDocumentsDirectory();
-  } else if (settings!.storeDownloadsSDCard) {
-    directory = await _getSDCard();
-  } else {
-    directory = await getApplicationSupportDirectory();
+    return join(directory.path, 'AnyTime');
   }
 
+  if (settings?.customDownloadPath != null && settings!.customDownloadPath.isNotEmpty) {
+    final customDir = Directory(settings.customDownloadPath);
+    try {
+      if (!customDir.existsSync()) {
+        customDir.createSync(recursive: true);
+      }
+      return customDir.path;
+    } catch (_) {
+      // Fallback to default if custom directory is not accessible
+    }
+  }
+
+  if (settings?.storeDownloadsSDCard ?? false) {
+    try {
+      directory = await _getSDCard();
+      return join(directory.path, 'AnyTime');
+    } catch (_) {}
+  }
+
+  directory = await getApplicationSupportDirectory();
   return join(directory.path, 'AnyTime');
 }
 
@@ -110,13 +127,28 @@ Future<Directory> _getSDCard() async {
   return path;
 }
 
-/// Strips characters that are invalid for file and directory names.
+/// Strips characters that are invalid for directory names, preserving Unicode/Chinese characters.
 String? safePath(String? s) {
-  return s?.replaceAll(RegExp(r'[^\w\s]+'), '').trim();
+  if (s == null) return null;
+  var cleaned = s.replaceAll(RegExp(r'[\/\\:*?"<>|\x00-\x1F]+'), '_');
+  cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
+  cleaned = cleaned.replaceAll(RegExp(r'[.\s]+$'), '');
+  if (cleaned.replaceAll('_', '').trim().isEmpty) {
+    return 'Unknown';
+  }
+  return cleaned;
 }
 
+/// Strips characters that are invalid for file names, preserving Unicode/Chinese characters.
 String? safeFile(String? s) {
-  return s?.replaceAll(RegExp(r'[^\w\s\.]+'), '').trim();
+  if (s == null) return null;
+  var cleaned = s.replaceAll(RegExp(r'[\/\\:*?"<>|\x00-\x1F]+'), '_');
+  cleaned = cleaned.replaceAll(RegExp(r'\s+'), ' ').trim();
+  cleaned = cleaned.replaceAll(RegExp(r'[.\s]+$'), '');
+  if (cleaned.replaceAll('_', '').trim().isEmpty) {
+    return 'episode';
+  }
+  return cleaned;
 }
 
 Future<String> resolveUrl(String url, {bool forceHttps = false}) async {

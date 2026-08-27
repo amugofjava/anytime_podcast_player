@@ -215,6 +215,14 @@ class DownloadControl extends StatelessWidget {
                 percent: 0,
                 label: L.of(context)!.download_episode_button_label,
               );
+            } else if (episode.downloadState == DownloadState.converting) {
+              return DownloadButton(
+                onPressed: () {},
+                title: episode.title!,
+                icon: Icons.sync,
+                percent: episode.downloadPercentage ?? 0,
+                label: L.of(context)!.converting_episode_button_label,
+              );
             } else if (episode.downloadState == DownloadState.queued) {
               return DownloadButton(
                 onPressed: () => _showCancelDialog(context),

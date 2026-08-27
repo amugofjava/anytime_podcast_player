@@ -1,0 +1,51 @@
+# 自动编译安卓安装包（APK）
+#
+# 触发方式（任选其一）：
+#   1. 把代码推到你的 GitHub 仓库的 main 分支
+#   2. 在 GitHub 仓库页面点 "Actions" -> "Build Android APK" -> "Run workflow"
+#
+# 编译完成后，在 Actions 运行页底部 "Artifacts" 处下载 APK。
+
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.8'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 测试先行关卡：任何单元测试失败都不会继续打包
+      - name: Run tests (TDD gate)
+        run: flutter test
+
+      # 编译正式版 APK。按处理器架构拆分，方便选择体积更小的包
+      - name: Build release APKs
+        run: flutter build apk --release --split-per-abi
+
+      # 把 APK 作为可下载的构建产物
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: anyTime-apk
+          path: build/app/outputs/flutter-apk/*.apk

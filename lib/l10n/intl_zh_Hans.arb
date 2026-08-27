@@ -1,4 +1,34 @@
 {
+  "app_title": "Anytime 播客播放器",
+  "@app_title": {
+    "description": "Full title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "app_title_short": "Anytime 播放器",
+  "@app_title_short": {
+    "description": "Title for the application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library": "库",
+  "@library": {
+    "description": "Library tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "discover": "发现",
+  "@discover": {
+    "description": "Discover tab label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads": "下载",
+  "@downloads": {
+    "description": "Downloads tab label",
+    "type": "text",
+    "placeholders": {}
+  },
   "subscribe_button_label": "关注",
   "@subscribe_button_label": {
     "description": "Subscribe button label",
@@ -35,250 +65,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "delete_label": "删除",
-  "@delete_label": {
-    "description": "Delete label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "delete_button_label": "删除",
-  "@delete_button_label": {
-    "description": "Delete label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "close_button_label": "关闭",
-  "@close_button_label": {
-    "description": "Close button label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "search_button_label": "搜索",
-  "@search_button_label": {
-    "description": "Search button label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "search_back_button_label": "后退",
-  "@search_back_button_label": {
-    "description": "Search button label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "about_label": "关于",
-  "@about_label": {
-    "description": "About menu item",
-    "type": "text",
-    "placeholders": {}
-  },
-  "stop_download_button_label": "停止",
-  "@stop_download_button_label": {
-    "description": "Stop label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "cancel_option_label": "取消",
-  "@cancel_option_label": {
-    "description": "Cancel option label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_theme": "主题",
-  "@settings_theme": {
-    "description": "Display theme",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_theme_heading": "选择主题",
-  "@settings_theme_heading": {
-    "description": "Choose theme behaviour",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_theme_value_light": "浅色主题",
-  "@settings_theme_value_light": {
-    "description": "Light theme",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_theme_value_dark": "深色主题",
-  "@settings_theme_value_dark": {
-    "description": "Dark theme",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_label": "设置",
-  "@settings_label": {
-    "description": "Settings label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "go_back_button_label": "返回",
-  "@go_back_button_label": {
-    "description": "Go-back button label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "continue_button_label": "继续",
-  "@continue_button_label": {
-    "description": "Continue button label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "chapters_label": "章节",
-  "@chapters_label": {
-    "description": "Tab label on now playing screen.",
-    "type": "text",
-    "placeholders": {}
-  },
-  "notes_label": "备注",
-  "@notes_label": {
-    "description": "Tab label on now playing screen.",
-    "type": "text",
-    "placeholders": {}
-  },
-  "label_opml_importing": "导入中",
-  "@label_opml_importing": {
-    "description": "Label for importing OPML dialog",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_auto_update_episodes_never": "从不",
-  "@settings_auto_update_episodes_never": {
-    "description": "Option label for auto updating of episodes",
-    "type": "text",
-    "placeholders": {}
-  },
-  "settings_auto_update_episodes_always": "总是",
-  "@settings_auto_update_episodes_always": {
-    "description": "Option label for auto updating of episodes",
-    "type": "text",
-    "placeholders": {}
-  },
-  "more_label": "更多",
-  "@more_label": {
-    "description": "More label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "queue_add_label": "添加",
-  "@queue_add_label": {
-    "description": "Queue add label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "queue_remove_label": "删除",
-  "@queue_remove_label": {
-    "description": "Queue remove label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "opml_import_button_label": "导入",
-  "@opml_import_button_label": {
-    "description": "OPML Import button label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "opml_export_button_label": "导出",
-  "@opml_export_button_label": {
-    "description": "OPML Export button label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "queue_clear_button_label": "清除",
-  "@queue_clear_button_label": {
-    "description": "Shown on dialog box when clearing queue",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "queue_clear_label_title": "清空队列",
-  "@queue_clear_label_title": {
-    "description": "Shown on dialog box when clearing queue",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "transcript_label": "转写",
-  "@transcript_label": {
-    "description": "Transcript label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "sleep_off_label": "关闭",
-  "@sleep_off_label": {
-    "description": "Describes off sleep label",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "feedback_menu_item_label": "反馈",
-  "@feedback_menu_item_label": {
-    "description": "Feedback option in main menu",
-    "type": "text",
-    "placeholders_order": [],
-    "placeholders": {}
-  },
-  "episode_filter_none_label": "无",
-  "@episode_filter_none_label": {
-    "description": "Episodes not filtered",
-    "type": "text",
-    "placeholders": {}
-  },
-  "episode_sort_none_label": "默认",
-  "@episode_sort_none_label": {
-    "description": "Episode default sort",
-    "type": "text",
-    "placeholders": {}
-  },
-  "semantic_current_value_label": "当前值",
-  "@semantic_current_value_label": {
-    "description": "For current sleep setting",
-    "type": "text",
-    "placeholders": {}
-  },
-  "semantic_announce_loading": "加载中，请稍候。",
-  "@semantic_announce_loading": {
-    "description": "Spoken when search in progress.",
-    "type": "text",
-    "placeholders": {}
-  },
-  "app_title": "Anytime 播客播放器",
-  "@app_title": {
-    "description": "Full title for the application",
-    "type": "text",
-    "placeholders": {}
-  },
-  "app_title_short": "Anytime 播放器",
-  "@app_title_short": {
-    "description": "Title for the application",
-    "type": "text",
-    "placeholders": {}
-  },
-  "library": "库",
-  "@library": {
-    "description": "Library tab label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "discover": "发现",
-  "@discover": {
-    "description": "Discover tab label",
-    "type": "text",
-    "placeholders": {}
-  },
-  "downloads": "下载",
-  "@downloads": {
-    "description": "Downloads tab label",
-    "type": "text",
-    "placeholders": {}
-  },
   "unsubscribe_message": "取消关注将删除此播客的所有已下载单集。",
   "@unsubscribe_message": {
     "description": "Displayed when the user unsubscribes from a podcast.",
@@ -291,9 +77,27 @@
     "type": "text",
     "placeholders": {}
   },
+  "open_up_next_hint": "打开「接下来播放」队列",
+  "@open_up_next_hint": {
+    "description": "Hint displayed on open up next queue from main window",
+    "type": "text",
+    "placeholders": {}
+  },
   "no_subscriptions_message": "点击下方的“发现”按钮或使用上面的搜索栏查找您的第一个播客",
   "@no_subscriptions_message": {
     "description": "Displayed on the library tab when the user has no subscriptions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_label": "删除",
+  "@delete_label": {
+    "description": "Delete label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "delete_button_label": "删除",
+  "@delete_button_label": {
+    "description": "Delete label",
     "type": "text",
     "placeholders": {}
   },
@@ -351,6 +155,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "converting_episode_button_label": "正在转换格式",
+  "@converting_episode_button_label": {
+    "description": "Semantic label when episode audio is being converted to MP3",
+    "type": "text",
+    "placeholders": {}
+  },
   "download_episode_button_label": "下载单集",
   "@download_episode_button_label": {
     "description": "Semantic label for the download episode button",
@@ -363,8 +173,26 @@
     "type": "text",
     "placeholders": {}
   },
+  "close_button_label": "关闭",
+  "@close_button_label": {
+    "description": "Close button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_button_label": "搜索",
+  "@search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
   "clear_search_button_label": "清空搜索文本",
   "@clear_search_button_label": {
+    "description": "Search button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_back_button_label": "后退",
+  "@search_back_button_label": {
     "description": "Search button label",
     "type": "text",
     "placeholders": {}
@@ -387,6 +215,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "about_label": "关于",
+  "@about_label": {
+    "description": "About menu item",
+    "type": "text",
+    "placeholders": {}
+  },
   "mark_episodes_played_label": "标记全部单集为已听",
   "@mark_episodes_played_label": {
     "description": "Mark all episodes played menu item",
@@ -405,6 +239,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "stop_download_button_label": "停止",
+  "@stop_download_button_label": {
+    "description": "Stop label",
+    "type": "text",
+    "placeholders": {}
+  },
   "stop_download_title": "停止下载",
   "@stop_download_title": {
     "description": "Stop download label",
@@ -420,6 +260,36 @@
   "settings_delete_played_label": "已下载的剧集播放后删除",
   "@settings_delete_played_label": {
     "description": "Delete downloaded episodes once played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_label": "自定义下载目录",
+  "@settings_custom_download_path_label": {
+    "description": "Label for custom download folder setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_default": "默认",
+  "@settings_custom_download_path_default": {
+    "description": "Subtitle when custom download folder is set to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_reset": "恢复默认目录",
+  "@settings_custom_download_path_reset": {
+    "description": "Tooltip/button to reset custom download folder to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_title": "需要存储管理权限",
+  "@settings_custom_download_path_permission_title": {
+    "description": "Title for storage permission dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_message": "若要将播客音频保存至外部自定义文件夹，Anytime 需要“所有文件访问权限”。",
+  "@settings_custom_download_path_permission_message": {
+    "description": "Message explaining need for all files access permission",
     "type": "text",
     "placeholders": {}
   },
@@ -447,9 +317,39 @@
     "type": "text",
     "placeholders": {}
   },
+  "cancel_option_label": "取消",
+  "@cancel_option_label": {
+    "description": "Cancel option label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme": "主题",
+  "@settings_theme": {
+    "description": "Display theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_heading": "选择主题",
+  "@settings_theme_heading": {
+    "description": "Choose theme behaviour",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_theme_value_auto": "系统主题",
   "@settings_theme_value_auto": {
     "description": "Based on System theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_light": "浅色主题",
+  "@settings_theme_value_light": {
+    "description": "Light theme",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_theme_value_dark": "深色主题",
+  "@settings_theme_value_dark": {
+    "description": "Dark theme",
     "type": "text",
     "placeholders": {}
   },
@@ -471,6 +371,24 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_label": "设置",
+  "@settings_label": {
+    "description": "Settings label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "go_back_button_label": "返回",
+  "@go_back_button_label": {
+    "description": "Go-back button label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continue_button_label": "继续",
+  "@continue_button_label": {
+    "description": "Continue button label",
+    "type": "text",
+    "placeholders": {}
+  },
   "consent_message": "此资助链接将带您前往外部网站，您可以直接在该网站上支持本节目。链接由播客作者提供，不受 Anytime 控制。",
   "@consent_message": {
     "description": "Display when first accessing external funding link",
@@ -479,6 +397,18 @@
   },
   "episode_label": "单集",
   "@episode_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chapters_label": "章节",
+  "@chapters_label": {
+    "description": "Tab label on now playing screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notes_label": "备注",
+  "@notes_label": {
     "description": "Tab label on now playing screen.",
     "type": "text",
     "placeholders": {}
@@ -525,8 +455,32 @@
     "type": "text",
     "placeholders": {}
   },
+  "label_opml_importing": "导入中",
+  "@label_opml_importing": {
+    "description": "Label for importing OPML dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_heading": "刷新播客",
+  "@settings_auto_update_episodes_heading": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_auto_update_episodes": "自动更新节目单",
   "@settings_auto_update_episodes": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_never": "从不",
+  "@settings_auto_update_episodes_never": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_always": "总是",
+  "@settings_auto_update_episodes_always": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
@@ -563,6 +517,18 @@
   },
   "settings_auto_update_episodes_12hour": "距离上次更新已 12 小时",
   "@settings_auto_update_episodes_12hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_24hour": "每 24 小时",
+  "@settings_auto_update_episodes_24hour": {
+    "description": "Option label for auto updating of episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_auto_update_episodes_48hour": "每 2 天",
+  "@settings_auto_update_episodes_48hour": {
     "description": "Option label for auto updating of episodes",
     "type": "text",
     "placeholders": {}
@@ -649,6 +615,47 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "playing_next_queue_label": "接下来播放",
+  "@playing_next_queue_label": {
+    "description": "Playing next label on queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "more_label": "更多",
+  "@more_label": {
+    "description": "More label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_add_label": "添加",
+  "@queue_add_label": {
+    "description": "Queue add label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_remove_label": "删除",
+  "@queue_remove_label": {
+    "description": "Queue remove label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_import_button_label": "导入",
+  "@opml_import_button_label": {
+    "description": "OPML Import button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "opml_export_button_label": "导出",
+  "@opml_export_button_label": {
+    "description": "OPML Export button label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "opml_import_export_label": "OPML 导入/导出",
   "@opml_import_export_label": {
     "description": "OPML Import/Export label",
@@ -663,9 +670,44 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "queue_clear_button_label": "清除",
+  "@queue_clear_button_label": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "queue_clear_label_title": "清空队列",
+  "@queue_clear_label_title": {
+    "description": "Shown on dialog box when clearing queue",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "layout_label": "布局",
   "@layout_label": {
     "description": "Layout menu label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_itunes": "全部,艺术,商业,喜剧,教育,小说,政府,健康与健身,历史,儿童与家庭,休闲,音乐,新闻,宗教与信仰,科学,社会与文化,体育,电视与电影,科技,真实犯罪",
+  "@discovery_categories_itunes": {
+    "description": "Comma separated list of iTunes categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "discovery_categories_pindex": "全部,幕后花絮,另类,动物,动画,艺术,天文学,汽车,航空,棒球,篮球,美容,书籍,佛教,商业,职业,化学,基督教,气候,喜剧,评论,课程,手工艺,板球,加密货币,文化,每日,设计,纪录片,戏剧,地球,教育,娱乐,创业,家庭,奇幻,时尚,小说,电影,健身,食品,足球,游戏,园艺,高尔夫,政府,健康,印度教,历史,爱好,冰球,家居,教程,即兴,访谈,投资,伊斯兰教,日志,犹太教,儿童,语言,学习,休闲,生活,管理,漫画,营销,数学,医学,心理健康,音乐,自然,自然,新闻,非营利,营养,育儿,表演,个人,宠物,哲学,物理学,地方,政治,关系,宗教,评论,角色扮演,橄榄球,跑步,科学,自我提升,性,足球,社会,社会,心灵,体育,单口相声,故事,游泳,电视,桌面游戏,科技,网球,旅行,真实犯罪,视频游戏,视觉,排球,天气,荒野,摔跤",
+  "@discovery_categories_pindex": {
+    "description": "Comma separated list of Podcast Index categories",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_label": "转写",
+  "@transcript_label": {
+    "description": "Transcript label",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -684,9 +726,23 @@
     "placeholders_order": [],
     "placeholders": {}
   },
+  "auto_scroll_transcript_label": "跟随文稿",
+  "@auto_scroll_transcript_label": {
+    "description": "Auto scroll switch label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
   "transcript_why_not_label": "为什么没有？",
   "@transcript_why_not_label": {
     "description": "Link to why no transcript is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "transcript_why_not_url": "https://anytimeplayer.app/docs/anytime_transcript_support_en.html",
+  "@transcript_why_not_url": {
+    "description": "Language specific link",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -715,6 +771,13 @@
   "semantics_layout_option_grid": "网格布局",
   "@semantics_layout_option_grid": {
     "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_mini_player_header": "迷你播放器。向右滑动到播放/暂停按钮。激活以打开主播放器窗口",
+  "@semantics_mini_player_header": {
+    "description": "Describes the mini player",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
@@ -789,9 +852,329 @@
     "placeholders_order": [],
     "placeholders": {}
   },
-  "settings_auto_update_episodes_heading": "刷新播客",
-  "@settings_auto_update_episodes_heading": {
-    "description": "Option label for auto updating of episodes",
+  "semantics_episode_tile_collapsed": "单集列表项。显示图片、摘要和主要控件。",
+  "@semantics_episode_tile_collapsed": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded": "单集列表项。显示描述、主要控件和附加控件。",
+  "@semantics_episode_tile_expanded": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_collapsed_hint": "展开以查看更多详情和附加选项",
+  "@semantics_episode_tile_collapsed_hint": {
+    "description": "Describes episode tile options when collapsed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_episode_tile_expanded_hint": "收起以显示摘要、下载和播放控件",
+  "@semantics_episode_tile_expanded_hint": {
+    "description": "Describes episode tile options when expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_off_label": "关闭",
+  "@sleep_off_label": {
+    "description": "Describes off sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_episode_label": "本集播完时",
+  "@sleep_episode_label": {
+    "description": "Describes end of episode sleep label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "sleep_minute_label": "{minutes} 分钟",
+  "@sleep_minute_label": {
+    "description": "Describes the number of minutes to sleep",
+    "type": "text",
+    "placeholders_order": [
+      "minutes"
+    ],
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "sleep_timer_label": "睡眠定时器",
+  "@sleep_timer_label": {
+    "description": "Describes sleep timer label",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "feedback_menu_item_label": "反馈",
+  "@feedback_menu_item_label": {
+    "description": "Feedback option in main menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "podcast_options_overflow_menu_semantic_label": "选项菜单",
+  "@podcast_options_overflow_menu_semantic_label": {
+    "description": "Podcast details overflow menu",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_announce_searching": "正在搜索，请稍候。",
+  "@semantic_announce_searching": {
+    "description": "Spoken when search in progress.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_expand_label": "打开播放选项滑块",
+  "@semantic_playing_options_expand_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_playing_options_collapse_label": "关闭播放选项滑块",
+  "@semantic_playing_options_collapse_label": {
+    "description": "Placed on options handle when screen reader enabled.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_podcast_artwork_label": "播客封面图",
+  "@semantic_podcast_artwork_label": {
+    "description": "Placed around podcast image on main player",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_chapter_link_label": "章节网页链接",
+  "@semantic_chapter_link_label": {
+    "description": "Placed around chapter link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantic_current_chapter_label": "当前章节",
+  "@semantic_current_chapter_label": {
+    "description": "Placed around chapter",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "episode_filter_none_label": "无",
+  "@episode_filter_none_label": {
+    "description": "Episodes not filtered",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_started_label": "已开始",
+  "@episode_filter_started_label": {
+    "description": "Only show episodes that have been started",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_played_label": "已播放",
+  "@episode_filter_played_label": {
+    "description": "Only show episodes that have been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_unplayed_label": "未播放",
+  "@episode_filter_unplayed_label": {
+    "description": "Only show episodes that have not been played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_label": "未找到单集",
+  "@episode_filter_no_episodes_title_label": {
+    "description": "No Episodes title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_no_episodes_title_description": "该播客没有符合你搜索条件和筛选的单集",
+  "@episode_filter_no_episodes_title_description": {
+    "description": "No episodes found description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_clear_filters_button_label": "清除筛选",
+  "@episode_filter_clear_filters_button_label": {
+    "description": "Clear filters button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_filter_semantic_label": "筛选单集",
+  "@episode_filter_semantic_label": {
+    "description": "Episode filter semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_semantic_label": "对单集排序",
+  "@episode_sort_semantic_label": {
+    "description": "Episode sort semantic label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_none_label": "默认",
+  "@episode_sort_none_label": {
+    "description": "Episode default sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_latest_first_label": "最新的在前",
+  "@episode_sort_latest_first_label": {
+    "description": "Episode latest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_earliest_first_label": "最早的在前",
+  "@episode_sort_earliest_first_label": {
+    "description": "Episode earliest first sort",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_ascending_label": "按字母 A-Z",
+  "@episode_sort_alphabetical_ascending_label": {
+    "description": "Episode alphabetical ascending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_sort_alphabetical_descending_label": "按字母 Z-A",
+  "@episode_sort_alphabetical_descending_label": {
+    "description": "Episode alphabetical descending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "open_show_website_label": "打开节目网站",
+  "@open_show_website_label": {
+    "description": "Open show website in browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "refresh_feed_label": "刷新单集",
+  "@refresh_feed_label": {
+    "description": "Menu item to refresh episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_layout_selector": "关闭布局选择器",
+  "@scrim_layout_selector": {
+    "description": "Replaces default scrim label for layout selector bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_position": "单集进度",
+  "@now_playing_episode_position": {
+    "description": "Episode position slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "now_playing_episode_time_remaining": "剩余时间",
+  "@now_playing_episode_time_remaining": {
+    "description": "Episode time remaining slider control label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resume_button_label": "继续播放单集",
+  "@resume_button_label": {
+    "description": "Semantic label for the resume button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "play_download_button_label": "播放已下载单集",
+  "@play_download_button_label": {
+    "description": "Semantic label for the play downloaded episode button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel_download_button_label": "取消下载",
+  "@cancel_download_button_label": {
+    "description": "Semantic label for the play cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "episode_details_button_label": "显示单集信息",
+  "@episode_details_button_label": {
+    "description": "Semantic label for the show info button.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_sleep_timer_selector": "关闭睡眠定时器选择器",
+  "@scrim_sleep_timer_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_speed_selector": "关闭播放速度选择器",
+  "@scrim_speed_selector": {
+    "description": "Replaces default scrim label for custom.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_current_value_label": "当前值",
+  "@semantic_current_value_label": {
+    "description": "For current sleep setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_details_selector": "关闭单集详情",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_sort_selector": "关闭单集排序",
+  "@scrim_episode_sort_selector": {
+    "description": "Replaces default scrim label for episode sort bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scrim_episode_filter_selector": "关闭单集筛选",
+  "@scrim_episode_filter_selector": {
+    "description": "Replaces default scrim label for episode filter bottom sheet.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "search_episodes_label": "搜索单集",
+  "@search_episodes_label": {
+    "description": "Hint text for episode search box",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_option": "连续播放",
+  "@settings_continuous_play_option": {
+    "description": "Continuous play toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_continuous_play_subtitle": "队列为空时自动播放该播客的下一集",
+  "@settings_continuous_play_subtitle": {
+    "description": "Continuous play toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_podcast_option_label": "分享播客",
+  "@share_podcast_option_label": {
+    "description": "Context menu option to share the current podcast",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share_episode_option_label": "分享单集",
+  "@share_episode_option_label": {
+    "description": "Context menu option to share the current podcast episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_announce_loading": "加载中，请稍候。",
+  "@semantic_announce_loading": {
+    "description": "Spoken when search in progress.",
     "type": "text",
     "placeholders": {}
   },
@@ -810,6 +1193,92 @@
     "placeholders": {
       "seconds": {}
     }
+  },
+  "episode_semantic_time_minute_remaining": "{minutes} 分钟后结束",
+  "@episode_semantic_time_minute_remaining": {
+    "description": "Longer version of minutes remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_second_remaining": "{seconds} 秒后结束",
+  "@episode_semantic_time_second_remaining": {
+    "description": "Longer version of seconds remaining for screen readers",
+    "type": "text",
+    "placeholders": {
+      "seconds": {}
+    }
+  },
+  "episode_time_weeks_ago": "{weeks,plural, =1{1周前}other{{weeks}周前}}",
+  "@episode_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_semantic_time_weeks_ago": "{weeks,plural, =1{一周前}other{{weeks}周前}}",
+  "@episode_semantic_time_weeks_ago": {
+    "description": "Shows number of weeks ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "weeks": {}
+    }
+  },
+  "episode_time_days_ago": "{days,plural, =1{1天前}other{{days}天前}}",
+  "@episode_time_days_ago": {
+    "description": "Shows number of days ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_semantic_time_days_ago": "{days,plural, =1{一天前}other{{days}天前}}",
+  "@episode_semantic_time_days_ago": {
+    "description": "Shows number of days ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "episode_time_hours_ago": "{hours,plural, =1{1小时前}other{{hours}小时前}}",
+  "@episode_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_semantic_time_hours_ago": "{hours,plural, =1{1小时前}other{{hours}小时前}}",
+  "@episode_semantic_time_hours_ago": {
+    "description": "Shows number of hours ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "episode_time_minutes_ago": "{minutes,plural, =1{1分钟前}other{{minutes}分钟前}}",
+  "@episode_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was released",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_semantic_time_minutes_ago": "{minutes,plural, =1{1分钟前}other{{minutes}分钟前}}",
+  "@episode_semantic_time_minutes_ago": {
+    "description": "Shows number of minutes ago the episode was release, longer form for screen readers",
+    "type": "text",
+    "placeholders": {
+      "minutes": {}
+    }
+  },
+  "episode_time_now": "刚刚",
+  "@episode_time_now": {
+    "description": "Episode has just been released",
+    "type": "text",
+    "placeholders": {}
   },
   "time_seconds": "{seconds}秒",
   "@time_seconds": {
@@ -843,9 +1312,379 @@
       "minutes": {}
     }
   },
+  "label_megabytes": "兆字节",
+  "@label_megabytes": {
+    "description": "Megabytes label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_megabytes_abbr": "MB",
+  "@label_megabytes_abbr": {
+    "description": "Megabytes label abbreviation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_episode_actions": "单集操作",
+  "@label_episode_actions": {
+    "description": "Episode Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_podcast_management_divider_label": "播客管理",
+  "@settings_podcast_management_divider_label": {
+    "description": "Settings divider label for podcast management options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_notification_divider_label": "通知",
+  "@settings_notification_divider_label": {
+    "description": "Settings divider label for notification options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option": "后台刷新",
+  "@settings_background_refresh_option": {
+    "description": "Background episode update toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_option_subtitle": "在屏幕关闭时刷新单集。这会增加电量消耗。",
+  "@settings_background_refresh_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option": "刷新通知",
+  "@settings_refresh_notification_option": {
+    "description": "Enable update notification setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_refresh_notification_option_subtitle": "刷新单集时显示通知图标",
+  "@settings_refresh_notification_option_subtitle": {
+    "description": "Background episode update toggle switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "update_library_option": "刷新播客库",
+  "@update_library_option": {
+    "description": "Option label for manually triggering library refresh",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_alphabetical_label": "按字母排序",
+  "@library_sort_alphabetical_label": {
+    "description": "Option label for sorting the library alphabetically",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_date_followed_label": "按关注日期",
+  "@library_sort_date_followed_label": {
+    "description": "Option label for sorting the library by date followed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_unplayed_count_label": "未播放单集",
+  "@library_sort_unplayed_count_label": {
+    "description": "Option label for sorting the library by unplayed count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "library_sort_latest_episodes_label": "最新单集",
+  "@library_sort_latest_episodes_label": {
+    "description": "Option label for sorting the library by latest count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "semantic_unplayed_episodes_count": "{episodes,plural, =1{1 集未播放}other{{episodes} 集未播放}}",
+  "@semantic_unplayed_episodes_count": {
+    "description": "Semantic label for unplayed episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "semantic_new_episodes_count": "{episodes,plural, =1{1 集新节目}other{{episodes} 集新节目}}",
+  "@semantic_new_episodes_count": {
+    "description": "Semantic label for new episodes count.",
+    "type": "text",
+    "placeholders": {
+      "episodes": {}
+    }
+  },
+  "layout_selector_highlight_new_episodes": "突出显示新单集",
+  "@layout_selector_highlight_new_episodes": {
+    "description": "Layout selector. Highlight new episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
   "layout_selector_unplayed_episodes": "显示未播数量",
   "@layout_selector_unplayed_episodes": {
     "description": "Layout selector. Highlight unplayed episodes option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by": "排序方式",
+  "@layout_selector_sort_by": {
+    "description": "Layout selector. Sort by option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_alphabetical": "按字母",
+  "@layout_selector_sort_by_alphabetical": {
+    "description": "Layout selector. Sort by alphabetical option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_followed": "按关注",
+  "@layout_selector_sort_by_followed": {
+    "description": "Layout selector. Sort by followed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_sort_by_unplayed": "按未播放",
+  "@layout_selector_sort_by_unplayed": {
+    "description": "Layout selector. Sort by unplayed option.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_list_view": "列表视图",
+  "@layout_selector_list_view": {
+    "description": "Layout selector, list view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_grid_view": "网格视图",
+  "@layout_selector_grid_view": {
+    "description": "Layout selector, grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "layout_selector_compact_grid_view": "紧凑网格视图",
+  "@layout_selector_compact_grid_view": {
+    "description": "Layout selector, compact grid view icon",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_label": "播客库更新",
+  "@alert_sync_title_label": {
+    "description": "Alert title during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alert_sync_title_body": "Anytime 正在更新你的播客库",
+  "@alert_sync_title_body": {
+    "description": "Alert body during library sync.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_latest_episode_label": "播放最新单集",
+  "@podcast_context_play_latest_episode_label": {
+    "description": "Context menu and semantic label for playing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_latest_episode_label": "将最新单集加入队列",
+  "@podcast_context_queue_latest_episode_label": {
+    "description": "Context menu and semantic label for queueing next episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "label_podcast_actions": "播客操作",
+  "@label_podcast_actions": {
+    "description": "Podcast Actions title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_play_next_episode_label": "播放下一集未播放单集",
+  "@podcast_context_play_next_episode_label": {
+    "description": "Context menu and semantic label for playing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "podcast_context_queue_next_episode_label": "将下一集未播放单集加入队列",
+  "@podcast_context_queue_next_episode_label": {
+    "description": "Context menu and semantic label for queueing next unplayed episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option": "使用移动数据时刷新",
+  "@settings_background_refresh_mobile_data_option": {
+    "description": "Background episode update when on mobile data toggle switch label",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_background_refresh_mobile_data_option_subtitle": "允许在使用移动数据时刷新播客库",
+  "@settings_background_refresh_mobile_data_option_subtitle": {
+    "description": "Background episode update toggle when on mobile switch subtitle",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_label": "语言",
+  "@settings_language_label": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_system": "跟随系统",
+  "@settings_language_system": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_english": "English",
+  "@settings_language_english": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_chinese": "中文",
+  "@settings_language_chinese": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_label": "转成 MP3",
+  "@settings_convert_to_mp3_label": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_subtitle": "自动将下载的单集转成 MP3",
+  "@settings_convert_to_mp3_subtitle": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads_tab_downloaded": "已下载",
+  "@downloads_tab_downloaded": {
+    "description": "Tab label for downloaded episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads_tab_active": "下载中",
+  "@downloads_tab_active": {
+    "description": "Tab label for active downloads queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "active_downloads_empty_message": "暂无正在下载或转码的单集",
+  "@active_downloads_empty_message": {
+    "description": "Message shown when there are no active downloads or transcode tasks",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_delete": "批量删除",
+  "@batch_action_delete": {
+    "description": "Button label to delete selected episodes in batch mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_queue": "加到队列",
+  "@batch_action_queue": {
+    "description": "Button label to add selected episodes to playback queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_played": "标记已听",
+  "@batch_action_mark_played": {
+    "description": "Button label to mark selected episodes as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_unplayed": "标记未听",
+  "@batch_action_mark_unplayed": {
+    "description": "Button label to mark selected episodes as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_title": "批量删除",
+  "@batch_delete_dialog_title": {
+    "description": "Title for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_message": "确定删除选中的已下载单集吗？此操作不可撤回。",
+  "@batch_delete_dialog_message": {
+    "description": "Message for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_add_to_queue_success": "已添加到播放队列",
+  "@batch_add_to_queue_success": {
+    "description": "Snackbar message when episodes are added to queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_pause": "暂停",
+  "@download_action_pause": {
+    "description": "Tooltip/label for pause download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_resume": "继续",
+  "@download_action_resume": {
+    "description": "Tooltip/label for resume download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_retry": "重试",
+  "@download_action_retry": {
+    "description": "Tooltip/label for retry download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_cancel": "取消",
+  "@download_action_cancel": {
+    "description": "Tooltip/label for cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_queued": "排队中",
+  "@download_status_queued": {
+    "description": "Status text for queued download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_downloading": "下载中",
+  "@download_status_downloading": {
+    "description": "Status text for downloading task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_converting": "转码中",
+  "@download_status_converting": {
+    "description": "Status text for audio converting task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_paused": "已暂停",
+  "@download_status_paused": {
+    "description": "Status text for paused download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_failed": "失败",
+  "@download_status_failed": {
+    "description": "Status text for failed download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_select_all": "全选",
+  "@multi_select_select_all": {
+    "description": "Button label to select all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_deselect_all": "取消全选",
+  "@multi_select_deselect_all": {
+    "description": "Button label to deselect all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_exit": "退出",
+  "@multi_select_exit": {
+    "description": "Tooltip/label to exit multi-select mode",
     "type": "text",
     "placeholders": {}
   }

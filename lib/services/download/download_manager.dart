@@ -21,6 +21,14 @@ class DownloadProgress {
 abstract class DownloadManager {
   Future<String?> enqueueTask(String url, String downloadPath, String fileName);
 
+  Future<void> pauseTask(String taskId);
+
+  Future<void> resumeTask(String taskId);
+
+  Future<void> cancelTask(String taskId);
+
+  Future<String?> retryTask(String taskId);
+
   Stream<DownloadProgress> get downloadProgress;
 
   void dispose();

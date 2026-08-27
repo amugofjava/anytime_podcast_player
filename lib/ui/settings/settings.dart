@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:anytime/bloc/podcast/opml_bloc.dart';
 import 'package:anytime/bloc/podcast/podcast_bloc.dart';
 import 'package:anytime/bloc/settings/settings_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:anytime/state/opml_state.dart';
 import 'package:anytime/ui/library/opml_export.dart';
 import 'package:anytime/ui/library/opml_import.dart';
 import 'package:anytime/ui/settings/episode_refresh.dart';
+import 'package:anytime/ui/settings/language.dart';
 import 'package:anytime/ui/settings/search_provider.dart';
 import 'package:anytime/ui/settings/settings_section_label.dart';
 import 'package:anytime/ui/settings/theme_select.dart';
@@ -22,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 /// This is the settings page and allows the user to select various
@@ -79,30 +83,67 @@ class _SettingsState extends State<Settings> {
                       onChanged: (value) => setState(() => settingsBloc.deleteDownloadedPlayedEpisodes(value)),
                     )),
               ),
-              sdcard
-                  ? MergeSemantics(
-                      child: ListTile(
-                        title: Text(L.of(context)!.settings_download_sd_card_label),
-                        trailing: Switch.adaptive(
-                          value: snapshot.data!.storeDownloadsSDCard,
-                          onChanged: (value) => sdcard
-                              ? setState(() {
-                                  if (value) {
-                                    _showStorageDialog(enableExternalStorage: true);
-                                  } else {
-                                    _showStorageDialog(enableExternalStorage: false);
-                                  }
-
-                                  settingsBloc.storeDownloadonSDCard(value);
-                                })
-                              : null,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(
-                      height: 0,
-                      width: 0,
-                    ),
+              MergeSemantics(
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  title: Text(L.of(context)!.settings_download_sd_card_label),
+                  // The switch is only enabled when a removable SD card is
+                  // present; otherwise downloads stay on internal storage.
+                  onTap: sdcard
+                      ? () {
+                          setState(() {
+                            final value = !snapshot.data!.storeDownloadsSDCard;
+                            if (value) {
+                              _showStorageDialog(enableExternalStorage: true);
+                            } else {
+                              _showStorageDialog(enableExternalStorage: false);
+                            }
+                            settingsBloc.storeDownloadonSDCard(value);
+                          });
+                        }
+                      : null,
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.storeDownloadsSDCard,
+                    onChanged: sdcard
+                        ? (value) {
+                            setState(() {
+                              if (value) {
+                                _showStorageDialog(enableExternalStorage: true);
+                              } else {
+                                _showStorageDialog(enableExternalStorage: false);
+                              }
+                              settingsBloc.storeDownloadonSDCard(value);
+                            });
+                          }
+                        : null,
+                  ),
+                ),
+              ),
+              MergeSemantics(
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(side: BorderSide.none),
+                  title: Text(L.of(context)!.settings_custom_download_path_label),
+                  subtitle: Text(
+                    snapshot.data!.customDownloadPath.isNotEmpty
+                        ? snapshot.data!.customDownloadPath
+                        : L.of(context)!.settings_custom_download_path_default,
+                  ),
+                  trailing: snapshot.data!.customDownloadPath.isNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          tooltip: L.of(context)!.settings_custom_download_path_reset,
+                          onPressed: () {
+                            setState(() {
+                              settingsBloc.setCustomDownloadPath('');
+                            });
+                          },
+                        )
+                      : const Icon(Icons.folder_open),
+                  onTap: () async {
+                    await _pickCustomDownloadPath(settingsBloc);
+                  },
+                ),
+              ),
               SettingsDividerLabel(label: L.of(context)!.settings_playback_divider_label),
               MergeSemantics(
                 child: ListTile(
@@ -120,6 +161,16 @@ class _SettingsState extends State<Settings> {
                   trailing: Switch.adaptive(
                     value: snapshot.data!.autoPlay,
                     onChanged: (value) => setState(() => settingsBloc.autoPlay(value)),
+                  ),
+                ),
+              ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_convert_to_mp3_label),
+                  subtitle: Text(L.of(context)!.settings_convert_to_mp3_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.convertToMp3,
+                    onChanged: (value) => setState(() => settingsBloc.convertToMp3(value)),
                   ),
                 ),
               ),
@@ -145,6 +196,31 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              MergeSemantics(
+                child: ListTile(
+                  title: Text(L.of(context)!.settings_auto_download_episodes_label),
+                  subtitle: Text(L.of(context)!.settings_auto_download_episodes_subtitle),
+                  trailing: Switch.adaptive(
+                    value: snapshot.data!.autoDownloadEpisodes,
+                    onChanged: (value) => setState(() => settingsBloc.setAutoDownloadEpisodes(value)),
+                  ),
+                ),
+              ),
+              if (snapshot.data!.autoDownloadEpisodes)
+                MergeSemantics(
+                  child: ListTile(
+                    title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+                    subtitle: Text(
+                      snapshot.data!.autoDownloadPodcastGuids.isEmpty
+                          ? L.of(context)!.settings_auto_download_all_podcasts
+                          : L.of(context)!.settings_auto_download_selected_podcasts(
+                                snapshot.data!.autoDownloadPodcastGuids.length,
+                              ),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => _showPodcastSelectionDialog(context, settingsBloc, snapshot.data!),
+                  ),
+                ),
               SettingsDividerLabel(label: L.of(context)!.settings_notification_divider_label),
               MergeSemantics(
                 child: ListTile(
@@ -211,6 +287,7 @@ class _SettingsState extends State<Settings> {
                 },
               ),
               const SearchProviderWidget(),
+              const LanguageWidget(),
             ],
           );
         });
@@ -253,6 +330,46 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  Future<void> _pickCustomDownloadPath(SettingsBloc settingsBloc) async {
+    if (Platform.isAndroid) {
+      var status = await Permission.manageExternalStorage.status;
+      if (!status.isGranted) {
+        final proceed = await showPlatformDialog<bool>(
+          context: context,
+          useRootNavigator: false,
+          builder: (_) => BasicDialogAlert(
+            title: Text(L.of(context)!.settings_custom_download_path_permission_title),
+            content: Text(L.of(context)!.settings_custom_download_path_permission_message),
+            actions: <Widget>[
+              BasicDialogAction(
+                title: Text(L.of(context)!.cancel_button_label),
+                onPressed: () => Navigator.pop(context, false),
+              ),
+              BasicDialogAction(
+                title: Text(L.of(context)!.ok_button_label),
+                onPressed: () => Navigator.pop(context, true),
+              ),
+            ],
+          ),
+        );
+
+        if (proceed != true) return;
+
+        status = await Permission.manageExternalStorage.request();
+        if (!status.isGranted) {
+          return;
+        }
+      }
+    }
+
+    final selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    if (selectedDirectory != null && selectedDirectory.isNotEmpty) {
+      setState(() {
+        settingsBloc.setCustomDownloadPath(selectedDirectory);
+      });
+    }
+  }
+
   void _showStorageDialog({required bool enableExternalStorage}) {
     showPlatformDialog<void>(
       context: context,
@@ -275,6 +392,106 @@ class _SettingsState extends State<Settings> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showPodcastSelectionDialog(
+    BuildContext context,
+    SettingsBloc settingsBloc,
+    AppSettings settings,
+  ) async {
+    final podcastBloc = Provider.of<PodcastBloc>(context, listen: false);
+    final subscriptions = await podcastBloc.podcastService.subscriptions();
+
+    if (!context.mounted) return;
+
+    if (subscriptions.isEmpty) {
+      await showPlatformDialog<void>(
+        context: context,
+        useRootNavigator: false,
+        builder: (_) => BasicDialogAlert(
+          title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+          content: Text(L.of(context)!.settings_auto_download_no_subscriptions),
+          actions: <Widget>[
+            BasicDialogAction(
+              title: Text(L.of(context)!.ok_button_label),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    final currentGuids = Set<String>.from(settings.autoDownloadPodcastGuids);
+    final Set<String> selectedGuids = currentGuids.isEmpty
+        ? subscriptions.map((p) => p.guid).whereType<String>().toSet()
+        : Set<String>.from(currentGuids);
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(L.of(context)!.settings_auto_download_podcasts_label),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: subscriptions.length,
+                  itemBuilder: (context, index) {
+                    final podcast = subscriptions[index];
+                    final isChecked = podcast.guid != null && selectedGuids.contains(podcast.guid);
+                    return CheckboxListTile(
+                      title: Text(
+                        podcast.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      value: isChecked,
+                      onChanged: (bool? val) {
+                        setDialogState(() {
+                          if (podcast.guid != null) {
+                            if (val == true) {
+                              selectedGuids.add(podcast.guid!);
+                            } else {
+                              selectedGuids.remove(podcast.guid!);
+                            }
+                          }
+                        });
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text(L.of(context)!.settings_auto_download_select_all),
+                  onPressed: () {
+                    setDialogState(() {
+                      selectedGuids.addAll(subscriptions.map((p) => p.guid).whereType<String>());
+                    });
+                  },
+                ),
+                TextButton(
+                  child: Text(L.of(context)!.cancel_button_label),
+                  onPressed: () => Navigator.pop(dialogContext),
+                ),
+                TextButton(
+                  child: Text(L.of(context)!.ok_button_label),
+                  onPressed: () {
+                    setState(() {
+                      settingsBloc.setAutoDownloadPodcastGuids(selectedGuids.toList());
+                    });
+                    Navigator.pop(dialogContext);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

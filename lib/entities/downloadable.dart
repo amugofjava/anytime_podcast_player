@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-enum DownloadState { none, queued, downloading, failed, cancelled, paused, downloaded }
+enum DownloadState { none, queued, downloading, failed, cancelled, paused, downloaded, converting }
 
 /// A Downloadble is an object that holds information about a podcast episode
 /// and its download status.
@@ -84,6 +84,8 @@ class Downloadable {
         return DownloadState.paused;
       case 6:
         return DownloadState.downloaded;
+      case 7:
+        return DownloadState.converting;
     }
 
     return DownloadState.none;

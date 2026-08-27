@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:anytime/core/extensions.dart';
+import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/queue.dart';
@@ -324,8 +325,55 @@ class SembastRepository extends Repository {
 
   @override
   Future<List<Episode>> findDownloads() async {
-    final finder =
-        Finder(filter: Filter.equals('downloadPercentage', '100'), sortOrders: [SortOrder('publicationDate', false)]);
+    final finder = Finder(
+      filter: Filter.and([
+        Filter.equals('downloadPercentage', '100'),
+        Filter.notEquals('downloadState', DownloadState.converting.index),
+      ]),
+      sortOrders: [SortOrder('publicationDate', false)],
+    );
+
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
+
+    final results = recordSnapshots.map((snapshot) {
+      final episode = Episode.fromMap(snapshot.key, snapshot.value);
+
+      return episode;
+    }).toList();
+
+    return results;
+  }
+
+  @override
+  Future<List<Episode>> findEpisodesByDownloadState(DownloadState state) async {
+    final finder = Finder(filter: Filter.equals('downloadState', state.index));
+
+    final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
+        await _episodeStore.find(await _db, finder: finder);
+
+    final results = recordSnapshots.map((snapshot) {
+      final episode = Episode.fromMap(snapshot.key, snapshot.value);
+
+      return episode;
+    }).toList();
+
+    return results;
+  }
+
+  @override
+  Future<List<Episode>> findActiveDownloads() async {
+    final activeStates = [
+      DownloadState.queued.index,
+      DownloadState.downloading.index,
+      DownloadState.converting.index,
+      DownloadState.paused.index,
+      DownloadState.failed.index,
+    ];
+    final finder = Finder(
+      filter: Filter.inList('downloadState', activeStates),
+      sortOrders: [SortOrder('publicationDate', false)],
+    );
 
     final List<RecordSnapshot<int, Map<String, Object?>>> recordSnapshots =
         await _episodeStore.find(await _db, finder: finder);

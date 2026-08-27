@@ -516,7 +516,9 @@ class _CupertinoAccessibleEpisodeTileState extends State<_CupertinoAccessibleEpi
                             },
                             child: Text(L.of(context)!.cancel_download_button_label),
                           ),
-                        if (widget.episode.downloadState != DownloadState.downloading)
+                        if (widget.episode.downloadState != DownloadState.downloading &&
+                            widget.episode.downloadState != DownloadState.converting &&
+                            widget.episode.downloadState != DownloadState.queued)
                           CupertinoActionSheetAction(
                             isDefaultAction: false,
                             onPressed: () {
@@ -722,7 +724,10 @@ class _AndroidAccessibleEpisodeTileState extends State<_AndroidAccessibleEpisode
                             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                             child: Text(L.of(context)!.cancel_download_button_label),
                           ),
-                        if (widget.episode.downloadState != DownloadState.downloading && widget.episode.downloaded)
+                        if (widget.episode.downloadState != DownloadState.downloading &&
+                            widget.episode.downloadState != DownloadState.converting &&
+                            widget.episode.downloadState != DownloadState.queued &&
+                            widget.episode.downloaded)
                           SimpleDialogOption(
                             onPressed: () {
                               episodeBloc.deleteDownload(widget.episode);
@@ -731,7 +736,10 @@ class _AndroidAccessibleEpisodeTileState extends State<_AndroidAccessibleEpisode
                             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
                             child: Text(L.of(context)!.delete_episode_button_label),
                           ),
-                        if (widget.episode.downloadState != DownloadState.downloading && !widget.episode.downloaded)
+                        if (widget.episode.downloadState != DownloadState.downloading &&
+                            widget.episode.downloadState != DownloadState.converting &&
+                            widget.episode.downloadState != DownloadState.queued &&
+                            !widget.episode.downloaded)
                           SimpleDialogOption(
                             onPressed: () {
                               podcastBloc.downloadEpisode(widget.episode);

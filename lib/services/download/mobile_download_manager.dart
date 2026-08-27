@@ -77,6 +77,27 @@ class MobileDownloaderManager implements DownloadManager {
   }
 
   @override
+  Future<void> pauseTask(String taskId) async {
+    await FlutterDownloader.pause(taskId: taskId);
+  }
+
+  @override
+  Future<void> resumeTask(String taskId) async {
+    await FlutterDownloader.resume(taskId: taskId);
+  }
+
+  @override
+  Future<void> cancelTask(String taskId) async {
+    await FlutterDownloader.cancel(taskId: taskId);
+    await FlutterDownloader.remove(taskId: taskId, shouldDeleteContent: true);
+  }
+
+  @override
+  Future<String?> retryTask(String taskId) async {
+    return await FlutterDownloader.retry(taskId: taskId);
+  }
+
+  @override
   void dispose() {
     IsolateNameServer.removePortNameMapping(portName);
     downloadController.close();

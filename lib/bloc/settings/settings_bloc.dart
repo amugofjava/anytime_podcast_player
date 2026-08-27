@@ -36,6 +36,11 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _backgroundUpdate = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _backgroundUpdateMobileData = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _language = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _convertToMp3 = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _customDownloadPath = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _autoDownloadEpisodes = BehaviorSubject<bool>();
+  final BehaviorSubject<List<String>> _autoDownloadPodcastGuids = BehaviorSubject<List<String>>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -57,9 +62,12 @@ class SettingsBloc extends Bloc {
 
     _currentSettings = AppSettings(
       theme: settingsService.theme,
+      language: settingsService.language,
+      convertToMp3: settingsService.convertToMp3,
       markDeletedEpisodesAsPlayed: settingsService.markDeletedEpisodesAsPlayed,
       deleteDownloadedPlayedEpisodes: settingsService.deleteDownloadedPlayedEpisodes,
       storeDownloadsSDCard: settingsService.storeDownloadsSDCard,
+      customDownloadPath: settingsService.customDownloadPath,
       playbackSpeed: settingsService.playbackSpeed,
       searchProvider: settingsService.searchProvider,
       searchProviders: providers,
@@ -77,6 +85,8 @@ class SettingsBloc extends Bloc {
       backgroundUpdate: settingsService.backgroundUpdate,
       backgroundUpdateMobileData: settingsService.backgroundUpdateMobileData,
       updatesNotification: settingsService.updateNotification,
+      autoDownloadEpisodes: settingsService.autoDownloadEpisodes,
+      autoDownloadPodcastGuids: settingsService.autoDownloadPodcastGuids,
     );
 
     _settings.add(_currentSettings);
@@ -85,6 +95,18 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(theme: mode);
       _settings.add(_currentSettings);
       settingsService.theme = mode;
+    });
+
+    _language.listen((String language) {
+      _currentSettings = _currentSettings.copyWith(language: language);
+      _settings.add(_currentSettings);
+      settingsService.language = language;
+    });
+
+    _convertToMp3.listen((bool convert) {
+      _currentSettings = _currentSettings.copyWith(convertToMp3: convert);
+      _settings.add(_currentSettings);
+      settingsService.convertToMp3 = convert;
     });
 
     _markDeletedAsPlayed.listen((bool mark) {
@@ -103,6 +125,24 @@ class SettingsBloc extends Bloc {
       _currentSettings = _currentSettings.copyWith(storeDownloadsSDCard: sdcard);
       _settings.add(_currentSettings);
       settingsService.storeDownloadsSDCard = sdcard;
+    });
+
+    _customDownloadPath.listen((String path) {
+      _currentSettings = _currentSettings.copyWith(customDownloadPath: path);
+      _settings.add(_currentSettings);
+      settingsService.customDownloadPath = path;
+    });
+
+    _autoDownloadEpisodes.listen((bool autoDownload) {
+      _currentSettings = _currentSettings.copyWith(autoDownloadEpisodes: autoDownload);
+      _settings.add(_currentSettings);
+      settingsService.autoDownloadEpisodes = autoDownload;
+    });
+
+    _autoDownloadPodcastGuids.listen((List<String> guids) {
+      _currentSettings = _currentSettings.copyWith(autoDownloadPodcastGuids: guids);
+      _settings.add(_currentSettings);
+      settingsService.autoDownloadPodcastGuids = guids;
     });
 
     _playbackSpeed.listen((double speed) {
@@ -228,6 +268,10 @@ class SettingsBloc extends Bloc {
 
   void Function(String) get theme => _theme.add;
 
+  void Function(String) get setLanguage => _language.add;
+
+  void Function(bool) get convertToMp3 => _convertToMp3.add;
+
   void Function(bool) get storeDownloadonSDCard => _storeDownloadOnSDCard.add;
 
   void Function(bool) get markDeletedAsPlayed => _markDeletedAsPlayed.add;
@@ -266,6 +310,12 @@ class SettingsBloc extends Bloc {
 
   void Function(bool) get updateNotification => _updateNotification.add;
 
+  void Function(String) get setCustomDownloadPath => _customDownloadPath.add;
+
+  void Function(bool) get setAutoDownloadEpisodes => _autoDownloadEpisodes.add;
+
+  void Function(List<String>) get setAutoDownloadPodcastGuids => _autoDownloadPodcastGuids.add;
+
   AppSettings get currentSettings => _settings.value;
 
   @override
@@ -274,6 +324,9 @@ class SettingsBloc extends Bloc {
     _markDeletedAsPlayed.close();
     _deleteDownloadedPlayedEpisodes.close();
     _storeDownloadOnSDCard.close();
+    _customDownloadPath.close();
+    _autoDownloadEpisodes.close();
+    _autoDownloadPodcastGuids.close();
     _playbackSpeed.close();
     _searchProvider.close();
     _externalLinkConsent.close();

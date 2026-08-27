@@ -83,7 +83,10 @@ android {
         }
 
         release {
-            signingConfig signingConfigs.release
+            // Sign with the debug keystore so the release APK can be built and
+            // installed without a private Play Store signing key. Suitable for
+            // personal use; not for publishing to the Play Store.
+            signingConfig signingConfigs.debug
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }

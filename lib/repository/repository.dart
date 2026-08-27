@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:anytime/entities/downloadable.dart';
 import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
@@ -66,6 +67,10 @@ abstract class Repository {
   Future<List<Episode>> findDownloadsByPodcastGuid(String pguid);
 
   Future<List<Episode>> findDownloads();
+
+  Future<List<Episode>> findEpisodesByDownloadState(DownloadState state);
+
+  Future<List<Episode>> findActiveDownloads();
 
   Future<Transcript?> findTranscriptById(int id);
 

@@ -156,6 +156,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "converting_episode_button_label": "Converting audio format",
+  "@converting_episode_button_label": {
+    "description": "Semantic label when episode audio is being converted to MP3",
+    "type": "text",
+    "placeholders": {}
+  },
   "download_episode_button_label": "Download episode",
   "@download_episode_button_label": {
     "description": "Semantic label for the download episode button",
@@ -255,6 +261,36 @@
   "settings_delete_played_label": "Delete downloaded episodes once played",
   "@settings_delete_played_label": {
     "description": "Delete downloaded episodes once played setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_label": "Custom download folder",
+  "@settings_custom_download_path_label": {
+    "description": "Label for custom download folder setting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_default": "Default",
+  "@settings_custom_download_path_default": {
+    "description": "Subtitle when custom download folder is set to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_reset": "Reset to default",
+  "@settings_custom_download_path_reset": {
+    "description": "Tooltip/button to reset custom download folder to default",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_title": "Storage Permission Required",
+  "@settings_custom_download_path_permission_title": {
+    "description": "Title for storage permission dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_custom_download_path_permission_message": "To save downloads to a custom folder outside the app, Anytime requires All Files Access permission.",
+  "@settings_custom_download_path_permission_message": {
+    "description": "Message explaining need for all files access permission",
     "type": "text",
     "placeholders": {}
   },
@@ -683,13 +719,13 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "search_transcript_label": "Search transcript",
-   "@search_transcript_label": {
-     "description": "Hint text for transcript search box",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "search_transcript_label": "Search transcript",
+  "@search_transcript_label": {
+    "description": "Hint text for transcript search box",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "auto_scroll_transcript_label": "Follow transcript",
   "@auto_scroll_transcript_label": {
@@ -711,34 +747,34 @@
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
- },
+  },
   "semantics_podcast_details_header": "Podcast details and episodes page",
   "@semantics_podcast_details_header": {
     "description": "Describes podcast details page",
     "type": "text",
     "placeholders_order": [],
     "placeholders": {}
-   },
-   "semantics_layout_option_list": "List layout",
-   "@semantics_layout_option_list": {
-     "description": "Describes list layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_compact_grid": "Compact grid layout",
-   "@semantics_layout_option_compact_grid": {
-     "description": "Describes compact grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
-   },
-   "semantics_layout_option_grid": "Grid layout",
-   "@semantics_layout_option_grid": {
-     "description": "Describes grid layout button",
-     "type": "text",
-     "placeholders_order": [],
-     "placeholders": {}
+  },
+  "semantics_layout_option_list": "List layout",
+  "@semantics_layout_option_list": {
+    "description": "Describes list layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_compact_grid": "Compact grid layout",
+  "@semantics_layout_option_compact_grid": {
+    "description": "Describes compact grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "semantics_layout_option_grid": "Grid layout",
+  "@semantics_layout_option_grid": {
+    "description": "Describes grid layout button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
   },
   "semantics_mini_player_header": "Mini player. Swipe right to play/pause button. Activate to open main player window",
   "@semantics_mini_player_header": {
@@ -1088,12 +1124,12 @@
     "description": "For current sleep setting",
     "type": "text",
     "placeholders": {}
-   },
-   "scrim_episode_details_selector": "Dismiss episode details",
-   "@scrim_episode_details_selector": {
-     "description": "Replaces default scrim label for episode details bottom sheet.",
-     "type": "text",
-     "placeholders": {}
+  },
+  "scrim_episode_details_selector": "Dismiss episode details",
+  "@scrim_episode_details_selector": {
+    "description": "Replaces default scrim label for episode details bottom sheet.",
+    "type": "text",
+    "placeholders": {}
   },
   "scrim_episode_sort_selector": "Dismiss episode sort",
   "@scrim_episode_sort_selector": {
@@ -1485,5 +1521,173 @@
     "type": "text",
     "placeholders": {}
   },
-  "@@locale": "en"
+  "@@locale": "en",
+  "settings_language_label": "Language",
+  "@settings_language_label": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_system": "Follow system",
+  "@settings_language_system": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_english": "English",
+  "@settings_language_english": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_language_chinese": "Chinese",
+  "@settings_language_chinese": {
+    "description": "Settings display language option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_label": "Convert to MP3",
+  "@settings_convert_to_mp3_label": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_convert_to_mp3_subtitle": "Automatically convert downloaded episodes to MP3",
+  "@settings_convert_to_mp3_subtitle": {
+    "description": "Settings auto MP3 conversion option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads_tab_downloaded": "Downloaded",
+  "@downloads_tab_downloaded": {
+    "description": "Tab label for downloaded episodes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloads_tab_active": "Downloading",
+  "@downloads_tab_active": {
+    "description": "Tab label for active downloads queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "active_downloads_empty_message": "No active downloads or transcoding tasks",
+  "@active_downloads_empty_message": {
+    "description": "Message shown when there are no active downloads or transcode tasks",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_delete": "Delete",
+  "@batch_action_delete": {
+    "description": "Button label to delete selected episodes in batch mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_queue": "Add to Queue",
+  "@batch_action_queue": {
+    "description": "Button label to add selected episodes to playback queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_played": "Mark Played",
+  "@batch_action_mark_played": {
+    "description": "Button label to mark selected episodes as played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_action_mark_unplayed": "Mark Unplayed",
+  "@batch_action_mark_unplayed": {
+    "description": "Button label to mark selected episodes as unplayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_title": "Delete Episodes",
+  "@batch_delete_dialog_title": {
+    "description": "Title for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_delete_dialog_message": "Are you sure you want to delete the selected downloaded episodes?",
+  "@batch_delete_dialog_message": {
+    "description": "Message for batch delete confirmation dialog",
+    "type": "text",
+    "placeholders": {}
+  },
+  "batch_add_to_queue_success": "Added selected episodes to queue",
+  "@batch_add_to_queue_success": {
+    "description": "Snackbar message when episodes are added to queue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_pause": "Pause",
+  "@download_action_pause": {
+    "description": "Tooltip/label for pause download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_resume": "Resume",
+  "@download_action_resume": {
+    "description": "Tooltip/label for resume download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_retry": "Retry",
+  "@download_action_retry": {
+    "description": "Tooltip/label for retry download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_action_cancel": "Cancel",
+  "@download_action_cancel": {
+    "description": "Tooltip/label for cancel download button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_queued": "Queued",
+  "@download_status_queued": {
+    "description": "Status text for queued download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_downloading": "Downloading",
+  "@download_status_downloading": {
+    "description": "Status text for downloading task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_converting": "Converting",
+  "@download_status_converting": {
+    "description": "Status text for audio converting task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_paused": "Paused",
+  "@download_status_paused": {
+    "description": "Status text for paused download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "download_status_failed": "Failed",
+  "@download_status_failed": {
+    "description": "Status text for failed download task",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_select_all": "Select All",
+  "@multi_select_select_all": {
+    "description": "Button label to select all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_deselect_all": "Deselect All",
+  "@multi_select_deselect_all": {
+    "description": "Button label to deselect all items in multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "multi_select_exit": "Exit",
+  "@multi_select_exit": {
+    "description": "Tooltip/label to exit multi-select mode",
+    "type": "text",
+    "placeholders": {}
+  }
 }

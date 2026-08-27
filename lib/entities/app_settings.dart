@@ -8,6 +8,12 @@ class AppSettings {
   /// The current theme name.
   final String theme;
 
+  /// The display language: 'system' (follow device), 'en' or 'zh'.
+  final String language;
+
+  /// True if downloaded episodes are automatically transcoded to MP3.
+  final bool convertToMp3;
+
   /// True if episodes are marked as played when deleted.
   final bool markDeletedEpisodesAsPlayed;
 
@@ -16,6 +22,9 @@ class AppSettings {
 
   /// True if downloads should be saved to the SD card.
   final bool storeDownloadsSDCard;
+
+  /// Custom download root directory selected by user. Empty string means default.
+  final String customDownloadPath;
 
   /// The default playback speed.
   final double playbackSpeed;
@@ -68,11 +77,20 @@ class AppSettings {
   /// True if showing a status icon in the notification bar during fetch is enabled
   final bool updatesNotification;
 
+  /// True if newly detected episodes should be automatically downloaded.
+  final bool autoDownloadEpisodes;
+
+  /// List of podcast GUIDs selected for auto-downloading. Empty means all subscribed.
+  final List<String> autoDownloadPodcastGuids;
+
   AppSettings({
     required this.theme,
+    required this.language,
+    required this.convertToMp3,
     required this.markDeletedEpisodesAsPlayed,
     required this.deleteDownloadedPlayedEpisodes,
     required this.storeDownloadsSDCard,
+    this.customDownloadPath = '',
     required this.playbackSpeed,
     required this.searchProvider,
     required this.searchProviders,
@@ -90,13 +108,18 @@ class AppSettings {
     required this.backgroundUpdate,
     required this.backgroundUpdateMobileData,
     required this.updatesNotification,
+    this.autoDownloadEpisodes = false,
+    this.autoDownloadPodcastGuids = const <String>[],
   });
 
   AppSettings.sensibleDefaults()
       : theme = 'dark',
+        language = 'system',
+        convertToMp3 = true,
         markDeletedEpisodesAsPlayed = false,
         deleteDownloadedPlayedEpisodes = false,
         storeDownloadsSDCard = false,
+        customDownloadPath = '',
         playbackSpeed = 1.0,
         searchProvider = 'itunes',
         searchProviders = <SearchProvider>[],
@@ -113,14 +136,19 @@ class AppSettings {
         autoPlay = false,
         backgroundUpdate = false,
         backgroundUpdateMobileData = false,
-        updatesNotification = false;
+        updatesNotification = false,
+        autoDownloadEpisodes = false,
+        autoDownloadPodcastGuids = const <String>[];
 
   AppSettings copyWith({
     String? theme,
+    String? language,
+    bool? convertToMp3,
     String? selectedTheme,
     bool? markDeletedEpisodesAsPlayed,
     bool? deleteDownloadedPlayedEpisodes,
     bool? storeDownloadsSDCard,
+    String? customDownloadPath,
     double? playbackSpeed,
     String? searchProvider,
     List<SearchProvider>? searchProviders,
@@ -138,12 +166,17 @@ class AppSettings {
     bool? backgroundUpdate,
     bool? backgroundUpdateMobileData,
     bool? updatesNotification,
+    bool? autoDownloadEpisodes,
+    List<String>? autoDownloadPodcastGuids,
   }) =>
       AppSettings(
         theme: theme ?? this.theme,
+        language: language ?? this.language,
+        convertToMp3: convertToMp3 ?? this.convertToMp3,
         markDeletedEpisodesAsPlayed: markDeletedEpisodesAsPlayed ?? this.markDeletedEpisodesAsPlayed,
         deleteDownloadedPlayedEpisodes: deleteDownloadedPlayedEpisodes ?? this.deleteDownloadedPlayedEpisodes,
         storeDownloadsSDCard: storeDownloadsSDCard ?? this.storeDownloadsSDCard,
+        customDownloadPath: customDownloadPath ?? this.customDownloadPath,
         playbackSpeed: playbackSpeed ?? this.playbackSpeed,
         searchProvider: searchProvider ?? this.searchProvider,
         searchProviders: searchProviders ?? this.searchProviders,
@@ -161,5 +194,7 @@ class AppSettings {
         backgroundUpdate: backgroundUpdate ?? this.backgroundUpdate,
         backgroundUpdateMobileData: backgroundUpdateMobileData ?? this.backgroundUpdateMobileData,
         updatesNotification: updatesNotification ?? this.updatesNotification,
+        autoDownloadEpisodes: autoDownloadEpisodes ?? this.autoDownloadEpisodes,
+        autoDownloadPodcastGuids: autoDownloadPodcastGuids ?? this.autoDownloadPodcastGuids,
       );
 }

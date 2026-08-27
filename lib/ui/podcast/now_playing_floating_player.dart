@@ -133,8 +133,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                         child: TextButton(
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                            shape: CircleBorder(
-                                side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
+                            shape: CircleBorder(side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                           ),
                           onPressed: () {
                             if (playing) {
@@ -153,8 +152,7 @@ class _FloatingPlayerBuilderState extends State<_FloatingPlayerBuilder> with Sin
                         child: TextButton(
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                            shape: CircleBorder(
-                                side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
+                            shape: CircleBorder(side: BorderSide(color: theme.colorScheme.surface, width: 0.0)),
                           ),
                           onPressed: () {
                             if (playing) {

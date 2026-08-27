@@ -8,6 +8,7 @@ import 'package:anytime/entities/episode.dart';
 import 'package:anytime/entities/podcast.dart';
 import 'package:anytime/entities/transcript.dart';
 import 'package:anytime/repository/repository.dart';
+import 'package:anytime/services/download/download_service.dart';
 import 'package:anytime/services/notifications/notification_service.dart';
 import 'package:anytime/services/settings/settings_service.dart';
 import 'package:anytime/state/episode_state.dart';
@@ -22,6 +23,7 @@ abstract class PodcastService {
   final Repository repository;
   final NotificationService notificationService;
   final SettingsService settingsService;
+  DownloadService? downloadService;
 
   static const itunesGenres = [
     '<All>',
@@ -167,6 +169,7 @@ abstract class PodcastService {
     required this.repository,
     required this.notificationService,
     required this.settingsService,
+    this.downloadService,
   });
 
   Future<pcast.SearchResult> search({
@@ -199,6 +202,8 @@ abstract class PodcastService {
   });
 
   Future<List<Episode>> loadDownloads();
+
+  Future<List<Episode>> loadActiveDownloads();
 
   Future<List<Episode>> loadEpisodes();
 

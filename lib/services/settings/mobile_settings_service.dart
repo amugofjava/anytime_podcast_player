@@ -58,6 +58,15 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  String get customDownloadPath => _sharedPreferences.getString('custom_download_path') ?? '';
+
+  @override
+  set customDownloadPath(String value) {
+    _sharedPreferences.setString('custom_download_path', value);
+    settingsNotifier.sink.add('custom_download_path');
+  }
+
+  @override
   String get theme => _sharedPreferences.getString('theme') ?? 'dark';
 
   @override
@@ -65,6 +74,26 @@ class MobileSettingsService extends SettingsService {
     _sharedPreferences.setString('theme', mode);
 
     settingsNotifier.sink.add('theme');
+  }
+
+  @override
+  String get language => _sharedPreferences.getString('language') ?? 'system';
+
+  @override
+  set language(String value) {
+    _sharedPreferences.setString('language', value);
+
+    settingsNotifier.sink.add('language');
+  }
+
+  @override
+  bool get convertToMp3 => _sharedPreferences.getBool('convertmp3') ?? true;
+
+  @override
+  set convertToMp3(bool value) {
+    _sharedPreferences.setBool('convertmp3', value);
+
+    settingsNotifier.sink.add('convertmp3');
   }
 
   @override
@@ -266,6 +295,28 @@ class MobileSettingsService extends SettingsService {
         _sharedPreferences.getInt('lastFeedRefresh') ?? DateTime.utc(1970, 1, 1).millisecondsSinceEpoch;
 
     return DateTime.fromMillisecondsSinceEpoch(lastUpdate);
+  }
+
+  @override
+  set autoDownloadEpisodes(bool value) {
+    _sharedPreferences.setBool('auto_download_episodes', value);
+    settingsNotifier.sink.add('auto_download_episodes');
+  }
+
+  @override
+  bool get autoDownloadEpisodes {
+    return _sharedPreferences.getBool('auto_download_episodes') ?? false;
+  }
+
+  @override
+  set autoDownloadPodcastGuids(List<String> guids) {
+    _sharedPreferences.setStringList('auto_download_podcast_guids', guids);
+    settingsNotifier.sink.add('auto_download_podcast_guids');
+  }
+
+  @override
+  List<String> get autoDownloadPodcastGuids {
+    return _sharedPreferences.getStringList('auto_download_podcast_guids') ?? <String>[];
   }
 
   @override

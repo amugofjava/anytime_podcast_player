@@ -9,5 +9,13 @@ abstract class DownloadService {
 
   Future<Episode?> findEpisodeByTaskId(String taskId);
 
+  Future<void> pauseDownload(Episode episode);
+
+  Future<void> resumeDownload(Episode episode);
+
+  Future<void> retryDownload(Episode episode);
+
+  Future<void> cancelDownload(Episode episode);
+
   void dispose();
 }

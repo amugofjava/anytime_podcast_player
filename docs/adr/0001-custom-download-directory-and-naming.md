@@ -1,0 +1,3 @@
+# 0001 - Custom Download Directory and Episode File Naming
+
+To allow users to access downloaded podcast audio in external file managers and car players, we enable a configurable Download Root Directory outside the application sandbox. Because FlutterDownloader and native FFmpeg (via ffmpeg_kit) require direct POSIX filesystem paths rather than virtual SAF `content://` URIs, we request Android's `MANAGE_EXTERNAL_STORAGE` permission on demand when the user configures a custom directory. Downloaded files are structured into `<Download Root Directory>/<Podcast Directory>/<Episode Audio File>` where files are named with `[YYYY-MM-DD]_[Episode Title].[ext]` while preserving Unicode/Chinese characters.

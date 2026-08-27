@@ -13,6 +13,14 @@ abstract class SettingsService {
 
   set theme(String mode);
 
+  String get language;
+
+  set language(String value);
+
+  bool get convertToMp3;
+
+  set convertToMp3(bool value);
+
   bool get markDeletedEpisodesAsPlayed;
 
   set markDeletedEpisodesAsPlayed(bool value);
@@ -24,6 +32,10 @@ abstract class SettingsService {
   bool get storeDownloadsSDCard;
 
   set storeDownloadsSDCard(bool value);
+
+  String get customDownloadPath;
+
+  set customDownloadPath(String value);
 
   set playbackSpeed(double playbackSpeed);
 
@@ -94,4 +106,12 @@ abstract class SettingsService {
   set lastFeedRefresh(DateTime lastFeedRefresh);
 
   DateTime get lastFeedRefresh;
+
+  set autoDownloadEpisodes(bool value);
+
+  bool get autoDownloadEpisodes;
+
+  set autoDownloadPodcastGuids(List<String> guids);
+
+  List<String> get autoDownloadPodcastGuids;
 }

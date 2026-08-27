@@ -65,6 +65,14 @@ void main() {
     expect(mobileSettingsService?.searchProvider, 'itunes');
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 
+  test('Test language', () async {
+    expect(mobileSettingsService?.language, 'system');
+    expectLater(settingsListener, emits('language'));
+    // Key not set so should still return system.
+    mobileSettingsService?.language = 'zh';
+    expect(mobileSettingsService?.language, 'zh');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
   test('Test external link consent', () async {
     expect(mobileSettingsService?.externalLinkConsent, false);
     expectLater(settingsListener, emits('elconsent'));
@@ -180,5 +188,24 @@ void main() {
     expectLater(settingsListener, emits('lastFeedRefresh'));
     mobileSettingsService?.lastFeedRefresh = latest;
     expect(mobileSettingsService?.lastFeedRefresh, latest);
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test custom download path', () async {
+    expect(mobileSettingsService?.customDownloadPath, '');
+    expectLater(settingsListener, emits('custom_download_path'));
+    mobileSettingsService?.customDownloadPath = '/custom/podcasts';
+    expect(mobileSettingsService?.customDownloadPath, '/custom/podcasts');
+  }, timeout: const Timeout(Duration(milliseconds: timeout)));
+
+  test('Test auto download episodes and podcast guids', () async {
+    expect(mobileSettingsService?.autoDownloadEpisodes, false);
+    expectLater(settingsListener, emits('auto_download_episodes'));
+    mobileSettingsService?.autoDownloadEpisodes = true;
+    expect(mobileSettingsService?.autoDownloadEpisodes, true);
+
+    expect(mobileSettingsService?.autoDownloadPodcastGuids, isEmpty);
+    expectLater(settingsListener, emits('auto_download_podcast_guids'));
+    mobileSettingsService?.autoDownloadPodcastGuids = ['guid-1', 'guid-2'];
+    expect(mobileSettingsService?.autoDownloadPodcastGuids, ['guid-1', 'guid-2']);
   }, timeout: const Timeout(Duration(milliseconds: timeout)));
 }

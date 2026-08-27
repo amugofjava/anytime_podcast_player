@@ -97,9 +97,9 @@ class _ChapterSelectorState extends State<ChapterSelector> {
                     final chapter = widget.chapters[index];
                     final chapterSelected = chapter == snapshot.data!.currentChapter;
                     final textStyle = theme.textTheme.bodyLarge!.copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                        );
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                    );
 
                     /// We should be able to use the selectedTileColor property but, if we do, when
                     /// we scroll the currently selected item out of view, the selected colour is

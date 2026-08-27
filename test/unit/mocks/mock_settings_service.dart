@@ -50,7 +50,22 @@ class MockSettingsService extends SettingsService {
   bool storeDownloadsSDCard = false;
 
   @override
+  String customDownloadPath = '';
+
+  @override
+  bool autoDownloadEpisodes = false;
+
+  @override
+  List<String> autoDownloadPodcastGuids = <String>[];
+
+  @override
   String theme = ThemeMode.dark.name;
+
+  @override
+  String language = 'system';
+
+  @override
+  bool convertToMp3 = true;
 
   @override
   bool trimSilence = false;
