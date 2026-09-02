@@ -211,6 +211,21 @@ class _SettingsState extends State<Settings> {
                 },
               ),
               const SearchProviderWidget(),
+              SettingsDividerLabel(label: L.of(context)!.settings_export_divider_label),
+              ListTile(
+                title: Text(L.of(context)!.settings_export_directory),
+                onTap: () async {
+                  var result = (await FilePicker.platform.getDirectoryPath());
+                  settingsBloc.exportDirectory(result!);
+                },
+              ),
+              ListTile(
+                title: Text(L.of(context)!.settings_mark_exported_played_label),
+                trailing: Switch.adaptive(
+                  value: snapshot.data!.markExportedEpisodesAsPlayed,
+                  onChanged: (value) => setState(() => settingsBloc.markExportedAsPlayed(value)),
+                ),
+              ),
             ],
           );
         });

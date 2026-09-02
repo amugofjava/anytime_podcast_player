@@ -210,6 +210,8 @@ abstract class PodcastService {
 
   Future<void> toggleEpisodePlayed(Episode episode);
 
+  Future<void> setEpisodePlayed(Episode episode);
+
   Future<List<Podcast>> subscriptions();
 
   Future<Podcast?> subscribe(Podcast podcast);

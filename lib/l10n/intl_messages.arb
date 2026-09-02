@@ -252,6 +252,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_mark_exported_played_label": "Mark exported episodes as played",
+  "@settings_mark_exported_played_label": {
+    "description": "Mark exported episodes as played setting",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_delete_played_label": "Delete downloaded episodes once played",
   "@settings_delete_played_label": {
     "description": "Delete downloaded episodes once played setting",
@@ -414,6 +420,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings_export_directory": "Export directory",
+  "@settings_export_directory": {
+    "description": "Option label export directory",
+    "type": "text",
+    "placeholders": {}
+  },
   "settings_export_opml": "Export OPML",
   "@settings_export_opml": {
     "description": "Option label exporting OPML file",
@@ -531,6 +543,12 @@
   "settings_data_divider_label": "DATA",
   "@settings_data_divider_label": {
     "description": "Settings divider label for data",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings_export_divider_label": "EXPORT",
+  "@settings_export_divider_label": {
+    "description": "Settings divider label for export",
     "type": "text",
     "placeholders": {}
   },
@@ -1079,6 +1097,12 @@
   "share_episode_option_label": "Share episode",
   "@share_episode_option_label": {
     "description": "Context menu option to share the current podcast episode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "export_episode_option_label": "Export episode",
+  "@Export_episode_option_label": {
+    "description": "Context menu option to export the current podcast episode",
     "type": "text",
     "placeholders": {}
   },

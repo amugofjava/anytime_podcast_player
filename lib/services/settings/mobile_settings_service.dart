@@ -255,6 +255,26 @@ class MobileSettingsService extends SettingsService {
   }
 
   @override
+  String get exportDirectory => _sharedPreferences.getString('exportDirectory') ?? '/storage/emulated/0/Documents';
+
+  @override
+  set exportDirectory(String exportDirectory) {
+    _sharedPreferences.setString('exportDirectory', exportDirectory);
+    settingsNotifier.sink.add('exportDirectory');
+  }
+
+  @override
+  set markExportedEpisodesAsPlayed(bool markExportedEpisodesAsPlayed) {
+    _sharedPreferences.setBool('markExportedEpisodesAsPlayed', markExportedEpisodesAsPlayed);
+    settingsNotifier.sink.add('markExportedEpisodesAsPlayed');
+  }
+
+  @override
+  bool get markExportedEpisodesAsPlayed {
+    return _sharedPreferences.getBool('markExportedEpisodesAsPlayed') ?? false;
+  }
+
+  @override
   set lastFeedRefresh(DateTime lastFeedRefresh) {
     _sharedPreferences.setInt('lastFeedRefresh', lastFeedRefresh.millisecondsSinceEpoch);
     settingsNotifier.sink.add('lastFeedRefresh');

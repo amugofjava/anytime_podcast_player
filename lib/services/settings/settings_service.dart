@@ -94,4 +94,12 @@ abstract class SettingsService {
   set lastFeedRefresh(DateTime lastFeedRefresh);
 
   DateTime get lastFeedRefresh;
+
+  set exportDirectory(String exportDirectory);
+
+  String get exportDirectory;
+
+  set markExportedEpisodesAsPlayed(bool markExportedEpisodesAsPlayed);
+
+  bool get markExportedEpisodesAsPlayed;
 }

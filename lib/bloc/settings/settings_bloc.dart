@@ -36,6 +36,8 @@ class SettingsBloc extends Bloc {
   final BehaviorSubject<bool> _backgroundUpdate = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _backgroundUpdateMobileData = BehaviorSubject<bool>();
   final BehaviorSubject<bool> _updateNotification = BehaviorSubject<bool>();
+  final BehaviorSubject<String> _exportDirectory = BehaviorSubject<String>();
+  final BehaviorSubject<bool> _markExportedAsPlayed = BehaviorSubject<bool>();
 
   var _currentSettings = AppSettings.sensibleDefaults();
 
@@ -77,6 +79,8 @@ class SettingsBloc extends Bloc {
       backgroundUpdate: settingsService.backgroundUpdate,
       backgroundUpdateMobileData: settingsService.backgroundUpdateMobileData,
       updatesNotification: settingsService.updateNotification,
+      exportDirectory: settingsService.exportDirectory,
+      markExportedEpisodesAsPlayed: settingsService.markExportedEpisodesAsPlayed,
     );
 
     _settings.add(_currentSettings);
@@ -212,6 +216,19 @@ class SettingsBloc extends Bloc {
         _initNotifications();
       }
     });
+
+    _exportDirectory.listen((exportDirectory) {
+      _currentSettings = _currentSettings.copyWith(exportDirectory: exportDirectory);
+      _settings.add(_currentSettings);
+      settingsService.exportDirectory = exportDirectory;
+    });
+
+    _markExportedAsPlayed.listen((bool mark) {
+      _currentSettings = _currentSettings.copyWith(markExportedEpisodesAsPlayed: mark);
+      _settings.add(_currentSettings);
+      settingsService.markExportedEpisodesAsPlayed = mark;
+    });
+
   }
 
   void _initNotifications() async {
@@ -265,6 +282,10 @@ class SettingsBloc extends Bloc {
   void Function(bool) get backgroundUpdatesMobileData => _backgroundUpdateMobileData.add;
 
   void Function(bool) get updateNotification => _updateNotification.add;
+
+  void Function(String) get exportDirectory => _exportDirectory.add;
+
+  void Function(bool) get markExportedAsPlayed => _markExportedAsPlayed.add;
 
   AppSettings get currentSettings => _settings.value;
 

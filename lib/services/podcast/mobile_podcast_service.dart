@@ -655,6 +655,14 @@ class MobilePodcastService extends PodcastService {
   }
 
   @override
+  Future<void> setEpisodePlayed(Episode episode) async {
+    episode.played = true;
+    episode.position = 0;
+
+    repository.saveEpisode(episode);
+  }
+
+  @override
   Future<List<Podcast>> subscriptions() async {
     final subs = await repository.subscriptions();
     final orderBy = settingsService.layoutOrder;

@@ -32,6 +32,9 @@ class EpisodeBloc extends Bloc {
   /// Add to sink to toggle played status of the [Episode].
   final PublishSubject<Episode?> _togglePlayed = PublishSubject<Episode>();
 
+  /// Add to sink to set played status of the [Episode].
+  final PublishSubject<Episode?> _setPlayed = PublishSubject<Episode>();
+
   /// Stream of currently downloaded episodes
   Stream<BlocState<List<Episode>>>? _downloadsOutput;
 
@@ -53,7 +56,8 @@ class EpisodeBloc extends Bloc {
     _episodesOutput = _episodesInput.switchMap<BlocState<List<Episode>>>((bool silent) => _loadEpisodes(silent));
 
     _handleDeleteDownloads();
-    _handleMarkAsPlayed();
+    _handleTogglePlayed();
+    _handleSetAsPlayed();
     _listenEpisodeEvents();
   }
 
@@ -74,9 +78,17 @@ class EpisodeBloc extends Bloc {
     });
   }
 
-  void _handleMarkAsPlayed() async {
+  void _handleTogglePlayed() async {
     _togglePlayed.stream.listen((episode) async {
       await podcastService.toggleEpisodePlayed(episode!);
+
+      fetchDownloads(true);
+    });
+  }
+
+  void _handleSetAsPlayed() async {
+    _setPlayed.stream.listen((episode) async {
+      await podcastService.setEpisodePlayed(episode!);
 
       fetchDownloads(true);
     });
@@ -114,6 +126,7 @@ class EpisodeBloc extends Bloc {
     _downloadsInput.close();
     _deleteDownload.close();
     _togglePlayed.close();
+    _setPlayed.close();
   }
 
   void Function(bool) get fetchDownloads => _downloadsInput.add;
@@ -127,6 +140,8 @@ class EpisodeBloc extends Bloc {
   void Function(Episode?) get deleteDownload => _deleteDownload.add;
 
   void Function(Episode?) get togglePlayed => _togglePlayed.add;
+
+  void Function(Episode?) get setPlayed => _setPlayed.add;
 
   Stream<EpisodeState> get episodeListener => podcastService.episodeListener;
 }

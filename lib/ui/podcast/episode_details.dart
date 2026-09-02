@@ -18,6 +18,8 @@ import 'package:anytime/ui/widgets/tile_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:anytime/services/settings/settings_service.dart';
+import 'package:anytime/services/settings/mobile_settings_service.dart';
 
 /// This class renders the more info widget that is accessed from the 'more'
 /// button on an episode.
@@ -235,6 +237,19 @@ class EpisodeToolBar extends StatelessWidget {
                                 _shareEpisode();
                               },
                       ),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: Icon(
+                          Icons.save,
+                          semanticLabel: L.of(context)!.export_episode_option_label,
+                          size: 20,
+                        ),
+                        onPressed: episode.guid.isEmpty  || ! episode.downloaded
+                            ? null
+                            : () {
+                                _exportEpisode(episodeBloc);
+                              },
+                      ),
                     ],
                   ),
                 );
@@ -244,5 +259,13 @@ class EpisodeToolBar extends StatelessWidget {
 
   void _shareEpisode() async {
     await shareEpisode(episode: episode);
+  }
+
+  void _exportEpisode(EpisodeBloc episodeBloc) async {
+    await exportEpisode(episode: episode);
+    SettingsService? settings = await MobileSettingsService.instance();
+    if (settings?.markExportedEpisodesAsPlayed == true) {
+      episodeBloc.setPlayed(episode);
+    }
   }
 }
