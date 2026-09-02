@@ -457,6 +457,16 @@ class L {
         );
   }
 
+  String get settings_mark_exported_played_label {
+    return message('settings_mark_exported_played_label') ??
+        Intl.message(
+          'Mark exported episodes as played',
+          name: 'settings_mark_exported_played_label',
+          desc: 'Mark exported episodes as played setting',
+          locale: localeName,
+        );
+  }
+
   String get settings_delete_played_label {
     return message('settings_delete_played_label') ??
         Intl.message(
@@ -727,6 +737,16 @@ class L {
         );
   }
 
+  String get settings_export_directory {
+    return message('settings_export_directory') ??
+        Intl.message(
+          'Export directory',
+          name: 'settings_export_directory',
+          desc: 'Option label export directory',
+          locale: localeName,
+        );
+  }
+
   String get settings_export_opml {
     return message('settings_export_opml') ??
         Intl.message(
@@ -923,6 +943,16 @@ class L {
           'DATA',
           name: 'settings_data_divider_label',
           desc: 'Settings divider label for data',
+          locale: localeName,
+        );
+  }
+
+  String get settings_export_divider_label {
+    return message('settings_export_divider_label') ??
+        Intl.message(
+          'EXPORT',
+          name: 'settings_export_divider_label',
+          desc: 'Settings divider label for export',
           locale: localeName,
         );
   }
@@ -1834,6 +1864,16 @@ class L {
           'Share episode',
           name: 'share_episode_option_label',
           desc: 'Context menu option to share the current podcast episode',
+          locale: localeName,
+        );
+  }
+
+  String get export_episode_option_label {
+    return message('export_episode_option_label') ??
+        Intl.message(
+          'Export episode',
+          name: 'export_episode_option_label',
+          desc: 'Context menu option to export the current podcast episode',
           locale: localeName,
         );
   }

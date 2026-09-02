@@ -15,6 +15,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 
 /// Globals
 String? _currentLocale;
@@ -173,6 +175,66 @@ Future<void> shareEpisode({required Episode episode}) async {
   await SharePlus.instance.share(
     ShareParams(text: link),
   );
+}
+
+// sanitize the path to eliminate problematic chars like "?"
+String? mySafePath(String? s) {
+  return s?.replaceAll(RegExp(r'[^\w\s\.\-]+'), '').trim();
+}
+
+Future<void> exportEpisode({required Episode episode}) async {
+  final log = Logger('exportEpisode');
+
+  try {
+    log.fine('Starting episode export for: ${episode.title}');
+
+    SettingsService? settings = await MobileSettingsService.instance();
+    final exportDir = settings?.exportDirectory;
+
+    if (exportDir == null) {
+      log.severe('Error: Export directory not set');
+      return;
+    }
+
+    // Create directory path using only exportDir and episode.podcast
+    final episodeDirPath = path.join(exportDir, mySafePath(episode.podcast));
+    log.fine('Creating episode directory at: $episodeDirPath');
+
+    final episodeDir = Directory(episodeDirPath);
+    if (!await episodeDir.exists()) {
+      log.fine('Episode directory does not exist, creating...');
+      await episodeDir.create(recursive: true);
+      log.fine('Episode directory created successfully');
+    }
+
+    // Extract file extension from episode.filename
+    final fileExtension = path.extension(episode.filename!);
+    // Create safe filename from episode.title
+    final safeTitle = mySafePath(episode.title);
+    // Combine safe title with file extension
+    final safeFilename = '$safeTitle$fileExtension';
+    log.fine('Sanitized filename: $safeFilename');
+
+    // Create full file path
+    final episodeFilePath = path.join(episodeDirPath, safeFilename);
+    log.fine('Target file path: $episodeFilePath');
+
+    final episodeFile = File(episodeFilePath);
+    if (!await episodeFile.exists()) {
+      log.fine('Source file does not exist, copying...');
+      final sourcePath = path.join(episode.filepath!, episode.filename!);
+      log.fine('Source file path: $sourcePath');
+      await File(sourcePath).copy(episodeFilePath);
+      log.fine('File copied successfully');
+    }
+
+    log.fine('Episode exported successfully: ${episode.title}');
+  } catch (e) {
+    log.severe('Error exporting episode: ${e.toString()}');
+    // Maybe show some error message? But there is no error handling elsewhere
+    //_showSnackBar('Failed to export episode: ${e.toString()}');
+    //rethrow; // Re-throw to maintain original behavior
+  }
 }
 
 Future<String> currentLocale({bool forceReload = false}) async {

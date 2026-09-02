@@ -4,4 +4,9 @@ formatter:
   page_width: 120
 
 analyzer:
-  exclude: [ build/**, lib/**/*.g.dart, lib/l10n/** ]
+  exclude:
+    - build/**
+    - lib/**/*.g.dart
+    - lib/l10n/**
+    - android/**
+    - ios/**
